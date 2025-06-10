@@ -1,0 +1,1 @@
+{"success":true,"data":{"available":false,"fallbackMode":true,"version":"Unknown","features":{"memory":false,"gpu":false,"worker":false},"timestamp":1749466542061,"message":"Use IPC channel for native module status in Electron environment"}}

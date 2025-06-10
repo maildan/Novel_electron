@@ -1,0 +1,25 @@
+{
+  "name": "typing-stats-native",
+  "version": "0.1.0",
+  "description": "Native modules for Loop 6 typing statistics app",
+  "main": "index.js",
+  "scripts": {
+    "build": "napi build --platform",
+    "build:debug": "napi build --platform --mode debug",
+    "build:release": "napi build --platform --mode release"
+  },
+  "napi": {
+    "name": "typing-stats-native",
+    "triples": {
+      "additional": [
+        "aarch64-apple-darwin",
+        "x86_64-apple-darwin",
+        "x86_64-pc-windows-msvc",
+        "x86_64-unknown-linux-gnu"
+      ]
+    }
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "^2.12.0"
+  }
+}

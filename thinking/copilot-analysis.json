@@ -1,0 +1,186 @@
+{
+  "timestamp": "2025.06.08.15.30.00",
+  "currentTask": "Loop 3 전체 디렉토리 상세 분석 및 Loop 6 마이그레이션 계획 수립",
+  "userRequest": "loop_3 폴더 전체 하위디렉토리 포함 완전 분석 후 copilot.json에 상세 기록, loop_6와 비교하여 마이그레이션 계획 작성",
+  "nextSteps": [
+    "loop_3 전체 디렉토리 구조 스캔 ✅",
+    "loop_3 핵심 파일 내용 분석 ✅",
+    "loop_6 현재 상태 분석 ✅", 
+    "마이그레이션 필요 항목 식별 🔄",
+    "상세 마이그레이션 계획 작성 🔄",
+    "copilot.json에 모든 분석 결과 기록"
+  ],
+  "mcpPlan": [
+    "STEP1: loop_3/ 전체 파일 트리 구조 분석 ✅ 완료",
+    "STEP2: loop_3/src/ 핵심 소스코드 분석 ✅ 완료",
+    "STEP3: loop_3/package.json, tsconfig.json 등 설정 파일 분석 ✅ 완료",
+    "STEP4: loop_6/ 현재 상태와 비교 분석 ✅ 완료",
+    "STEP5: 마이그레이션 우선순위 및 계획 수립 🔄 진행중",
+    "STEP6: copilot.json에 모든 분석 내용 상세 기록 🔄 진행중"
+  ],
+  "analysisProgress": {
+    "loop3DirectoryStructure": "✅ 완료",
+    "loop3CoreFiles": "✅ 완료",
+    "loop6Comparison": "✅ 완료", 
+    "migrationPlan": "🔄 진행중"
+  },
+  "detailedFindings": {
+    "loop3Structure": {
+      "totalFiles": "1,000+ 파일 (하위디렉토리 포함)",
+      "coreJavaScriptFiles": [
+        "main.js (1585줄) - Electron 메인 프로세스, 최대 복잡도",
+        "keyboard.js (1229줄) - 키보드 이벤트 처리, 한글 IME 지원",
+        "window.js (1236줄) - 윈도우 관리, Next.js 서버 연동",
+        "memory-manager.js (524줄) - 메모리 최적화, 네이티브 모듈",
+        "settings.js (386줄) - 설정 관리, 파일 저장/로드"
+      ],
+      "handlersDirectory": {
+        "keyboard-handlers.js (232줄)": "키보드 IPC 핸들러, 한글 자모 계산",
+        "tracking-handlers.js (264줄)": "모니터링 시작/중지, 통계 저장",
+        "window-handlers.js": "윈도우 모드 관리",
+        "settings-handlers.js": "설정 변경 IPC",
+        "memory-handlers.js": "메모리 관리 IPC",
+        "restart-handlers.js": "앱 재시작 처리"
+      },
+      "appDirectory": "Next.js React 애플리케이션 (TypeScript)",
+      "nativeModules": "Rust 네이티브 모듈 (typing_stats_native.node)"
+    },
+    "loop3KeyFeatures": {
+      "architecture": {
+        "electronMain": "JavaScript 기반 메인 프로세스",
+        "nextjsApp": "React + TypeScript 프론트엔드",
+        "ipcCommunication": "렌더러-메인 간 IPC 핸들러 시스템",
+        "nativeIntegration": "Rust 네이티브 모듈 연동"
+      },
+      "keyboardSystem": {
+        "globalListener": "uiohook 또는 네이티브 키보드 후킹",
+        "hangulSupport": "한글 자모 분해/조합 처리",
+        "imeHandling": "IME composition 이벤트 관리",
+        "permissions": "macOS 접근성/화면녹화 권한 체크"
+      },
+      "memoryManagement": {
+        "nativeOptimization": "Rust 모듈 기반 메모리 최적화",
+        "gcControl": "V8 가비지 컬렉션 수동 제어",
+        "monitoring": "주기적 메모리 사용량 체크",
+        "lowMemoryHandling": "메모리 부족 시 자동 정리"
+      },
+      "windowManagement": {
+        "multiMode": "노멀/미니/트레이 모드",
+        "screenDetection": "멀티모니터 지원",
+        "nextjsIntegration": "Next.js 서버 준비 확인",
+        "devModeOptimization": "개발 모드 최적화"
+      }
+    },
+    "loop6CurrentState": {
+      "architecture": {
+        "electronMain": "TypeScript 기반 메인 프로세스",
+        "port": "5500 포트 (3000에서 변경)",
+        "buildSystem": "분리된 tsconfig (main/renderer)",
+        "packageManager": "yarn 전용"
+      },
+      "migratedModules": [
+        "main.ts ✅ - 기본 구조 완성",
+        "constants.ts ✅ - 타입 정의 완료",
+        "settings-manager.ts ✅ - ElectronStore 기반",
+        "window.ts ✅ - WindowManager 클래스화",
+        "handlers-manager.ts ✅ - 통합 핸들러 관리",
+        "keyboard-handlers.ts ✅ - 비동기 처리 완료",
+        "tracking-handlers.ts ✅ - IPC 핸들러 완성"
+      ],
+      "pendingMigration": [
+        "keyboard.js → keyboard-advanced.ts (부분 완료)",
+        "memory-manager.js → memory-manager.ts (미완성)",
+        "전체 IPC 핸들러 시스템 통합",
+        "네이티브 모듈 연동",
+        "권한 관리 시스템"
+      ]
+    }
+  },
+  "migrationRequirements": {
+    "criticalMissing": {
+      "nativeModuleIntegration": "Loop 3의 Rust 네이티브 모듈 완전 포팅 필요",
+      "hangulIMESystem": "keyboard.js의 한글 IME 처리 로직 완전 마이그레이션",
+      "memoryOptimization": "memory-manager.js의 네이티브 최적화 로직",
+      "permissionSystem": "macOS 권한 체크 및 요청 시스템",
+      "activeWindowDetection": "active-win 모듈 기반 윈도우 감지"
+    },
+    "architecturalChanges": {
+      "jsToTs": "모든 JavaScript 파일을 TypeScript로 변환",
+      "classBasedDesign": "함수형에서 클래스 기반 아키텍처로 전환",
+      "asyncAwaitPattern": "콜백 기반에서 Promise/async-await 패턴",
+      "electronStoreIntegration": "파일 기반 설정에서 ElectronStore로 전환",
+      "strictTyping": "엄격한 TypeScript 타입 체크"
+    },
+    "featureParity": {
+      "keyboardMonitoring": "글로벌 키보드 이벤트 캐처",
+      "typingAnalysis": "타이핑 속도, 정확도, 패턴 분석",
+      "systemMonitoring": "CPU, 메모리, GPU 리소스 모니터링",
+      "multiWindowSupport": "다중 윈도우 모드 (노멀/미니/트레이)",
+      "dataStorage": "타이핑 데이터 로컬 저장 및 동기화"
+    }
+  },
+  "migrationPriority": {
+    "phase1_immediate": [
+      "keyboard.js 완전 마이그레이션 (한글 IME 핵심)",
+      "memory-manager.js TypeScript 변환",
+      "네이티브 모듈 연동 복원",
+      "권한 시스템 구현"
+    ],
+    "phase2_integration": [
+      "모든 IPC 핸들러 통합 테스트",
+      "Next.js 5500 포트 연동 확인",
+      "윈도우 모드 전환 테스트",
+      "타이핑 분석 기능 검증"
+    ],
+    "phase3_optimization": [
+      "메모리 최적화 검증",
+      "성능 벤치마크 비교",
+      "에러 핸들링 강화",
+      "로그 시스템 개선"
+    ]
+  },
+  "detailedMigrationPlan": {
+    "step1_keyboardSystem": {
+      "source": "/Users/user/loop/loop_3/src/main/keyboard.js (1229줄)",
+      "target": "/Users/user/loop/loop_6/src/main/keyboard-advanced.ts",
+      "status": "부분 완료, 한글 IME 로직 미완성",
+      "remainingWork": [
+        "HANGUL_STATUS 객체 마이그레이션",
+        "IME_COMPOSITION 이벤트 처리",
+        "권한 체크 로직 (screenRecording, accessibility)",
+        "active-win 모듈 통합",
+        "네이티브 키보드 후킹 설정"
+      ]
+    },
+    "step2_memoryManager": {
+      "source": "/Users/user/loop/loop_3/src/main/memory-manager.js (524줄)",
+      "target": "/Users/user/loop/loop_6/src/main/memory-manager.ts",
+      "status": "기본 구조만 존재",
+      "remainingWork": [
+        "네이티브 모듈 로딩 시스템",
+        "주기적 메모리 모니터링",
+        "V8 가비지 컬렉션 제어",
+        "메모리 임계값 관리",
+        "자동 최적화 로직"
+      ]
+    },
+    "step3_nativeModules": {
+      "source": "/Users/user/loop/loop_3/native-modules/",
+      "target": "/Users/user/loop/loop_6/src/native-modules/",
+      "status": "디렉토리만 존재",
+      "remainingWork": [
+        "Rust 프로젝트 완전 복사",
+        "Cargo.toml 설정 확인",
+        "빌드 스크립트 설정",
+        "Node.js 바인딩 테스트",
+        "TypeScript 타입 정의"
+      ]
+    }
+  },
+  "userPreferences": {
+    "language": "한국어 무조건",
+    "packageManager": "yarn 절대적",
+    "detailLevel": "매우 상세",
+    "recordEverything": true
+  }
+}

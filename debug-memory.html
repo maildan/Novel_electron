@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
+        .result { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 3px; }
+        .error { background: #ffe6e6; color: #cc0000; }
+        .success { background: #e6ffe6; color: #006600; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Memory API Debug Test</h1>
+    
+    <div class="test-section">
+        <h2>1. ElectronAPI 가용성 체크</h2>
+        <button onclick="checkElectronAPI()">ElectronAPI 체크</button>
+        <div id="api-check-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Memory API 테스트</h2>
+        <button onclick="testMemoryGetInfo()">memory.getInfo() 테스트</button>
+        <div id="memory-info-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Memory Optimize 테스트</h2>
+        <button onclick="testMemoryOptimize()">memory.optimize() 테스트</button>
+        <div id="memory-optimize-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Native Status 테스트</h2>
+        <button onclick="testNativeStatus()">native.getStatus() 테스트</button>
+        <div id="native-status-result" class="result"></div>
+    </div>
+
+    <script>
+        function logResult(elementId, result, isError = false) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<pre>${JSON.stringify(result, null, 2)}</pre>`;
+            element.className = isError ? 'result error' : 'result success';
+        }
+
+        function checkElectronAPI() {
+            const result = {
+                windowElectronAPI: typeof window.electronAPI,
+                hasMemoryAPI: !!(window.electronAPI && window.electronAPI.memory),
+                hasSystemAPI: !!(window.electronAPI && window.electronAPI.system),
+                memoryMethods: window.electronAPI?.memory ? Object.keys(window.electronAPI.memory) : [],
+                systemMethods: window.electronAPI?.system ? Object.keys(window.electronAPI.system) : []
+            };
+            
+            logResult('api-check-result', result);
+            console.log('ElectronAPI Check:', result);
+        }
+
+        async function testMemoryGetInfo() {
+            try {
+                console.log('Testing memory.getInfo()...');
+                
+                if (!window.electronAPI || !window.electronAPI.memory) {
+                    throw new Error('ElectronAPI or memory API not available');
+                }
+
+                const response = await window.electronAPI.memory.getInfo();
+                console.log('Memory Info Response:', response);
+                
+                logResult('memory-info-result', response);
+            } catch (error) {
+                console.error('Memory getInfo error:', error);
+                logResult('memory-info-result', { error: error.message }, true);
+            }
+        }
+
+        async function testMemoryOptimize() {
+            try {
+                console.log('Testing memory.optimize()...');
+                
+                if (!window.electronAPI || !window.electronAPI.memory) {
+                    throw new Error('ElectronAPI or memory API not available');
+                }
+
+                const response = await window.electronAPI.memory.optimize();
+                console.log('Memory Optimize Response:', response);
+                
+                logResult('memory-optimize-result', response);
+            } catch (error) {
+                console.error('Memory optimize error:', error);
+                logResult('memory-optimize-result', { error: error.message }, true);
+            }
+        }
+
+        async function testNativeStatus() {
+            try {
+                console.log('Testing system.native.getStatus()...');
+                
+                if (!window.electronAPI || !window.electronAPI.system || !window.electronAPI.system.native) {
+                    throw new Error('ElectronAPI or system.native API not available');
+                }
+
+                const response = await window.electronAPI.system.native.getStatus();
+                console.log('Native Status Response:', response);
+                
+                logResult('native-status-result', response);
+            } catch (error) {
+                console.error('Native status error:', error);
+                logResult('native-status-result', { error: error.message }, true);
+            }
+        }
+
+        // 페이지 로드 시 자동으로 API 체크
+        window.addEventListener('load', () => {
+            console.log('Page loaded, checking ElectronAPI...');
+            checkElectronAPI();
+        });
+    </script>
+</body>
+</html>

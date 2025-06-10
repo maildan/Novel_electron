@@ -1,0 +1,116 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Keystroke {
+  id          Int      @id @default(autoincrement())
+  key         String
+  timestamp   DateTime
+  keyCode     Int
+  shiftKey    Boolean  @default(false)
+  ctrlKey     Boolean  @default(false)
+  altKey      Boolean  @default(false)
+  metaKey     Boolean  @default(false)
+  appName     String?
+  windowTitle String?
+  createdAt   DateTime @default(now())
+
+  @@map("keystrokes")
+}
+
+model Session {
+  id        Int      @id @default(autoincrement())
+  startTime DateTime
+  endTime   DateTime?
+  duration  Int?     // milliseconds
+  createdAt DateTime @default(now())
+
+  @@map("sessions")
+}
+
+model TypingStats {
+  id           Int      @id @default(autoincrement())
+  date         DateTime
+  totalKeys    Int      @default(0)
+  wpm          Float?
+  accuracy     Float?
+  sessionTime  Int?     // milliseconds
+  createdAt    DateTime @default(now())
+
+  @@map("typing_stats")
+}
+
+model SystemMetric {
+  id          Int      @id @default(autoincrement())
+  cpuUsage    Float
+  memoryUsage Float
+  gpuUsage    Float?
+  timestamp   DateTime @default(now())
+  createdAt   DateTime @default(now())
+
+  @@map("system_metrics")
+}
+
+// 사용자 설정 모델
+model UserSetting {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  value     String   // JSON 형식으로 저장
+  updatedAt DateTime @updatedAt
+
+  @@map("user_settings")
+}
+
+// 타이핑 로그 모델 (Loop 3 호환)
+model TypingLog {
+  id          Int      @id @default(autoincrement())
+  content     String?  // 타이핑한 내용
+  keyCount    Int
+  typingTime  Int      // 밀리초 단위
+  wpm         Float?
+  accuracy    Float
+  appName     String?
+  windowTitle String?
+  url         String?
+  timestamp   DateTime @default(now())
+  date        String   // YYYY-MM-DD 형식, 날짜별 조회용
+  userId      String?  // 향후 다중 사용자 지원 시 사용
+  totalChars  Int?     // 총 문자 수
+
+  @@map("typing_logs")
+}
+
+// 메모리 로그 모델 (시스템 모니터링용)
+model MemoryLog {
+  id           Int      @id @default(autoincrement())
+  total        Int      // 총 메모리 (바이트)
+  used         Int      // 사용된 메모리 (바이트)
+  available    Int      // 사용 가능한 메모리 (바이트)
+  percentage   Float    // 사용률 (%)
+  timestamp    DateTime @default(now())
+  processName  String?  // 프로세스명
+  pid          Int?     // 프로세스 ID
+
+  @@map("memory_logs")
+}
+
+// CPU 로그 모델 (시스템 모니터링용)
+model CpuLog {
+  id          Int      @id @default(autoincrement())
+  usage       Float    // CPU 사용률 (%)
+  cores       Int?     // 코어 수
+  temperature Float?   // 온도 (섭씨)
+  timestamp   DateTime @default(now())
+  processName String?  // 프로세스명
+  pid         Int?     // 프로세스 ID
+
+  @@map("cpu_logs")
+}

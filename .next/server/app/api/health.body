@@ -1,0 +1,1 @@
+{"status":"ok","timestamp":"2025-06-10T00:59:07.244Z","uptime":0.242035084,"environment":"production","port":"5500","pid":63641,"memory":{"rss":103530496,"heapTotal":41369600,"heapUsed":26159080,"external":3423822,"arrayBuffers":87832},"version":"v22.16.0"}

@@ -1,0 +1,134 @@
+/**
+ * Electron 앱 전용 스타일시트
+ * Next.js+Electron 환경에서 특정 CSS 요구사항을 처리하기 위한 글로벌 스타일
+ */
+
+/* 앱 환경에서 스크롤바 사용자 정의 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* 드래그 영역 스타일 */
+.titlebar {
+  -webkit-app-region: drag;
+  user-select: none;
+}
+
+.titlebar button,
+.titlebar input,
+.titlebar select,
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+
+/* 앱 특정 컴포넌트 스타일 */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  z-index: 50;
+  background-color: var(--header-bg);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  -webkit-app-region: drag;
+}
+
+.app-logo {
+  height: 30px;
+  width: auto;
+}
+
+.app-container {
+  padding-top: 60px; /* 헤더 높이만큼 상단 여백 설정 */
+  height: 100vh;
+  overflow-y: auto;
+}
+
+/* 타이핑 통계 표시 영역 */
+.stats-panel {
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.stats-panel h3 {
+  margin-top: 0;
+  color: var(--text-color);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.stats-item {
+  background-color: var(--background-color);
+  border-radius: 6px;
+  padding: 12px;
+  text-align: center;
+}
+
+.stats-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.stats-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* 다크모드 특정 스타일 */
+.dark-mode .app-header,
+html.dark-mode .app-header,
+body.dark-mode .app-header,
+[data-theme="dark"] .app-header {
+  background-color: #1e1e1e;
+  border-color: #333;
+}
+
+/* 메뉴 스타일링 */
+.app-menu {
+  display: flex;
+  gap: 16px;
+  margin-left: 20px;
+}
+
+.app-menu-item {
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+}
+
+.app-menu-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dark-mode .app-menu-item:hover,
+html.dark-mode .app-menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}

@@ -1,0 +1,57 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES2020",
+    "outDir": "./dist/main",
+    "rootDir": "./src",
+    "noEmit": false,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "useDefineForClassFields": false,
+    "strict": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/app/*": ["./src/app/*"],
+      "@/components/*": ["./src/app/components/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/utils/*": ["./src/app/utils/*"],
+      "@/hooks/*": ["./src/app/hooks/*"],
+      "@/types/*": ["./src/types/*"],
+      "@/main/*": ["./src/main/*"],
+      "@/preload/*": ["./src/preload/*"],
+      "@/shared/*": ["./src/shared/*"]
+    },
+    "types": [
+      "node",
+      "electron"
+    ]
+  },
+  "ts-node": {
+    "esm": false,
+    "transpileOnly": true,
+    "compilerOptions": {
+      "module": "commonjs",
+      "target": "ES2020",
+      "allowSyntheticDefaultImports": true,
+      "esModuleInterop": true
+    }
+  },
+  "include": [
+    "src/main/**/*",
+    "src/preload/**/*",
+    "src/shared/**/*",
+    "src/types/**/*"
+  ],
+  "exclude": [
+    "src/app",
+    "node_modules",
+    "dist"
+  ]
+}

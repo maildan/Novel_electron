@@ -1,0 +1,3 @@
+{"timestamp":"2025-06-09T00:15:00.000Z","type":"debug","category":"ui-fix","data":{"action":"window-display-fix","details":"DevTools를 별도 창으로 열기 및 윈도우 표시 로직 강화","changes":["openDevTools mode detach","did-finish-load fallback","enhanced logging"]}}
+{"timestamp":"2025-06-09T00:15:01.000Z","type":"system","category":"copilot-chat","data":{"message":"좋아","response":"UI 표시 문제를 해결하기 위해 window.ts를 수정했습니다","context":"Next.js 서버는 정상이지만 Electron UI가 표시되지 않는 문제"}}
+{"timestamp":"2025-06-09T00:15:02.000Z","type":"analysis","category":"problem-solving","data":{"issue":"electron-ui-not-visible","potential_causes":["window ready event timing","url loading failure","security settings"],"solutions_applied":["detached devtools","fallback display logic","enhanced logging"]}}

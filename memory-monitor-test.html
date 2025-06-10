@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메모리 모니터링 테스트</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .test-section h3 {
+            color: #333;
+            margin-top: 0;
+        }
+        button {
+            background-color: #007cba;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #005a87;
+        }
+        .result {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .success {
+            color: #28a745;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .info {
+            color: #17a2b8;
+        }
+        .memory-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .memory-item {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .memory-item h4 {
+            margin: 0 0 10px 0;
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 메모리 모니터링 시스템 테스트</h1>
+        <p>이 페이지는 Electron 애플리케이션의 메모리 모니터링 기능을 테스트합니다.</p>
+
+        <div class="test-section">
+            <h3>1. ElectronAPI 확인</h3>
+            <button onclick="checkElectronAPI()">ElectronAPI 상태 확인</button>
+            <div id="api-result" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>2. 메모리 정보 조회</h3>
+            <button onclick="getMemoryInfo()">메모리 정보 가져오기</button>
+            <button onclick="startMemoryMonitoring()">실시간 모니터링 시작</button>
+            <button onclick="stopMemoryMonitoring()">모니터링 중지</button>
+            <div id="memory-result" class="result"></div>
+            <div id="memory-stats" class="memory-stats"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>3. 메모리 최적화</h3>
+            <button onclick="optimizeMemory()">메모리 최적화 실행</button>
+            <div id="optimize-result" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>4. 네이티브 모듈 상태</h3>
+            <button onclick="getNativeStatus()">네이티브 모듈 상태 확인</button>
+            <div id="native-result" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        let monitoringInterval = null;
+
+        function log(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : 'info';
+            element.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+            element.scrollTop = element.scrollHeight;
+        }
+
+        function clear(elementId) {
+            document.getElementById(elementId).innerHTML = '';
+        }
+
+        async function checkElectronAPI() {
+            clear('api-result');
+            
+            if (typeof window === 'undefined') {
+                log('api-result', 'ERROR: window 객체가 없습니다', 'error');
+                return;
+            }
+
+            if (!window.electronAPI) {
+                log('api-result', 'ERROR: window.electronAPI가 없습니다', 'error');
+                return;
+            }
+
+            log('api-result', '✅ window.electronAPI 사용 가능', 'success');
+            
+            // API 메서드 확인
+            const methods = ['system', 'memory', 'native'];
+            for (const method of methods) {
+                if (window.electronAPI[method]) {
+                    log('api-result', `✅ electronAPI.${method} 사용 가능`, 'success');
+                } else {
+                    log('api-result', `❌ electronAPI.${method} 없음`, 'error');
+                }
+            }
+
+            // 메모리 관련 메서드 상세 확인
+            if (window.electronAPI.memory) {
+                const memoryMethods = ['getInfo', 'optimize', 'cleanup'];
+                for (const method of memoryMethods) {
+                    if (window.electronAPI.memory[method]) {
+                        log('api-result', `✅ electronAPI.memory.${method} 사용 가능`, 'success');
+                    } else {
+                        log('api-result', `❌ electronAPI.memory.${method} 없음`, 'error');
+                    }
+                }
+            }
+        }
+
+        async function getMemoryInfo() {
+            clear('memory-result');
+            clear('memory-stats');
+            
+            try {
+                log('memory-result', '메모리 정보 요청 중...', 'info');
+                
+                if (!window.electronAPI || !window.electronAPI.memory) {
+                    throw new Error('ElectronAPI 또는 memory API를 사용할 수 없습니다');
+                }
+
+                const result = await window.electronAPI.memory.getInfo();
+                
+                if (result.success) {
+                    log('memory-result', '✅ 메모리 정보 조회 성공', 'success');
+                    log('memory-result', JSON.stringify(result.data, null, 2), 'info');
+                    
+                    // 메모리 통계 시각화
+                    displayMemoryStats(result.data);
+                } else {
+                    log('memory-result', `❌ 메모리 정보 조회 실패: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                log('memory-result', `❌ 오류 발생: ${error.message}`, 'error');
+                console.error('Memory info error:', error);
+            }
+        }
+
+        function displayMemoryStats(data) {
+            const statsContainer = document.getElementById('memory-stats');
+            
+            const items = [
+                { title: 'Main Process', data: data.main },
+                { title: 'Renderer Process', data: data.renderer },
+                { title: 'System Memory', data: data.system }
+            ];
+
+            if (data.gpu) {
+                items.push({ title: 'GPU Memory', data: data.gpu });
+            }
+
+            statsContainer.innerHTML = items.map(item => `
+                <div class="memory-item">
+                    <h4>${item.title}</h4>
+                    <div>Used: ${item.data.used}MB</div>
+                    <div>Total: ${item.data.total}MB</div>
+                    <div>Free: ${item.data.free}MB</div>
+                    <div>Usage: ${item.data.percentage.toFixed(1)}%</div>
+                </div>
+            `).join('');
+        }
+
+        async function optimizeMemory() {
+            clear('optimize-result');
+            
+            try {
+                log('optimize-result', '메모리 최적화 시작...', 'info');
+                
+                const result = await window.electronAPI.memory.optimize();
+                
+                if (result.success) {
+                    log('optimize-result', '✅ 메모리 최적화 완료', 'success');
+                    log('optimize-result', result.message, 'info');
+                } else {
+                    log('optimize-result', `❌ 메모리 최적화 실패: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                log('optimize-result', `❌ 오류 발생: ${error.message}`, 'error');
+                console.error('Memory optimize error:', error);
+            }
+        }
+
+        async function getNativeStatus() {
+            clear('native-result');
+            
+            try {
+                log('native-result', '네이티브 모듈 상태 확인 중...', 'info');
+                
+                const result = await window.electronAPI.system.native.getStatus();
+                
+                if (result.success) {
+                    log('native-result', '✅ 네이티브 모듈 상태 조회 성공', 'success');
+                    log('native-result', JSON.stringify(result.data, null, 2), 'info');
+                } else {
+                    log('native-result', `❌ 네이티브 모듈 상태 조회 실패: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                log('native-result', `❌ 오류 발생: ${error.message}`, 'error');
+                console.error('Native status error:', error);
+            }
+        }
+
+        function startMemoryMonitoring() {
+            if (monitoringInterval) {
+                log('memory-result', '이미 모니터링이 실행 중입니다', 'info');
+                return;
+            }
+
+            log('memory-result', '🔄 실시간 메모리 모니터링 시작', 'success');
+            
+            monitoringInterval = setInterval(async () => {
+                try {
+                    const result = await window.electronAPI.memory.getInfo();
+                    if (result.success) {
+                        displayMemoryStats(result.data);
+                    }
+                } catch (error) {
+                    console.error('Monitoring error:', error);
+                }
+            }, 2000); // 2초마다 업데이트
+        }
+
+        function stopMemoryMonitoring() {
+            if (monitoringInterval) {
+                clearInterval(monitoringInterval);
+                monitoringInterval = null;
+                log('memory-result', '⏹️ 실시간 모니터링 중지', 'info');
+            }
+        }
+
+        // 페이지 로드 시 자동으로 API 상태 확인
+        window.addEventListener('load', () => {
+            setTimeout(checkElectronAPI, 1000);
+        });
+    </script>
+</body>
+</html>
