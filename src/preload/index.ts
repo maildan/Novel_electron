@@ -364,7 +364,24 @@ export type ElectronAPI = typeof electronAPI
 // Context Bridge를 통해 API 노출
 try {
   contextBridge.exposeInMainWorld('electronAPI', electronAPI)
-  console.log('✅ Preload script: electronAPI 노출 성공')
+  
+  // 디버깅을 위해 실제 노출된 키들 확인
+  const exposedKeys = Object.keys(electronAPI);
+  console.log('✅ Electron API가 성공적으로 노출되었습니다.');
+  console.log('🔌 사용 가능한 API:', exposedKeys);
+  
+  // native API가 포함되었는지 확인
+  if (electronAPI.native) {
+    console.log('✅ Native API가 최상위 레벨에서 사용 가능합니다.');
+    console.log('🛠️ Native API 함수들:', Object.keys(electronAPI.native));
+  } else {
+    console.warn('⚠️ Native API가 최상위 레벨에서 누락되었습니다.');
+  }
+  
+  // system.native도 확인
+  if (electronAPI.system?.native) {
+    console.log('✅ System.Native API도 사용 가능합니다.');
+  }
   
   // CSS 스타일 주입 함수 추가
   contextBridge.exposeInMainWorld('injectStyles', () => {

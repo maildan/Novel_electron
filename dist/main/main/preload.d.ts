@@ -85,6 +85,45 @@ declare const electronAPI: {
         getLocale: () => Promise<any>;
         focus: () => Promise<any>;
     };
+    native: {
+        getMemoryUsage: () => Promise<any>;
+        startMemoryMonitoring: () => Promise<any>;
+        getMemoryStats: () => Promise<any>;
+        optimizeMemory: () => Promise<any>;
+        cleanupMemory: () => Promise<any>;
+        optimizeMemoryAdvanced: () => Promise<any>;
+        resetMemoryMonitoring: () => Promise<any>;
+        getGpuInfo: () => Promise<any>;
+        getGpuMemoryStats: () => Promise<any>;
+        runGpuAcceleration: (data: string) => Promise<any>;
+        runGpuBenchmark: () => Promise<any>;
+        getSystemInfo: () => Promise<any>;
+        isNativeModuleAvailable: () => Promise<any>;
+        getNativeModuleInfo: () => Promise<any>;
+        getNativeModuleVersion: () => Promise<any>;
+        initializeNativeModules: () => Promise<any>;
+        cleanupNativeModules: () => Promise<any>;
+        getTimestamp: () => Promise<any>;
+        addWorkerTask: (taskData: string) => Promise<any>;
+        getWorkerTaskStatus: (taskId: string) => Promise<any>;
+        getWorkerStats: () => Promise<any>;
+        getPendingTaskCount: () => Promise<any>;
+        resetWorkerPool: () => Promise<any>;
+        executeCpuTask: (taskData: string) => Promise<any>;
+        processDataParallel: (data: string) => Promise<any>;
+        calculateFileHash: (filePath: string) => Promise<any>;
+        calculateDirectorySize: (dirPath: string) => Promise<any>;
+        calculateStringSimilarity: (str1: string, str2: string) => Promise<any>;
+        validateJson: (jsonStr: string) => Promise<any>;
+        encodeBase64: (data: string) => Promise<any>;
+        decodeBase64: (encodedData: string) => Promise<any>;
+        generateUuid: () => Promise<any>;
+        getTimestampString: () => Promise<any>;
+        getEnvVar: (name: string) => Promise<any>;
+        getProcessId: () => Promise<any>;
+        startPerformanceMeasurement: (label: string) => Promise<any>;
+        endPerformanceMeasurement: (measurementId: string) => Promise<any>;
+    };
     debug: {
         getProcessInfo: () => {
             versions: NodeJS.ProcessVersions;

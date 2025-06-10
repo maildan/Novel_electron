@@ -7,6 +7,56 @@
 
 import { contextBridge, ipcRenderer } from 'electron';
 
+// 네이티브 모듈 API
+const nativeAPI = {
+  // 메모리 관련
+  getMemoryUsage: () => ipcRenderer.invoke('native:getMemoryUsage'),
+  startMemoryMonitoring: () => ipcRenderer.invoke('native:startMemoryMonitoring'),
+  getMemoryStats: () => ipcRenderer.invoke('native:getMemoryStats'),
+  optimizeMemory: () => ipcRenderer.invoke('native:optimizeMemory'),
+  cleanupMemory: () => ipcRenderer.invoke('native:cleanupMemory'),
+  optimizeMemoryAdvanced: () => ipcRenderer.invoke('native:optimizeMemoryAdvanced'),
+  resetMemoryMonitoring: () => ipcRenderer.invoke('native:resetMemoryMonitoring'),
+  
+  // GPU 관련
+  getGpuInfo: () => ipcRenderer.invoke('native:getGpuInfo'),
+  getGpuMemoryStats: () => ipcRenderer.invoke('native:getGpuMemoryStats'),
+  runGpuAcceleration: (data: string) => ipcRenderer.invoke('native:runGpuAcceleration', data),
+  runGpuBenchmark: () => ipcRenderer.invoke('native:runGpuBenchmark'),
+  
+  // 시스템 관련
+  getSystemInfo: () => ipcRenderer.invoke('native:getSystemInfo'),
+  isNativeModuleAvailable: () => ipcRenderer.invoke('native:isNativeModuleAvailable'),
+  getNativeModuleInfo: () => ipcRenderer.invoke('native:getNativeModuleInfo'),
+  getNativeModuleVersion: () => ipcRenderer.invoke('native:getNativeModuleVersion'),
+  initializeNativeModules: () => ipcRenderer.invoke('native:initializeNativeModules'),
+  cleanupNativeModules: () => ipcRenderer.invoke('native:cleanupNativeModules'),
+  getTimestamp: () => ipcRenderer.invoke('native:getTimestamp'),
+  
+  // 워커 관련
+  addWorkerTask: (taskData: string) => ipcRenderer.invoke('native:addWorkerTask', taskData),
+  getWorkerTaskStatus: (taskId: string) => ipcRenderer.invoke('native:getWorkerTaskStatus', taskId),
+  getWorkerStats: () => ipcRenderer.invoke('native:getWorkerStats'),
+  getPendingTaskCount: () => ipcRenderer.invoke('native:getPendingTaskCount'),
+  resetWorkerPool: () => ipcRenderer.invoke('native:resetWorkerPool'),
+  executeCpuTask: (taskData: string) => ipcRenderer.invoke('native:executeCpuTask', taskData),
+  processDataParallel: (data: string) => ipcRenderer.invoke('native:processDataParallel', data),
+  
+  // 유틸리티 관련
+  calculateFileHash: (filePath: string) => ipcRenderer.invoke('native:calculateFileHash', filePath),
+  calculateDirectorySize: (dirPath: string) => ipcRenderer.invoke('native:calculateDirectorySize', dirPath),
+  calculateStringSimilarity: (str1: string, str2: string) => ipcRenderer.invoke('native:calculateStringSimilarity', str1, str2),
+  validateJson: (jsonStr: string) => ipcRenderer.invoke('native:validateJson', jsonStr),
+  encodeBase64: (data: string) => ipcRenderer.invoke('native:encodeBase64', data),
+  decodeBase64: (encodedData: string) => ipcRenderer.invoke('native:decodeBase64', encodedData),
+  generateUuid: () => ipcRenderer.invoke('native:generateUuid'),
+  getTimestampString: () => ipcRenderer.invoke('native:getTimestampString'),
+  getEnvVar: (name: string) => ipcRenderer.invoke('native:getEnvVar', name),
+  getProcessId: () => ipcRenderer.invoke('native:getProcessId'),
+  startPerformanceMeasurement: (label: string) => ipcRenderer.invoke('native:startPerformanceMeasurement', label),
+  endPerformanceMeasurement: (measurementId: string) => ipcRenderer.invoke('native:endPerformanceMeasurement', measurementId),
+};
+
 // 시스템 API
 const systemAPI = {
   getInfo: () => ipcRenderer.invoke('system:getInfo'),
@@ -155,6 +205,7 @@ const electronAPI = {
   settings: settingsAPI,
   window: windowAPI,
   app: appAPI,
+  native: nativeAPI,
   
   // 디버깅 정보
   debug: {

@@ -67,149 +67,240 @@ export default function NativeModuleStatus() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const setBrowserFallback = () => {
+    setModuleInfo({
+      uiohook: {
+        available: false,
+        version: '브라우저 환경',
+        initialized: false,
+        loadError: '브라우저 환경에서는 네이티브 모듈을 사용할 수 없습니다',
+        fallbackMode: true,
+        features: {
+          keyboardHook: false,
+          mouseHook: false,
+          globalEvents: false
+        }
+      },
+      system: {
+        platform: navigator.platform,
+        arch: '브라우저',
+        node: '브라우저 환경',
+        electron: '브라우저 환경',
+        chrome: navigator.userAgent,
+        hostname: 'localhost',
+        uptime: 0,
+        cpuCount: navigator.hardwareConcurrency || 1,
+        cpuModel: '알 수 없음',
+        loadAverage: { '1min': 0, '5min': 0, '15min': 0 },
+        memory: { total: 0, free: 0, used: 0, percentage: 0 }
+      },
+      permissions: {
+        accessibility: false,
+        input: false,
+        screenRecording: null,
+        microphone: null,
+        camera: null
+      },
+      performance: {
+        processUptime: 0,
+        memoryUsage: { rss: 0, heapTotal: 0, heapUsed: 0, external: 0, arrayBuffers: 0 },
+        resourceUsage: null,
+        pid: 0,
+        ppid: null
+      },
+      environment: {
+        nodeEnv: 'browser',
+        isDev: false,
+        userAgent: navigator.userAgent,
+        workingDirectory: '브라우저 환경'
+      }
+    });
+  };
+
   useEffect(() => {
     const fetchStatus = async () => {
       try {
         setLoading(true);
+        setError(null);
         
-        // Electron API를 통해 네이티브 모듈 상태 조회
-        if (typeof window !== 'undefined' && window.electronAPI) {
-          const status = await window.electronAPI.system.native.getStatus();
-          
-          // 추가로 네이티브 모듈 API 직접 호출해서 실제 동작 확인
-          try {
-            const nativeVersionResult = await window.electronAPI.native.getNativeModuleVersion();
-            const nativeInfoResult = await window.electronAPI.native.getNativeModuleInfo();
-            const isAvailableResult = await window.electronAPI.native.isNativeModuleAvailable();
-            
-            console.log('🔧 Direct native module test:', {
-              version: nativeVersionResult,
-              info: nativeInfoResult,
-              available: isAvailableResult
-            });
+        console.log('🔧 Native Module Status: 상태 조회 시작');
+        
+        // 더 세밀한 Electron API 확인
+        if (typeof window === 'undefined') {
+          console.warn('❌ Window 객체가 없음 - 서버 사이드 렌더링 중일 수 있음');
+          setBrowserFallback();
+          return;
+        }
 
-            // 각 API 응답의 상세 내용 로깅
-            console.log('📊 상세 API 응답 분석:', {
-              systemStatus: status,
-              versionData: nativeVersionResult?.data,
-              infoData: nativeInfoResult?.data,
-              availableData: isAvailableResult?.data
-            });
-            
-            // 직접 호출한 결과로 상태 업데이트
-            if (nativeVersionResult.success || nativeInfoResult.success || isAvailableResult.success) {
-              const isAvailable = isAvailableResult.success ? isAvailableResult.data : false;
-              const version = nativeVersionResult.success ? nativeVersionResult.data : 'unknown';
-              const hasError = nativeVersionResult.error || nativeInfoResult.error || null;
-              
-              const moduleData: NativeModuleInfo = {
-                uiohook: {
-                  available: Boolean(isAvailable),
-                  version: String(version),
-                  initialized: Boolean(isAvailable),
-                  loadError: hasError,
-                  fallbackMode: !Boolean(isAvailable),
-                  features: {
-                    keyboardHook: Boolean(isAvailable),
-                    mouseHook: Boolean(isAvailable),
-                    globalEvents: Boolean(isAvailable)
-                  }
-                },
-                // 기존 system 정보는 유지하되 네이티브 모듈 정보로 보강
-                system: status.data?.system || {
-                  platform: navigator.platform,
-                  arch: 'unknown',
-                  node: 'N/A',
-                  electron: 'N/A',
-                  chrome: navigator.userAgent
-                },
-                permissions: status.data?.permissions || {
-                  accessibility: false,
-                  input: false
-                }
-              };
-              setModuleInfo(moduleData);
-            } else if (status.success) {
-              setModuleInfo(status.data);
+        // Electron API가 로드될 때까지 잠깐 대기 (최대 3초)
+        let electronAPI = window.electronAPI;
+        let waitAttempts = 0;
+        const maxWaitAttempts = 30; // 3초 (100ms * 30)
+        
+        while (!electronAPI && waitAttempts < maxWaitAttempts) {
+          console.log(`⏳ Electron API 로드 대기 중... (${waitAttempts + 1}/${maxWaitAttempts})`);
+          await new Promise(resolve => setTimeout(resolve, 100));
+          electronAPI = window.electronAPI;
+          waitAttempts++;
+        }
+
+        if (!electronAPI) {
+          console.warn('❌ window.electronAPI가 없음 - 브라우저 환경이거나 preload 스크립트 로드 실패');
+          setBrowserFallback();
+          return;
+        }
+
+        console.log('✅ Electron API 발견됨, 최상위 키들:', Object.keys(electronAPI));
+
+        // Native API 그룹 확인 (최상위 native 모듈 확인)
+        let nativeAPI: any = null;
+        let nativeAPIPath = '';
+        
+        if (electronAPI.native) {
+          nativeAPI = electronAPI.native;
+          nativeAPIPath = 'window.electronAPI.native';
+          console.log('✅ 최상위 Native API 발견됨');
+        } else if (electronAPI.system?.native) {
+          nativeAPI = electronAPI.system.native;
+          nativeAPIPath = 'window.electronAPI.system.native';
+          console.log('✅ System.Native API 발견됨');
+        } else {
+          console.warn('❌ Native API를 찾을 수 없음 - 최상위와 system 하위 모두 확인했지만 없음');
+          setBrowserFallback();
+          return;
+        }
+
+        console.log(`✅ Native API 사용 경로: ${nativeAPIPath}`);
+        console.log('✅ Native API 함수들:', Object.keys(nativeAPI));
+
+        // 안전한 함수 호출을 위한 헬퍼 함수
+        const safeCall = async (funcName: string, ...args: any[]) => {
+          try {
+            if (typeof nativeAPI[funcName] === 'function') {
+              return await nativeAPI[funcName](...args);
             } else {
-              setError(status.error || '네이티브 모듈 상태 조회 실패');
+              console.warn(`⚠️ ${funcName} 함수가 없음 - 타입:`, typeof nativeAPI[funcName]);
+              return null;
             }
-          } catch (nativeError) {
-            console.warn('Direct native module call failed:', nativeError);
-            // 폴백으로 기존 상태 사용
-            if (status.success) {
-              setModuleInfo(status.data);
-            } else {
-              setError(status.error || '네이티브 모듈 상태 조회 실패');
+          } catch (error) {
+            console.error(`❌ ${funcName} 호출 실패:`, error);
+            return null;
+          }
+        };
+
+        console.log('✅ 안전한 함수 호출 시스템 준비됨');
+        
+        // 네이티브 모듈 정보 조회
+        let nativeInfo = null;
+        try {
+          console.log('🔧 네이티브 모듈 정보 조회 중...');
+          
+          // 네이티브 모듈 사용 가능 여부
+          const availableResult = await safeCall('isNativeModuleAvailable');
+          console.log('🔍 네이티브 모듈 사용 가능 여부:', availableResult);
+          
+          // 네이티브 모듈 버전
+          const versionResult = await safeCall('getNativeModuleVersion');
+          console.log('📋 네이티브 모듈 버전:', versionResult);
+
+          // 네이티브 모듈 상세 정보
+          const infoResult = await safeCall('getNativeModuleInfo');
+          console.log('📄 네이티브 모듈 상세 정보:', infoResult);
+          
+          nativeInfo = {
+            available: availableResult?.success ? Boolean(availableResult.data) : false,
+            version: versionResult?.success ? String(versionResult.data || '알 수 없음') : '알 수 없음',
+            info: infoResult?.success ? infoResult.data : null,
+            errors: [
+              availableResult?.error,
+              versionResult?.error, 
+              infoResult?.error
+            ].filter(Boolean)
+          };
+          
+        } catch (nativeError) {
+          console.error('❌ 네이티브 모듈 정보 조회 실패:', nativeError);
+          nativeInfo = {
+            available: false,
+            version: '오류',
+            info: null,
+            errors: [String(nativeError)]
+          };
+        }
+
+        // 시스템 정보 조회 - 더 안전하게
+        const systemInfo = {
+          platform: typeof navigator !== 'undefined' ? navigator.platform : '알 수 없음',
+          arch: '알 수 없음',
+          node: '알 수 없음',
+          electron: '알 수 없음',
+          chrome: typeof navigator !== 'undefined' ? navigator.userAgent : '알 수 없음',
+          hostname: 'localhost',
+          uptime: 0,
+          cpuCount: typeof navigator !== 'undefined' ? (navigator.hardwareConcurrency || 1) : 1,
+          cpuModel: '알 수 없음',
+          loadAverage: { '1min': 0, '5min': 0, '15min': 0 },
+          memory: { total: 0, free: 0, used: 0, percentage: 0 }
+        };
+
+        // 시스템 정보 API 호출 시도 (존재하는 경우만)
+        try {
+          if (electronAPI?.system?.getInfo && typeof electronAPI.system.getInfo === 'function') {
+            const sysInfoResult = await electronAPI.system.getInfo();
+            if (sysInfoResult?.success && sysInfoResult.data) {
+              console.log('✅ 시스템 정보 조회 성공:', sysInfoResult.data);
+              Object.assign(systemInfo, sysInfoResult.data);
             }
           }
-        } else {
-          // 브라우저 환경에서는 폴백 데이터 사용
-          setModuleInfo({
-            uiohook: {
-              available: false,
-              version: '0.0.0',
-              initialized: false,
-              loadError: '브라우저 환경에서는 네이티브 모듈을 사용할 수 없습니다',
-              fallbackMode: true,
-              features: {
-                keyboardHook: false,
-                mouseHook: false,
-                globalEvents: false
-              }
-            },
-            system: {
-              platform: navigator.platform,
-              arch: 'unknown',
-              node: 'N/A',
-              electron: 'N/A',
-              chrome: navigator.userAgent,
-              hostname: 'localhost',
-              uptime: 0,
-              cpuCount: navigator.hardwareConcurrency || 1,
-              cpuModel: 'Unknown',
-              loadAverage: {
-                '1min': 0,
-                '5min': 0,
-                '15min': 0
-              },
-              memory: {
-                total: 0,
-                free: 0,
-                used: 0,
-                percentage: 0
-              }
-            },
-            permissions: {
-              accessibility: false,
-              input: false,
-              screenRecording: null,
-              microphone: null,
-              camera: null
-            },
-            performance: {
-              processUptime: 0,
-              memoryUsage: {
-                rss: 0,
-                heapTotal: 0,
-                heapUsed: 0,
-                external: 0,
-                arrayBuffers: 0
-              },
-              resourceUsage: null,
-              pid: 0,
-              ppid: null
-            },
-            environment: {
-              nodeEnv: 'browser',
-              isDev: false,
-              userAgent: navigator.userAgent,
-              workingDirectory: 'N/A'
-            }
-          });
+        } catch (sysError) {
+          console.warn('⚠️ 시스템 정보 조회 실패:', sysError);
         }
+
+        // 권한 정보 (기본값)
+        const permissionInfo = {
+          accessibility: false,
+          input: false,
+          screenRecording: null,
+          microphone: null,
+          camera: null
+        };
+
+        // 종합 데이터 구성
+        const moduleData: NativeModuleInfo = {
+          uiohook: {
+            available: nativeInfo?.available || false,
+            version: nativeInfo?.version || '알 수 없음',
+            initialized: nativeInfo?.available || false,
+            loadError: nativeInfo?.errors?.join(', ') || null,
+            fallbackMode: !nativeInfo?.available,
+            features: {
+              keyboardHook: nativeInfo?.available || false,
+              mouseHook: nativeInfo?.available || false,
+              globalEvents: nativeInfo?.available || false
+            }
+          },
+          system: systemInfo,
+          permissions: permissionInfo,
+          performance: {
+            processUptime: 0,
+            memoryUsage: { rss: 0, heapTotal: 0, heapUsed: 0, external: 0, arrayBuffers: 0 },
+            resourceUsage: null,
+            pid: 0,
+            ppid: null
+          },
+          environment: {
+            nodeEnv: 'unknown',
+            isDev: false,
+            userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '알 수 없음',
+            workingDirectory: '알 수 없음'
+          }
+        };
+
+        console.log('✅ 최종 모듈 정보:', moduleData);
+        setModuleInfo(moduleData);
+        
       } catch (err) {
-        console.error('네이티브 모듈 상태 확인 오류:', err);
+        console.error('❌ 네이티브 모듈 상태 확인 오류:', err);
         setError(err instanceof Error ? err.message : '알 수 없는 오류');
       } finally {
         setLoading(false);
