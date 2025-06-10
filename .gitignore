@@ -11,3 +11,12 @@
 
 #!.yarn/cache
 .pnp.*
+/env
+/typing-stats-native.darwin-arm64.node
+/typing-stats-native.darwin-arm64.node.backup
+/typing-stats-native.darwin-arm64.node.backup.1749513252626
+/typing-stats-native.darwin-arm64.node.backup.1749513274146
+typing-stats-native.darwin-arm64.node.backup.1749517440419
+/src/generated/prisma
+node_modules
+node_modules
