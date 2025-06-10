@@ -84,5 +84,7 @@ Here’s the final, fully translated and tailored **`cursor_GUIDE.md`** for your
 25. **지속 업그레이드**: 위 규칙을 지속적으로 개선하여 Novel 앱의 완전한 AI 에이전트화 목표 달성.
 
 **추가 자료**
-1. loop_3 디렉토리 구성 및 분석 loop-project-analysis-v2.md
-2. loop_3 추가 자료 loop_3/docs 
+1. loop_6 디렉토리 구성 및 분석 project-final-status-report-2025-01-26.md
+
+2. NATIVE_MODULE_FIXING_SESSION.md
+3. loop_6 추가 자료 SESSION_DATA_ARCHIVE.md

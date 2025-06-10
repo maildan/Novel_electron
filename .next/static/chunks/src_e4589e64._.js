@@ -2665,138 +2665,252 @@ function NativeModuleStatus() {
     const [moduleInfo, setModuleInfo] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
     const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const setBrowserFallback = ()=>{
+        setModuleInfo({
+            uiohook: {
+                available: false,
+                version: '브라우저 환경',
+                initialized: false,
+                loadError: '브라우저 환경에서는 네이티브 모듈을 사용할 수 없습니다',
+                fallbackMode: true,
+                features: {
+                    keyboardHook: false,
+                    mouseHook: false,
+                    globalEvents: false
+                }
+            },
+            system: {
+                platform: navigator.platform,
+                arch: '브라우저',
+                node: '브라우저 환경',
+                electron: '브라우저 환경',
+                chrome: navigator.userAgent,
+                hostname: 'localhost',
+                uptime: 0,
+                cpuCount: navigator.hardwareConcurrency || 1,
+                cpuModel: '알 수 없음',
+                loadAverage: {
+                    '1min': 0,
+                    '5min': 0,
+                    '15min': 0
+                },
+                memory: {
+                    total: 0,
+                    free: 0,
+                    used: 0,
+                    percentage: 0
+                }
+            },
+            permissions: {
+                accessibility: false,
+                input: false,
+                screenRecording: null,
+                microphone: null,
+                camera: null
+            },
+            performance: {
+                processUptime: 0,
+                memoryUsage: {
+                    rss: 0,
+                    heapTotal: 0,
+                    heapUsed: 0,
+                    external: 0,
+                    arrayBuffers: 0
+                },
+                resourceUsage: null,
+                pid: 0,
+                ppid: null
+            },
+            environment: {
+                nodeEnv: 'browser',
+                isDev: false,
+                userAgent: navigator.userAgent,
+                workingDirectory: '브라우저 환경'
+            }
+        });
+    };
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "NativeModuleStatus.useEffect": ()=>{
             const fetchStatus = {
                 "NativeModuleStatus.useEffect.fetchStatus": async ()=>{
                     try {
                         setLoading(true);
-                        // Electron API를 통해 네이티브 모듈 상태 조회
-                        if ("object" !== 'undefined' && window.electronAPI) {
-                            const status = await window.electronAPI.system.native.getStatus();
-                            // 추가로 네이티브 모듈 API 직접 호출해서 실제 동작 확인
-                            try {
-                                const nativeVersionResult = await window.electronAPI.native.getNativeModuleVersion();
-                                const nativeInfoResult = await window.electronAPI.native.getNativeModuleInfo();
-                                const isAvailableResult = await window.electronAPI.native.isNativeModuleAvailable();
-                                console.log('🔧 Direct native module test:', {
-                                    version: nativeVersionResult,
-                                    info: nativeInfoResult,
-                                    available: isAvailableResult
-                                });
-                                // 직접 호출한 결과로 상태 업데이트
-                                if (nativeVersionResult.success || nativeInfoResult.success || isAvailableResult.success) {
-                                    const isAvailable = isAvailableResult.success ? isAvailableResult.data : false;
-                                    const version = nativeVersionResult.success ? nativeVersionResult.data : 'unknown';
-                                    const hasError = nativeVersionResult.error || nativeInfoResult.error || null;
-                                    const moduleData = {
-                                        uiohook: {
-                                            available: Boolean(isAvailable),
-                                            version: String(version),
-                                            initialized: Boolean(isAvailable),
-                                            loadError: hasError,
-                                            fallbackMode: !Boolean(isAvailable),
-                                            features: {
-                                                keyboardHook: Boolean(isAvailable),
-                                                mouseHook: Boolean(isAvailable),
-                                                globalEvents: Boolean(isAvailable)
-                                            }
-                                        },
-                                        // 기존 system 정보는 유지하되 네이티브 모듈 정보로 보강
-                                        system: status.data?.system || {
-                                            platform: navigator.platform,
-                                            arch: 'unknown',
-                                            node: 'N/A',
-                                            electron: 'N/A',
-                                            chrome: navigator.userAgent
-                                        },
-                                        permissions: status.data?.permissions || {
-                                            accessibility: false,
-                                            input: false
-                                        }
-                                    };
-                                    setModuleInfo(moduleData);
-                                } else if (status.success) {
-                                    setModuleInfo(status.data);
-                                } else {
-                                    setError(status.error || '네이티브 모듈 상태 조회 실패');
-                                }
-                            } catch (nativeError) {
-                                console.warn('Direct native module call failed:', nativeError);
-                                // 폴백으로 기존 상태 사용
-                                if (status.success) {
-                                    setModuleInfo(status.data);
-                                } else {
-                                    setError(status.error || '네이티브 모듈 상태 조회 실패');
+                        setError(null);
+                        console.log('🔧 Native Module Status: 상태 조회 시작');
+                        // 더 세밀한 Electron API 확인
+                        if ("TURBOPACK compile-time falsy", 0) {
+                            "TURBOPACK unreachable";
+                        }
+                        // Electron API가 로드될 때까지 잠깐 대기 (최대 3초)
+                        let electronAPI = window.electronAPI;
+                        let waitAttempts = 0;
+                        const maxWaitAttempts = 30; // 3초 (100ms * 30)
+                        while(!electronAPI && waitAttempts < maxWaitAttempts){
+                            console.log(`⏳ Electron API 로드 대기 중... (${waitAttempts + 1}/${maxWaitAttempts})`);
+                            await new Promise({
+                                "NativeModuleStatus.useEffect.fetchStatus": (resolve)=>setTimeout(resolve, 100)
+                            }["NativeModuleStatus.useEffect.fetchStatus"]);
+                            electronAPI = window.electronAPI;
+                            waitAttempts++;
+                        }
+                        if (!electronAPI) {
+                            console.warn('❌ window.electronAPI가 없음 - 브라우저 환경이거나 preload 스크립트 로드 실패');
+                            setBrowserFallback();
+                            return;
+                        }
+                        console.log('✅ Electron API 발견됨, 최상위 키들:', Object.keys(electronAPI));
+                        // Native API 그룹 확인 (최상위 native 모듈 확인)
+                        let nativeAPI = null;
+                        let nativeAPIPath = '';
+                        if (electronAPI.native) {
+                            nativeAPI = electronAPI.native;
+                            nativeAPIPath = 'window.electronAPI.native';
+                            console.log('✅ 최상위 Native API 발견됨');
+                        } else if (electronAPI.system?.native) {
+                            nativeAPI = electronAPI.system.native;
+                            nativeAPIPath = 'window.electronAPI.system.native';
+                            console.log('✅ System.Native API 발견됨');
+                        } else {
+                            console.warn('❌ Native API를 찾을 수 없음 - 최상위와 system 하위 모두 확인했지만 없음');
+                            setBrowserFallback();
+                            return;
+                        }
+                        console.log(`✅ Native API 사용 경로: ${nativeAPIPath}`);
+                        console.log('✅ Native API 함수들:', Object.keys(nativeAPI));
+                        // 안전한 함수 호출을 위한 헬퍼 함수
+                        const safeCall = {
+                            "NativeModuleStatus.useEffect.fetchStatus.safeCall": async (funcName, ...args)=>{
+                                try {
+                                    if (typeof nativeAPI[funcName] === 'function') {
+                                        return await nativeAPI[funcName](...args);
+                                    } else {
+                                        console.warn(`⚠️ ${funcName} 함수가 없음 - 타입:`, typeof nativeAPI[funcName]);
+                                        return null;
+                                    }
+                                } catch (error) {
+                                    console.error(`❌ ${funcName} 호출 실패:`, error);
+                                    return null;
                                 }
                             }
-                        } else {
-                            // 브라우저 환경에서는 폴백 데이터 사용
-                            setModuleInfo({
-                                uiohook: {
-                                    available: false,
-                                    version: '0.0.0',
-                                    initialized: false,
-                                    loadError: '브라우저 환경에서는 네이티브 모듈을 사용할 수 없습니다',
-                                    fallbackMode: true,
-                                    features: {
-                                        keyboardHook: false,
-                                        mouseHook: false,
-                                        globalEvents: false
-                                    }
-                                },
-                                system: {
-                                    platform: navigator.platform,
-                                    arch: 'unknown',
-                                    node: 'N/A',
-                                    electron: 'N/A',
-                                    chrome: navigator.userAgent,
-                                    hostname: 'localhost',
-                                    uptime: 0,
-                                    cpuCount: navigator.hardwareConcurrency || 1,
-                                    cpuModel: 'Unknown',
-                                    loadAverage: {
-                                        '1min': 0,
-                                        '5min': 0,
-                                        '15min': 0
-                                    },
-                                    memory: {
-                                        total: 0,
-                                        free: 0,
-                                        used: 0,
-                                        percentage: 0
-                                    }
-                                },
-                                permissions: {
-                                    accessibility: false,
-                                    input: false,
-                                    screenRecording: null,
-                                    microphone: null,
-                                    camera: null
-                                },
-                                performance: {
-                                    processUptime: 0,
-                                    memoryUsage: {
-                                        rss: 0,
-                                        heapTotal: 0,
-                                        heapUsed: 0,
-                                        external: 0,
-                                        arrayBuffers: 0
-                                    },
-                                    resourceUsage: null,
-                                    pid: 0,
-                                    ppid: null
-                                },
-                                environment: {
-                                    nodeEnv: 'browser',
-                                    isDev: false,
-                                    userAgent: navigator.userAgent,
-                                    workingDirectory: 'N/A'
-                                }
-                            });
+                        }["NativeModuleStatus.useEffect.fetchStatus.safeCall"];
+                        console.log('✅ 안전한 함수 호출 시스템 준비됨');
+                        // 네이티브 모듈 정보 조회
+                        let nativeInfo = null;
+                        try {
+                            console.log('🔧 네이티브 모듈 정보 조회 중...');
+                            // 네이티브 모듈 사용 가능 여부
+                            const availableResult = await safeCall('isNativeModuleAvailable');
+                            console.log('🔍 네이티브 모듈 사용 가능 여부:', availableResult);
+                            // 네이티브 모듈 버전
+                            const versionResult = await safeCall('getNativeModuleVersion');
+                            console.log('📋 네이티브 모듈 버전:', versionResult);
+                            // 네이티브 모듈 상세 정보
+                            const infoResult = await safeCall('getNativeModuleInfo');
+                            console.log('📄 네이티브 모듈 상세 정보:', infoResult);
+                            nativeInfo = {
+                                available: availableResult?.success ? Boolean(availableResult.data) : false,
+                                version: versionResult?.success ? String(versionResult.data || '알 수 없음') : '알 수 없음',
+                                info: infoResult?.success ? infoResult.data : null,
+                                errors: [
+                                    availableResult?.error,
+                                    versionResult?.error,
+                                    infoResult?.error
+                                ].filter(Boolean)
+                            };
+                        } catch (nativeError) {
+                            console.error('❌ 네이티브 모듈 정보 조회 실패:', nativeError);
+                            nativeInfo = {
+                                available: false,
+                                version: '오류',
+                                info: null,
+                                errors: [
+                                    String(nativeError)
+                                ]
+                            };
                         }
+                        // 시스템 정보 조회 - 더 안전하게
+                        const systemInfo = {
+                            platform: typeof navigator !== 'undefined' ? navigator.platform : '알 수 없음',
+                            arch: '알 수 없음',
+                            node: '알 수 없음',
+                            electron: '알 수 없음',
+                            chrome: typeof navigator !== 'undefined' ? navigator.userAgent : '알 수 없음',
+                            hostname: 'localhost',
+                            uptime: 0,
+                            cpuCount: typeof navigator !== 'undefined' ? navigator.hardwareConcurrency || 1 : 1,
+                            cpuModel: '알 수 없음',
+                            loadAverage: {
+                                '1min': 0,
+                                '5min': 0,
+                                '15min': 0
+                            },
+                            memory: {
+                                total: 0,
+                                free: 0,
+                                used: 0,
+                                percentage: 0
+                            }
+                        };
+                        // 시스템 정보 API 호출 시도 (존재하는 경우만)
+                        try {
+                            if (electronAPI?.system?.getInfo && typeof electronAPI.system.getInfo === 'function') {
+                                const sysInfoResult = await electronAPI.system.getInfo();
+                                if (sysInfoResult?.success && sysInfoResult.data) {
+                                    console.log('✅ 시스템 정보 조회 성공:', sysInfoResult.data);
+                                    Object.assign(systemInfo, sysInfoResult.data);
+                                }
+                            }
+                        } catch (sysError) {
+                            console.warn('⚠️ 시스템 정보 조회 실패:', sysError);
+                        }
+                        // 권한 정보 (기본값)
+                        const permissionInfo = {
+                            accessibility: false,
+                            input: false,
+                            screenRecording: null,
+                            microphone: null,
+                            camera: null
+                        };
+                        // 종합 데이터 구성
+                        const moduleData = {
+                            uiohook: {
+                                available: nativeInfo?.available || false,
+                                version: nativeInfo?.version || '알 수 없음',
+                                initialized: nativeInfo?.available || false,
+                                loadError: nativeInfo?.errors?.join(', ') || null,
+                                fallbackMode: !nativeInfo?.available,
+                                features: {
+                                    keyboardHook: nativeInfo?.available || false,
+                                    mouseHook: nativeInfo?.available || false,
+                                    globalEvents: nativeInfo?.available || false
+                                }
+                            },
+                            system: systemInfo,
+                            permissions: permissionInfo,
+                            performance: {
+                                processUptime: 0,
+                                memoryUsage: {
+                                    rss: 0,
+                                    heapTotal: 0,
+                                    heapUsed: 0,
+                                    external: 0,
+                                    arrayBuffers: 0
+                                },
+                                resourceUsage: null,
+                                pid: 0,
+                                ppid: null
+                            },
+                            environment: {
+                                nodeEnv: 'unknown',
+                                isDev: false,
+                                userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '알 수 없음',
+                                workingDirectory: '알 수 없음'
+                            }
+                        };
+                        console.log('✅ 최종 모듈 정보:', moduleData);
+                        setModuleInfo(moduleData);
                     } catch (err) {
-                        console.error('네이티브 모듈 상태 확인 오류:', err);
+                        console.error('❌ 네이티브 모듈 상태 확인 오류:', err);
                         setError(err instanceof Error ? err.message : '알 수 없는 오류');
                     } finally{
                         setLoading(false);
@@ -2816,13 +2930,13 @@ function NativeModuleStatus() {
             className: "h-4 w-4 text-green-500"
         }, void 0, false, {
             fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-            lineNumber: 221,
+            lineNumber: 320,
             columnNumber: 7
         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$x$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__XCircle$3e$__["XCircle"], {
             className: "h-4 w-4 text-red-500"
         }, void 0, false, {
             fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-            lineNumber: 223,
+            lineNumber: 322,
             columnNumber: 7
         }, this);
     };
@@ -2832,7 +2946,7 @@ function NativeModuleStatus() {
             children: available ? label : `${label} 비활성`
         }, void 0, false, {
             fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-            lineNumber: 229,
+            lineNumber: 328,
             columnNumber: 7
         }, this);
     };
@@ -2847,19 +2961,19 @@ function NativeModuleStatus() {
                                 className: "h-5 w-5 animate-spin"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                lineNumber: 240,
+                                lineNumber: 339,
                                 columnNumber: 13
                             }, this),
                             "네이티브 모듈 상태"
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                        lineNumber: 239,
+                        lineNumber: 338,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                    lineNumber: 238,
+                    lineNumber: 337,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -2870,23 +2984,23 @@ function NativeModuleStatus() {
                             children: "상태 확인 중..."
                         }, void 0, false, {
                             fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                            lineNumber: 246,
+                            lineNumber: 345,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                        lineNumber: 245,
+                        lineNumber: 344,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                    lineNumber: 244,
+                    lineNumber: 343,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-            lineNumber: 237,
+            lineNumber: 336,
             columnNumber: 7
         }, this);
     }
@@ -2901,19 +3015,19 @@ function NativeModuleStatus() {
                                 className: "h-5 w-5 text-red-500"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                lineNumber: 258,
+                                lineNumber: 357,
                                 columnNumber: 13
                             }, this),
                             "네이티브 모듈 상태"
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                        lineNumber: 257,
+                        lineNumber: 356,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                    lineNumber: 256,
+                    lineNumber: 355,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -2924,23 +3038,23 @@ function NativeModuleStatus() {
                             children: error
                         }, void 0, false, {
                             fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                            lineNumber: 264,
+                            lineNumber: 363,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                        lineNumber: 263,
+                        lineNumber: 362,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                    lineNumber: 262,
+                    lineNumber: 361,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-            lineNumber: 255,
+            lineNumber: 354,
             columnNumber: 7
         }, this);
     }
@@ -2955,19 +3069,19 @@ function NativeModuleStatus() {
                                 className: "h-5 w-5 text-gray-500"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                lineNumber: 276,
+                                lineNumber: 375,
                                 columnNumber: 13
                             }, this),
                             "네이티브 모듈 상태"
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                        lineNumber: 275,
+                        lineNumber: 374,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                    lineNumber: 274,
+                    lineNumber: 373,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -2978,23 +3092,23 @@ function NativeModuleStatus() {
                             children: "네이티브 모듈 정보를 가져올 수 없습니다"
                         }, void 0, false, {
                             fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                            lineNumber: 282,
+                            lineNumber: 381,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                        lineNumber: 281,
+                        lineNumber: 380,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                    lineNumber: 280,
+                    lineNumber: 379,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-            lineNumber: 273,
+            lineNumber: 372,
             columnNumber: 7
         }, this);
     }
@@ -3008,19 +3122,19 @@ function NativeModuleStatus() {
                             className: "h-5 w-5"
                         }, void 0, false, {
                             fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                            lineNumber: 295,
+                            lineNumber: 394,
                             columnNumber: 11
                         }, this),
                         "네이티브 모듈 상태"
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                    lineNumber: 294,
+                    lineNumber: 393,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                lineNumber: 293,
+                lineNumber: 392,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -3037,14 +3151,14 @@ function NativeModuleStatus() {
                                         children: "uiohook (키보드 후킹)"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 303,
+                                        lineNumber: 402,
                                         columnNumber: 13
                                     }, this),
                                     getStatusIcon(moduleInfo?.uiohook?.available || false)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                lineNumber: 302,
+                                lineNumber: 401,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3057,7 +3171,7 @@ function NativeModuleStatus() {
                                                 children: "버전:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 308,
+                                                lineNumber: 407,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3065,13 +3179,13 @@ function NativeModuleStatus() {
                                                 children: moduleInfo?.uiohook?.version || 'N/A'
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 309,
+                                                lineNumber: 408,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 307,
+                                        lineNumber: 406,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3081,14 +3195,14 @@ function NativeModuleStatus() {
                                                 children: "초기화:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 312,
+                                                lineNumber: 411,
                                                 columnNumber: 15
                                             }, this),
                                             getStatusBadge(moduleInfo?.uiohook?.initialized || false, '완료')
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 311,
+                                        lineNumber: 410,
                                         columnNumber: 13
                                     }, this),
                                     moduleInfo?.uiohook?.fallbackMode && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3098,7 +3212,7 @@ function NativeModuleStatus() {
                                                 children: "폴백 모드:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 317,
+                                                lineNumber: 416,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Badge"], {
@@ -3106,13 +3220,13 @@ function NativeModuleStatus() {
                                                 children: "활성"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 318,
+                                                lineNumber: 417,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 316,
+                                        lineNumber: 415,
                                         columnNumber: 15
                                     }, this),
                                     moduleInfo?.uiohook?.loadError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3123,7 +3237,7 @@ function NativeModuleStatus() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 322,
+                                        lineNumber: 421,
                                         columnNumber: 15
                                     }, this),
                                     moduleInfo?.uiohook?.features && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3134,7 +3248,7 @@ function NativeModuleStatus() {
                                                 children: "기능:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 328,
+                                                lineNumber: 427,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3144,14 +3258,14 @@ function NativeModuleStatus() {
                                                         children: "키보드 후킹:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                        lineNumber: 330,
+                                                        lineNumber: 429,
                                                         columnNumber: 19
                                                     }, this),
                                                     getStatusBadge(moduleInfo.uiohook.features?.keyboardHook || false, '지원')
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 329,
+                                                lineNumber: 428,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3161,14 +3275,14 @@ function NativeModuleStatus() {
                                                         children: "마우스 후킹:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                        lineNumber: 334,
+                                                        lineNumber: 433,
                                                         columnNumber: 19
                                                     }, this),
                                                     getStatusBadge(moduleInfo.uiohook.features?.mouseHook || false, '지원')
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 333,
+                                                lineNumber: 432,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3178,32 +3292,32 @@ function NativeModuleStatus() {
                                                         children: "글로벌 이벤트:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                        lineNumber: 338,
+                                                        lineNumber: 437,
                                                         columnNumber: 19
                                                     }, this),
                                                     getStatusBadge(moduleInfo.uiohook.features?.globalEvents || false, '지원')
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 337,
+                                                lineNumber: 436,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 327,
+                                        lineNumber: 426,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                lineNumber: 306,
+                                lineNumber: 405,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                        lineNumber: 301,
+                        lineNumber: 400,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3216,7 +3330,7 @@ function NativeModuleStatus() {
                                         className: "h-4 w-4"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 349,
+                                        lineNumber: 448,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3224,13 +3338,13 @@ function NativeModuleStatus() {
                                         children: "시스템 정보"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 350,
+                                        lineNumber: 449,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                lineNumber: 348,
+                                lineNumber: 447,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3243,7 +3357,7 @@ function NativeModuleStatus() {
                                                 children: "플랫폼:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 354,
+                                                lineNumber: 453,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3251,13 +3365,13 @@ function NativeModuleStatus() {
                                                 children: moduleInfo?.system?.platform || 'N/A'
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 355,
+                                                lineNumber: 454,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 353,
+                                        lineNumber: 452,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3267,7 +3381,7 @@ function NativeModuleStatus() {
                                                 children: "아키텍처:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 358,
+                                                lineNumber: 457,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3275,13 +3389,13 @@ function NativeModuleStatus() {
                                                 children: moduleInfo?.system?.arch || 'N/A'
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 359,
+                                                lineNumber: 458,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 357,
+                                        lineNumber: 456,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3291,7 +3405,7 @@ function NativeModuleStatus() {
                                                 children: "Node.js:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 362,
+                                                lineNumber: 461,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3299,13 +3413,13 @@ function NativeModuleStatus() {
                                                 children: moduleInfo?.system?.node || 'N/A'
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 363,
+                                                lineNumber: 462,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 361,
+                                        lineNumber: 460,
                                         columnNumber: 13
                                     }, this),
                                     moduleInfo?.system?.electron && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3315,7 +3429,7 @@ function NativeModuleStatus() {
                                                 children: "Electron:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 367,
+                                                lineNumber: 466,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3323,13 +3437,13 @@ function NativeModuleStatus() {
                                                 children: moduleInfo.system.electron
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 368,
+                                                lineNumber: 467,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 366,
+                                        lineNumber: 465,
                                         columnNumber: 15
                                     }, this),
                                     moduleInfo?.system?.cpuCount && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3339,7 +3453,7 @@ function NativeModuleStatus() {
                                                 children: "CPU 코어:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 373,
+                                                lineNumber: 472,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3350,13 +3464,13 @@ function NativeModuleStatus() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 374,
+                                                lineNumber: 473,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 372,
+                                        lineNumber: 471,
                                         columnNumber: 15
                                     }, this),
                                     moduleInfo?.system?.memory && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3366,7 +3480,7 @@ function NativeModuleStatus() {
                                                 children: "시스템 메모리:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 379,
+                                                lineNumber: 478,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3377,13 +3491,13 @@ function NativeModuleStatus() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 380,
+                                                lineNumber: 479,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 378,
+                                        lineNumber: 477,
                                         columnNumber: 15
                                     }, this),
                                     moduleInfo?.system?.uptime && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3393,7 +3507,7 @@ function NativeModuleStatus() {
                                                 children: "가동 시간:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 387,
+                                                lineNumber: 486,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3404,25 +3518,25 @@ function NativeModuleStatus() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 388,
+                                                lineNumber: 487,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 386,
+                                        lineNumber: 485,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                lineNumber: 352,
+                                lineNumber: 451,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                        lineNumber: 347,
+                        lineNumber: 446,
                         columnNumber: 9
                     }, this),
                     moduleInfo?.performance && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3435,7 +3549,7 @@ function NativeModuleStatus() {
                                         className: "h-4 w-4"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 400,
+                                        lineNumber: 499,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3443,13 +3557,13 @@ function NativeModuleStatus() {
                                         children: "성능 정보"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 401,
+                                        lineNumber: 500,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                lineNumber: 399,
+                                lineNumber: 498,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3462,7 +3576,7 @@ function NativeModuleStatus() {
                                                 children: "프로세스 ID:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 405,
+                                                lineNumber: 504,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3470,13 +3584,13 @@ function NativeModuleStatus() {
                                                 children: moduleInfo.performance.pid
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 406,
+                                                lineNumber: 505,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 404,
+                                        lineNumber: 503,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3486,7 +3600,7 @@ function NativeModuleStatus() {
                                                 children: "힙 메모리:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 409,
+                                                lineNumber: 508,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3497,13 +3611,13 @@ function NativeModuleStatus() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 410,
+                                                lineNumber: 509,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 408,
+                                        lineNumber: 507,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3513,7 +3627,7 @@ function NativeModuleStatus() {
                                                 children: "RSS 메모리:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 415,
+                                                lineNumber: 514,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3524,13 +3638,13 @@ function NativeModuleStatus() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 416,
+                                                lineNumber: 515,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 414,
+                                        lineNumber: 513,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3540,7 +3654,7 @@ function NativeModuleStatus() {
                                                 children: "프로세스 실행 시간:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 421,
+                                                lineNumber: 520,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3551,25 +3665,25 @@ function NativeModuleStatus() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 422,
+                                                lineNumber: 521,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 420,
+                                        lineNumber: 519,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                lineNumber: 403,
+                                lineNumber: 502,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                        lineNumber: 398,
+                        lineNumber: 497,
                         columnNumber: 11
                     }, this),
                     moduleInfo?.environment && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3582,7 +3696,7 @@ function NativeModuleStatus() {
                                         className: "h-4 w-4"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 434,
+                                        lineNumber: 533,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3590,13 +3704,13 @@ function NativeModuleStatus() {
                                         children: "환경 정보"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 435,
+                                        lineNumber: 534,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                lineNumber: 433,
+                                lineNumber: 532,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3609,7 +3723,7 @@ function NativeModuleStatus() {
                                                 children: "환경:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 439,
+                                                lineNumber: 538,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3617,13 +3731,13 @@ function NativeModuleStatus() {
                                                 children: moduleInfo.environment.nodeEnv
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 440,
+                                                lineNumber: 539,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 438,
+                                        lineNumber: 537,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3633,14 +3747,14 @@ function NativeModuleStatus() {
                                                 children: "개발 모드:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 443,
+                                                lineNumber: 542,
                                                 columnNumber: 17
                                             }, this),
                                             getStatusBadge(moduleInfo.environment.isDev, '활성')
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 442,
+                                        lineNumber: 541,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3650,7 +3764,7 @@ function NativeModuleStatus() {
                                                 children: "작업 디렉토리:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 447,
+                                                lineNumber: 546,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3658,25 +3772,25 @@ function NativeModuleStatus() {
                                                 children: moduleInfo.environment.workingDirectory
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 448,
+                                                lineNumber: 547,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 446,
+                                        lineNumber: 545,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                lineNumber: 437,
+                                lineNumber: 536,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                        lineNumber: 432,
+                        lineNumber: 531,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3689,7 +3803,7 @@ function NativeModuleStatus() {
                                         className: "h-4 w-4"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 459,
+                                        lineNumber: 558,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3697,13 +3811,13 @@ function NativeModuleStatus() {
                                         children: "권한 상태"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 460,
+                                        lineNumber: 559,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                lineNumber: 458,
+                                lineNumber: 557,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3716,14 +3830,14 @@ function NativeModuleStatus() {
                                                 children: "접근성 권한:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 464,
+                                                lineNumber: 563,
                                                 columnNumber: 15
                                             }, this),
                                             getStatusBadge(moduleInfo?.permissions?.accessibility || false, '허용됨')
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 463,
+                                        lineNumber: 562,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3733,26 +3847,26 @@ function NativeModuleStatus() {
                                                 children: "입력 모니터링:"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                                lineNumber: 468,
+                                                lineNumber: 567,
                                                 columnNumber: 15
                                             }, this),
                                             getStatusBadge(moduleInfo?.permissions?.input || false, '허용됨')
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                        lineNumber: 467,
+                                        lineNumber: 566,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                                lineNumber: 462,
+                                lineNumber: 561,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                        lineNumber: 457,
+                        lineNumber: 556,
                         columnNumber: 9
                     }, this),
                     moduleInfo?.system?.platform?.toLowerCase().includes('mac') && (!moduleInfo?.permissions?.accessibility || !moduleInfo?.permissions?.input) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3765,24 +3879,24 @@ function NativeModuleStatus() {
                             children: "권한 설정 안내"
                         }, void 0, false, {
                             fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                            lineNumber: 478,
+                            lineNumber: 577,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                        lineNumber: 477,
+                        lineNumber: 576,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-                lineNumber: 299,
+                lineNumber: 398,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/components/ui/native-module-status.tsx",
-        lineNumber: 292,
+        lineNumber: 391,
         columnNumber: 5
     }, this);
 }

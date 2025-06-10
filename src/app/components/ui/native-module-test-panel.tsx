@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './card';
+import { GpuInfo as ElectronGpuInfo } from '../../../types/electron';
 
 interface MemoryInfo {
   used: number;
@@ -10,9 +11,14 @@ interface MemoryInfo {
   usage_percentage: number;
 }
 
-interface GpuInfo {
+interface LocalGpuInfo {
   available: boolean;
   name?: string;
+  vendor?: string;
+  driverVersion?: string;
+  memoryMb?: number;
+  utilization?: number;
+  temperature?: number;
   memory?: {
     used: number;
     total: number;
@@ -22,7 +28,7 @@ interface GpuInfo {
 export default function NativeModuleTestPanel({ className }: { className?: string }) {
   // 상태 관리
   const [memoryInfo, setMemoryInfo] = useState<MemoryInfo | null>(null);
-  const [gpuInfo, setGpuInfo] = useState<GpuInfo | null>(null);
+  const [gpuInfo, setGpuInfo] = useState<LocalGpuInfo | null>(null);
   const [optimizationResult, setOptimizationResult] = useState<any>(null);
   const [loading, setLoading] = useState({
     memory: false,
@@ -67,15 +73,40 @@ export default function NativeModuleTestPanel({ className }: { className?: strin
       setError(null);
 
       if (typeof window !== 'undefined' && window.electronAPI && window.electronAPI.system && window.electronAPI.system.gpu) {
-        const response = await window.electronAPI.system.gpu.getInfo();
+        const response: ElectronGpuInfo = await window.electronAPI.system.gpu.getInfo();
         if (response) {
-          setGpuInfo(response);
+          // ElectronGpuInfo를 LocalGpuInfo로 변환
+          const localGpuInfo: LocalGpuInfo = {
+            available: !response.fallback, // fallback이 false면 사용 가능
+            name: response.name,
+            vendor: response.vendor,
+            driverVersion: response.driverVersion,
+            memoryMb: response.memoryMb,
+            utilization: response.utilization,
+            temperature: response.temperature,
+            memory: response.memoryMb ? {
+              used: Math.round(response.memoryMb * (response.utilization / 100)),
+              total: response.memoryMb
+            } : undefined
+          };
+          setGpuInfo(localGpuInfo);
         } else {
+          setGpuInfo(null);
           setError('GPU 정보를 가져올 수 없습니다');
         }
+      } else {
+        // Electron API가 없는 경우 기본값 설정
+        setGpuInfo({
+          available: false,
+          name: '브라우저 환경'
+        });
       }
     } catch (err) {
       console.error('GPU 정보 가져오기 오류:', err);
+      setGpuInfo({
+        available: false,
+        name: '오류 발생'
+      });
       setError(
         err instanceof Error ? err.message : 'GPU 정보를 가져오는 중 오류가 발생했습니다'
       );
@@ -231,18 +262,53 @@ export default function NativeModuleTestPanel({ className }: { className?: strin
                 </div>
               )}
               
+              {gpuInfo.vendor && (
+                <div className="bg-purple-50 rounded-lg p-3">
+                  <div className="text-sm text-gray-600">제조사</div>
+                  <div className="text-lg font-bold text-purple-600">{gpuInfo.vendor}</div>
+                </div>
+              )}
+              
+              {gpuInfo.driverVersion && (
+                <div className="bg-indigo-50 rounded-lg p-3">
+                  <div className="text-sm text-gray-600">드라이버 버전</div>
+                  <div className="text-lg font-bold text-indigo-600">{gpuInfo.driverVersion}</div>
+                </div>
+              )}
+              
+              {gpuInfo.memoryMb && (
+                <div className="bg-orange-50 rounded-lg p-3">
+                  <div className="text-sm text-gray-600">GPU 메모리</div>
+                  <div className="text-lg font-bold text-orange-600">{gpuInfo.memoryMb} MB</div>
+                </div>
+              )}
+              
+              {gpuInfo.utilization !== undefined && (
+                <div className="bg-yellow-50 rounded-lg p-3">
+                  <div className="text-sm text-gray-600">사용률</div>
+                  <div className="text-lg font-bold text-yellow-600">{gpuInfo.utilization.toFixed(1)}%</div>
+                </div>
+              )}
+              
+              {gpuInfo.temperature !== undefined && (
+                <div className="bg-red-50 rounded-lg p-3">
+                  <div className="text-sm text-gray-600">온도</div>
+                  <div className="text-lg font-bold text-red-600">{gpuInfo.temperature}°C</div>
+                </div>
+              )}
+              
               {gpuInfo.memory && (
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-purple-50 rounded-lg p-3">
                     <div className="text-sm text-gray-600">사용 중</div>
                     <div className="text-lg font-bold text-purple-600">
-                      {formatMemory(gpuInfo.memory.used)}
+                      {formatMemory(gpuInfo.memory.used * 1024 * 1024)}
                     </div>
                   </div>
                   <div className="bg-indigo-50 rounded-lg p-3">
                     <div className="text-sm text-gray-600">전체</div>
                     <div className="text-lg font-bold text-indigo-600">
-                      {formatMemory(gpuInfo.memory.total)}
+                      {formatMemory(gpuInfo.memory.total * 1024 * 1024)}
                     </div>
                   </div>
                 </div>

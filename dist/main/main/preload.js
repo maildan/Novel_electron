@@ -7,6 +7,51 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
+// 네이티브 모듈 API
+const nativeAPI = {
+    // 메모리 관련
+    getMemoryUsage: () => electron_1.ipcRenderer.invoke('native:getMemoryUsage'),
+    startMemoryMonitoring: () => electron_1.ipcRenderer.invoke('native:startMemoryMonitoring'),
+    getMemoryStats: () => electron_1.ipcRenderer.invoke('native:getMemoryStats'),
+    optimizeMemory: () => electron_1.ipcRenderer.invoke('native:optimizeMemory'),
+    cleanupMemory: () => electron_1.ipcRenderer.invoke('native:cleanupMemory'),
+    optimizeMemoryAdvanced: () => electron_1.ipcRenderer.invoke('native:optimizeMemoryAdvanced'),
+    resetMemoryMonitoring: () => electron_1.ipcRenderer.invoke('native:resetMemoryMonitoring'),
+    // GPU 관련
+    getGpuInfo: () => electron_1.ipcRenderer.invoke('native:getGpuInfo'),
+    getGpuMemoryStats: () => electron_1.ipcRenderer.invoke('native:getGpuMemoryStats'),
+    runGpuAcceleration: (data) => electron_1.ipcRenderer.invoke('native:runGpuAcceleration', data),
+    runGpuBenchmark: () => electron_1.ipcRenderer.invoke('native:runGpuBenchmark'),
+    // 시스템 관련
+    getSystemInfo: () => electron_1.ipcRenderer.invoke('native:getSystemInfo'),
+    isNativeModuleAvailable: () => electron_1.ipcRenderer.invoke('native:isNativeModuleAvailable'),
+    getNativeModuleInfo: () => electron_1.ipcRenderer.invoke('native:getNativeModuleInfo'),
+    getNativeModuleVersion: () => electron_1.ipcRenderer.invoke('native:getNativeModuleVersion'),
+    initializeNativeModules: () => electron_1.ipcRenderer.invoke('native:initializeNativeModules'),
+    cleanupNativeModules: () => electron_1.ipcRenderer.invoke('native:cleanupNativeModules'),
+    getTimestamp: () => electron_1.ipcRenderer.invoke('native:getTimestamp'),
+    // 워커 관련
+    addWorkerTask: (taskData) => electron_1.ipcRenderer.invoke('native:addWorkerTask', taskData),
+    getWorkerTaskStatus: (taskId) => electron_1.ipcRenderer.invoke('native:getWorkerTaskStatus', taskId),
+    getWorkerStats: () => electron_1.ipcRenderer.invoke('native:getWorkerStats'),
+    getPendingTaskCount: () => electron_1.ipcRenderer.invoke('native:getPendingTaskCount'),
+    resetWorkerPool: () => electron_1.ipcRenderer.invoke('native:resetWorkerPool'),
+    executeCpuTask: (taskData) => electron_1.ipcRenderer.invoke('native:executeCpuTask', taskData),
+    processDataParallel: (data) => electron_1.ipcRenderer.invoke('native:processDataParallel', data),
+    // 유틸리티 관련
+    calculateFileHash: (filePath) => electron_1.ipcRenderer.invoke('native:calculateFileHash', filePath),
+    calculateDirectorySize: (dirPath) => electron_1.ipcRenderer.invoke('native:calculateDirectorySize', dirPath),
+    calculateStringSimilarity: (str1, str2) => electron_1.ipcRenderer.invoke('native:calculateStringSimilarity', str1, str2),
+    validateJson: (jsonStr) => electron_1.ipcRenderer.invoke('native:validateJson', jsonStr),
+    encodeBase64: (data) => electron_1.ipcRenderer.invoke('native:encodeBase64', data),
+    decodeBase64: (encodedData) => electron_1.ipcRenderer.invoke('native:decodeBase64', encodedData),
+    generateUuid: () => electron_1.ipcRenderer.invoke('native:generateUuid'),
+    getTimestampString: () => electron_1.ipcRenderer.invoke('native:getTimestampString'),
+    getEnvVar: (name) => electron_1.ipcRenderer.invoke('native:getEnvVar', name),
+    getProcessId: () => electron_1.ipcRenderer.invoke('native:getProcessId'),
+    startPerformanceMeasurement: (label) => electron_1.ipcRenderer.invoke('native:startPerformanceMeasurement', label),
+    endPerformanceMeasurement: (measurementId) => electron_1.ipcRenderer.invoke('native:endPerformanceMeasurement', measurementId),
+};
 // 시스템 API
 const systemAPI = {
     getInfo: () => electron_1.ipcRenderer.invoke('system:getInfo'),
@@ -145,6 +190,7 @@ const electronAPI = {
     settings: settingsAPI,
     window: windowAPI,
     app: appAPI,
+    native: nativeAPI,
     // 디버깅 정보
     debug: {
         getProcessInfo: () => ({

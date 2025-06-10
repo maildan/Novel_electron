@@ -165,56 +165,56 @@ export function registerNativeIpcHandlers(): void {
   loadNativeModule();
   
   // 메모리 관련 핸들러
-  ipcMain.handle('native:getMemoryUsage', () => {
+  ipcMain.handle('nativeGetMemoryUsage', () => {
     const result = safeNativeCall('getMemoryUsage');
     return result;
   });
   
-  ipcMain.handle('native:startMemoryMonitoring', () => {
+  ipcMain.handle('nativeStartMemoryMonitoring', () => {
     return safeNativeCall('startMemoryMonitoring');
   });
   
-  ipcMain.handle('native:getMemoryStats', () => {
+  ipcMain.handle('nativeGetMemoryStats', () => {
     const result = safeNativeCall('getMemoryStats');
     return result;
   });
   
-  ipcMain.handle('native:optimizeMemory', () => {
+  ipcMain.handle('nativeOptimizeMemory', () => {
     return safeNativeCall('optimizeMemory');
   });
   
-  ipcMain.handle('native:cleanupMemory', () => {
+  ipcMain.handle('nativeCleanupMemory', () => {
     return safeNativeCall('cleanupMemory');
   });
   
-  ipcMain.handle('native:optimizeMemoryAdvanced', () => {
+  ipcMain.handle('nativeOptimizeMemoryAdvanced', () => {
     return safeNativeCall('optimizeMemoryAdvanced');
   });
   
-  ipcMain.handle('native:resetMemoryMonitoring', () => {
+  ipcMain.handle('nativeResetMemoryMonitoring', () => {
     return safeNativeCall('resetMemoryMonitoring');
   });
   
   // GPU 관련 핸들러
-  ipcMain.handle('native:getGpuInfo', () => {
+  ipcMain.handle('nativeGetGpuInfo', () => {
     const result = safeNativeCall('getGpuInfo');
     return result;
   });
   
-  ipcMain.handle('native:getGpuMemoryStats', () => {
+  ipcMain.handle('nativeGetGpuMemoryStats', () => {
     return safeNativeCall('getGpuMemoryStats');
   });
   
-  ipcMain.handle('native:runGpuAcceleration', (_, data: string) => {
+  ipcMain.handle('nativeRunGpuAcceleration', (_, data: string) => {
     return safeNativeCall('runGpuAcceleration', data);
   });
   
-  ipcMain.handle('native:runGpuBenchmark', () => {
+  ipcMain.handle('nativeRunGpuBenchmark', () => {
     return safeNativeCall('runGpuBenchmark');
   });
   
   // 시스템 관련 핸들러
-  ipcMain.handle('native:getSystemInfo', () => {
+  ipcMain.handle('nativeGetSystemInfo', () => {
     const result = safeNativeCall('getSystemInfo');
     if (result.success && typeof result.data === 'string') {
       result.data = safeJsonParse(result.data);
@@ -222,11 +222,11 @@ export function registerNativeIpcHandlers(): void {
     return result;
   });
   
-  ipcMain.handle('native:isNativeModuleAvailable', () => {
+  ipcMain.handle('nativeIsNativeModuleAvailable', () => {
     return safeNativeCall('isNativeModuleAvailable');
   });
   
-  ipcMain.handle('native:getNativeModuleInfo', () => {
+  ipcMain.handle('nativeGetNativeModuleInfo', () => {
     const result = safeNativeCall('getNativeModuleInfo');
     if (result.success && typeof result.data === 'string') {
       result.data = safeJsonParse(result.data);
@@ -234,19 +234,19 @@ export function registerNativeIpcHandlers(): void {
     return result;
   });
   
-  ipcMain.handle('native:getNativeModuleVersion', () => {
+  ipcMain.handle('nativeGetNativeModuleVersion', () => {
     return safeNativeCall('getNativeModuleVersion');
   });
   
-  ipcMain.handle('native:initializeNativeModules', () => {
+  ipcMain.handle('nativeInitializeNativeModules', () => {
     return safeNativeCall('initializeNativeModules');
   });
   
-  ipcMain.handle('native:cleanupNativeModules', () => {
+  ipcMain.handle('nativeCleanupNativeModules', () => {
     return safeNativeCall('cleanupNativeModules');
   });
   
-  ipcMain.handle('native:getTimestamp', () => {
+  ipcMain.handle('nativeGetTimestamp', () => {
     return safeNativeCall('getTimestamp');
   });
   
