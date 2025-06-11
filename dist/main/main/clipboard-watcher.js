@@ -515,32 +515,32 @@ async function saveClipboardToFile(filePath, type = 'text') {
  */
 function setupClipboardIpcHandlers() {
     // 텍스트 복사
-    electron_1.ipcMain.handle('clipboard:copy-text', (event, text) => {
+    electron_1.ipcMain.handle('clipboard:copyText', (event, text) => {
         return copyTextToClipboard(text);
     });
     // HTML 복사
-    electron_1.ipcMain.handle('clipboard:copy-html', (event, html, text) => {
+    electron_1.ipcMain.handle('clipboard:copyHtml', (event, html, text) => {
         return copyHtmlToClipboard(html, text);
     });
     // 이미지 복사
-    electron_1.ipcMain.handle('clipboard:copy-image', (event, imageData) => {
+    electron_1.ipcMain.handle('clipboard:copyImage', (event, imageData) => {
         return copyImageToClipboard(imageData);
     });
     // 텍스트 읽기
-    electron_1.ipcMain.handle('clipboard:read-text', () => {
+    electron_1.ipcMain.handle('clipboard:readText', () => {
         return readTextFromClipboard();
     });
     // HTML 읽기
-    electron_1.ipcMain.handle('clipboard:read-html', () => {
+    electron_1.ipcMain.handle('clipboard:readHtml', () => {
         return readHtmlFromClipboard();
     });
     // 이미지 읽기
-    electron_1.ipcMain.handle('clipboard:read-image', () => {
+    electron_1.ipcMain.handle('clipboard:readImage', () => {
         const image = readImageFromClipboard();
         return image ? image.toDataURL() : null;
     });
     // 감시 시작
-    electron_1.ipcMain.handle('clipboard:start-watching', (event, options = {}) => {
+    electron_1.ipcMain.handle('clipboard:startWatching', (event, options = {}) => {
         if (options.interval) {
             setWatchInterval(options.interval);
         }
@@ -548,29 +548,29 @@ function setupClipboardIpcHandlers() {
         return isWatchingEnabled;
     });
     // 감시 중지
-    electron_1.ipcMain.handle('clipboard:stop-watching', () => {
+    electron_1.ipcMain.handle('clipboard:stopWatching', () => {
         stopWatching();
         return !isWatchingEnabled;
     });
     // 히스토리 조회
-    electron_1.ipcMain.handle('clipboard:get-history', (event, limit = 20) => {
+    electron_1.ipcMain.handle('clipboard:getHistory', (event, limit = 20) => {
         return getClipboardHistory(limit);
     });
     // 히스토리 삭제
-    electron_1.ipcMain.handle('clipboard:clear-history', () => {
+    electron_1.ipcMain.handle('clipboard:clearHistory', () => {
         clearClipboardHistory();
         return true;
     });
     // 통계 조회
-    electron_1.ipcMain.handle('clipboard:get-stats', () => {
+    electron_1.ipcMain.handle('clipboard:getStats', () => {
         return getClipboardStats();
     });
     // 파일로 저장
-    electron_1.ipcMain.handle('clipboard:save-to-file', (event, filePath, type) => {
+    electron_1.ipcMain.handle('clipboard:saveToFile', (event, filePath, type) => {
         return saveClipboardToFile(filePath, type);
     });
     // 감시 간격 설정
-    electron_1.ipcMain.handle('clipboard:set-interval', (event, intervalMs) => {
+    electron_1.ipcMain.handle('clipboard:setInterval', (event, intervalMs) => {
         return setWatchInterval(intervalMs);
     });
 }

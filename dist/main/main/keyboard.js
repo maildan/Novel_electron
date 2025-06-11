@@ -449,7 +449,7 @@ function registerGlobalShortcuts() {
  */
 function setupKeyboardIpcHandlers() {
     // Get typing statistics
-    electron_1.ipcMain.handle('get-typing-stats', async () => {
+    electron_1.ipcMain.handle('getTypingStats', async () => {
         return {
             totalTypingCount: imeComposition.totalTypingCount,
             compositionState: { ...composerState },
@@ -458,7 +458,7 @@ function setupKeyboardIpcHandlers() {
         };
     });
     // Reset typing statistics
-    electron_1.ipcMain.handle('reset-typing-stats', async () => {
+    electron_1.ipcMain.handle('resetTypingStats', async () => {
         imeComposition.totalTypingCount = 0;
         imeComposition.lastComposedText = '';
         imeComposition.compositionBuffer = '';
@@ -472,11 +472,11 @@ function setupKeyboardIpcHandlers() {
         return true;
     });
     // Get keyboard permissions status
-    electron_1.ipcMain.handle('get-keyboard-permissions', async () => {
+    electron_1.ipcMain.handle('getKeyboardPermissions', async () => {
         return { ...permissionStatus };
     });
     // Toggle keyboard monitoring
-    electron_1.ipcMain.handle('toggle-keyboard-monitoring', async () => {
+    electron_1.ipcMain.handle('toggleKeyboardMonitoring', async () => {
         if (isListening) {
             await stopKeyboardMonitoring();
         }
@@ -486,7 +486,7 @@ function setupKeyboardIpcHandlers() {
         return isListening;
     });
     // Get Hangul composition state
-    electron_1.ipcMain.handle('get-hangul-composition-state', async () => {
+    electron_1.ipcMain.handle('getHangulCompositionState', async () => {
         return { ...composerState };
     });
     debugLog('Keyboard IPC handlers registered');

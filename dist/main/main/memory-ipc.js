@@ -113,7 +113,7 @@ function convertMemoryStatsToReactFormat(stats) {
 function registerMemoryIpcHandlers() {
     console.log('[Memory IPC] 메모리 관련 IPC 핸들러 등록 시작');
     // 메모리 정보 조회 (React 컴포넌트용)
-    electron_1.ipcMain.handle('memory:get-info', async () => {
+    electron_1.ipcMain.handle('memory:getInfo', async () => {
         try {
             const memoryManager = memory_1.MemoryManager.getInstance();
             // MemoryManager에서 직접 ReactMemoryData 형태로 데이터 가져오기
@@ -170,7 +170,7 @@ function registerMemoryIpcHandlers() {
         }
     });
     // 네이티브 모듈 상태 조회
-    electron_1.ipcMain.handle('system:native:get-status', () => {
+    electron_1.ipcMain.handle('system:native:getStatus', () => {
         try {
             const status = native_client_1.nativeClient.getStatus();
             const available = native_client_1.nativeClient.isAvailable();
@@ -271,10 +271,10 @@ function registerMemoryIpcHandlers() {
  * 메모리 관련 IPC 핸들러 정리
  */
 function cleanupMemoryIpcHandlers() {
-    electron_1.ipcMain.removeHandler('memory:get-info');
+    electron_1.ipcMain.removeHandler('memory:getInfo');
     electron_1.ipcMain.removeHandler('memory:optimize');
     electron_1.ipcMain.removeHandler('memory:cleanup');
-    electron_1.ipcMain.removeHandler('system:native:get-status');
+    electron_1.ipcMain.removeHandler('system:native:getStatus');
     console.log('[Memory IPC] 메모리 관련 IPC 핸들러 정리 완료');
 }
 //# sourceMappingURL=memory-ipc.js.map

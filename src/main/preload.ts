@@ -60,82 +60,87 @@ const nativeAPI = {
 // 시스템 API
 const systemAPI = {
   getInfo: () => ipcRenderer.invoke('system:getInfo'),
-  startMonitoring: () => ipcRenderer.invoke('system:start-monitoring'),
-  stopMonitoring: () => ipcRenderer.invoke('system:stop-monitoring'),
-  getCurrentMetrics: () => ipcRenderer.invoke('system:get-current-metrics'),
-  getMetricsHistory: (minutes?: number) => ipcRenderer.invoke('system:get-metrics-history', minutes),
+  startMonitoring: () => ipcRenderer.invoke('system:startMonitoring'),
+  stopMonitoring: () => ipcRenderer.invoke('system:stopMonitoring'),
+  getCurrentMetrics: () => ipcRenderer.invoke('system:getCurrentMetrics'),
+  getMetricsHistory: (minutes?: number) => ipcRenderer.invoke('system:getMetricsHistory', minutes),
   cleanup: (force?: boolean) => ipcRenderer.invoke('system:cleanup', force),
-  getUsage: () => ipcRenderer.invoke('system:get-usage'),
-  getStats: () => ipcRenderer.invoke('system:get-stats'),
-  optimizeMemory: () => ipcRenderer.invoke('system:optimize-memory'),
+  getUsage: () => ipcRenderer.invoke('system:getUsage'),
+  getStats: () => ipcRenderer.invoke('system:getStats'),
+  optimizeMemory: () => ipcRenderer.invoke('system:optimizeMemory'),
   getLoopProcesses: () => ipcRenderer.invoke('system:getLoopProcesses'),
   gpu: {
-    getInfo: () => ipcRenderer.invoke('gpu:get-info'),
+    getInfo: () => ipcRenderer.invoke('gpu:getInfo'),
     compute: (data: any) => ipcRenderer.invoke('gpu:compute', data),
     enable: () => ipcRenderer.invoke('gpu:enable'),
     disable: () => ipcRenderer.invoke('gpu:disable'),
   },
   native: {
-    getStatus: () => ipcRenderer.invoke('native:get-status'),
+    getStatus: () => ipcRenderer.invoke('system:native:getStatus'),
   }
 };
 
 // 메모리 API
 const memoryAPI = {
   cleanup: (force?: boolean) => ipcRenderer.invoke('memory:cleanup', force),
-  getUsage: () => ipcRenderer.invoke('memory:get-usage'),
-  getStats: () => ipcRenderer.invoke('memory:get-stats'),
-  getInfo: () => ipcRenderer.invoke('memory:get-info'),
+  getUsage: () => ipcRenderer.invoke('memory:getUsage'),
+  getStats: () => ipcRenderer.invoke('memory:getStats'),
+  getInfo: () => ipcRenderer.invoke('memory:getInfo'),
   optimize: () => ipcRenderer.invoke('memory:optimize'),
+  forceGc: () => ipcRenderer.invoke('memory:forceGc'),
+  setThreshold: (threshold: number) => ipcRenderer.invoke('memory:setThreshold', threshold),
 };
 
 // 설정 API - IPC 핸들러와 직접 연결
 const settingsAPI = {
   get: () => ipcRenderer.invoke('settings:get'),
-  getSetting: (key: string) => ipcRenderer.invoke('settings:get-setting', key),
+  getSetting: (key: string) => ipcRenderer.invoke('settings:getSetting', key),
   update: (key: string, value: any) => ipcRenderer.invoke('settings:update', key, value),
-  updateMultiple: (settings: Record<string, any>) => ipcRenderer.invoke('settings:update-multiple', settings),
+  updateMultiple: (settings: Record<string, any>) => ipcRenderer.invoke('settings:updateMultiple', settings),
   reset: () => ipcRenderer.invoke('settings:reset'),
   export: (filePath: string) => ipcRenderer.invoke('settings:export', filePath),
   import: (filePath: string) => ipcRenderer.invoke('settings:import', filePath),
   validate: (settings: Record<string, any>) => ipcRenderer.invoke('settings:validate', settings),
-  createBackup: () => ipcRenderer.invoke('settings:create-backup'),
-  getHistory: () => ipcRenderer.invoke('settings:get-history'),
-  clearHistory: () => ipcRenderer.invoke('settings:clear-history'),
+  createBackup: () => ipcRenderer.invoke('settings:createBackup'),
+  getHistory: () => ipcRenderer.invoke('settings:getHistory'),
+  clearHistory: () => ipcRenderer.invoke('settings:clearHistory'),
 };
 
 // 윈도우 API
 const windowAPI = {
-  minimize: () => ipcRenderer.invoke('window:minimize'),
-  maximize: () => ipcRenderer.invoke('window:maximize'),
+  minimize: () => ipcRenderer.invoke('minimizeWindow'),
+  maximize: () => ipcRenderer.invoke('maximizeWindow'),
   unmaximize: () => ipcRenderer.invoke('window:unmaximize'),
-  close: () => ipcRenderer.invoke('window:close'),
-  setAlwaysOnTop: (flag: boolean) => ipcRenderer.invoke('window:set-always-on-top', flag),
-  setOpacity: (opacity: number) => ipcRenderer.invoke('window:set-opacity', opacity),
-  setSize: (width: number, height: number) => ipcRenderer.invoke('window:set-size', width, height),
-  setPosition: (x: number, y: number) => ipcRenderer.invoke('window:set-position', x, y),
+  close: () => ipcRenderer.invoke('closeWindow'),
+  setAlwaysOnTop: (flag: boolean) => ipcRenderer.invoke('setAlwaysOnTop', flag),
+  setOpacity: (opacity: number) => ipcRenderer.invoke('setWindowOpacity', opacity),
+  setSize: (width: number, height: number) => ipcRenderer.invoke('window:setSize', width, height),
+  setPosition: (x: number, y: number) => ipcRenderer.invoke('window:setPosition', x, y),
   center: () => ipcRenderer.invoke('window:center'),
-  focus: () => ipcRenderer.invoke('window:focus'),
+  focus: () => ipcRenderer.invoke('focusWindow'),
   blur: () => ipcRenderer.invoke('window:blur'),
   show: () => ipcRenderer.invoke('window:show'),
   hide: () => ipcRenderer.invoke('window:hide'),
-  setFullScreen: (flag: boolean) => ipcRenderer.invoke('window:set-fullscreen', flag),
-  isFullScreen: () => ipcRenderer.invoke('window:is-fullscreen'),
-  isMaximized: () => ipcRenderer.invoke('window:is-maximized'),
-  isMinimized: () => ipcRenderer.invoke('window:is-minimized'),
-  isVisible: () => ipcRenderer.invoke('window:is-visible'),
-  isFocused: () => ipcRenderer.invoke('window:is-focused'),
+  setFullScreen: (flag: boolean) => ipcRenderer.invoke('window:setFullScreen', flag),
+  isFullScreen: () => ipcRenderer.invoke('window:isFullScreen'),
+  isMaximized: () => ipcRenderer.invoke('window:isMaximized'),
+  isMinimized: () => ipcRenderer.invoke('window:isMinimized'),
+  isVisible: () => ipcRenderer.invoke('window:isVisible'),
+  isFocused: () => ipcRenderer.invoke('window:isFocused'),
+  setWindowMode: (mode: string) => ipcRenderer.invoke('setWindowMode', mode),
+  getWindowStatus: () => ipcRenderer.invoke('getWindowStatus'),
+  setWindowBounds: (bounds: any) => ipcRenderer.invoke('setWindowBounds', bounds),
 };
 
 // 앱 API
 const appAPI = {
-  getVersion: () => ipcRenderer.invoke('app:get-version'),
-  getName: () => ipcRenderer.invoke('app:get-name'),
-  getPath: (name: string) => ipcRenderer.invoke('app:get-path', name),
+  getVersion: () => ipcRenderer.invoke('app:getVersion'),
+  getName: () => ipcRenderer.invoke('app:getName'),
+  getPath: (name: string) => ipcRenderer.invoke('app:getPath', name),
   quit: () => ipcRenderer.invoke('app:quit'),
   relaunch: () => ipcRenderer.invoke('app:relaunch'),
-  isPackaged: () => ipcRenderer.invoke('app:is-packaged'),
-  getLocale: () => ipcRenderer.invoke('app:get-locale'),
+  isPackaged: () => ipcRenderer.invoke('app:isPackaged'),
+  getLocale: () => ipcRenderer.invoke('app:getLocale'),
   focus: () => ipcRenderer.invoke('app:focus'),
 };
 

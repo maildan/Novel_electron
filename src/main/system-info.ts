@@ -395,57 +395,57 @@ function getDebugInfo(): {
  */
 function setupSystemInfoIpcHandlers(): void {
   // Get basic system information
-  ipcMain.handle('get-system-info', async () => {
+  ipcMain.handle('getSystemInfo', async () => {
     return getSystemInfo();
   });
   
   // Get memory information
-  ipcMain.handle('get-memory-info', async () => {
+  ipcMain.handle('getMemoryInfo', async () => {
     return getMemoryInfo();
   });
   
   // Get CPU information
-  ipcMain.handle('get-cpu-info', async () => {
+  ipcMain.handle('getCpuInfo', async () => {
     return await getCPUInfo();
   });
   
   // Get process list
-  ipcMain.handle('get-process-list', async () => {
+  ipcMain.handle('getProcessList', async () => {
     return getProcessList();
   });
   
   // Check system permissions
-  ipcMain.handle('check-system-permissions', async () => {
+  ipcMain.handle('checkSystemPermissions', async () => {
     return await checkSystemPermissions();
   });
   
   // Request system permissions
-  ipcMain.handle('request-system-permissions', async () => {
+  ipcMain.handle('requestSystemPermissions', async () => {
     return await requestSystemPermissions();
   });
   
   // Detect browser information
-  ipcMain.handle('detect-browser-info', async () => {
+  ipcMain.handle('detectBrowserInfo', async () => {
     return await detectBrowserInfo();
   });
   
   // Get disk usage
-  ipcMain.handle('get-disk-usage', async () => {
+  ipcMain.handle('getDiskUsage', async () => {
     return await getDiskUsage();
   });
   
   // Get network information
-  ipcMain.handle('get-network-info', async () => {
+  ipcMain.handle('getNetworkInfo', async () => {
     return getNetworkInfo();
   });
   
   // Get debug information
-  ipcMain.handle('get-debug-info', async () => {
+  ipcMain.handle('getDebugInfo', async () => {
     return getDebugInfo();
   });
   
   // Open system preferences for permissions
-  ipcMain.handle('open-system-preferences', async (event, panel?: string) => {
+  ipcMain.handle('openSystemPreferences', async (event, panel?: string) => {
     if (process.platform === 'darwin') {
       const command = panel ? 
         `open "x-apple.systempreferences:com.apple.preference.security?${panel}"` :

@@ -345,47 +345,47 @@ function getDebugInfo() {
  */
 function setupSystemInfoIpcHandlers() {
     // Get basic system information
-    electron_1.ipcMain.handle('get-system-info', async () => {
+    electron_1.ipcMain.handle('getSystemInfo', async () => {
         return getSystemInfo();
     });
     // Get memory information
-    electron_1.ipcMain.handle('get-memory-info', async () => {
+    electron_1.ipcMain.handle('getMemoryInfo', async () => {
         return getMemoryInfo();
     });
     // Get CPU information
-    electron_1.ipcMain.handle('get-cpu-info', async () => {
+    electron_1.ipcMain.handle('getCpuInfo', async () => {
         return await getCPUInfo();
     });
     // Get process list
-    electron_1.ipcMain.handle('get-process-list', async () => {
+    electron_1.ipcMain.handle('getProcessList', async () => {
         return getProcessList();
     });
     // Check system permissions
-    electron_1.ipcMain.handle('check-system-permissions', async () => {
+    electron_1.ipcMain.handle('checkSystemPermissions', async () => {
         return await checkSystemPermissions();
     });
     // Request system permissions
-    electron_1.ipcMain.handle('request-system-permissions', async () => {
+    electron_1.ipcMain.handle('requestSystemPermissions', async () => {
         return await requestSystemPermissions();
     });
     // Detect browser information
-    electron_1.ipcMain.handle('detect-browser-info', async () => {
+    electron_1.ipcMain.handle('detectBrowserInfo', async () => {
         return await detectBrowserInfo();
     });
     // Get disk usage
-    electron_1.ipcMain.handle('get-disk-usage', async () => {
+    electron_1.ipcMain.handle('getDiskUsage', async () => {
         return await getDiskUsage();
     });
     // Get network information
-    electron_1.ipcMain.handle('get-network-info', async () => {
+    electron_1.ipcMain.handle('getNetworkInfo', async () => {
         return getNetworkInfo();
     });
     // Get debug information
-    electron_1.ipcMain.handle('get-debug-info', async () => {
+    electron_1.ipcMain.handle('getDebugInfo', async () => {
         return getDebugInfo();
     });
     // Open system preferences for permissions
-    electron_1.ipcMain.handle('open-system-preferences', async (event, panel) => {
+    electron_1.ipcMain.handle('openSystemPreferences', async (event, panel) => {
         if (process.platform === 'darwin') {
             const command = panel ?
                 `open "x-apple.systempreferences:com.apple.preference.security?${panel}"` :

@@ -249,7 +249,7 @@ export function registerNativeIpcHandlers(): void {
   ipcMain.handle('nativeGetTimestamp', () => {
     return safeNativeCall('getTimestamp');
   });
-  
+
   // 워커 관련 핸들러
   ipcMain.handle('native:addWorkerTask', (_, taskData: string) => {
     return safeNativeCall('addWorkerTask', taskData);
@@ -371,9 +371,6 @@ export function cleanupNativeIpcHandlers(): void {
     'native:runGpuAcceleration',
     'native:runGpuBenchmark',
     'native:getSystemInfo',
-    'native:isNativeModuleAvailable',
-    'native:getNativeModuleInfo',
-    'native:getNativeModuleVersion',
     'native:initializeNativeModules',
     'native:cleanupNativeModules',
     'native:getTimestamp',

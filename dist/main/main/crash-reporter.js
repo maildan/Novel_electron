@@ -588,7 +588,7 @@ function handleAppShutdown() {
  */
 function setupCrashReporterIpcHandlers() {
     // 충돌 보고서 정보 조회
-    electron_1.ipcMain.handle('crash-reporter:get-info', () => {
+    electron_1.ipcMain.handle('crashReporter:getInfo', () => {
         return {
             directory: CRASH_REPORTS_DIR,
             enabled: electron_1.crashReporter.getUploadToServer(),
@@ -599,7 +599,7 @@ function setupCrashReporterIpcHandlers() {
         };
     });
     // 업로드 설정 변경
-    electron_1.ipcMain.handle('crash-reporter:set-upload', (event, shouldUpload) => {
+    electron_1.ipcMain.handle('crashReporter:setUpload', (event, shouldUpload) => {
         electron_1.crashReporter.setUploadToServer(shouldUpload);
         return true;
     });

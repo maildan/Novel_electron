@@ -326,7 +326,59 @@ exports.nativeClient = new NativeModuleClient();
  * 네이티브 모듈 관련 IPC 핸들러 등록
  */
 function registerNativeIpcHandlers() {
-    electron_1.ipcMain.handle('native:get-status', async () => {
+    // 네이티브 모듈 사용 가능 여부 확인
+    electron_1.ipcMain.handle('native:isNativeModuleAvailable', async () => {
+        try {
+            const status = exports.nativeClient.getStatus();
+            return {
+                success: true,
+                data: status.isAvailable
+            };
+        }
+        catch (error) {
+            (0, utils_1.errorLog)('네이티브 모듈 사용 가능 여부 조회 오류:', error);
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : '알 수 없는 오류'
+            };
+        }
+    });
+    // 네이티브 모듈 버전 정보
+    electron_1.ipcMain.handle('native:getNativeModuleVersion', async () => {
+        try {
+            const status = exports.nativeClient.getStatus();
+            return {
+                success: true,
+                data: status.version || '알 수 없음'
+            };
+        }
+        catch (error) {
+            (0, utils_1.errorLog)('네이티브 모듈 버전 조회 오류:', error);
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : '알 수 없는 오류'
+            };
+        }
+    });
+    // 네이티브 모듈 상세 정보
+    electron_1.ipcMain.handle('native:getNativeModuleInfo', async () => {
+        try {
+            const info = exports.nativeClient.getNativeModuleInfo();
+            return {
+                success: true,
+                data: info
+            };
+        }
+        catch (error) {
+            (0, utils_1.errorLog)('네이티브 모듈 상세 정보 조회 오류:', error);
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : '알 수 없는 오류'
+            };
+        }
+    });
+    // 기존 호환성 핸들러들 (camelCase 형태)
+    electron_1.ipcMain.handle('native:getStatus', async () => {
         try {
             const status = exports.nativeClient.getStatus();
             return {
@@ -348,7 +400,7 @@ function registerNativeIpcHandlers() {
             };
         }
     });
-    electron_1.ipcMain.handle('native:get-info', async () => {
+    electron_1.ipcMain.handle('native:getInfo', async () => {
         try {
             const info = exports.nativeClient.getNativeModuleInfo();
             return {
@@ -364,14 +416,19 @@ function registerNativeIpcHandlers() {
             };
         }
     });
-    (0, utils_1.debugLog)('네이티브 모듈 관련 IPC 핸들러 등록 완료');
+    (0, utils_1.debugLog)('네이티브 모듈 관련 IPC 핸들러 등록 완료 (kebab-case 형태 포함)');
 }
 /**
  * 네이티브 모듈 관련 IPC 핸들러 정리
  */
 function cleanupNativeIpcHandlers() {
+    // kebab-case 형태 핸들러들
+    electron_1.ipcMain.removeHandler('native:isNativeModuleAvailable');
+    electron_1.ipcMain.removeHandler('native:getNativeModuleVersion');
+    electron_1.ipcMain.removeHandler('native:getNativeModuleInfo');
+    // 기존 호환성 핸들러들
     electron_1.ipcMain.removeHandler('native:get-status');
-    electron_1.ipcMain.removeHandler('native:get-info');
+    electron_1.ipcMain.removeHandler('native:getInfo');
     (0, utils_1.debugLog)('네이티브 모듈 관련 IPC 핸들러 정리 완료');
 }
 //# sourceMappingURL=native-client.js.map

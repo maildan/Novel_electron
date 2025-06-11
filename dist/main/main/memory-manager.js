@@ -550,7 +550,7 @@ async function checkAndOptimizeMemoryIfNeeded() {
 function registerMemoryIpcHandlers() {
     (0, utils_1.debugLog)('메모리 관련 IPC 핸들러 등록 시작');
     // 메모리 정보 조회
-    electron_1.ipcMain.handle('memory:get-info', async () => {
+    electron_1.ipcMain.handle('memory:getInfo', async () => {
         try {
             const manager = getMemoryManager();
             const memoryInfo = await manager.getMemoryInfo();
@@ -580,7 +580,7 @@ function registerMemoryIpcHandlers() {
         }
     });
     // 강제 가비지 컬렉션
-    electron_1.ipcMain.handle('memory:force-gc', async () => {
+    electron_1.ipcMain.handle('memory:forceGc', async () => {
         try {
             const manager = getMemoryManager();
             if (global.gc) {
@@ -601,7 +601,7 @@ function registerMemoryIpcHandlers() {
         }
     });
     // 메모리 임계값 설정
-    electron_1.ipcMain.handle('memory:set-threshold', async (_, threshold) => {
+    electron_1.ipcMain.handle('memory:setThreshold', async (_, threshold) => {
         try {
             const manager = getMemoryManager();
             await manager.updateSettings({ threshold });

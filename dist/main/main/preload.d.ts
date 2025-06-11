@@ -40,6 +40,8 @@ declare const electronAPI: {
         getStats: () => Promise<any>;
         getInfo: () => Promise<any>;
         optimize: () => Promise<any>;
+        forceGc: () => Promise<any>;
+        setThreshold: (threshold: number) => Promise<any>;
     };
     settings: {
         get: () => Promise<any>;
@@ -74,6 +76,9 @@ declare const electronAPI: {
         isMinimized: () => Promise<any>;
         isVisible: () => Promise<any>;
         isFocused: () => Promise<any>;
+        setWindowMode: (mode: string) => Promise<any>;
+        getWindowStatus: () => Promise<any>;
+        setWindowBounds: (bounds: any) => Promise<any>;
     };
     app: {
         getVersion: () => Promise<any>;

@@ -77,7 +77,8 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.8",
     "@types/better-sqlite3": "^7.6.13",
-    "@types/node": "^22.10.7",
+    "@types/electron": "^1.6.12",
+    "@types/node": "^24.0.0",
     "@types/react": "^19.0.3",
     "@types/react-dom": "^19.0.3",
     "concurrently": "^8.2.2",

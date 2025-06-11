@@ -436,7 +436,59 @@ export const nativeClient = new NativeModuleClient();
  * 네이티브 모듈 관련 IPC 핸들러 등록
  */
 export function registerNativeIpcHandlers(): void {
-  ipcMain.handle('native:get-status', async () => {
+  // 네이티브 모듈 사용 가능 여부 확인
+  ipcMain.handle('native:isNativeModuleAvailable', async () => {
+    try {
+      const status = nativeClient.getStatus();
+      return {
+        success: true,
+        data: status.isAvailable
+      };
+    } catch (error) {
+      errorLog('네이티브 모듈 사용 가능 여부 조회 오류:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : '알 수 없는 오류'
+      };
+    }
+  });
+
+  // 네이티브 모듈 버전 정보
+  ipcMain.handle('native:getNativeModuleVersion', async () => {
+    try {
+      const status = nativeClient.getStatus();
+      return {
+        success: true,
+        data: status.version || '알 수 없음'
+      };
+    } catch (error) {
+      errorLog('네이티브 모듈 버전 조회 오류:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : '알 수 없는 오류'
+      };
+    }
+  });
+
+  // 네이티브 모듈 상세 정보
+  ipcMain.handle('native:getNativeModuleInfo', async () => {
+    try {
+      const info = nativeClient.getNativeModuleInfo();
+      return {
+        success: true,
+        data: info
+      };
+    } catch (error) {
+      errorLog('네이티브 모듈 상세 정보 조회 오류:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : '알 수 없는 오류'
+      };
+    }
+  });
+
+  // 기존 호환성 핸들러들 (camelCase 형태)
+  ipcMain.handle('native:getStatus', async () => {
     try {
       const status = nativeClient.getStatus();
       return {
@@ -458,7 +510,7 @@ export function registerNativeIpcHandlers(): void {
     }
   });
 
-  ipcMain.handle('native:get-info', async () => {
+  ipcMain.handle('native:getInfo', async () => {
     try {
       const info = nativeClient.getNativeModuleInfo();
       return {
@@ -474,14 +526,21 @@ export function registerNativeIpcHandlers(): void {
     }
   });
 
-  debugLog('네이티브 모듈 관련 IPC 핸들러 등록 완료');
+  debugLog('네이티브 모듈 관련 IPC 핸들러 등록 완료 (kebab-case 형태 포함)');
 }
 
 /**
  * 네이티브 모듈 관련 IPC 핸들러 정리
  */
 export function cleanupNativeIpcHandlers(): void {
+  // kebab-case 형태 핸들러들
+  ipcMain.removeHandler('native:isNativeModuleAvailable');
+  ipcMain.removeHandler('native:getNativeModuleVersion');
+  ipcMain.removeHandler('native:getNativeModuleInfo');
+  
+  // 기존 호환성 핸들러들
   ipcMain.removeHandler('native:get-status');
-  ipcMain.removeHandler('native:get-info');
+  ipcMain.removeHandler('native:getInfo');
+  
   debugLog('네이티브 모듈 관련 IPC 핸들러 정리 완료');
 }

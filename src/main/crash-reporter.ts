@@ -677,7 +677,7 @@ function handleAppShutdown(): void {
  */
 function setupCrashReporterIpcHandlers(): void {
   // 충돌 보고서 정보 조회
-  ipcMain.handle('crash-reporter:get-info', () => {
+  ipcMain.handle('crashReporter:getInfo', () => {
     return {
       directory: CRASH_REPORTS_DIR,
       enabled: crashReporter.getUploadToServer(),
@@ -689,7 +689,7 @@ function setupCrashReporterIpcHandlers(): void {
   });
 
   // 업로드 설정 변경
-  ipcMain.handle('crash-reporter:set-upload', (event, shouldUpload: boolean) => {
+  ipcMain.handle('crashReporter:setUpload', (event, shouldUpload: boolean) => {
     crashReporter.setUploadToServer(shouldUpload);
     return true;
   });

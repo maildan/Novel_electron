@@ -550,38 +550,38 @@ export async function saveClipboardToFile(filePath: string, type: 'text' | 'html
  */
 function setupClipboardIpcHandlers(): void {
   // 텍스트 복사
-  ipcMain.handle('clipboard:copy-text', (event, text: string) => {
+  ipcMain.handle('clipboard:copyText', (event, text: string) => {
     return copyTextToClipboard(text);
   });
 
   // HTML 복사
-  ipcMain.handle('clipboard:copy-html', (event, html: string, text?: string) => {
+  ipcMain.handle('clipboard:copyHtml', (event, html: string, text?: string) => {
     return copyHtmlToClipboard(html, text);
   });
 
   // 이미지 복사
-  ipcMain.handle('clipboard:copy-image', (event, imageData) => {
+  ipcMain.handle('clipboard:copyImage', (event, imageData) => {
     return copyImageToClipboard(imageData);
   });
 
   // 텍스트 읽기
-  ipcMain.handle('clipboard:read-text', () => {
+  ipcMain.handle('clipboard:readText', () => {
     return readTextFromClipboard();
   });
 
   // HTML 읽기
-  ipcMain.handle('clipboard:read-html', () => {
+  ipcMain.handle('clipboard:readHtml', () => {
     return readHtmlFromClipboard();
   });
 
   // 이미지 읽기
-  ipcMain.handle('clipboard:read-image', () => {
+  ipcMain.handle('clipboard:readImage', () => {
     const image = readImageFromClipboard();
     return image ? image.toDataURL() : null;
   });
 
   // 감시 시작
-  ipcMain.handle('clipboard:start-watching', (event, options: ClipboardWatcherOptions = {}) => {
+  ipcMain.handle('clipboard:startWatching', (event, options: ClipboardWatcherOptions = {}) => {
     if (options.interval) {
       setWatchInterval(options.interval);
     }
@@ -590,34 +590,34 @@ function setupClipboardIpcHandlers(): void {
   });
 
   // 감시 중지
-  ipcMain.handle('clipboard:stop-watching', () => {
+  ipcMain.handle('clipboard:stopWatching', () => {
     stopWatching();
     return !isWatchingEnabled;
   });
 
   // 히스토리 조회
-  ipcMain.handle('clipboard:get-history', (event, limit: number = 20) => {
+  ipcMain.handle('clipboard:getHistory', (event, limit: number = 20) => {
     return getClipboardHistory(limit);
   });
 
   // 히스토리 삭제
-  ipcMain.handle('clipboard:clear-history', () => {
+  ipcMain.handle('clipboard:clearHistory', () => {
     clearClipboardHistory();
     return true;
   });
 
   // 통계 조회
-  ipcMain.handle('clipboard:get-stats', () => {
+  ipcMain.handle('clipboard:getStats', () => {
     return getClipboardStats();
   });
 
   // 파일로 저장
-  ipcMain.handle('clipboard:save-to-file', (event, filePath: string, type: 'text' | 'html' | 'image') => {
+  ipcMain.handle('clipboard:saveToFile', (event, filePath: string, type: 'text' | 'html' | 'image') => {
     return saveClipboardToFile(filePath, type);
   });
 
   // 감시 간격 설정
-  ipcMain.handle('clipboard:set-interval', (event, intervalMs: number) => {
+  ipcMain.handle('clipboard:setInterval', (event, intervalMs: number) => {
     return setWatchInterval(intervalMs);
   });
 }

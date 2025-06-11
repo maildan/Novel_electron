@@ -191,7 +191,7 @@ function useSettings() {
             if (isElectron && electronAPI && electronAPI.ipcRenderer) {
                 console.debug('🔌 useSettings: Electron IPC를 통해 설정 저장');
                 try {
-                    const result = await electronAPI.ipcRenderer.invoke('settings:update-multiple', newSettings);
+                    const result = await electronAPI.ipcRenderer.invoke('settings:updateMultiple', newSettings);
                     console.debug('✅ useSettings: Electron 설정 저장 결과:', result);
                     if (!result) {
                         throw new Error('Electron 설정 저장 실패');

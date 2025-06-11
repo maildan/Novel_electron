@@ -276,11 +276,11 @@ function clearAllScreenshots() {
  */
 function setupScreenshotIpcHandlers() {
     // Get available sources
-    electron_1.ipcMain.handle('get-screenshot-sources', async () => {
+    electron_1.ipcMain.handle('getScreenshotSources', async () => {
         return await getScreenshotSources();
     });
     // Capture screenshot from specific source
-    electron_1.ipcMain.handle('capture-screenshot', async (event, sourceId, options) => {
+    electron_1.ipcMain.handle('captureScreenshot', async (event, sourceId, options) => {
         const result = await captureScreenshot(sourceId, options);
         return {
             metadata: result.metadata,
@@ -288,7 +288,7 @@ function setupScreenshotIpcHandlers() {
         };
     });
     // Capture primary screen
-    electron_1.ipcMain.handle('capture-primary-screen', async (event, options) => {
+    electron_1.ipcMain.handle('capturePrimaryScreen', async (event, options) => {
         const result = await capturePrimaryScreen(options);
         return {
             metadata: result.metadata,
@@ -296,7 +296,7 @@ function setupScreenshotIpcHandlers() {
         };
     });
     // Capture active window
-    electron_1.ipcMain.handle('capture-active-window', async (event, options) => {
+    electron_1.ipcMain.handle('captureActiveWindow', async (event, options) => {
         const result = await captureActiveWindow(options);
         return {
             metadata: result.metadata,
@@ -304,11 +304,11 @@ function setupScreenshotIpcHandlers() {
         };
     });
     // Get screenshot history
-    electron_1.ipcMain.handle('get-screenshot-history', async () => {
+    electron_1.ipcMain.handle('getScreenshotHistory', async () => {
         return getScreenshotHistory();
     });
     // Load screenshot
-    electron_1.ipcMain.handle('load-screenshot', async (event, filename) => {
+    electron_1.ipcMain.handle('loadScreenshot', async (event, filename) => {
         const buffer = loadScreenshot(filename);
         if (buffer) {
             return electron_1.nativeImage.createFromBuffer(buffer).toDataURL();
@@ -316,15 +316,15 @@ function setupScreenshotIpcHandlers() {
         return null;
     });
     // Delete screenshot
-    electron_1.ipcMain.handle('delete-screenshot', async (event, filename) => {
+    electron_1.ipcMain.handle('deleteScreenshot', async (event, filename) => {
         return deleteScreenshot(filename);
     });
     // Clear all screenshots
-    electron_1.ipcMain.handle('clear-all-screenshots', async () => {
+    electron_1.ipcMain.handle('clearAllScreenshots', async () => {
         return clearAllScreenshots();
     });
     // Get screenshot directory path
-    electron_1.ipcMain.handle('get-screenshot-directory', async () => {
+    electron_1.ipcMain.handle('getScreenshotDirectory', async () => {
         return getScreenshotDirectory();
     });
     (0, debug_1.debugLog)('Screenshot IPC handlers registered');

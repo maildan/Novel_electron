@@ -136,71 +136,71 @@ function registerNativeIpcHandlers() {
     // 네이티브 모듈 로드
     loadNativeModule();
     // 메모리 관련 핸들러
-    electron_1.ipcMain.handle('native:getMemoryUsage', () => {
+    electron_1.ipcMain.handle('nativeGetMemoryUsage', () => {
         const result = safeNativeCall('getMemoryUsage');
         return result;
     });
-    electron_1.ipcMain.handle('native:startMemoryMonitoring', () => {
+    electron_1.ipcMain.handle('nativeStartMemoryMonitoring', () => {
         return safeNativeCall('startMemoryMonitoring');
     });
-    electron_1.ipcMain.handle('native:getMemoryStats', () => {
+    electron_1.ipcMain.handle('nativeGetMemoryStats', () => {
         const result = safeNativeCall('getMemoryStats');
         return result;
     });
-    electron_1.ipcMain.handle('native:optimizeMemory', () => {
+    electron_1.ipcMain.handle('nativeOptimizeMemory', () => {
         return safeNativeCall('optimizeMemory');
     });
-    electron_1.ipcMain.handle('native:cleanupMemory', () => {
+    electron_1.ipcMain.handle('nativeCleanupMemory', () => {
         return safeNativeCall('cleanupMemory');
     });
-    electron_1.ipcMain.handle('native:optimizeMemoryAdvanced', () => {
+    electron_1.ipcMain.handle('nativeOptimizeMemoryAdvanced', () => {
         return safeNativeCall('optimizeMemoryAdvanced');
     });
-    electron_1.ipcMain.handle('native:resetMemoryMonitoring', () => {
+    electron_1.ipcMain.handle('nativeResetMemoryMonitoring', () => {
         return safeNativeCall('resetMemoryMonitoring');
     });
     // GPU 관련 핸들러
-    electron_1.ipcMain.handle('native:getGpuInfo', () => {
+    electron_1.ipcMain.handle('nativeGetGpuInfo', () => {
         const result = safeNativeCall('getGpuInfo');
         return result;
     });
-    electron_1.ipcMain.handle('native:getGpuMemoryStats', () => {
+    electron_1.ipcMain.handle('nativeGetGpuMemoryStats', () => {
         return safeNativeCall('getGpuMemoryStats');
     });
-    electron_1.ipcMain.handle('native:runGpuAcceleration', (_, data) => {
+    electron_1.ipcMain.handle('nativeRunGpuAcceleration', (_, data) => {
         return safeNativeCall('runGpuAcceleration', data);
     });
-    electron_1.ipcMain.handle('native:runGpuBenchmark', () => {
+    electron_1.ipcMain.handle('nativeRunGpuBenchmark', () => {
         return safeNativeCall('runGpuBenchmark');
     });
     // 시스템 관련 핸들러
-    electron_1.ipcMain.handle('native:getSystemInfo', () => {
+    electron_1.ipcMain.handle('nativeGetSystemInfo', () => {
         const result = safeNativeCall('getSystemInfo');
         if (result.success && typeof result.data === 'string') {
             result.data = safeJsonParse(result.data);
         }
         return result;
     });
-    electron_1.ipcMain.handle('native:isNativeModuleAvailable', () => {
+    electron_1.ipcMain.handle('nativeIsNativeModuleAvailable', () => {
         return safeNativeCall('isNativeModuleAvailable');
     });
-    electron_1.ipcMain.handle('native:getNativeModuleInfo', () => {
+    electron_1.ipcMain.handle('nativeGetNativeModuleInfo', () => {
         const result = safeNativeCall('getNativeModuleInfo');
         if (result.success && typeof result.data === 'string') {
             result.data = safeJsonParse(result.data);
         }
         return result;
     });
-    electron_1.ipcMain.handle('native:getNativeModuleVersion', () => {
+    electron_1.ipcMain.handle('nativeGetNativeModuleVersion', () => {
         return safeNativeCall('getNativeModuleVersion');
     });
-    electron_1.ipcMain.handle('native:initializeNativeModules', () => {
+    electron_1.ipcMain.handle('nativeInitializeNativeModules', () => {
         return safeNativeCall('initializeNativeModules');
     });
-    electron_1.ipcMain.handle('native:cleanupNativeModules', () => {
+    electron_1.ipcMain.handle('nativeCleanupNativeModules', () => {
         return safeNativeCall('cleanupNativeModules');
     });
-    electron_1.ipcMain.handle('native:getTimestamp', () => {
+    electron_1.ipcMain.handle('nativeGetTimestamp', () => {
         return safeNativeCall('getTimestamp');
     });
     // 워커 관련 핸들러
@@ -304,9 +304,6 @@ function cleanupNativeIpcHandlers() {
         'native:runGpuAcceleration',
         'native:runGpuBenchmark',
         'native:getSystemInfo',
-        'native:isNativeModuleAvailable',
-        'native:getNativeModuleInfo',
-        'native:getNativeModuleVersion',
         'native:initializeNativeModules',
         'native:cleanupNativeModules',
         'native:getTimestamp',

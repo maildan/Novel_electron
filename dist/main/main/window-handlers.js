@@ -189,7 +189,7 @@ function registerWindowHandlers() {
     }
     console.log('윈도우 관련 IPC 핸들러 등록 중...');
     // 윈도우 모드 변경 핸들러
-    electron_1.ipcMain.handle('set-window-mode', async (event, mode) => {
+    electron_1.ipcMain.handle('setWindowMode', async (event, mode) => {
         try {
             console.log(`윈도우 모드 변경 요청: ${mode}`);
             const success = applyWindowMode(mode);
@@ -209,7 +209,7 @@ function registerWindowHandlers() {
         }
     });
     // 윈도우 상태 조회 핸들러
-    electron_1.ipcMain.handle('get-window-status', async () => {
+    electron_1.ipcMain.handle('getWindowStatus', async () => {
         try {
             const status = getWindowStatus();
             return {
@@ -223,7 +223,7 @@ function registerWindowHandlers() {
         }
     });
     // 윈도우 크기/위치 설정 핸들러
-    electron_1.ipcMain.handle('set-window-bounds', async (event, bounds) => {
+    electron_1.ipcMain.handle('setWindowBounds', async (event, bounds) => {
         try {
             const success = setWindowBounds(bounds);
             const status = getWindowStatus();
@@ -240,7 +240,7 @@ function registerWindowHandlers() {
         }
     });
     // 윈도우 투명도 설정 핸들러
-    electron_1.ipcMain.handle('set-window-opacity', async (event, opacity) => {
+    electron_1.ipcMain.handle('setWindowOpacity', async (event, opacity) => {
         try {
             const success = setWindowOpacity(opacity);
             const status = getWindowStatus();
@@ -257,7 +257,7 @@ function registerWindowHandlers() {
         }
     });
     // 항상 위에 설정 핸들러
-    electron_1.ipcMain.handle('set-always-on-top', async (event, alwaysOnTop) => {
+    electron_1.ipcMain.handle('setAlwaysOnTop', async (event, alwaysOnTop) => {
         try {
             const success = setAlwaysOnTop(alwaysOnTop);
             const status = getWindowStatus();
@@ -275,7 +275,7 @@ function registerWindowHandlers() {
         }
     });
     // 윈도우 최소화 핸들러
-    electron_1.ipcMain.handle('minimize-window', async () => {
+    electron_1.ipcMain.handle('minimizeWindow', async () => {
         try {
             const mainWindow = electron_1.BrowserWindow.getAllWindows().find(win => !win.isDestroyed());
             if (mainWindow) {
@@ -290,7 +290,7 @@ function registerWindowHandlers() {
         }
     });
     // 윈도우 최대화 핸들러
-    electron_1.ipcMain.handle('maximize-window', async () => {
+    electron_1.ipcMain.handle('maximizeWindow', async () => {
         try {
             const mainWindow = electron_1.BrowserWindow.getAllWindows().find(win => !win.isDestroyed());
             if (mainWindow) {
@@ -312,7 +312,7 @@ function registerWindowHandlers() {
         }
     });
     // 윈도우 닫기 핸들러
-    electron_1.ipcMain.handle('close-window', async () => {
+    electron_1.ipcMain.handle('closeWindow', async () => {
         try {
             const mainWindow = electron_1.BrowserWindow.getAllWindows().find(win => !win.isDestroyed());
             if (mainWindow) {
@@ -327,7 +327,7 @@ function registerWindowHandlers() {
         }
     });
     // 윈도우 포커스 핸들러
-    electron_1.ipcMain.handle('focus-window', async () => {
+    electron_1.ipcMain.handle('focusWindow', async () => {
         try {
             const mainWindow = electron_1.BrowserWindow.getAllWindows().find(win => !win.isDestroyed());
             if (mainWindow) {

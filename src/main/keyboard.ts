@@ -490,7 +490,7 @@ function registerGlobalShortcuts(): void {
  */
 function setupKeyboardIpcHandlers(): void {
   // Get typing statistics
-  ipcMain.handle('get-typing-stats', async () => {
+  ipcMain.handle('getTypingStats', async () => {
     return {
       totalTypingCount: imeComposition.totalTypingCount,
       compositionState: { ...composerState },
@@ -500,7 +500,7 @@ function setupKeyboardIpcHandlers(): void {
   });
   
   // Reset typing statistics
-  ipcMain.handle('reset-typing-stats', async () => {
+  ipcMain.handle('resetTypingStats', async () => {
     imeComposition.totalTypingCount = 0;
     imeComposition.lastComposedText = '';
     imeComposition.compositionBuffer = '';
@@ -517,12 +517,12 @@ function setupKeyboardIpcHandlers(): void {
   });
   
   // Get keyboard permissions status
-  ipcMain.handle('get-keyboard-permissions', async () => {
+  ipcMain.handle('getKeyboardPermissions', async () => {
     return { ...permissionStatus };
   });
 
   // Toggle keyboard monitoring
-  ipcMain.handle('toggle-keyboard-monitoring', async () => {
+  ipcMain.handle('toggleKeyboardMonitoring', async () => {
     if (isListening) {
       await stopKeyboardMonitoring();
     } else {
@@ -532,7 +532,7 @@ function setupKeyboardIpcHandlers(): void {
   });
 
   // Get Hangul composition state
-  ipcMain.handle('get-hangul-composition-state', async () => {
+  ipcMain.handle('getHangulCompositionState', async () => {
     return { ...composerState };
   });
   

@@ -623,7 +623,7 @@ export function registerMemoryIpcHandlers(): void {
   debugLog('메모리 관련 IPC 핸들러 등록 시작');
 
   // 메모리 정보 조회
-  ipcMain.handle('memory:get-info', async () => {
+  ipcMain.handle('memory:getInfo', async () => {
     try {
       const manager = getMemoryManager();
       const memoryInfo = await manager.getMemoryInfo();
@@ -653,7 +653,7 @@ export function registerMemoryIpcHandlers(): void {
   });
 
   // 강제 가비지 컬렉션
-  ipcMain.handle('memory:force-gc', async () => {
+  ipcMain.handle('memory:forceGc', async () => {
     try {
       const manager = getMemoryManager();
       if (global.gc) {
@@ -673,7 +673,7 @@ export function registerMemoryIpcHandlers(): void {
   });
 
   // 메모리 임계값 설정
-  ipcMain.handle('memory:set-threshold', async (_, threshold: number) => {
+  ipcMain.handle('memory:setThreshold', async (_, threshold: number) => {
     try {
       const manager = getMemoryManager();
       await manager.updateSettings({ threshold });

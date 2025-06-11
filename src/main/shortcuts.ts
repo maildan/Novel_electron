@@ -423,7 +423,7 @@ export function initializeShortcuts(): void {
  */
 function setupIpcHandlers(): void {
   // 전역 단축키 등록 요청
-  ipcMain.handle('shortcuts:register-global', (event, config: ShortcutConfig) => {
+  ipcMain.handle('shortcuts:registerGlobal', (event, config: ShortcutConfig) => {
     return registerGlobalShortcut(
       config.accelerator,
       () => {
@@ -441,17 +441,17 @@ function setupIpcHandlers(): void {
   });
 
   // 전역 단축키 해제 요청
-  ipcMain.handle('shortcuts:unregister-global', (event, { accelerator }) => {
+  ipcMain.handle('shortcuts:unregisterGlobal', (event, { accelerator }) => {
     return unregisterGlobalShortcut(accelerator);
   });
 
   // 단축키 토글 요청
-  ipcMain.handle('shortcuts:toggle-global', (event, { accelerator, enabled }) => {
+  ipcMain.handle('shortcuts:toggleGlobal', (event, { accelerator, enabled }) => {
     return toggleGlobalShortcut(accelerator, enabled);
   });
 
   // 등록된 단축키 목록 조회
-  ipcMain.handle('shortcuts:get-all', () => {
+  ipcMain.handle('shortcuts:getAll', () => {
     const shortcuts = [];
     
     for (const [accelerator, data] of registeredShortcuts.entries()) {
@@ -469,12 +469,12 @@ function setupIpcHandlers(): void {
   });
 
   // 단축키 히스토리 조회
-  ipcMain.handle('shortcuts:get-history', () => {
+  ipcMain.handle('shortcuts:getHistory', () => {
     return shortcutHistory.slice(0, 50); // 최근 50개만 반환
   });
 
   // 단축키 충돌 검사
-  ipcMain.handle('shortcuts:check-conflicts', (event, { accelerator }) => {
+  ipcMain.handle('shortcuts:checkConflicts', (event, { accelerator }) => {
     return checkShortcutConflict(accelerator);
   });
 }

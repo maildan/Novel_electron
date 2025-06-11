@@ -117,7 +117,7 @@ export function registerMemoryIpcHandlers(): void {
   console.log('[Memory IPC] 메모리 관련 IPC 핸들러 등록 시작');
 
   // 메모리 정보 조회 (React 컴포넌트용)
-  ipcMain.handle('memory:get-info', async () => {
+  ipcMain.handle('memory:getInfo', async () => {
     try {
       const memoryManager = MemoryManager.getInstance();
       
@@ -180,7 +180,7 @@ export function registerMemoryIpcHandlers(): void {
   });
 
   // 네이티브 모듈 상태 조회
-  ipcMain.handle('system:native:get-status', () => {
+  ipcMain.handle('system:native:getStatus', () => {
     try {
       const status = nativeClient.getStatus();
       const available = nativeClient.isAvailable();
@@ -288,9 +288,9 @@ export function registerMemoryIpcHandlers(): void {
  * 메모리 관련 IPC 핸들러 정리
  */
 export function cleanupMemoryIpcHandlers(): void {
-  ipcMain.removeHandler('memory:get-info');
+  ipcMain.removeHandler('memory:getInfo');
   ipcMain.removeHandler('memory:optimize');
   ipcMain.removeHandler('memory:cleanup');
-  ipcMain.removeHandler('system:native:get-status');
+  ipcMain.removeHandler('system:native:getStatus');
   console.log('[Memory IPC] 메모리 관련 IPC 핸들러 정리 완료');
 }

@@ -298,12 +298,12 @@ function clearAllScreenshots(): boolean {
  */
 function setupScreenshotIpcHandlers(): void {
   // Get available sources
-  ipcMain.handle('get-screenshot-sources', async () => {
+  ipcMain.handle('getScreenshotSources', async () => {
     return await getScreenshotSources();
   });
   
   // Capture screenshot from specific source
-  ipcMain.handle('capture-screenshot', async (event, sourceId: string, options?: ScreenshotOptions) => {
+  ipcMain.handle('captureScreenshot', async (event, sourceId: string, options?: ScreenshotOptions) => {
     const result = await captureScreenshot(sourceId, options);
     return {
       metadata: result.metadata,
@@ -312,7 +312,7 @@ function setupScreenshotIpcHandlers(): void {
   });
   
   // Capture primary screen
-  ipcMain.handle('capture-primary-screen', async (event, options?: ScreenshotOptions) => {
+  ipcMain.handle('capturePrimaryScreen', async (event, options?: ScreenshotOptions) => {
     const result = await capturePrimaryScreen(options);
     return {
       metadata: result.metadata,
@@ -321,7 +321,7 @@ function setupScreenshotIpcHandlers(): void {
   });
   
   // Capture active window
-  ipcMain.handle('capture-active-window', async (event, options?: ScreenshotOptions) => {
+  ipcMain.handle('captureActiveWindow', async (event, options?: ScreenshotOptions) => {
     const result = await captureActiveWindow(options);
     return {
       metadata: result.metadata,
@@ -330,12 +330,12 @@ function setupScreenshotIpcHandlers(): void {
   });
   
   // Get screenshot history
-  ipcMain.handle('get-screenshot-history', async () => {
+  ipcMain.handle('getScreenshotHistory', async () => {
     return getScreenshotHistory();
   });
   
   // Load screenshot
-  ipcMain.handle('load-screenshot', async (event, filename: string) => {
+  ipcMain.handle('loadScreenshot', async (event, filename: string) => {
     const buffer = loadScreenshot(filename);
     if (buffer) {
       return nativeImage.createFromBuffer(buffer).toDataURL();
@@ -344,17 +344,17 @@ function setupScreenshotIpcHandlers(): void {
   });
   
   // Delete screenshot
-  ipcMain.handle('delete-screenshot', async (event, filename: string) => {
+  ipcMain.handle('deleteScreenshot', async (event, filename: string) => {
     return deleteScreenshot(filename);
   });
   
   // Clear all screenshots
-  ipcMain.handle('clear-all-screenshots', async () => {
+  ipcMain.handle('clearAllScreenshots', async () => {
     return clearAllScreenshots();
   });
   
   // Get screenshot directory path
-  ipcMain.handle('get-screenshot-directory', async () => {
+  ipcMain.handle('getScreenshotDirectory', async () => {
     return getScreenshotDirectory();
   });
   
