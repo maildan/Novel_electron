@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: ['class', '[data-theme="dark"]', '.dark-mode', '.dark-theme'],
+  darkMode: 'class', // 단순하게 'class'만 사용하여 .dark 클래스로 다크모드 활성화
   content: [
     './src/app/**/*.{js,ts,jsx,tsx}',
     './src/pages/**/*.{js,ts,jsx,tsx}',
@@ -23,6 +23,16 @@ module.exports = {
         'header-bg': 'var(--header-bg)',
         footer: 'var(--footer-bg)',
         'footer-bg': 'var(--footer-bg)',
+        focus: 'var(--focus-outline)',
+        'focus-outline': 'var(--focus-outline)',
+        // WCAG 가이드라인 색상 팔레트
+        'wcag-light-primary': '#6200EE',
+        'wcag-light-bg': '#FFFFFF',
+        'wcag-light-border': '#E0E0E0',
+        'wcag-dark-primary': '#BB86FC',
+        'wcag-dark-bg': '#121212',
+        'wcag-dark-surface': '#1E1E1E',
+        'wcag-dark-border': '#2A2A2A',
       },
       fontFamily: {
         sans: 'var(--font-sans)',

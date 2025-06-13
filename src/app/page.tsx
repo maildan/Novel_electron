@@ -151,83 +151,60 @@ export default function HomePage() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100 dark:bg-gray-950">
-      {/* Header Navigation */}
-      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm">
-        <div className="flex items-center justify-between px-6 py-4">
-          {/* Logo/Title */}
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-950">
+      {/* Tab Navigation Bar */}
+      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm">
+        <div className="flex items-center justify-between px-6 py-3">
           <div className="flex items-center gap-3">
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">Loop 6</h1>
-            <span className="text-sm text-gray-500 dark:text-gray-400">타이핑 분석 시스템</span>
+            <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center">
+              <span className="text-white font-bold text-sm">L6</span>
+            </div>
+            <div>
+              <h1 className="text-lg font-bold text-gray-900 dark:text-white">Loop 6</h1>
+              <span className="text-xs text-gray-500 dark:text-gray-400">타이핑 분석 시스템</span>
+            </div>
           </div>
-
-          {/* Navigation Tabs */}
-          <nav className="flex items-center gap-1">
+          
+          {/* Horizontal Tab Navigation */}
+          <nav className="flex items-center space-x-1">
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 border ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 ${
                   activeTab === item.id
-                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-700 shadow-sm'
-                    : 'text-gray-600 dark:text-gray-400 border-transparent hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200 hover:border-gray-200 dark:hover:border-gray-600'
+                    ? 'bg-blue-500 text-white shadow-sm'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'
                 }`}
               >
-                <ClientIcon icon={item.icon} className="w-4 h-4" />
+                <ClientIcon icon={item.icon} className="w-4 h-4 flex-shrink-0" />
                 <span className="text-sm font-medium">{item.label}</span>
               </button>
             ))}
           </nav>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="md:hidden p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Mobile Navigation (hidden by default, can be shown when sidebarOpen is true on mobile) */}
-        {sidebarOpen && (
-          <div className="md:hidden border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-            <nav className="p-4">
-              <div className="grid grid-cols-2 gap-2">
-                {navItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      setActiveTab(item.id);
-                      setSidebarOpen(false); // Close mobile menu after selection
-                    }}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors border ${
-                      activeTab === item.id
-                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-700'
-                        : 'text-gray-700 dark:text-gray-300 border-transparent hover:bg-gray-200 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-                    }`}
-                  >
-                    <ClientIcon icon={item.icon} className="w-4 h-4" />
-                    <span className="text-sm">{item.label}</span>
-                  </button>
-                ))}
-              </div>
-            </nav>
-          </div>
-        )}
-      </header>
-
-      {/* Main Content */}
-      <main className="flex-1 overflow-hidden">
-        <div className="h-full overflow-auto p-6">
-          {loading ? (
-            <div className="flex items-center justify-center h-64">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-              <span className="ml-2 text-gray-600 dark:text-gray-400">로딩 중...</span>
+          {/* Status Information */}
+          <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-green-500"></div>
+              <span>시스템 정상</span>
             </div>
-          ) : (
-            renderContent()
-          )}
+            <span>로그 {logs.length}개</span>
+            {loading && <span>로딩 중...</span>}
+          </div>
         </div>
+      </div>
+
+      {/* Content */}
+      <main className="p-6">
+        {loading ? (
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+            <span className="ml-2 text-gray-600 dark:text-gray-400">로딩 중...</span>
+          </div>
+        ) : (
+          renderContent()
+        )}
       </main>
     </div>
   );
