@@ -404,14 +404,14 @@ try {
         --text-disabled: #9e9e9e;
         
         /* 액센트 및 상호작용 색상 */
-        --accent-primary: #6200EE;
-        --accent-secondary: #3700B3;
-        --accent-tertiary: #BB86FC;
+        --accent-primary: #3b82f6;
+        --accent-secondary: #1d4ed8;
+        --accent-tertiary: #60a5fa;
         
         /* 경계선 및 구분선 */
         --border-primary: #e0e0e0;
         --border-secondary: #f0f0f0;
-        --border-focus: #6200EE;
+        --border-focus: #3b82f6;
         
         /* 배경 및 표면 */
         --surface-primary: #ffffff;
@@ -459,13 +459,13 @@ try {
         --text-tertiary: #757575;
         --text-disabled: #616161;
         
-        --accent-primary: #BB86FC;
-        --accent-secondary: #9C27B0;
-        --accent-tertiary: #6200EE;
+        --accent-primary: #60a5fa;
+        --accent-secondary: #3b82f6;
+        --accent-tertiary: #93c5fd;
         
         --border-primary: #333333;
         --border-secondary: #2a2a2a;
-        --border-focus: #BB86FC;
+        --border-focus: #60a5fa;
         
         --surface-primary: #1e1e1e;
         --surface-secondary: #242424;

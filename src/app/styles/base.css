@@ -85,7 +85,7 @@ body:not(.dark) {
 }
 
 :focus-visible {
-  outline: var(--focus-ring-width) solid var(--border-focus);
+  outline: var(--focus-ring-width) solid #3b82f6; /* 파란색으로 변경 */
   outline-offset: var(--focus-ring-offset);
 }
 
@@ -122,8 +122,8 @@ input, textarea, select {
 }
 
 input:focus, textarea:focus, select:focus {
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px rgba(98, 0, 238, 0.1);
+  border-color: #3b82f6; /* 파란색으로 변경 */
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); /* 파란색 그림자로 변경 */
 }
 
 /* 버튼 기본 스타일 */
@@ -142,11 +142,11 @@ button {
 
 button:hover {
   background-color: var(--surface-hover);
-  border-color: var(--border-focus);
+  border-color: #3b82f6; /* 파란색으로 변경 */
 }
 
 button:focus-visible {
-  outline: var(--focus-ring-width) solid var(--border-focus);
+  outline: var(--focus-ring-width) solid #3b82f6; /* 파란색으로 변경 */
   outline-offset: var(--focus-ring-offset);
 }
 
@@ -281,4 +281,44 @@ li {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* 모든 호버 및 포커스 아웃라인 완전 제거 */
+*:hover {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+*:focus {
+  outline: none !important;
+}
+
+*:focus-visible {
+  outline: none !important;
+}
+
+/* 버튼, 링크 등 상호작용 요소의 호버/포커스 시 아웃라인 완전 제거 */
+button:hover,
+button:focus,
+button:focus-visible,
+a:hover,
+a:focus,
+a:focus-visible,
+input:hover,
+input:focus,
+input:focus-visible,
+textarea:hover,
+textarea:focus,
+textarea:focus-visible,
+select:hover,
+select:focus,
+select:focus-visible,
+[role="button"]:hover,
+[role="button"]:focus,
+[role="button"]:focus-visible,
+[tabindex]:hover,
+[tabindex]:focus,
+[tabindex]:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }

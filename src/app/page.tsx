@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { TypingBox } from './components/ui/typing-box';
 import { StatsChart } from './components/ui/stats-chart';
 import MemoryMonitor from './components/ui/memory-monitor';
@@ -37,6 +38,7 @@ export default function HomePage() {
   const [logs, setLogs] = useState<Log[]>([]);
   const [loading, setLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [imageError, setImageError] = useState(false);
 
   // 로그 데이터 로드 및 CSS 설정
   useEffect(() => {
@@ -158,8 +160,19 @@ export default function HomePage() {
           <div className="flex items-center justify-between h-16">
             {/* Left: Logo and Brand */}
             <div className="flex items-center gap-3 flex-shrink-0">
-              <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center">
-                <span className="text-white font-bold text-sm">L6</span>
+              <div className="w-8 h-8 rounded-lg overflow-hidden bg-blue-500 flex items-center justify-center relative">
+                {!imageError ? (
+                  <Image 
+                    src="/appIcon.webp" 
+                    alt="Loop 6 Logo" 
+                    width={32}
+                    height={32}
+                    className="w-full h-full object-cover"
+                    onError={() => setImageError(true)}
+                  />
+                ) : (
+                  <span className="text-white font-bold text-sm">L6</span>
+                )}
               </div>
               <div className="hidden sm:block">
                 <h1 className="text-lg font-bold text-gray-900 dark:text-white">Loop 6</h1>
@@ -171,19 +184,26 @@ export default function HomePage() {
             <div className="flex-1"></div>
             
             {/* Right: Navigation */}
-            <nav className="flex items-center space-x-1 max-w-md">
+            <nav className="flex items-center space-x-6 max-w-md">
               {navItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 min-w-0 flex-shrink-0 ${
+                  className={`flex flex-col items-center gap-1 px-4 py-3 rounded-lg transition-all duration-200 min-w-0 flex-shrink-0 ${
                     activeTab === item.id
                       ? 'bg-blue-500 text-white shadow-sm'
                       : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'
                   }`}
                 >
-                  <ClientIcon icon={item.icon} className="w-4 h-4 flex-shrink-0" />
-                  <span className="text-sm font-medium hidden sm:inline">{item.label}</span>
+                  <ClientIcon icon={item.icon} className="w-5 h-5 flex-shrink-0" />
+                  <span className="text-xs font-medium whitespace-nowrap">{item.label}</span>
+                  {/* 각 nav의 설명을 라벨과 함께 표시 */}
+                  <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap opacity-75">
+                    {item.id === 'home' && '타이핑 연습'}
+                    {item.id === 'stats' && '성과 분석'}
+                    {item.id === 'analysis' && '상세 분석'}
+                    {item.id === 'settings' && '앱 설정'}
+                  </span>
                 </button>
               ))}
             </nav>

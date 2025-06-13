@@ -59,10 +59,12 @@
   from {
     transform: translateX(100%);
     opacity: 0;
+    /* border-radius 애니메이션 제거 */
   }
   to {
     transform: translateX(0);
     opacity: 1;
+    /* border-radius 애니메이션 제거 */
   }
 }
 
@@ -70,10 +72,12 @@
   from {
     transform: translateX(0);
     opacity: 1;
+    /* border-radius 애니메이션 제거 */
   }
   to {
     transform: translateX(100%);
     opacity: 0;
+    /* border-radius 애니메이션 제거 */
   }
 }
 

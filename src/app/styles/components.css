@@ -1,90 +1,67 @@
 /* ===== Component Styles ===== */
 
-/* 토글 스위치 스타일 개선 - WCAG 가이드라인 준수 */
+/* 토글 스위치 스타일 개선 - WCAG 가이드라인 및 실무 기준 */
 .toggle-switch {
   position: relative;
-  width: 60px; /* 더 큰 터치 영역 */
-  height: 32px; /* 높이 증가 */
-  border-radius: 16px;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 52px; /* 크기 조정 */
+  height: 28px; 
+  border-radius: 14px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
-  border: 2px solid var(--border-primary);
-  background-color: var(--surface-secondary);
+  border: none; /* 테두리 제거 */
   box-sizing: border-box;
-  min-width: 60px; /* 최소 터치 영역 보장 */
-  margin: 8px; /* 주변 요소와 적절한 간격 */
+  min-width: 52px; 
+  margin: 8px; 
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
-  flex-shrink: 0; /* 요소 밖으로 나가지 않도록 */
+  flex-shrink: 0; 
+  outline: none !important; /* 아웃라인 완전 제거 */
 }
 
-/* 호버 상태 */
+/* 라이트모드 OFF 상태 */
+.toggle-switch:not(.active) {
+  background: #d1d5db; /* 회색 */
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* 라이트모드 ON 상태 */
+.toggle-switch.active {
+  background: #22c55e; /* 녹색 */
+  box-shadow: 0 2px 4px rgba(34, 197, 94, 0.3);
+}
+
+/* 호버 상태 - 아웃라인 없음 */
 .toggle-switch:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  border-color: var(--accent-secondary);
+  outline: none !important;
+  box-shadow: none !important;
+  transform: none !important; /* 호버 시 움직임 제거 */
 }
 
-/* 포커스 상태 - 접근성 */
+/* 포커스 상태 - 아웃라인 없음 */
+.toggle-switch:focus,
 .toggle-switch:focus-visible {
-  outline: 2px solid var(--border-focus);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 3px rgba(98, 0, 238, 0.1);
-}
-
-/* 다크모드 포커스 */
-.dark .toggle-switch:focus-visible {
-  box-shadow: 0 0 0 3px rgba(187, 134, 252, 0.2);
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* 토글 썸 (핸들) */
 .toggle-switch .toggle-thumb {
   position: absolute;
-  width: 24px; /* 크기 증가 */
-  height: 24px;
+  width: 22px; 
+  height: 22px;
   border-radius: 50%;
-  background-color: #ffffff;
-  top: 2px;
-  left: 2px;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  top: 3px;
+  left: 3px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: none;
 }
 
-/* 활성 상태 (ON) */
-.toggle-switch.active {
-  background-color: var(--accent-primary);
-  border-color: var(--accent-primary);
-}
-
+/* 활성 상태 썸 위치 */
 .toggle-switch.active .toggle-thumb {
-  transform: translateX(28px); /* 큰 토글에 맞게 조정 */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-/* 다크모드 활성 상태 */
-.dark .toggle-switch.active {
-  background-color: var(--accent-primary);
-  border-color: var(--accent-primary);
-}
-
-.dark .toggle-switch.active .toggle-thumb {
-  background-color: var(--background);
-}
-
-/* 비활성 상태 (OFF) */
-.toggle-switch:not(.active) {
-  background-color: #e0e0e0;
-  border-color: #d0d0d0;
-}
-
-.dark .toggle-switch:not(.active) {
-  background-color: #444444;
-  border-color: #555555;
-}
-
-.dark .toggle-switch:not(.active) .toggle-thumb {
-  background-color: #ffffff;
+  transform: translateX(24px); /* 이동 거리 조정 */
 }
 
 /* 비활성화 상태 */
@@ -92,6 +69,42 @@
   opacity: 0.6;
   cursor: not-allowed;
   pointer-events: none;
+}
+
+/* ===== 다크모드 토글 스위치 스타일 ===== */
+
+/* 다크모드 OFF 상태 */
+.dark .toggle-switch:not(.active) {
+  background: #4b5563; /* 어두운 회색 */
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* 다크모드 ON 상태 */
+.dark .toggle-switch.active {
+  background: #00ff9f; /* 밝은 네온 그린 */
+  box-shadow: 
+    0 2px 8px rgba(0, 255, 159, 0.5),
+    0 0 15px rgba(0, 255, 159, 0.3);
+}
+
+/* 다크모드 썸 */
+.dark .toggle-switch .toggle-thumb {
+  background: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* 다크모드 호버 상태 - 아웃라인 없음 */
+.dark .toggle-switch:hover {
+  outline: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* 다크모드 포커스 상태 - 아웃라인 없음 */
+.dark .toggle-switch:focus,
+.dark .toggle-switch:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* ARIA 지원 */
@@ -190,7 +203,7 @@ button, .btn, .toggle-switch {
 
 .input-field:focus, input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, textarea:focus {
   border-color: var(--border-focus) !important;
-  box-shadow: 0 0 0 3px rgba(98, 0, 238, 0.1) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important; /* 파란색으로 변경 */
   outline: none !important;
 }
 
