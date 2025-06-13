@@ -5053,55 +5053,71 @@ function Settings({ onSave, initialSettings }) {
                                 className: "space-y-4",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex items-center justify-between",
+                                        className: "settings-row",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "flex items-center space-x-2",
-                                                children: [
-                                                    isDarkMode ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$moon$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Moon$3e$__["Moon"], {
-                                                        className: "h-4 w-4"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                        lineNumber: 243,
-                                                        columnNumber: 35
-                                                    }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$sun$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Sun$3e$__["Sun"], {
-                                                        className: "h-4 w-4"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                        lineNumber: 243,
-                                                        columnNumber: 66
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        className: "text-gray-900 dark:text-white",
-                                                        children: [
-                                                            "다크 모드 (",
-                                                            theme,
-                                                            ")"
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                        lineNumber: 244,
-                                                        columnNumber: 21
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 242,
-                                                columnNumber: 19
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                onClick: toggleDarkMode,
-                                                className: `w-12 h-6 rounded-full p-1 transition-colors ${isDarkMode ? 'bg-blue-600' : 'bg-gray-300'}`,
+                                                className: "settings-label",
                                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: `w-4 h-4 rounded-full bg-white transition-transform ${isDarkMode ? 'translate-x-6' : 'translate-x-0'}`
-                                                }, void 0, false, {
+                                                    className: "flex items-center space-x-2",
+                                                    children: [
+                                                        isDarkMode ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$moon$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Moon$3e$__["Moon"], {
+                                                            className: "h-4 w-4"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/src/app/components/ui/settings.tsx",
+                                                            lineNumber: 244,
+                                                            columnNumber: 37
+                                                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$sun$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Sun$3e$__["Sun"], {
+                                                            className: "h-4 w-4"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/src/app/components/ui/settings.tsx",
+                                                            lineNumber: 244,
+                                                            columnNumber: 68
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            children: [
+                                                                "다크 모드 (",
+                                                                theme,
+                                                                ")"
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/src/app/components/ui/settings.tsx",
+                                                            lineNumber: 245,
+                                                            columnNumber: 23
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 252,
+                                                    lineNumber: 243,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 246,
+                                                lineNumber: 242,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "toggle-container",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    onClick: toggleDarkMode,
+                                                    className: `toggle-switch ${isDarkMode ? 'active' : ''}`,
+                                                    role: "switch",
+                                                    "aria-checked": isDarkMode,
+                                                    "aria-label": "다크 모드 토글",
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "toggle-thumb"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/components/ui/settings.tsx",
+                                                        lineNumber: 256,
+                                                        columnNumber: 23
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/components/ui/settings.tsx",
+                                                    lineNumber: 249,
+                                                    columnNumber: 21
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/components/ui/settings.tsx",
+                                                lineNumber: 248,
                                                 columnNumber: 19
                                             }, this)
                                         ]
@@ -5118,7 +5134,7 @@ function Settings({ onSave, initialSettings }) {
                                                 children: "창 모드"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 262,
+                                                lineNumber: 263,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5147,31 +5163,31 @@ function Settings({ onSave, initialSettings }) {
                                                                 className: "h-4 w-4"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                                lineNumber: 278,
+                                                                lineNumber: 279,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                 children: mode.label
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                                lineNumber: 279,
+                                                                lineNumber: 280,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, mode.value, true, {
                                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                        lineNumber: 269,
+                                                        lineNumber: 270,
                                                         columnNumber: 23
                                                     }, this))
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 263,
+                                                lineNumber: 264,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                        lineNumber: 261,
+                                        lineNumber: 262,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5182,7 +5198,7 @@ function Settings({ onSave, initialSettings }) {
                                                 children: "애니메이션 효과"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 287,
+                                                lineNumber: 288,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -5190,23 +5206,24 @@ function Settings({ onSave, initialSettings }) {
                                                             ...prev,
                                                             enableAnimations: !prev.enableAnimations
                                                         })),
-                                                className: `w-12 h-6 rounded-full p-1 transition-colors ${localSettings.enableAnimations ? 'bg-blue-600' : 'bg-gray-300'}`,
+                                                className: `min-w-[44px] min-h-[44px] w-16 h-8 rounded-full p-1 transition-colors ${localSettings.enableAnimations ? 'bg-blue-600' : 'bg-gray-300'}`,
+                                                "aria-label": "애니메이션 효과 토글",
                                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: `w-4 h-4 rounded-full bg-white transition-transform ${localSettings.enableAnimations ? 'translate-x-6' : 'translate-x-0'}`
+                                                    className: `w-6 h-6 rounded-full bg-white transition-transform ${localSettings.enableAnimations ? 'translate-x-8' : 'translate-x-0'}`
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 294,
+                                                    lineNumber: 296,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 288,
+                                                lineNumber: 289,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                        lineNumber: 286,
+                                        lineNumber: 287,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5219,7 +5236,7 @@ function Settings({ onSave, initialSettings }) {
                                                         className: "h-4 w-4"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                        lineNumber: 305,
+                                                        lineNumber: 307,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5227,13 +5244,13 @@ function Settings({ onSave, initialSettings }) {
                                                         children: "알림 활성화"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                        lineNumber: 306,
+                                                        lineNumber: 308,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 304,
+                                                lineNumber: 306,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -5241,23 +5258,24 @@ function Settings({ onSave, initialSettings }) {
                                                             ...prev,
                                                             enableNotifications: !prev.enableNotifications
                                                         })),
-                                                className: `w-12 h-6 rounded-full p-1 transition-colors ${localSettings.enableNotifications ? 'bg-blue-600' : 'bg-gray-300'}`,
+                                                className: `min-w-[44px] min-h-[44px] w-16 h-8 rounded-full p-1 transition-colors ${localSettings.enableNotifications ? 'bg-blue-600' : 'bg-gray-300'}`,
+                                                "aria-label": "알림 활성화 토글",
                                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: `w-4 h-4 rounded-full bg-white transition-transform ${localSettings.enableNotifications ? 'translate-x-6' : 'translate-x-0'}`
+                                                    className: `w-6 h-6 rounded-full bg-white transition-transform ${localSettings.enableNotifications ? 'translate-x-8' : 'translate-x-0'}`
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 314,
+                                                    lineNumber: 317,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 308,
+                                                lineNumber: 310,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                        lineNumber: 303,
+                                        lineNumber: 305,
                                         columnNumber: 17
                                     }, this)
                                 ]
@@ -5290,14 +5308,14 @@ function Settings({ onSave, initialSettings }) {
                                         className: "h-5 w-5 mr-2"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                        lineNumber: 331,
+                                        lineNumber: 334,
                                         columnNumber: 17
                                     }, this),
                                     "타이핑 분석"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                lineNumber: 330,
+                                lineNumber: 333,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5311,7 +5329,7 @@ function Settings({ onSave, initialSettings }) {
                                                     children: category
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 339,
+                                                    lineNumber: 342,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -5327,18 +5345,18 @@ function Settings({ onSave, initialSettings }) {
                                                         className: `w-4 h-4 rounded-full bg-white transition-transform ${enabled ? 'translate-x-6' : 'translate-x-0'}`
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                        lineNumber: 352,
+                                                        lineNumber: 355,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 340,
+                                                    lineNumber: 343,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, category, true, {
                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                            lineNumber: 338,
+                                            lineNumber: 341,
                                             columnNumber: 19
                                         }, this)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5349,7 +5367,7 @@ function Settings({ onSave, initialSettings }) {
                                                 children: "실시간 통계"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 363,
+                                                lineNumber: 366,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -5362,35 +5380,35 @@ function Settings({ onSave, initialSettings }) {
                                                     className: `w-4 h-4 rounded-full bg-white transition-transform ${localSettings.enableRealTimeStats ? 'translate-x-6' : 'translate-x-0'}`
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 370,
+                                                    lineNumber: 373,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 364,
+                                                lineNumber: 367,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                        lineNumber: 362,
+                                        lineNumber: 365,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                lineNumber: 335,
+                                lineNumber: 338,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                        lineNumber: 329,
+                        lineNumber: 332,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                    lineNumber: 328,
+                    lineNumber: 331,
                     columnNumber: 11
                 }, this);
             case 'performance':
@@ -5407,14 +5425,14 @@ function Settings({ onSave, initialSettings }) {
                                             className: "h-5 w-5 mr-2"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                            lineNumber: 387,
+                                            lineNumber: 390,
                                             columnNumber: 17
                                         }, this),
                                         "성능 설정"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                    lineNumber: 386,
+                                    lineNumber: 389,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5430,7 +5448,7 @@ function Settings({ onSave, initialSettings }) {
                                                             className: "h-4 w-4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                            lineNumber: 395,
+                                                            lineNumber: 398,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5438,13 +5456,13 @@ function Settings({ onSave, initialSettings }) {
                                                             children: "GPU 가속"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                            lineNumber: 396,
+                                                            lineNumber: 399,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 394,
+                                                    lineNumber: 397,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -5454,18 +5472,18 @@ function Settings({ onSave, initialSettings }) {
                                                         className: `w-4 h-4 rounded-full bg-white transition-transform ${localSettings.enableGPUAcceleration ? 'translate-x-6' : 'translate-x-0'}`
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                        lineNumber: 404,
+                                                        lineNumber: 407,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 398,
+                                                    lineNumber: 401,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                            lineNumber: 393,
+                                            lineNumber: 396,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5478,7 +5496,7 @@ function Settings({ onSave, initialSettings }) {
                                                             className: "h-4 w-4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                            lineNumber: 415,
+                                                            lineNumber: 418,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5486,13 +5504,13 @@ function Settings({ onSave, initialSettings }) {
                                                             children: "메모리 최적화"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                            lineNumber: 416,
+                                                            lineNumber: 419,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 414,
+                                                    lineNumber: 417,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -5502,18 +5520,18 @@ function Settings({ onSave, initialSettings }) {
                                                         className: `w-4 h-4 rounded-full bg-white transition-transform ${localSettings.enableMemoryOptimization ? 'translate-x-6' : 'translate-x-0'}`
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                        lineNumber: 424,
+                                                        lineNumber: 427,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 418,
+                                                    lineNumber: 421,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                            lineNumber: 413,
+                                            lineNumber: 416,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5524,7 +5542,7 @@ function Settings({ onSave, initialSettings }) {
                                                     children: "처리 모드"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 434,
+                                                    lineNumber: 437,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -5537,7 +5555,7 @@ function Settings({ onSave, initialSettings }) {
                                                             children: "자동"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                            lineNumber: 440,
+                                                            lineNumber: 443,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -5545,7 +5563,7 @@ function Settings({ onSave, initialSettings }) {
                                                             children: "일반"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                            lineNumber: 441,
+                                                            lineNumber: 444,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -5553,7 +5571,7 @@ function Settings({ onSave, initialSettings }) {
                                                             children: "CPU 집약적"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                            lineNumber: 442,
+                                                            lineNumber: 445,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -5561,19 +5579,19 @@ function Settings({ onSave, initialSettings }) {
                                                             children: "GPU 집약적"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                            lineNumber: 443,
+                                                            lineNumber: 446,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 435,
+                                                    lineNumber: 438,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                            lineNumber: 433,
+                                            lineNumber: 436,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5588,7 +5606,7 @@ function Settings({ onSave, initialSettings }) {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 449,
+                                                    lineNumber: 452,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -5604,25 +5622,25 @@ function Settings({ onSave, initialSettings }) {
                                                     className: "w-full"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 452,
+                                                    lineNumber: 455,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                            lineNumber: 448,
+                                            lineNumber: 451,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                    lineNumber: 391,
+                                    lineNumber: 394,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                            lineNumber: 385,
+                            lineNumber: 388,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5635,14 +5653,14 @@ function Settings({ onSave, initialSettings }) {
                                             className: "h-5 w-5 mr-2"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                            lineNumber: 468,
+                                            lineNumber: 471,
                                             columnNumber: 17
                                         }, this),
                                         "시스템 모니터링"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                    lineNumber: 467,
+                                    lineNumber: 470,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5658,25 +5676,25 @@ function Settings({ onSave, initialSettings }) {
                                                             className: "h-4 w-4 mr-2"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                            lineNumber: 475,
+                                                            lineNumber: 478,
                                                             columnNumber: 21
                                                         }, this),
                                                         "메모리 모니터"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 474,
+                                                    lineNumber: 477,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ui$2f$memory$2d$monitor$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 478,
+                                                    lineNumber: 481,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                            lineNumber: 473,
+                                            lineNumber: 476,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5689,25 +5707,25 @@ function Settings({ onSave, initialSettings }) {
                                                             className: "h-4 w-4 mr-2"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                            lineNumber: 483,
+                                                            lineNumber: 486,
                                                             columnNumber: 21
                                                         }, this),
                                                         "활성 상태"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 482,
+                                                    lineNumber: 485,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ui$2f$activity$2d$monitor$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 486,
+                                                    lineNumber: 489,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                            lineNumber: 481,
+                                            lineNumber: 484,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5720,43 +5738,43 @@ function Settings({ onSave, initialSettings }) {
                                                             className: "h-4 w-4 mr-2"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                            lineNumber: 491,
+                                                            lineNumber: 494,
                                                             columnNumber: 21
                                                         }, this),
                                                         "시스템 정보"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 490,
+                                                    lineNumber: 493,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ui$2f$native$2d$module$2d$status$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 494,
+                                                    lineNumber: 497,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                            lineNumber: 489,
+                                            lineNumber: 492,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                    lineNumber: 472,
+                                    lineNumber: 475,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                            lineNumber: 466,
+                            lineNumber: 469,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                    lineNumber: 384,
+                    lineNumber: 387,
                     columnNumber: 11
                 }, this);
             case 'typing':
@@ -5772,14 +5790,14 @@ function Settings({ onSave, initialSettings }) {
                                         className: "h-5 w-5 mr-2"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                        lineNumber: 506,
+                                        lineNumber: 509,
                                         columnNumber: 17
                                     }, this),
                                     "타이핑 분석 설정"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                lineNumber: 505,
+                                lineNumber: 508,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5793,7 +5811,7 @@ function Settings({ onSave, initialSettings }) {
                                                 children: "타이핑 분석 활성화"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 513,
+                                                lineNumber: 516,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -5806,18 +5824,18 @@ function Settings({ onSave, initialSettings }) {
                                                     className: `w-4 h-4 rounded-full bg-white transition-transform ${localSettings.enableTypingAnalysis ? 'translate-x-6' : 'translate-x-0'}`
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 520,
+                                                    lineNumber: 523,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 514,
+                                                lineNumber: 517,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                        lineNumber: 512,
+                                        lineNumber: 515,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5828,7 +5846,7 @@ function Settings({ onSave, initialSettings }) {
                                                 children: "실시간 분석"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 530,
+                                                lineNumber: 533,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -5841,18 +5859,18 @@ function Settings({ onSave, initialSettings }) {
                                                     className: `w-4 h-4 rounded-full bg-white transition-transform ${localSettings.enableRealTimeAnalysis ? 'translate-x-6' : 'translate-x-0'}`
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 537,
+                                                    lineNumber: 540,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 531,
+                                                lineNumber: 534,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                        lineNumber: 529,
+                                        lineNumber: 532,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5867,7 +5885,7 @@ function Settings({ onSave, initialSettings }) {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 547,
+                                                lineNumber: 550,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -5883,13 +5901,13 @@ function Settings({ onSave, initialSettings }) {
                                                 className: "w-full"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 550,
+                                                lineNumber: 553,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                        lineNumber: 546,
+                                        lineNumber: 549,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5900,7 +5918,7 @@ function Settings({ onSave, initialSettings }) {
                                                 children: "키보드 레이아웃 자동 감지"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 563,
+                                                lineNumber: 566,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -5913,18 +5931,18 @@ function Settings({ onSave, initialSettings }) {
                                                     className: `w-4 h-4 rounded-full bg-white transition-transform ${localSettings.enableKeyboardDetection ? 'translate-x-6' : 'translate-x-0'}`
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 570,
+                                                    lineNumber: 573,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 564,
+                                                lineNumber: 567,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                        lineNumber: 562,
+                                        lineNumber: 565,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5935,7 +5953,7 @@ function Settings({ onSave, initialSettings }) {
                                                 children: "타이핑 패턴 학습"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 580,
+                                                lineNumber: 583,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -5948,35 +5966,35 @@ function Settings({ onSave, initialSettings }) {
                                                     className: `w-4 h-4 rounded-full bg-white transition-transform ${localSettings.enablePatternLearning ? 'translate-x-6' : 'translate-x-0'}`
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 587,
+                                                    lineNumber: 590,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 581,
+                                                lineNumber: 584,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                        lineNumber: 579,
+                                        lineNumber: 582,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                lineNumber: 510,
+                                lineNumber: 513,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                        lineNumber: 504,
+                        lineNumber: 507,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                    lineNumber: 503,
+                    lineNumber: 506,
                     columnNumber: 11
                 }, this);
             case 'performance':
@@ -5993,14 +6011,14 @@ function Settings({ onSave, initialSettings }) {
                                             className: "h-5 w-5 mr-2"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                            lineNumber: 604,
+                                            lineNumber: 607,
                                             columnNumber: 17
                                         }, this),
                                         "성능 설정"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                    lineNumber: 603,
+                                    lineNumber: 606,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6017,7 +6035,7 @@ function Settings({ onSave, initialSettings }) {
                                                             children: "GPU 가속"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                            lineNumber: 612,
+                                                            lineNumber: 615,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -6025,13 +6043,13 @@ function Settings({ onSave, initialSettings }) {
                                                             children: "변경 시 애플리케이션이 재시작됩니다"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                            lineNumber: 613,
+                                                            lineNumber: 616,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 611,
+                                                    lineNumber: 614,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -6041,18 +6059,18 @@ function Settings({ onSave, initialSettings }) {
                                                         className: `w-4 h-4 rounded-full bg-white transition-transform ${localSettings.enableGPUAcceleration ? 'translate-x-6' : 'translate-x-0'}`
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                        lineNumber: 623,
+                                                        lineNumber: 626,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 617,
+                                                    lineNumber: 620,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                            lineNumber: 610,
+                                            lineNumber: 613,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6063,7 +6081,7 @@ function Settings({ onSave, initialSettings }) {
                                                     children: "메모리 최적화"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 633,
+                                                    lineNumber: 636,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -6073,18 +6091,18 @@ function Settings({ onSave, initialSettings }) {
                                                         className: `w-4 h-4 rounded-full bg-white transition-transform ${localSettings.enableMemoryOptimization ? 'translate-x-6' : 'translate-x-0'}`
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                        lineNumber: 640,
+                                                        lineNumber: 643,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 634,
+                                                    lineNumber: 637,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                            lineNumber: 632,
+                                            lineNumber: 635,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6095,7 +6113,7 @@ function Settings({ onSave, initialSettings }) {
                                                     children: "처리 모드"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 650,
+                                                    lineNumber: 653,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6135,7 +6153,7 @@ function Settings({ onSave, initialSettings }) {
                                                                     children: mode.label
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                                    lineNumber: 668,
+                                                                    lineNumber: 671,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -6143,24 +6161,24 @@ function Settings({ onSave, initialSettings }) {
                                                                     children: mode.description
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                                    lineNumber: 669,
+                                                                    lineNumber: 672,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, mode.value, true, {
                                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                            lineNumber: 659,
+                                                            lineNumber: 662,
                                                             columnNumber: 23
                                                         }, this))
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 651,
+                                                    lineNumber: 654,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                            lineNumber: 649,
+                                            lineNumber: 652,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6175,7 +6193,7 @@ function Settings({ onSave, initialSettings }) {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 677,
+                                                    lineNumber: 680,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6191,25 +6209,25 @@ function Settings({ onSave, initialSettings }) {
                                                     className: "w-full"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 680,
+                                                    lineNumber: 683,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                            lineNumber: 676,
+                                            lineNumber: 679,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                    lineNumber: 608,
+                                    lineNumber: 611,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                            lineNumber: 602,
+                            lineNumber: 605,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6222,14 +6240,14 @@ function Settings({ onSave, initialSettings }) {
                                             className: "h-5 w-5 mr-2"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                            lineNumber: 696,
+                                            lineNumber: 699,
                                             columnNumber: 17
                                         }, this),
                                         "시스템 모니터링"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                    lineNumber: 695,
+                                    lineNumber: 698,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6245,25 +6263,25 @@ function Settings({ onSave, initialSettings }) {
                                                             className: "h-4 w-4 mr-2"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                            lineNumber: 703,
+                                                            lineNumber: 706,
                                                             columnNumber: 21
                                                         }, this),
                                                         "메모리 모니터"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 702,
+                                                    lineNumber: 705,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ui$2f$memory$2d$monitor$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 706,
+                                                    lineNumber: 709,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                            lineNumber: 701,
+                                            lineNumber: 704,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6276,25 +6294,25 @@ function Settings({ onSave, initialSettings }) {
                                                             className: "h-4 w-4 mr-2"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                            lineNumber: 711,
+                                                            lineNumber: 714,
                                                             columnNumber: 21
                                                         }, this),
                                                         "활성 상태"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 710,
+                                                    lineNumber: 713,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ui$2f$activity$2d$monitor$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 714,
+                                                    lineNumber: 717,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                            lineNumber: 709,
+                                            lineNumber: 712,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6307,43 +6325,43 @@ function Settings({ onSave, initialSettings }) {
                                                             className: "h-4 w-4 mr-2"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                            lineNumber: 719,
+                                                            lineNumber: 722,
                                                             columnNumber: 21
                                                         }, this),
                                                         "시스템 정보"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 718,
+                                                    lineNumber: 721,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ui$2f$native$2d$module$2d$status$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 722,
+                                                    lineNumber: 725,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                            lineNumber: 717,
+                                            lineNumber: 720,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                    lineNumber: 700,
+                                    lineNumber: 703,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                            lineNumber: 694,
+                            lineNumber: 697,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                    lineNumber: 601,
+                    lineNumber: 604,
                     columnNumber: 11
                 }, this);
             case 'data':
@@ -6359,14 +6377,14 @@ function Settings({ onSave, initialSettings }) {
                                         className: "h-5 w-5 mr-2"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                        lineNumber: 734,
+                                        lineNumber: 737,
                                         columnNumber: 17
                                     }, this),
                                     "데이터 및 개인정보"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                lineNumber: 733,
+                                lineNumber: 736,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6383,7 +6401,7 @@ function Settings({ onSave, initialSettings }) {
                                                         children: "데이터 수집 허용"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                        lineNumber: 742,
+                                                        lineNumber: 745,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -6391,13 +6409,13 @@ function Settings({ onSave, initialSettings }) {
                                                         children: "앱 개선을 위한 익명 사용 데이터 수집"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                        lineNumber: 743,
+                                                        lineNumber: 746,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 741,
+                                                lineNumber: 744,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -6410,18 +6428,18 @@ function Settings({ onSave, initialSettings }) {
                                                     className: `w-4 h-4 rounded-full bg-white transition-transform ${localSettings.enableDataCollection ? 'translate-x-6' : 'translate-x-0'}`
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 753,
+                                                    lineNumber: 756,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 747,
+                                                lineNumber: 750,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                        lineNumber: 740,
+                                        lineNumber: 743,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6435,7 +6453,7 @@ function Settings({ onSave, initialSettings }) {
                                                         children: "자동 저장"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                        lineNumber: 764,
+                                                        lineNumber: 767,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -6443,13 +6461,13 @@ function Settings({ onSave, initialSettings }) {
                                                         children: "설정 변경 시 자동으로 저장"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                        lineNumber: 765,
+                                                        lineNumber: 768,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 763,
+                                                lineNumber: 766,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -6462,18 +6480,18 @@ function Settings({ onSave, initialSettings }) {
                                                     className: `w-4 h-4 rounded-full bg-white transition-transform ${localSettings.enableAutoSave ? 'translate-x-6' : 'translate-x-0'}`
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 775,
+                                                    lineNumber: 778,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 769,
+                                                lineNumber: 772,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                        lineNumber: 762,
+                                        lineNumber: 765,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6488,7 +6506,7 @@ function Settings({ onSave, initialSettings }) {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 785,
+                                                lineNumber: 788,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6504,7 +6522,7 @@ function Settings({ onSave, initialSettings }) {
                                                 className: "w-full"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 788,
+                                                lineNumber: 791,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6514,26 +6532,26 @@ function Settings({ onSave, initialSettings }) {
                                                         children: "7일"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                        lineNumber: 798,
+                                                        lineNumber: 801,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: "1년"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                        lineNumber: 799,
+                                                        lineNumber: 802,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 797,
+                                                lineNumber: 800,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                        lineNumber: 784,
+                                        lineNumber: 787,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6552,14 +6570,14 @@ function Settings({ onSave, initialSettings }) {
                                                             className: "h-4 w-4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                            lineNumber: 813,
+                                                            lineNumber: 816,
                                                             columnNumber: 23
                                                         }, this),
                                                         "데이터 내보내기"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 806,
+                                                    lineNumber: 809,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -6576,42 +6594,42 @@ function Settings({ onSave, initialSettings }) {
                                                             className: "h-4 w-4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                            lineNumber: 829,
+                                                            lineNumber: 832,
                                                             columnNumber: 23
                                                         }, this),
                                                         "모든 데이터 삭제"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                    lineNumber: 817,
+                                                    lineNumber: 820,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                                            lineNumber: 805,
+                                            lineNumber: 808,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                        lineNumber: 804,
+                                        lineNumber: 807,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                lineNumber: 738,
+                                lineNumber: 741,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                        lineNumber: 732,
+                        lineNumber: 735,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                    lineNumber: 731,
+                    lineNumber: 734,
                     columnNumber: 11
                 }, this);
             default:
@@ -6619,7 +6637,7 @@ function Settings({ onSave, initialSettings }) {
                     children: "카테고리를 선택해주세요."
                 }, void 0, false, {
                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                    lineNumber: 840,
+                    lineNumber: 843,
                     columnNumber: 16
                 }, this);
         }
@@ -6631,12 +6649,12 @@ function Settings({ onSave, initialSettings }) {
                 className: "animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
             }, void 0, false, {
                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                lineNumber: 847,
+                lineNumber: 850,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/app/components/ui/settings.tsx",
-            lineNumber: 846,
+            lineNumber: 849,
             columnNumber: 7
         }, this);
     }
@@ -6655,19 +6673,19 @@ function Settings({ onSave, initialSettings }) {
                                     className: "h-5 w-5 mr-2"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                    lineNumber: 858,
+                                    lineNumber: 861,
                                     columnNumber: 13
                                 }, this),
                                 "설정"
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                            lineNumber: 857,
+                            lineNumber: 860,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                        lineNumber: 856,
+                        lineNumber: 859,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
@@ -6683,7 +6701,7 @@ function Settings({ onSave, initialSettings }) {
                                                 className: "w-5 h-5 flex-shrink-0"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 875,
+                                                lineNumber: 878,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -6691,28 +6709,28 @@ function Settings({ onSave, initialSettings }) {
                                                 children: category.label
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                                lineNumber: 876,
+                                                lineNumber: 879,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                        lineNumber: 867,
+                                        lineNumber: 870,
                                         columnNumber: 17
                                     }, this)
                                 }, category.id, false, {
                                     fileName: "[project]/src/app/components/ui/settings.tsx",
-                                    lineNumber: 866,
+                                    lineNumber: 869,
                                     columnNumber: 15
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/src/app/components/ui/settings.tsx",
-                            lineNumber: 864,
+                            lineNumber: 867,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                        lineNumber: 863,
+                        lineNumber: 866,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6726,14 +6744,14 @@ function Settings({ onSave, initialSettings }) {
                                         className: "h-4 w-4"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                        lineNumber: 889,
+                                        lineNumber: 892,
                                         columnNumber: 13
                                     }, this),
                                     "저장"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                lineNumber: 885,
+                                lineNumber: 888,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -6744,26 +6762,26 @@ function Settings({ onSave, initialSettings }) {
                                         className: "h-4 w-4"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                                        lineNumber: 897,
+                                        lineNumber: 900,
                                         columnNumber: 13
                                     }, this),
                                     "초기화"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                                lineNumber: 893,
+                                lineNumber: 896,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/ui/settings.tsx",
-                        lineNumber: 884,
+                        lineNumber: 887,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                lineNumber: 855,
+                lineNumber: 858,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6771,7 +6789,7 @@ function Settings({ onSave, initialSettings }) {
                 children: renderCategoryContent()
             }, void 0, false, {
                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                lineNumber: 904,
+                lineNumber: 907,
                 columnNumber: 7
             }, this),
             showSaveConfirm && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6779,7 +6797,7 @@ function Settings({ onSave, initialSettings }) {
                 children: "설정이 저장되었습니다!"
             }, void 0, false, {
                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                lineNumber: 910,
+                lineNumber: 913,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ui$2f$restart$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -6795,13 +6813,13 @@ function Settings({ onSave, initialSettings }) {
                 }
             }, void 0, false, {
                 fileName: "[project]/src/app/components/ui/settings.tsx",
-                lineNumber: 916,
+                lineNumber: 919,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/components/ui/settings.tsx",
-        lineNumber: 853,
+        lineNumber: 856,
         columnNumber: 5
     }, this);
 }
@@ -7218,144 +7236,140 @@ function HomePage() {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "min-h-screen bg-gray-100 dark:bg-gray-950",
         children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm",
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
+                className: "bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm sticky top-0 z-50",
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "flex items-center justify-between px-6 py-3",
-                    children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "flex items-center gap-3",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center",
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "text-white font-bold text-sm",
-                                        children: "L6"
+                    className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex items-center justify-between h-16",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex items-center gap-3 flex-shrink-0",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center",
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "text-white font-bold text-sm",
+                                            children: "L6"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/page.tsx",
+                                            lineNumber: 162,
+                                            columnNumber: 17
+                                        }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/page.tsx",
-                                        lineNumber: 160,
+                                        lineNumber: 161,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "hidden sm:block",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                                                className: "text-lg font-bold text-gray-900 dark:text-white",
+                                                children: "Loop 6"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/page.tsx",
+                                                lineNumber: 165,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "text-xs text-gray-500 dark:text-gray-400",
+                                                children: "타이핑 분석 시스템"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/page.tsx",
+                                                lineNumber: 166,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/page.tsx",
+                                        lineNumber: 164,
                                         columnNumber: 15
                                     }, this)
-                                }, void 0, false, {
-                                    fileName: "[project]/src/app/page.tsx",
-                                    lineNumber: 159,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
-                                            className: "text-lg font-bold text-gray-900 dark:text-white",
-                                            children: "Loop 6"
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/app/page.tsx",
-                                            lineNumber: 163,
-                                            columnNumber: 15
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                            className: "text-xs text-gray-500 dark:text-gray-400",
-                                            children: "타이핑 분석 시스템"
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/app/page.tsx",
-                                            lineNumber: 164,
-                                            columnNumber: 15
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/src/app/page.tsx",
-                                    lineNumber: 162,
-                                    columnNumber: 13
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/src/app/page.tsx",
-                            lineNumber: 158,
-                            columnNumber: 11
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
-                            className: "flex items-center space-x-1",
-                            children: navItems.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                    onClick: ()=>setActiveTab(item.id),
-                                    className: `flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 ${activeTab === item.id ? 'bg-blue-500 text-white shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'}`,
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ui$2f$client$2d$icon$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                            icon: item.icon,
-                                            className: "w-4 h-4 flex-shrink-0"
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/app/page.tsx",
-                                            lineNumber: 180,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                            className: "text-sm font-medium",
-                                            children: item.label
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/app/page.tsx",
-                                            lineNumber: 181,
-                                            columnNumber: 17
-                                        }, this)
-                                    ]
-                                }, item.id, true, {
-                                    fileName: "[project]/src/app/page.tsx",
-                                    lineNumber: 171,
-                                    columnNumber: 15
-                                }, this))
-                        }, void 0, false, {
-                            fileName: "[project]/src/app/page.tsx",
-                            lineNumber: 169,
-                            columnNumber: 11
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/app/page.tsx",
+                                lineNumber: 160,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex-1"
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/page.tsx",
+                                lineNumber: 171,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
+                                className: "flex items-center space-x-1 max-w-md",
+                                children: navItems.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        onClick: ()=>setActiveTab(item.id),
+                                        className: `flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 min-w-0 flex-shrink-0 ${activeTab === item.id ? 'bg-blue-500 text-white shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'}`,
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ui$2f$client$2d$icon$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                                icon: item.icon,
+                                                className: "w-4 h-4 flex-shrink-0"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/page.tsx",
+                                                lineNumber: 185,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "text-sm font-medium hidden sm:inline",
+                                                children: item.label
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/page.tsx",
+                                                lineNumber: 186,
+                                                columnNumber: 19
+                                            }, this)
+                                        ]
+                                    }, item.id, true, {
+                                        fileName: "[project]/src/app/page.tsx",
+                                        lineNumber: 176,
+                                        columnNumber: 17
+                                    }, this))
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/page.tsx",
+                                lineNumber: 174,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 flex-shrink-0",
+                                children: loading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "flex items-center gap-2",
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "w-2 h-2 rounded-full bg-green-500"
+                                            className: "w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/page.tsx",
-                                            lineNumber: 189,
-                                            columnNumber: 15
+                                            lineNumber: 195,
+                                            columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                            children: "시스템 정상"
+                                            className: "hidden sm:inline",
+                                            children: "로딩 중"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/page.tsx",
-                                            lineNumber: 190,
-                                            columnNumber: 15
+                                            lineNumber: 196,
+                                            columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/page.tsx",
-                                    lineNumber: 188,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                    children: [
-                                        "로그 ",
-                                        logs.length,
-                                        "개"
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/src/app/page.tsx",
-                                    lineNumber: 192,
-                                    columnNumber: 13
-                                }, this),
-                                loading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                    children: "로딩 중..."
-                                }, void 0, false, {
-                                    fileName: "[project]/src/app/page.tsx",
-                                    lineNumber: 193,
-                                    columnNumber: 25
+                                    lineNumber: 194,
+                                    columnNumber: 17
                                 }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/src/app/page.tsx",
-                            lineNumber: 187,
-                            columnNumber: 11
-                        }, this)
-                    ]
-                }, void 0, true, {
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/page.tsx",
+                                lineNumber: 192,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/app/page.tsx",
+                        lineNumber: 158,
+                        columnNumber: 11
+                    }, this)
+                }, void 0, false, {
                     fileName: "[project]/src/app/page.tsx",
                     lineNumber: 157,
                     columnNumber: 9
@@ -7366,7 +7380,7 @@ function HomePage() {
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
-                className: "p-6",
+                className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6",
                 children: loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "flex items-center justify-center h-64",
                     children: [
@@ -7374,7 +7388,7 @@ function HomePage() {
                             className: "animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"
                         }, void 0, false, {
                             fileName: "[project]/src/app/page.tsx",
-                            lineNumber: 202,
+                            lineNumber: 208,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -7382,18 +7396,18 @@ function HomePage() {
                             children: "로딩 중..."
                         }, void 0, false, {
                             fileName: "[project]/src/app/page.tsx",
-                            lineNumber: 203,
+                            lineNumber: 209,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/page.tsx",
-                    lineNumber: 201,
+                    lineNumber: 207,
                     columnNumber: 11
                 }, this) : renderContent()
             }, void 0, false, {
                 fileName: "[project]/src/app/page.tsx",
-                lineNumber: 199,
+                lineNumber: 205,
                 columnNumber: 7
             }, this)
         ]

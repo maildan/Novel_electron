@@ -152,51 +152,57 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-950">
-      {/* Tab Navigation Bar */}
-      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm">
-        <div className="flex items-center justify-between px-6 py-3">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center">
-              <span className="text-white font-bold text-sm">L6</span>
+      {/* Main Header with Navigation */}
+      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Left: Logo and Brand */}
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center">
+                <span className="text-white font-bold text-sm">L6</span>
+              </div>
+              <div className="hidden sm:block">
+                <h1 className="text-lg font-bold text-gray-900 dark:text-white">Loop 6</h1>
+                <span className="text-xs text-gray-500 dark:text-gray-400">타이핑 분석 시스템</span>
+              </div>
             </div>
-            <div>
-              <h1 className="text-lg font-bold text-gray-900 dark:text-white">Loop 6</h1>
-              <span className="text-xs text-gray-500 dark:text-gray-400">타이핑 분석 시스템</span>
-            </div>
-          </div>
-          
-          {/* Horizontal Tab Navigation */}
-          <nav className="flex items-center space-x-1">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 ${
-                  activeTab === item.id
-                    ? 'bg-blue-500 text-white shadow-sm'
-                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'
-                }`}
-              >
-                <ClientIcon icon={item.icon} className="w-4 h-4 flex-shrink-0" />
-                <span className="text-sm font-medium">{item.label}</span>
-              </button>
-            ))}
-          </nav>
+            
+            {/* Center: Empty space for balance */}
+            <div className="flex-1"></div>
+            
+            {/* Right: Navigation */}
+            <nav className="flex items-center space-x-1 max-w-md">
+              {navItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 min-w-0 flex-shrink-0 ${
+                    activeTab === item.id
+                      ? 'bg-blue-500 text-white shadow-sm'
+                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'
+                  }`}
+                >
+                  <ClientIcon icon={item.icon} className="w-4 h-4 flex-shrink-0" />
+                  <span className="text-sm font-medium hidden sm:inline">{item.label}</span>
+                </button>
+              ))}
+            </nav>
 
-          {/* Status Information */}
-          <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-green-500"></div>
-              <span>시스템 정상</span>
+            {/* Right: Status */}
+            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 flex-shrink-0">
+              {loading && (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                  <span className="hidden sm:inline">로딩 중</span>
+                </div>
+              )}
             </div>
-            <span>로그 {logs.length}개</span>
-            {loading && <span>로딩 중...</span>}
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Content */}
-      <main className="p-6">
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {loading ? (
           <div className="flex items-center justify-center h-64">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>

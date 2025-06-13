@@ -1,0 +1,340 @@
+/* ===== Component Styles ===== */
+
+/* 토글 스위치 스타일 개선 - WCAG 가이드라인 준수 */
+.toggle-switch {
+  position: relative;
+  width: 60px; /* 더 큰 터치 영역 */
+  height: 32px; /* 높이 증가 */
+  border-radius: 16px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: 2px solid var(--border-primary);
+  background-color: var(--surface-secondary);
+  box-sizing: border-box;
+  min-width: 60px; /* 최소 터치 영역 보장 */
+  margin: 8px; /* 주변 요소와 적절한 간격 */
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0; /* 요소 밖으로 나가지 않도록 */
+}
+
+/* 호버 상태 */
+.toggle-switch:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-color: var(--accent-secondary);
+}
+
+/* 포커스 상태 - 접근성 */
+.toggle-switch:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(98, 0, 238, 0.1);
+}
+
+/* 다크모드 포커스 */
+.dark .toggle-switch:focus-visible {
+  box-shadow: 0 0 0 3px rgba(187, 134, 252, 0.2);
+}
+
+/* 토글 썸 (핸들) */
+.toggle-switch .toggle-thumb {
+  position: absolute;
+  width: 24px; /* 크기 증가 */
+  height: 24px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  top: 2px;
+  left: 2px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* 활성 상태 (ON) */
+.toggle-switch.active {
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+}
+
+.toggle-switch.active .toggle-thumb {
+  transform: translateX(28px); /* 큰 토글에 맞게 조정 */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* 다크모드 활성 상태 */
+.dark .toggle-switch.active {
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+}
+
+.dark .toggle-switch.active .toggle-thumb {
+  background-color: var(--background);
+}
+
+/* 비활성 상태 (OFF) */
+.toggle-switch:not(.active) {
+  background-color: #e0e0e0;
+  border-color: #d0d0d0;
+}
+
+.dark .toggle-switch:not(.active) {
+  background-color: #444444;
+  border-color: #555555;
+}
+
+.dark .toggle-switch:not(.active) .toggle-thumb {
+  background-color: #ffffff;
+}
+
+/* 비활성화 상태 */
+.toggle-switch:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ARIA 지원 */
+.toggle-switch[role="switch"] {
+  outline: none;
+}
+
+/* 설정 행 레이아웃 개선 */
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  min-height: 60px; /* 최소 높이 보장 */
+  gap: 16px; /* 요소 간 간격 */
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.settings-row .settings-label {
+  flex: 1;
+  min-width: 0; /* 텍스트 오버플로우 방지 */
+  color: var(--text-primary);
+  font-weight: 500;
+  margin-right: 16px;
+}
+
+.settings-row .settings-control {
+  flex-shrink: 0; /* 컨트롤이 축소되지 않도록 */
+  display: flex;
+  align-items: center;
+  margin-left: auto; /* 우측 정렬 */
+}
+
+/* 설정 컨테이너 개선 */
+.settings-container {
+  max-width: 100%;
+  overflow-x: hidden; /* 가로 스크롤 방지 */
+  padding: 0 8px; /* 좌우 여백 */
+}
+
+.settings-content {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* 긴 텍스트 처리 */
+.settings-label-text {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+/* 토글 버튼 컨테이너 */
+.toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 76px; /* 토글 버튼 + 여백 */
+  padding: 0 8px;
+}
+
+/* 버튼 및 UI 요소 범위 개선 */
+button, .btn, .toggle-switch {
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 카드 및 컨테이너 스타일 개선 */
+.card, .bg-white, .bg-gray-900 {
+  background-color: var(--surface-primary) !important;
+  border: 1px solid var(--border-primary) !important;
+  box-shadow: 0 1px 3px var(--shadow-light) !important;
+  transition: all 0.2s ease;
+}
+
+.card:hover, .bg-white:hover, .bg-gray-900:hover {
+  box-shadow: 0 4px 12px var(--shadow-medium) !important;
+  border-color: var(--border-focus) !important;
+}
+
+/* 입력 필드 스타일 개선 */
+.input-field, input[type="text"], input[type="email"], input[type="password"], textarea {
+  background-color: var(--surface-primary) !important;
+  border: 1px solid var(--border-primary) !important;
+  color: var(--text-primary) !important;
+  padding: 12px 16px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.input-field:focus, input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, textarea:focus {
+  border-color: var(--border-focus) !important;
+  box-shadow: 0 0 0 3px rgba(98, 0, 238, 0.1) !important;
+  outline: none !important;
+}
+
+/* 다크모드 입력 필드 */
+.dark .input-field, .dark input[type="text"], .dark input[type="email"], .dark input[type="password"], .dark textarea {
+  background-color: var(--surface-secondary) !important;
+  border-color: #3c3c3c !important;
+}
+
+/* 상태 표시 스타일 */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.status-success {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: var(--success);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.status-warning {
+  background-color: rgba(255, 152, 0, 0.1);
+  color: var(--warning);
+  border: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+.status-error {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: var(--error);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+.status-info {
+  background-color: rgba(33, 150, 243, 0.1);
+  color: var(--info);
+  border: 1px solid rgba(33, 150, 243, 0.3);
+}
+
+/* 다크모드 상태 색상 조정 */
+.dark .status-success {
+  color: #4caf50;
+}
+
+.dark .status-warning {
+  color: #ff9800;
+}
+
+.dark .status-error {
+  color: #f44336;
+}
+
+.dark .status-info {
+  color: #2196f3;
+}
+
+/* 로딩 스피너 */
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-primary);
+  border-radius: 50%;
+  border-top-color: var(--accent-primary);
+  animation: spin 1s linear infinite;
+}
+
+/* 진행률 바 */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: var(--surface-secondary);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--accent-primary);
+  transition: width 0.3s ease;
+  border-radius: 4px;
+}
+
+/* 툴팁 스타일 */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--surface-tertiary);
+  color: var(--text-primary);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  z-index: 1000;
+  border: 1px solid var(--border-primary);
+  box-shadow: 0 4px 12px var(--shadow-medium);
+}
+
+/* 배지 스타일 */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: var(--surface-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-primary);
+}
+
+.badge-primary {
+  background-color: var(--accent-primary);
+  color: white;
+  border-color: var(--accent-primary);
+}
+
+.badge-success {
+  background-color: var(--success);
+  color: white;
+  border-color: var(--success);
+}
+
+.badge-warning {
+  background-color: var(--warning);
+  color: white;
+  border-color: var(--warning);
+}
+
+.badge-error {
+  background-color: var(--error);
+  color: white;
+  border-color: var(--error);
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Loop 6",
+  "short_name": "Loop6",
+  "description": "타이핑 분석 시스템",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6200EE",
+  "icons": [
+    {
+      "src": "/app-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/app_icon.webp",
+      "sizes": "512x512",
+      "type": "image/webp"
+    }
+  ]
+}

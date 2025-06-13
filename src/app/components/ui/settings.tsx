@@ -238,23 +238,24 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
               
               <div className="space-y-4">
                 {/* 다크 모드 토글 */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    {isDarkMode ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-                    <span className="text-gray-900 dark:text-white">다크 모드 ({theme})</span>
+                <div className="settings-row">
+                  <div className="settings-label">
+                    <div className="flex items-center space-x-2">
+                      {isDarkMode ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+                      <span>다크 모드 ({theme})</span>
+                    </div>
                   </div>
-                  <button
-                    onClick={toggleDarkMode}
-                    className={`w-12 h-6 rounded-full p-1 transition-colors ${
-                      isDarkMode ? 'bg-blue-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <div
-                      className={`w-4 h-4 rounded-full bg-white transition-transform ${
-                        isDarkMode ? 'translate-x-6' : 'translate-x-0'
-                      }`}
-                    />
-                  </button>
+                  <div className="toggle-container">
+                    <button
+                      onClick={toggleDarkMode}
+                      className={`toggle-switch ${isDarkMode ? 'active' : ''}`}
+                      role="switch"
+                      aria-checked={isDarkMode}
+                      aria-label="다크 모드 토글"
+                    >
+                      <div className="toggle-thumb" />
+                    </button>
+                  </div>
                 </div>
 
                 {/* 창 모드 설정 */}
@@ -287,13 +288,14 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                   <span className="text-gray-900 dark:text-white">애니메이션 효과</span>
                   <button
                     onClick={() => setLocalSettings(prev => ({ ...prev, enableAnimations: !prev.enableAnimations }))}
-                    className={`w-12 h-6 rounded-full p-1 transition-colors ${
+                    className={`min-w-[44px] min-h-[44px] w-16 h-8 rounded-full p-1 transition-colors ${
                       localSettings.enableAnimations ? 'bg-blue-600' : 'bg-gray-300'
                     }`}
+                    aria-label="애니메이션 효과 토글"
                   >
                     <div
-                      className={`w-4 h-4 rounded-full bg-white transition-transform ${
-                        localSettings.enableAnimations ? 'translate-x-6' : 'translate-x-0'
+                      className={`w-6 h-6 rounded-full bg-white transition-transform ${
+                        localSettings.enableAnimations ? 'translate-x-8' : 'translate-x-0'
                       }`}
                     />
                   </button>
@@ -307,13 +309,14 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                   </div>
                   <button
                     onClick={() => setLocalSettings(prev => ({ ...prev, enableNotifications: !prev.enableNotifications }))}
-                    className={`w-12 h-6 rounded-full p-1 transition-colors ${
+                    className={`min-w-[44px] min-h-[44px] w-16 h-8 rounded-full p-1 transition-colors ${
                       localSettings.enableNotifications ? 'bg-blue-600' : 'bg-gray-300'
                     }`}
+                    aria-label="알림 활성화 토글"
                   >
                     <div
-                      className={`w-4 h-4 rounded-full bg-white transition-transform ${
-                        localSettings.enableNotifications ? 'translate-x-6' : 'translate-x-0'
+                      className={`w-6 h-6 rounded-full bg-white transition-transform ${
+                        localSettings.enableNotifications ? 'translate-x-8' : 'translate-x-0'
                       }`}
                     />
                   </button>

@@ -1,0 +1,9 @@
+/* filepath: /Users/user/loop/loop_6/src/app/globals.css */
+@import "tailwindcss";
+
+/* 모듈화된 CSS 파일들 */
+@import "./styles/variables.css";
+@import "./styles/base.css";
+@import "./styles/components.css";
+@import "./styles/animations.css";
+@import "./styles/utilities.css";

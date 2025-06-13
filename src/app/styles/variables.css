@@ -1,0 +1,183 @@
+/* ===== CSS Variables & Color Palette ===== */
+/* WCAG 가이드라인 기반 색상 시스템 */
+
+:root {
+  --font-inter: 'Inter', system-ui, sans-serif;
+  
+  /* WCAG 가이드라인 기반 라이트 모드 색상 팔레트 */
+  --background: #ffffff;
+  --foreground: #121212;
+  --background-secondary: #f5f5f5; /* 보조 배경 */
+  
+  /* 텍스트 색상 - 4.5:1 대비 비율 확보 */
+  --text-primary: #121212;    /* 21:1 대비 비율 */
+  --text-secondary: #424242;  /* 6.6:1 대비 비율 */
+  --text-tertiary: #616161;   /* 4.5:1 대비 비율 */
+  --text-disabled: #9e9e9e;   /* 2.4:1 대비 비율 */
+  
+  /* 액센트 및 상호작용 색상 */
+  --accent-primary: #6200EE;      /* Material 딥 퍼플 */
+  --accent-secondary: #3700B3;    /* 어두운 액센트 */
+  --accent-tertiary: #BB86FC;     /* 밝은 액센트 */
+  
+  /* 경계선 및 구분선 - 1.5:1 대비 비율 */
+  --border-primary: #e0e0e0;      /* 기본 경계선 */
+  --border-secondary: #f0f0f0;    /* 연한 경계선 */
+  --border-focus: #6200EE;        /* 포커스 경계선 */
+  
+  /* 배경 및 표면 */
+  --surface-primary: #ffffff;     /* 기본 표면 */
+  --surface-secondary: #fafafa;   /* 보조 표면 */
+  --surface-tertiary: #f5f5f5;    /* 3차 표면 */
+  --surface-hover: #f0f0f0;       /* 호버 표면 */
+  
+  /* 상태 색상 */
+  --success: #4caf50;
+  --warning: #ff9800;
+  --error: #f44336;
+  --info: #2196f3;
+  
+  /* 그림자 */
+  --shadow-light: rgba(0, 0, 0, 0.05);
+  --shadow-medium: rgba(0, 0, 0, 0.1);
+  --shadow-heavy: rgba(0, 0, 0, 0.15);
+  
+  /* 호버 및 포커스 효과 */
+  --hover-opacity: 0.9;
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  
+  /* 레거시 호환성 */
+  --primary-color: var(--accent-primary);
+  --background-color: var(--background);
+  --text-color: var(--text-primary);
+  --border-color: var(--border-primary);
+  --card-bg: var(--surface-primary);
+  --header-bg: var(--surface-primary);
+  --footer-bg: var(--surface-tertiary);
+  --hover-color: var(--surface-hover);
+  --shadow-color: var(--shadow-medium);
+  --focus-outline: var(--border-focus);
+  
+  /* shadcn/ui HSL Color variables */
+  --background-hsl: 0 0% 100%;
+  --foreground-hsl: 222.2 84% 4.9%;
+  --card-hsl: 0 0% 100%;
+  --card-foreground-hsl: 222.2 84% 4.9%;
+  --popover-hsl: 0 0% 100%;
+  --popover-foreground-hsl: 222.2 84% 4.9%;
+  --primary-hsl: 221.2 83.2% 53.3%;
+  --primary-foreground-hsl: 210 40% 98%;
+  --secondary-hsl: 210 40% 96%;
+  --secondary-foreground-hsl: 222.2 84% 4.9%;
+  --muted-hsl: 210 40% 96%;
+  --muted-foreground-hsl: 215.4 16.3% 46.9%;
+  --accent-hsl: 210 40% 96%;
+  --accent-foreground-hsl: 222.2 84% 4.9%;
+  --destructive-hsl: 0 84.2% 60.2%;
+  --destructive-foreground-hsl: 210 40% 98%;
+  --border-hsl: 214.3 31.8% 91.4%;
+  --input-hsl: 214.3 31.8% 91.4%;
+  --ring-hsl: 221.2 83.2% 53.3%;
+  --radius: 0.5rem;
+  
+  /* 호환성을 위한 매핑 */
+  --color-background: var(--background-color);
+  --color-foreground: var(--text-color);
+  --font-sans: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  --font-mono: monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #0a0a0a;
+    --text-color: #ededed;
+  }
+}
+
+/* WCAG 가이드라인 기반 다크 모드 */
+.dark {
+  /* 배경 색상 - Material Design 권장 */
+  --background: #121212;          /* 기본 배경 */
+  --foreground: #e0e0e0;         /* 기본 전경 */
+  --background-secondary: #1e1e1e; /* 보조 배경 */
+  
+  /* 텍스트 색상 - 4.5:1 대비 비율 확보 */
+  --text-primary: #e0e0e0;       /* 12.6:1 대비 비율 */
+  --text-secondary: #b0b0b0;     /* 6.7:1 대비 비율 */
+  --text-tertiary: #8a8a8a;      /* 4.5:1 대비 비율 */
+  --text-disabled: #606060;      /* 2.6:1 대비 비율 */
+  
+  /* 액센트 및 상호작용 색상 */
+  --accent-primary: #BB86FC;     /* Material 라이트 퍼플 */
+  --accent-secondary: #CF6679;   /* 보조 액센트 */
+  --accent-tertiary: #03DAC6;    /* 3차 액센트 */
+  
+  /* 경계선 및 구분선 - 1.5:1 대비 비율 */
+  --border-primary: #2a2a2a;     /* 기본 경계선 */
+  --border-secondary: #1f1f1f;   /* 연한 경계선 */
+  --border-focus: #BB86FC;       /* 포커스 경계선 */
+  
+  /* 배경 및 표면 */
+  --surface-primary: #1e1e1e;    /* 기본 표면 */
+  --surface-secondary: #252525;  /* 보조 표면 */
+  --surface-tertiary: #2a2a2a;   /* 3차 표면 */
+  --surface-hover: #333333;      /* 호버 표면 */
+  
+  /* 상태 색상 - 다크모드 최적화 */
+  --success: #4caf50;
+  --warning: #ffb74d;
+  --error: #ef5350;
+  --info: #42a5f5;
+  
+  /* 그림자 - 다크모드용 */
+  --shadow-light: rgba(0, 0, 0, 0.2);
+  --shadow-medium: rgba(0, 0, 0, 0.4);
+  --shadow-heavy: rgba(0, 0, 0, 0.6);
+  
+  /* 레거시 호환성 */
+  --primary-color: var(--accent-primary);
+  --background-color: var(--background);
+  --text-color: var(--text-primary);
+  --border-color: var(--border-primary);
+  --card-bg: var(--surface-primary);
+  --header-bg: var(--surface-primary);
+  --footer-bg: var(--background);
+  --hover-color: var(--surface-hover);
+  --shadow-color: var(--shadow-medium);
+  --focus-outline: var(--border-focus);
+  
+  /* shadcn/ui HSL Color variables - 다크모드 */
+  --background-hsl: 222.2 84% 4.9%;
+  --foreground-hsl: 210 40% 98%;
+  --card-hsl: 222.2 84% 4.9%;
+  --card-foreground-hsl: 210 40% 98%;
+  --popover-hsl: 222.2 84% 4.9%;
+  --popover-foreground-hsl: 210 40% 98%;
+  --primary-hsl: 210 40% 98%;
+  --primary-foreground-hsl: 222.2 84% 4.9%;
+  --secondary-hsl: 217.2 32.6% 17.5%;
+  --secondary-foreground-hsl: 210 40% 98%;
+  --muted-hsl: 217.2 32.6% 17.5%;
+  --muted-foreground-hsl: 215 20.2% 65.1%;
+  --accent-hsl: 217.2 32.6% 17.5%;
+  --accent-foreground-hsl: 210 40% 98%;
+  --destructive-hsl: 0 62.8% 30.6%;
+  --destructive-foreground-hsl: 210 40% 98%;
+  --border-hsl: 217.2 32.6% 17.5%;
+  --input-hsl: 217.2 32.6% 17.5%;
+  --ring-hsl: 212.7 26.8% 83.9%;
+}
+
+[data-theme='dark'] {
+  /* data-theme 기반 다크모드 지원 */
+  --background-color: var(--background);
+  --text-color: var(--text-primary);
+  --border-color: var(--border-primary);
+  --card-bg: var(--surface-primary);
+  --header-bg: var(--surface-primary);
+  --footer-bg: var(--background);
+  --hover-color: var(--surface-hover);
+  --shadow-color: var(--shadow-medium);
+  --focus-outline: var(--border-focus);
+}

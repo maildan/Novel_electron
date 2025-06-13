@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "functions": {
+    "/api/native/gpu/acceleration": {},
+    "/api/native/memory/optimize": {},
+    "/api/native/status": {},
+    "/api/native/gpu/settings": {}
+  }
+}
