@@ -37,9 +37,9 @@ import { DatabaseManager } from './database';
 import { MemoryManager } from './memory';
 import { SystemMonitor } from './system-monitor';
 import { IpcHandlers } from './ipc-handlers';
-import { registerWindowHandlers, initializeWindowHandlers } from './window-handlers';
-import { registerKeyboardHandlers, initializeKeyboardHandlers } from './keyboard-handlers';
-import { registerSystemInfoIpcHandlers } from './system-info-ipc';
+import { registerWindowHandlers, initializeWindowHandlers } from './windowHandlers';
+import { registerKeyboardHandlers, initializeKeyboardHandlers } from './keyboardHandlers';
+import { registerSystemInfoIpcHandlers } from './systemInfoIpc';
 import { registerNativeIpcHandlers, cleanupNativeIpcHandlers } from './native-ipc';
 import { StaticServer } from './static-server';
 
@@ -53,7 +53,7 @@ import './crash-reporter';
 import './data-collector';
 import './data-sync';
 import './dialog-manager';
-import './gpu-utils';
+import './gpuUtils';
 import './handlers-manager';
 import './keyboard-advanced';
 import './menu-manager';
@@ -76,7 +76,7 @@ import './tray';
 import './update-manager';
 import './utils';
 import './web-contents-handlers';
-import './window-handlers';
+import './windowHandlers';
 
 // Load environment variables early
 config();

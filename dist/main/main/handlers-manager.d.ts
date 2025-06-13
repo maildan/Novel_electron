@@ -5,8 +5,8 @@
  * Loop 3의 handlers/index.js를 완전히 마이그레이션하고 확장했습니다.
  */
 import { registerTrackingHandlers, cleanupTrackingHandlers } from './tracking-handlers';
-import { registerKeyboardHandlers, cleanupKeyboardHandlers } from './keyboard-handlers';
-import { registerWindowHandlers, cleanupWindowHandlers } from './window-handlers';
+import { registerKeyboardHandlers, cleanupKeyboardHandlers } from './keyboardHandlers';
+import { registerWindowHandlers, cleanupWindowHandlers } from './windowHandlers';
 /**
  * 모든 IPC 핸들러를 순서대로 등록
  */

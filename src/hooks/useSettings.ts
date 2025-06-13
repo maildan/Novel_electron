@@ -13,6 +13,13 @@ export interface SettingsState {
   enableTypingSound: boolean;
   enableKeyboardShortcuts: boolean;
   
+  // 타이핑 분석 설정 (새로 추가)
+  enableTypingAnalysis: boolean;
+  enableRealTimeAnalysis: boolean;
+  statsCollectionInterval: number;
+  enableKeyboardDetection: boolean;
+  enablePatternLearning: boolean;
+  
   // GPU 설정
   enableGPUAcceleration: boolean;
   gpuAccelerationLevel: number;
@@ -80,6 +87,13 @@ const defaultSettings: SettingsState = {
   enableRealTimeStats: true,
   enableTypingSound: false,
   enableKeyboardShortcuts: true,
+  
+  // 타이핑 분석 설정 (새로 추가)
+  enableTypingAnalysis: true,
+  enableRealTimeAnalysis: true,
+  statsCollectionInterval: 5,
+  enableKeyboardDetection: true,
+  enablePatternLearning: true,
   
   // GPU 설정
   enableGPUAcceleration: true,

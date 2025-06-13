@@ -17,8 +17,7 @@ import {
   Database,
   Cpu,
   Monitor,
-  Menu,
-  X
+  Menu
 } from 'lucide-react';
 import ClientIcon from './components/ui/client-icon';
 
@@ -31,7 +30,7 @@ interface Log {
   totalChars?: number;
 }
 
-type ActiveTab = 'home' | 'stats' | 'analysis' | 'memory' | 'activity' | 'system' | 'settings';
+type ActiveTab = 'home' | 'stats' | 'analysis' | 'settings';
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('home');
@@ -91,9 +90,6 @@ export default function HomePage() {
     { id: 'home' as ActiveTab, label: '홈', icon: Home },
     { id: 'stats' as ActiveTab, label: '통계', icon: BarChart3 },
     { id: 'analysis' as ActiveTab, label: '분석', icon: Activity },
-    { id: 'memory' as ActiveTab, label: '메모리', icon: Cpu },
-    { id: 'activity' as ActiveTab, label: '활성 상태', icon: Monitor },
-    { id: 'system' as ActiveTab, label: '시스템', icon: Database },
     { id: 'settings' as ActiveTab, label: '설정', icon: SettingsIcon },
   ];
 
@@ -104,7 +100,7 @@ export default function HomePage() {
           <div className="space-y-6">
             <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                Loop 6 - 타이핑 분석 시스템
+                Loop
               </h1>
               <p className="text-gray-600 dark:text-gray-300 mb-6">
                 실시간 타이핑 분석, GPU 가속, 메모리 최적화를 지원하는 고성능 데스크톱 애플리케이션입니다.
@@ -146,15 +142,6 @@ export default function HomePage() {
       case 'analysis':
         return <TypingAnalyzer />;
 
-      case 'memory':
-        return <MemoryMonitor />;
-
-      case 'activity':
-        return <ActivityMonitor />;
-
-      case 'system':
-        return <NativeModuleStatus />;
-
       case 'settings':
         return <Settings />;
 
@@ -164,51 +151,73 @@ export default function HomePage() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100 dark:bg-gray-950">
-      {/* Sidebar */}
-      <div className={`${sidebarOpen ? 'w-64' : 'w-16'} bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 flex flex-col`}>
-        {/* Header */}
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between">
-            {sidebarOpen && (
-              <h1 className="text-lg font-semibold text-gray-900 dark:text-white">Loop 6</h1>
-            )}
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            >
-              {sidebarOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-            </button>
+    <div className="flex flex-col h-screen bg-gray-100 dark:bg-gray-950">
+      {/* Header Navigation */}
+      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm">
+        <div className="flex items-center justify-between px-6 py-4">
+          {/* Logo/Title */}
+          <div className="flex items-center gap-3">
+            <h1 className="text-xl font-bold text-gray-900 dark:text-white">Loop 6</h1>
+            <span className="text-sm text-gray-500 dark:text-gray-400">타이핑 분석 시스템</span>
           </div>
+
+          {/* Navigation Tabs */}
+          <nav className="flex items-center gap-1">
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 border ${
+                  activeTab === item.id
+                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-700 shadow-sm'
+                    : 'text-gray-600 dark:text-gray-400 border-transparent hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200 hover:border-gray-200 dark:hover:border-gray-600'
+                }`}
+              >
+                <ClientIcon icon={item.icon} className="w-4 h-4" />
+                <span className="text-sm font-medium">{item.label}</span>
+              </button>
+            ))}
+          </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="md:hidden p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 p-4">
-          <ul className="space-y-2">
-            {navItems.map((item) => {
-              return (
-                <li key={item.id}>
+        {/* Mobile Navigation (hidden by default, can be shown when sidebarOpen is true on mobile) */}
+        {sidebarOpen && (
+          <div className="md:hidden border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+            <nav className="p-4">
+              <div className="grid grid-cols-2 gap-2">
+                {navItems.map((item) => (
                   <button
-                    onClick={() => setActiveTab(item.id)}
-                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${
+                    key={item.id}
+                    onClick={() => {
+                      setActiveTab(item.id);
+                      setSidebarOpen(false); // Close mobile menu after selection
+                    }}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors border ${
                       activeTab === item.id
-                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-700'
+                        : 'text-gray-700 dark:text-gray-300 border-transparent hover:bg-gray-200 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                     }`}
-                    title={!sidebarOpen ? item.label : undefined}
                   >
-                    <ClientIcon icon={item.icon} className="w-5 h-5 flex-shrink-0" />
-                    {sidebarOpen && <span className="text-sm font-medium">{item.label}</span>}
+                    <ClientIcon icon={item.icon} className="w-4 h-4" />
+                    <span className="text-sm">{item.label}</span>
                   </button>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-      </div>
+                ))}
+              </div>
+            </nav>
+          </div>
+        )}
+      </header>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-hidden">
+      <main className="flex-1 overflow-hidden">
         <div className="h-full overflow-auto p-6">
           {loading ? (
             <div className="flex items-center justify-center h-64">
@@ -219,7 +228,7 @@ export default function HomePage() {
             renderContent()
           )}
         </div>
-      </div>
+      </main>
     </div>
   );
 }

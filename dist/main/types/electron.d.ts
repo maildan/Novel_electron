@@ -89,6 +89,7 @@ export interface NativeModuleInfo {
     };
 }
 export interface ElectronAPI {
+    invoke: (channel: string, ...args: any[]) => Promise<any>;
     system: {
         getInfo: () => Promise<any>;
         getCurrentMetrics: () => Promise<any>;

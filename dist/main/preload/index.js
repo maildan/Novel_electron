@@ -280,6 +280,8 @@ const electronAPI = {
     once: (channel, listener) => {
         electron_1.ipcRenderer.once(channel, listener);
     },
+    // IPC 호출을 위한 일반적인 invoke 메서드 추가
+    invoke: (channel, ...args) => electron_1.ipcRenderer.invoke(channel, ...args),
     // 유틸리티
     utils: {
         removeAllListeners: (channel) => {

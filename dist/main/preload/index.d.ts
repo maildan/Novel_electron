@@ -147,6 +147,7 @@ declare const electronAPI: {
     on: (channel: string, listener: (...args: any[]) => void) => void;
     off: (channel: string, listener: (...args: any[]) => void) => void;
     once: (channel: string, listener: (...args: any[]) => void) => void;
+    invoke: (channel: string, ...args: any[]) => Promise<any>;
     utils: {
         removeAllListeners: (channel: string) => void;
         platform: NodeJS.Platform;

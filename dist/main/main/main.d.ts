@@ -11,7 +11,7 @@ import './crash-reporter';
 import './data-collector';
 import './data-sync';
 import './dialog-manager';
-import './gpu-utils';
+import './gpuUtils';
 import './handlers-manager';
 import './keyboard-advanced';
 import './menu-manager';
@@ -34,7 +34,7 @@ import './tray';
 import './update-manager';
 import './utils';
 import './web-contents-handlers';
-import './window-handlers';
+import './windowHandlers';
 interface AppState {
     isInitializing: boolean;
     isReady: boolean;

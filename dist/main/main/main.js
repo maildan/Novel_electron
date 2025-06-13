@@ -74,7 +74,7 @@ require("./crash-reporter");
 require("./data-collector");
 require("./data-sync");
 require("./dialog-manager");
-require("./gpu-utils");
+require("./gpuUtils");
 require("./handlers-manager");
 require("./keyboard-advanced");
 require("./menu-manager");
@@ -97,7 +97,7 @@ require("./tray");
 require("./update-manager");
 require("./utils");
 require("./web-contents-handlers");
-require("./window-handlers");
+require("./windowHandlers");
 // Load environment variables early
 (0, dotenv_1.config)();
 // Development mode detection - define early for all other code to use

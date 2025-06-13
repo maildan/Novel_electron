@@ -204,6 +204,19 @@ const ipcRendererAPI = {
 
 // 전체 Electron API 객체
 const electronAPI = {
+  // 최상위 레벨에 invoke 메서드 노출
+  invoke: async (channel: string, ...args: any[]) => {
+    console.log('📞 IPC Invoke:', channel, args);
+    try {
+      const result = await ipcRenderer.invoke(channel, ...args);
+      console.log('✅ IPC Invoke Response:', channel, result);
+      return result;
+    } catch (error) {
+      console.error('❌ IPC Invoke Error:', channel, error);
+      throw error;
+    }
+  },
+  
   ipcRenderer: ipcRendererAPI,
   system: systemAPI,
   memory: memoryAPI,

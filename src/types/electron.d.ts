@@ -49,6 +49,9 @@ interface NativeModuleAPI {
 }
 
 interface ElectronAPI {
+  // IPC 호출을 위한 invoke 메서드
+  invoke: (channel: string, ...args: any[]) => Promise<any>;
+  
   settings: {
     get: (key: string) => Promise<any>;
     set: (key: string, value: any) => Promise<void>;

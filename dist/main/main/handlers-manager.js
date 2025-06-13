@@ -5,6 +5,9 @@
  * 모든 IPC 핸들러를 관리하고 초기화하는 중앙 관리자입니다.
  * Loop 3의 handlers/index.js를 완전히 마이그레이션하고 확장했습니다.
  */
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerWindowHandlers = exports.registerKeyboardHandlers = exports.registerTrackingHandlers = void 0;
 exports.setupAllHandlers = setupAllHandlers;
@@ -17,14 +20,15 @@ exports.diagnoseHandlers = diagnoseHandlers;
 exports.resetHandlersState = resetHandlersState;
 const tracking_handlers_1 = require("./tracking-handlers");
 Object.defineProperty(exports, "registerTrackingHandlers", { enumerable: true, get: function () { return tracking_handlers_1.registerTrackingHandlers; } });
-const keyboard_handlers_1 = require("./keyboard-handlers");
-Object.defineProperty(exports, "registerKeyboardHandlers", { enumerable: true, get: function () { return keyboard_handlers_1.registerKeyboardHandlers; } });
-const window_handlers_1 = require("./window-handlers");
-Object.defineProperty(exports, "registerWindowHandlers", { enumerable: true, get: function () { return window_handlers_1.registerWindowHandlers; } });
+const keyboardHandlers_1 = require("./keyboardHandlers");
+Object.defineProperty(exports, "registerKeyboardHandlers", { enumerable: true, get: function () { return keyboardHandlers_1.registerKeyboardHandlers; } });
+const windowHandlers_1 = require("./windowHandlers");
+Object.defineProperty(exports, "registerWindowHandlers", { enumerable: true, get: function () { return windowHandlers_1.registerWindowHandlers; } });
 const ipc_handlers_1 = require("./ipc-handlers");
 const memory_ipc_1 = require("./memory-ipc");
 const native_client_1 = require("./native-client");
-const system_info_ipc_1 = require("./system-info-ipc");
+const systemInfoIpc_1 = require("./systemInfoIpc");
+const settingsIpcHandlers_1 = __importDefault(require("./settingsIpcHandlers"));
 // Simple debug logging
 function debugLog(message, ...args) {
     console.log(`[HandlersManager] ${message}`, ...args);
@@ -39,11 +43,18 @@ let handlersState = {
     initializationOrder: []
 };
 /**
- * 설정 관련 핸들러 등록 (SettingsManager에서 자동 처리)
+ * 설정 관련 핸들러 등록
  */
 function registerSettingsHandlers() {
-    debugLog('설정 관련 핸들러는 SettingsManager에서 자동 등록됩니다');
-    handlersState.registeredHandlers.add('settings');
+    try {
+        // 새로운 설정 IPC 핸들러 등록
+        settingsIpcHandlers_1.default.register();
+        debugLog('설정 관련 핸들러 등록 완료');
+        handlersState.registeredHandlers.add('settings');
+    }
+    catch (error) {
+        errorLog('설정 핸들러 등록 오류:', error);
+    }
 }
 /**
  * 시스템 정보 관련 핸들러 등록
@@ -51,7 +62,7 @@ function registerSettingsHandlers() {
 function registerSystemInfoHandlers() {
     try {
         // 시스템 정보 핸들러를 실제로 등록
-        (0, system_info_ipc_1.registerSystemInfoIpcHandlers)();
+        (0, systemInfoIpc_1.registerSystemInfoIpcHandlers)();
         debugLog('시스템 정보 관련 핸들러 등록 완료');
         handlersState.registeredHandlers.add('system-info');
     }
@@ -143,14 +154,14 @@ async function setupAllHandlers() {
         registerIntegratedHandlers();
         registerSystemInfoHandlers();
         registerNativeHandlers();
-        (0, window_handlers_1.registerWindowHandlers)();
+        (0, windowHandlers_1.registerWindowHandlers)();
         registerMemoryHandlers();
-        (0, keyboard_handlers_1.registerKeyboardHandlers)();
+        (0, keyboardHandlers_1.registerKeyboardHandlers)();
         (0, tracking_handlers_1.registerTrackingHandlers)();
         registerRestartHandlers();
         // 핸들러 초기화
-        (0, window_handlers_1.initializeWindowHandlers)();
-        await (0, keyboard_handlers_1.initializeKeyboardHandlers)();
+        (0, windowHandlers_1.initializeWindowHandlers)();
+        await (0, keyboardHandlers_1.initializeKeyboardHandlers)();
         (0, tracking_handlers_1.initializeAutoMonitoring)();
         // 핸들러 설정 완료
         handlersState.isAllHandlersSetup = true;
@@ -194,13 +205,13 @@ function reregisterHandler(handlerName) {
                 registerSystemInfoHandlers();
                 break;
             case 'window':
-                (0, window_handlers_1.registerWindowHandlers)();
+                (0, windowHandlers_1.registerWindowHandlers)();
                 break;
             case 'memory':
                 registerMemoryHandlers();
                 break;
             case 'keyboard':
-                (0, keyboard_handlers_1.registerKeyboardHandlers)();
+                (0, keyboardHandlers_1.registerKeyboardHandlers)();
                 break;
             case 'tracking':
                 (0, tracking_handlers_1.registerTrackingHandlers)();
@@ -227,8 +238,8 @@ function cleanupAllHandlers() {
         debugLog('모든 핸들러 정리 시작...');
         // 역순으로 정리
         (0, tracking_handlers_1.cleanupTrackingHandlers)();
-        (0, keyboard_handlers_1.cleanupKeyboardHandlers)();
-        (0, window_handlers_1.cleanupWindowHandlers)();
+        (0, keyboardHandlers_1.cleanupKeyboardHandlers)();
+        (0, windowHandlers_1.cleanupWindowHandlers)();
         // 상태 초기화
         handlersState.isAllHandlersSetup = false;
         handlersState.registeredHandlers.clear();
@@ -278,12 +289,12 @@ exports.default = {
         cleanup: tracking_handlers_1.cleanupTrackingHandlers
     },
     keyboard: {
-        register: keyboard_handlers_1.registerKeyboardHandlers,
-        cleanup: keyboard_handlers_1.cleanupKeyboardHandlers
+        register: keyboardHandlers_1.registerKeyboardHandlers,
+        cleanup: keyboardHandlers_1.cleanupKeyboardHandlers
     },
     window: {
-        register: window_handlers_1.registerWindowHandlers,
-        cleanup: window_handlers_1.cleanupWindowHandlers
+        register: windowHandlers_1.registerWindowHandlers,
+        cleanup: windowHandlers_1.cleanupWindowHandlers
     }
 };
 //# sourceMappingURL=handlers-manager.js.map

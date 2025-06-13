@@ -67,6 +67,12 @@ const defaultSettings = {
     enableRealTimeStats: true,
     enableTypingSound: false,
     enableKeyboardShortcuts: true,
+    // 타이핑 분석 설정 (새로 추가)
+    enableTypingAnalysis: true,
+    enableRealTimeAnalysis: true,
+    statsCollectionInterval: 5,
+    enableKeyboardDetection: true,
+    enablePatternLearning: true,
     // GPU 설정
     enableGPUAcceleration: true,
     gpuAccelerationLevel: 1,
@@ -397,6 +403,11 @@ function ThemeProvider({ children }) {
     };
     // 실제 적용할 테마 계산
     const calculateResolvedTheme = ()=>{
+        // darkMode 설정이 우선순위를 가짐
+        if (typeof settings.darkMode === 'boolean') {
+            return settings.darkMode ? 'dark' : 'light';
+        }
+        // theme 설정이 있을 때
         if (settings.theme === 'system') {
             return getSystemTheme();
         }
@@ -431,15 +442,27 @@ function ThemeProvider({ children }) {
     // 다크모드 설정 함수
     const setDarkMode = async (enabled)=>{
         console.log('🌙 ThemeProvider: 다크모드 설정', enabled);
-        const newTheme = enabled ? 'dark' : 'light';
-        await updateSetting('darkMode', enabled);
-        await updateSetting('theme', newTheme);
-        // 로컬 스토리지에도 저장 (백업용)
         try {
-            localStorage.setItem('darkMode', enabled.toString());
-            localStorage.setItem('theme', newTheme);
+            const newTheme = enabled ? 'dark' : 'light';
+            // settings에 동시에 업데이트
+            await updateSetting('darkMode', enabled);
+            await updateSetting('theme', newTheme);
+            // 즉시 DOM에 적용
+            setResolvedTheme(enabled ? 'dark' : 'light');
+            applyThemeToDOM(enabled ? 'dark' : 'light');
+            // 로컬 스토리지에도 저장 (백업용)
+            try {
+                localStorage.setItem('darkMode', enabled.toString());
+                localStorage.setItem('theme', newTheme);
+            } catch (error) {
+                console.error('❌ ThemeProvider: localStorage 저장 실패', error);
+            }
+            console.log('✅ ThemeProvider: 다크모드 설정 완료', {
+                enabled,
+                theme: newTheme
+            });
         } catch (error) {
-            console.error('❌ ThemeProvider: localStorage 저장 실패', error);
+            console.error('❌ ThemeProvider: 다크모드 설정 실패', error);
         }
     };
     // 테마 설정 함수
@@ -459,8 +482,9 @@ function ThemeProvider({ children }) {
     };
     // 다크모드 토글 함수
     const toggleDarkMode = async ()=>{
-        const newDarkMode = !settings.darkMode;
-        console.log('🌙 ThemeProvider: 다크모드 토글', settings.darkMode, '->', newDarkMode);
+        const currentDarkMode = settings.darkMode || resolvedTheme === 'dark';
+        const newDarkMode = !currentDarkMode;
+        console.log('🌙 ThemeProvider: 다크모드 토글', currentDarkMode, '->', newDarkMode);
         await setDarkMode(newDarkMode);
     };
     // 시스템 테마 변경 감지
@@ -542,7 +566,7 @@ function ThemeProvider({ children }) {
         children: children
     }, void 0, false, {
         fileName: "[project]/src/app/components/ui/ThemeProvider.tsx",
-        lineNumber: 198,
+        lineNumber: 217,
         columnNumber: 5
     }, this);
 }

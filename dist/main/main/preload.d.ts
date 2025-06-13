@@ -5,6 +5,7 @@
  * contextIsolation이 활성화된 상태에서 보안을 유지하면서 API를 노출합니다.
  */
 declare const electronAPI: {
+    invoke: (channel: string, ...args: any[]) => Promise<any>;
     ipcRenderer: {
         send: (channel: string, ...args: any[]) => void;
         invoke: (channel: string, ...args: any[]) => Promise<any>;

@@ -101,6 +101,9 @@ export interface NativeModuleInfo {
 }
 
 export interface ElectronAPI {
+  // 최상위 레벨 invoke 메서드 추가
+  invoke: (channel: string, ...args: any[]) => Promise<any>;
+  
   system: {
     getInfo: () => Promise<any>;
     getCurrentMetrics: () => Promise<any>;

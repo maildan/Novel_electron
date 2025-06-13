@@ -3,17 +3,21 @@
 :root {
   --font-inter: 'Inter', system-ui, sans-serif;
   
-  /* Loop 앱 전용 Color variables */
+  /* Loop 앱 전용 Color variables - 라이트 모드 (WCAG 가이드라인 적용) */
   --background: #ffffff;
   --foreground: #171717;
-  --primary-color: #0070f3;
-  --background-color: #f9f9f9;
-  --text-color: #333;
-  --text-secondary: #666;
-  --border-color: #e0e0e0;
+  --primary-color: #6200EE; /* WCAG 권장 라이트모드 액센트 */
+  --background-color: #ffffff; /* WCAG 권장 라이트모드 배경 */
+  --text-color: #212121; /* 대비 비율 4.5:1 확보 */
+  --text-secondary: #616161; /* 대비 비율 4.5:1 확보 */
+  --border-color: #E0E0E0; /* WCAG 권장 라이트모드 경계선 */
   --card-bg: #ffffff;
   --header-bg: #ffffff;
-  --footer-bg: #f0f0f0;
+  --footer-bg: #f5f5f5;
+  --hover-color: #f3f4f6;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --focus-outline: #6200EE; /* 포커스 아웃라인 색상 */
+  --button-hover-opacity: 0.9; /* 버튼 호버 불투명도 */
   
   /* shadcn/ui HSL Color variables */
   --background-hsl: 0 0% 100%;
@@ -106,15 +110,50 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* 라이트 모드 기본 스타일 강화 */
+body:not(.dark) {
+  background-color: #ffffff !important;
+  color: #333333 !important;
+}
+
 .dark body {
   background-color: var(--background-color);
   color: var(--text-color);
+}
+
+/* 메인 컨테이너 배경 강화 */
+.bg-gray-100:not(.dark *) {
+  background-color: #f9fafb !important;
+}
+
+.bg-gray-50:not(.dark *) {
+  background-color: #f9fafb !important;
+}
+
+.bg-gray-950:not(.dark *) {
+  background-color: #ffffff !important;
 }
 
 /* 카드 및 컨테이너 */
 .dark .bg-white,
 .dark .bg-card {
   background-color: var(--card-bg) !important;
+}
+
+.bg-white:not(.dark *) {
+  background-color: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+
+.bg-gray-900:not(.dark *) {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+}
+
+/* 라이트 모드에서 모든 컨테이너 배경 보장 */
+:not(.dark) .bg-white,
+:not(.dark) .bg-card {
+  background-color: #ffffff !important;
 }
 
 .dark .text-black,
@@ -720,4 +759,166 @@ h2 {
 
 .animate-slide-up {
   animation: slide-up 0.2s ease-out;
+}
+
+/* 라이트 모드 개선 - 호버 및 테두리 색상 */
+:root:not(.dark) {
+  /* 라이트 모드에서 모든 테두리가 회색이 되도록 보장 */
+  --tw-border-opacity: 1;
+  border-color: rgb(229 231 235 / var(--tw-border-opacity));
+}
+
+/* 다크모드 외곽선 문제 해결 */
+.dark {
+  /* 모든 테두리가 적절한 다크모드 색상을 갖도록 보장 */
+  --tw-border-opacity: 1;
+  border-color: rgb(55 65 81 / var(--tw-border-opacity));
+}
+
+/* 다크모드에서 테두리 색상 강제 적용 */
+.dark .border-gray-200,
+.dark .border-gray-300,
+.dark .border-transparent {
+  border-color: #374151 !important;
+}
+
+/* 다크모드에서 호버 시 테두리 색상 */
+.dark button:hover,
+.dark .hover\:border-gray-200:hover,
+.dark .hover\:border-gray-300:hover {
+  border-color: #4b5563 !important;
+}
+
+/* 다크모드에서 활성 상태 테두리 */
+.dark .border-blue-200 {
+  border-color: #1e40af !important;
+}
+
+/* 다크모드에서 네비게이션 테두리 색상 */
+.dark nav button {
+  border-color: transparent !important;
+}
+
+.dark nav button:hover {
+  border-color: #4b5563 !important;
+}
+
+.dark nav button.bg-blue-50 {
+  border-color: #1e40af !important;
+}
+
+/* 다크모드 외곽선 문제 완전 해결 */
+.dark * {
+  border-color: #374151 !important;
+}
+
+.dark button {
+  border-color: #374151 !important;
+}
+
+.dark input, .dark textarea, .dark select {
+  border-color: #374151 !important;
+  background-color: #1f2937 !important;
+  color: #e5e7eb !important;
+}
+
+.dark .border-gray-200 {
+  border-color: #374151 !important;
+}
+
+.dark .border-gray-300 {
+  border-color: #4b5563 !important;
+}
+
+.dark .border-gray-700 {
+  border-color: #374151 !important;
+}
+
+.dark .border-white {
+  border-color: #374151 !important;
+}
+
+/* 특정 상태의 버튼들 */
+.dark button:hover {
+  border-color: #4b5563 !important;
+}
+
+.dark .bg-blue-50 {
+  background-color: #1e3a8a !important;
+  border-color: #1e40af !important;
+}
+
+.dark .border-blue-200 {
+  border-color: #1e40af !important;
+}
+
+.dark .border-blue-700 {
+  border-color: #1d4ed8 !important;
+}
+
+/* 네비게이션 요소들 */
+.dark nav button {
+  border-color: transparent !important;
+}
+
+.dark nav button:hover {
+  border-color: #4b5563 !important;
+}
+
+.dark nav button.bg-blue-50 {
+  border-color: #1e40af !important;
+}
+
+/* 폼 요소들 */
+.dark input[type="range"] {
+  background-color: #374151 !important;
+}
+
+/* 카드와 컨테이너 */
+.dark .bg-white {
+  background-color: #1f2937 !important;
+  border-color: #374151 !important;
+}
+
+.dark .bg-gray-50 {
+  background-color: #111827 !important;
+}
+
+.dark .bg-gray-100 {
+  background-color: #111827 !important;
+}
+
+.dark .bg-gray-800 {
+  background-color: #1f2937 !important;
+  border-color: #374151 !important;
+}
+
+.dark .bg-gray-900 {
+  background-color: #111827 !important;
+  border-color: #374151 !important;
+}
+
+/* 텍스트 색상 보정 */
+.dark .text-gray-700 {
+  color: #d1d5db !important;
+}
+
+.dark .text-gray-600 {
+  color: #9ca3af !important;
+}
+
+.dark .text-gray-500 {
+  color: #6b7280 !important;
+}
+
+.dark .text-gray-400 {
+  color: #9ca3af !important;
+}
+
+.dark .text-gray-900 {
+  color: #f9fafb !important;
+}
+
+.dark .text-white {
+  color: #f9fafb !important;
 }

@@ -6,13 +6,14 @@
  */
 
 import { registerTrackingHandlers, cleanupTrackingHandlers, initializeAutoMonitoring } from './tracking-handlers';
-import { registerKeyboardHandlers, cleanupKeyboardHandlers, initializeKeyboardHandlers } from './keyboard-handlers';
-import { registerWindowHandlers, cleanupWindowHandlers, initializeWindowHandlers } from './window-handlers';
+import { registerKeyboardHandlers, cleanupKeyboardHandlers, initializeKeyboardHandlers } from './keyboardHandlers';
+import { registerWindowHandlers, cleanupWindowHandlers, initializeWindowHandlers } from './windowHandlers';
 import { SettingsManager } from './settings-manager';
 import { IpcHandlers } from './ipc-handlers';
 import { registerMemoryIpcHandlers } from './memory-ipc';
 import { registerNativeIpcHandlers } from './native-client';
-import { registerSystemInfoIpcHandlers } from './system-info-ipc';
+import { registerSystemInfoIpcHandlers } from './systemInfoIpc';
+import settingsIpcHandlers from './settingsIpcHandlers';
 
 // Simple debug logging
 function debugLog(message: string, ...args: any[]): void {
@@ -38,11 +39,17 @@ let handlersState: HandlersState = {
 };
 
 /**
- * 설정 관련 핸들러 등록 (SettingsManager에서 자동 처리)
+ * 설정 관련 핸들러 등록
  */
 function registerSettingsHandlers(): void {
-  debugLog('설정 관련 핸들러는 SettingsManager에서 자동 등록됩니다');
-  handlersState.registeredHandlers.add('settings');
+  try {
+    // 새로운 설정 IPC 핸들러 등록
+    settingsIpcHandlers.register();
+    debugLog('설정 관련 핸들러 등록 완료');
+    handlersState.registeredHandlers.add('settings');
+  } catch (error) {
+    errorLog('설정 핸들러 등록 오류:', error);
+  }
 }
 
 /**
