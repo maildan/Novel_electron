@@ -32,6 +32,9 @@ import NativeModuleStatus from './native-module-status';
 // 설정 카테고리 타입
 type SettingCategory = 'general' | 'typing' | 'performance' | 'data';
 
+// 성능 설정 탭 타입
+type PerformanceTab = 'settings' | 'memory' | 'activity' | 'system';
+
 // 설정 카테고리 정의
 const settingCategories = [
   { id: 'general' as SettingCategory, label: '일반 설정', icon: User },
@@ -65,9 +68,15 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
   const [needsRestart, setNeedsRestart] = useState(false);
   const [showSaveConfirm, setShowSaveConfirm] = useState(false);
   const [showRestartDialog, setShowRestartDialog] = useState(false);
+  const [activePerformanceTab, setActivePerformanceTab] = useState<PerformanceTab>('settings');
   const [restartReason, setRestartReason] = useState('');
   const [localSettings, setLocalSettings] = useState<SettingsState>(settings);
   const [activeCategory, setActiveCategory] = useState<SettingCategory>('general');
+  
+  // 슬라이드 애니메이션 관련 상태
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [nextCategory, setNextCategory] = useState<SettingCategory | null>(null);
+  const [animationDirection, setAnimationDirection] = useState<'left' | 'right'>('right');
 
   // 설정이 변경될 때 로컬 상태 업데이트
   useEffect(() => {
@@ -80,6 +89,27 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
       setLocalSettings(initialSettings);
     }
   }, [initialSettings]);
+
+  // 카테고리 전환 핸들러 - 순수 슬라이드 애니메이션
+  const handleCategoryChange = (newCategory: SettingCategory) => {
+    if (newCategory === activeCategory || isTransitioning) return;
+    
+    // 애니메이션 방향 결정 (카테고리 순서 기반)
+    const currentIndex = settingCategories.findIndex(cat => cat.id === activeCategory);
+    const newIndex = settingCategories.findIndex(cat => cat.id === newCategory);
+    const direction = newIndex > currentIndex ? 'right' : 'left';
+    
+    setIsTransitioning(true);
+    setNextCategory(newCategory);
+    setAnimationDirection(direction);
+    
+    // 애니메이션 완료 후 카테고리 변경
+    setTimeout(() => {
+      setActiveCategory(newCategory);
+      setNextCategory(null);
+      setIsTransitioning(false);
+    }, 300); // 애니메이션 지속 시간과 동일
+  };
 
   // GPU 가속 토글 핸들러 - 사용자 확인 추가
   const handleGPUAccelerationToggle = async () => {
@@ -199,13 +229,57 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
   };
 
   const handleSave = async () => {
+    console.log('⚙️ Settings: 저장 시작');
+    
     try {
-      await saveSettings(localSettings);
-      setShowSaveConfirm(true);
-      setTimeout(() => setShowSaveConfirm(false), 2000);
-      onSave?.(localSettings);
+      // 저장 중 상태 표시
+      setShowSaveConfirm(false);
+      
+      // 백엔드 연결 상태 확인
+      if (typeof window !== 'undefined' && (window as any).electronAPI?.ipcRenderer) {
+        console.log('🔌 Settings: Electron IPC를 통한 저장 시도');
+        
+        try {
+          // 백엔드에 설정 저장 요청
+          const result = await (window as any).electronAPI.ipcRenderer.invoke('settings:update-multiple', localSettings);
+          console.log('📡 Settings: 백엔드 응답:', result);
+          
+          if (result === true || (result && result.success !== false)) {
+            console.log('✅ Settings: 백엔드 저장 성공');
+            
+            // 저장 성공 메시지 표시
+            setShowSaveConfirm(true);
+            setTimeout(() => setShowSaveConfirm(false), 3000);
+            
+            // 부모 컴포넌트에 저장 완료 알림
+            onSave?.(localSettings);
+          } else {
+            throw new Error('백엔드 저장 실패: ' + (result?.error || '알 수 없는 오류'));
+          }
+        } catch (ipcError) {
+          console.error('❌ Settings: IPC 통신 오류:', ipcError);
+          throw new Error('설정 저장 중 통신 오류가 발생했습니다.');
+        }
+      } else {
+        console.log('🌐 Settings: 웹 환경에서 localStorage 저장');
+        
+        // 웹 환경에서는 localStorage 사용
+        localStorage.setItem('loop-settings', JSON.stringify(localSettings));
+        
+        // 저장 성공 메시지 표시
+        setShowSaveConfirm(true);
+        setTimeout(() => setShowSaveConfirm(false), 3000);
+        
+        // 부모 컴포넌트에 저장 완료 알림
+        onSave?.(localSettings);
+      }
+      
     } catch (error) {
-      console.error('설정 저장 실패:', error);
+      console.error('❌ Settings: 저장 중 오류', error);
+      
+      // 저장 실패 메시지 표시
+      const errorMessage = error instanceof Error ? error.message : '설정 저장에 실패했습니다.';
+      alert(`저장 실패: ${errorMessage}\n\n다시 시도해주세요.`);
     }
   };
 
@@ -224,13 +298,17 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
     await themeToggleDarkMode();
   };
 
-  // 카테고리별 콘텐츠 렌더링
-  const renderCategoryContent = () => {
-    switch (activeCategory) {
+  // 카테고리별 콘텐츠 렌더링 - 가시성 개선
+  const renderCategoryContent = (category?: SettingCategory) => {
+    const currentCategory = category || activeCategory;
+    console.log('Settings: Rendering category content for:', currentCategory); // 디버깅용
+    
+    switch (currentCategory) {
       case 'general':
+        console.log('Settings: Rendering general category'); // 디버깅용
         return (
-          <div className="space-y-6">
-            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <div className="space-y-6" style={{ minHeight: '400px', visibility: 'visible' }}>
+            <div className="bg-white dark:bg-gray-900 shadow-sm border border-gray-200 dark:border-gray-700 p-6 settings-card">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                 <User className="h-5 w-5 mr-2" />
                 일반 설정
@@ -270,7 +348,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                       <button
                         key={mode.value}
                         onClick={() => handleWindowModeChange(mode.value as WindowModeType)}
-                        className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg border transition-colors ${
+                        className={`w-full flex items-center space-x-3 px-4 py-3 border transition-colors settings-action-button ${
                           localSettings.windowMode === mode.value
                             ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300'
                             : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
@@ -284,42 +362,42 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                 </div>
 
                 {/* 애니메이션 효과 */}
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-900 dark:text-white">애니메이션 효과</span>
-                  <button
-                    onClick={() => setLocalSettings(prev => ({ ...prev, enableAnimations: !prev.enableAnimations }))}
-                    className={`min-w-[44px] min-h-[44px] w-16 h-8 rounded-full p-1 transition-colors ${
-                      localSettings.enableAnimations ? 'bg-blue-600' : 'bg-gray-300'
-                    }`}
-                    aria-label="애니메이션 효과 토글"
-                  >
-                    <div
-                      className={`w-6 h-6 rounded-full bg-white transition-transform ${
-                        localSettings.enableAnimations ? 'translate-x-8' : 'translate-x-0'
-                      }`}
-                    />
-                  </button>
+                <div className="settings-row">
+                  <div className="settings-label">
+                    <span>애니메이션 효과</span>
+                  </div>
+                  <div className="toggle-container">
+                    <button
+                      onClick={() => setLocalSettings(prev => ({ ...prev, enableAnimations: !prev.enableAnimations }))}
+                      className={`toggle-switch ${localSettings.enableAnimations ? 'active' : ''}`}
+                      role="switch"
+                      aria-checked={localSettings.enableAnimations}
+                      aria-label="애니메이션 효과 토글"
+                    >
+                      <div className="toggle-thumb" />
+                    </button>
+                  </div>
                 </div>
 
                 {/* 알림 활성화 */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Bell className="h-4 w-4" />
-                    <span className="text-gray-900 dark:text-white">알림 활성화</span>
+                <div className="settings-row">
+                  <div className="settings-label">
+                    <div className="flex items-center space-x-2">
+                      <Bell className="h-4 w-4" />
+                      <span>알림 활성화</span>
+                    </div>
                   </div>
-                  <button
-                    onClick={() => setLocalSettings(prev => ({ ...prev, enableNotifications: !prev.enableNotifications }))}
-                    className={`min-w-[44px] min-h-[44px] w-16 h-8 rounded-full p-1 transition-colors ${
-                      localSettings.enableNotifications ? 'bg-blue-600' : 'bg-gray-300'
-                    }`}
-                    aria-label="알림 활성화 토글"
-                  >
-                    <div
-                      className={`w-6 h-6 rounded-full bg-white transition-transform ${
-                        localSettings.enableNotifications ? 'translate-x-8' : 'translate-x-0'
-                      }`}
-                    />
-                  </button>
+                  <div className="toggle-container">
+                    <button
+                      onClick={() => setLocalSettings(prev => ({ ...prev, enableNotifications: !prev.enableNotifications }))}
+                      className={`toggle-switch ${localSettings.enableNotifications ? 'active' : ''}`}
+                      role="switch"
+                      aria-checked={localSettings.enableNotifications}
+                      aria-label="알림 활성화 토글"
+                    >
+                      <div className="toggle-thumb" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -338,163 +416,46 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
               <div className="space-y-4">
                 {/* 분석 카테고리 토글들 */}
                 {Object.entries(localSettings.enabledCategories).map(([category, enabled]) => (
-                  <div key={category} className="flex items-center justify-between">
-                    <span className="text-gray-900 dark:text-white capitalize">{category}</span>
-                    <button
-                      onClick={() => setLocalSettings(prev => ({
-                        ...prev,
-                        enabledCategories: {
-                          ...prev.enabledCategories,
-                          [category]: !enabled
-                        }
-                      }))}
-                      className={`w-12 h-6 rounded-full p-1 transition-colors ${
-                        enabled ? 'bg-blue-600' : 'bg-gray-300'
-                      }`}
-                    >
-                      <div
-                        className={`w-4 h-4 rounded-full bg-white transition-transform ${
-                          enabled ? 'translate-x-6' : 'translate-x-0'
-                        }`}
-                      />
-                    </button>
+                  <div key={category} className="settings-row">
+                    <div className="settings-label">
+                      <span className="capitalize">{category}</span>
+                    </div>
+                    <div className="toggle-container">
+                      <button
+                        onClick={() => setLocalSettings(prev => ({
+                          ...prev,
+                          enabledCategories: {
+                            ...prev.enabledCategories,
+                            [category]: !enabled
+                          }
+                        }))}
+                        className={`toggle-switch ${enabled ? 'active' : ''}`}
+                        role="switch"
+                        aria-checked={enabled}
+                        aria-label={`${category} 분석 토글`}
+                      >
+                        <div className="toggle-thumb" />
+                      </button>
+                    </div>
                   </div>
                 ))}
                 
                 {/* 실시간 통계 */}
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-900 dark:text-white">실시간 통계</span>
-                  <button
-                    onClick={() => setLocalSettings(prev => ({ ...prev, enableRealTimeStats: !prev.enableRealTimeStats }))}
-                    className={`w-12 h-6 rounded-full p-1 transition-colors ${
-                      localSettings.enableRealTimeStats ? 'bg-blue-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <div
-                      className={`w-4 h-4 rounded-full bg-white transition-transform ${
-                        localSettings.enableRealTimeStats ? 'translate-x-6' : 'translate-x-0'
-                      }`}
-                    />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'performance':
-        return (
-          <div className="space-y-6">
-            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                <Activity className="h-5 w-5 mr-2" />
-                성능 설정
-              </h3>
-              
-              <div className="space-y-4">
-                {/* GPU 가속 */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Zap className="h-4 w-4" />
-                    <span className="text-gray-900 dark:text-white">GPU 가속</span>
+                <div className="settings-row">
+                  <div className="settings-label">
+                    <span>실시간 통계</span>
                   </div>
-                  <button
-                    onClick={handleGPUAccelerationToggle}
-                    className={`w-12 h-6 rounded-full p-1 transition-colors ${
-                      localSettings.enableGPUAcceleration ? 'bg-blue-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <div
-                      className={`w-4 h-4 rounded-full bg-white transition-transform ${
-                        localSettings.enableGPUAcceleration ? 'translate-x-6' : 'translate-x-0'
-                      }`}
-                    />
-                  </button>
-                </div>
-
-                {/* 메모리 최적화 */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Activity className="h-4 w-4" />
-                    <span className="text-gray-900 dark:text-white">메모리 최적화</span>
+                  <div className="toggle-container">
+                    <button
+                      onClick={() => setLocalSettings(prev => ({ ...prev, enableRealTimeStats: !prev.enableRealTimeStats }))}
+                      className={`toggle-switch ${localSettings.enableRealTimeStats ? 'active' : ''}`}
+                      role="switch"
+                      aria-checked={localSettings.enableRealTimeStats}
+                      aria-label="실시간 통계 토글"
+                    >
+                      <div className="toggle-thumb" />
+                    </button>
                   </div>
-                  <button
-                    onClick={handleMemoryOptimization}
-                    className={`w-12 h-6 rounded-full p-1 transition-colors ${
-                      localSettings.enableMemoryOptimization ? 'bg-blue-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <div
-                      className={`w-4 h-4 rounded-full bg-white transition-transform ${
-                        localSettings.enableMemoryOptimization ? 'translate-x-6' : 'translate-x-0'
-                      }`}
-                    />
-                  </button>
-                </div>
-
-                {/* 처리 모드 */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">처리 모드</label>
-                  <select
-                    value={localSettings.processingMode}
-                    onChange={(e) => handleProcessingModeChange(e.target.value as SettingsState['processingMode'])}
-                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="auto">자동</option>
-                    <option value="normal">일반</option>
-                    <option value="cpuIntensive">CPU 집약적</option>
-                    <option value="gpuIntensive">GPU 집약적</option>
-                  </select>
-                </div>
-
-                {/* 메모리 임계값 */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    최대 메모리 임계값: {localSettings.maxMemoryThreshold}MB
-                  </label>
-                  <input
-                    type="range"
-                    min="50"
-                    max="500"
-                    step="10"
-                    value={localSettings.maxMemoryThreshold}
-                    onChange={(e) => setLocalSettings(prev => ({ ...prev, maxMemoryThreshold: parseInt(e.target.value) }))}
-                    className="w-full"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* 시스템 모니터링 섹션 */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                <Monitor className="h-5 w-5 mr-2" />
-                시스템 모니터링
-              </h3>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-                  <h4 className="text-md font-medium text-gray-900 dark:text-white mb-2 flex items-center">
-                    <HardDrive className="h-4 w-4 mr-2" />
-                    메모리 모니터
-                  </h4>
-                  <MemoryMonitor />
-                </div>
-                
-                <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-                  <h4 className="text-md font-medium text-gray-900 dark:text-white mb-2 flex items-center">
-                    <Gauge className="h-4 w-4 mr-2" />
-                    활성 상태
-                  </h4>
-                  <ActivityMonitor />
-                </div>
-                
-                <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 md:col-span-2">
-                  <h4 className="text-md font-medium text-gray-900 dark:text-white mb-2 flex items-center">
-                    <Database className="h-4 w-4 mr-2" />
-                    시스템 정보
-                  </h4>
-                  <NativeModuleStatus />
                 </div>
               </div>
             </div>
@@ -512,37 +473,39 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
               
               <div className="space-y-4">
                 {/* 분석 활성화 */}
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-900 dark:text-white">타이핑 분석 활성화</span>
-                  <button
-                    onClick={() => setLocalSettings(prev => ({ ...prev, enableTypingAnalysis: !prev.enableTypingAnalysis }))}
-                    className={`w-12 h-6 rounded-full p-1 transition-colors ${
-                      localSettings.enableTypingAnalysis ? 'bg-blue-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <div
-                      className={`w-4 h-4 rounded-full bg-white transition-transform ${
-                        localSettings.enableTypingAnalysis ? 'translate-x-6' : 'translate-x-0'
-                      }`}
-                    />
-                  </button>
+                <div className="settings-row">
+                  <div className="settings-label">
+                    <span>타이핑 분석 활성화</span>
+                  </div>
+                  <div className="toggle-container">
+                    <button
+                      onClick={() => setLocalSettings(prev => ({ ...prev, enableTypingAnalysis: !prev.enableTypingAnalysis }))}
+                      className={`toggle-switch ${localSettings.enableTypingAnalysis ? 'active' : ''}`}
+                      role="switch"
+                      aria-checked={localSettings.enableTypingAnalysis}
+                      aria-label="타이핑 분석 활성화 토글"
+                    >
+                      <div className="toggle-thumb" />
+                    </button>
+                  </div>
                 </div>
 
                 {/* 실시간 분석 */}
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-900 dark:text-white">실시간 분석</span>
-                  <button
-                    onClick={() => setLocalSettings(prev => ({ ...prev, enableRealTimeAnalysis: !prev.enableRealTimeAnalysis }))}
-                    className={`w-12 h-6 rounded-full p-1 transition-colors ${
-                      localSettings.enableRealTimeAnalysis ? 'bg-blue-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <div
-                      className={`w-4 h-4 rounded-full bg-white transition-transform ${
-                        localSettings.enableRealTimeAnalysis ? 'translate-x-6' : 'translate-x-0'
-                      }`}
-                    />
-                  </button>
+                <div className="settings-row">
+                  <div className="settings-label">
+                    <span>실시간 분석</span>
+                  </div>
+                  <div className="toggle-container">
+                    <button
+                      onClick={() => setLocalSettings(prev => ({ ...prev, enableRealTimeAnalysis: !prev.enableRealTimeAnalysis }))}
+                      className={`toggle-switch ${localSettings.enableRealTimeAnalysis ? 'active' : ''}`}
+                      role="switch"
+                      aria-checked={localSettings.enableRealTimeAnalysis}
+                      aria-label="실시간 분석 토글"
+                    >
+                      <div className="toggle-thumb" />
+                    </button>
+                  </div>
                 </div>
 
                 {/* 통계 수집 주기 */}
@@ -562,37 +525,39 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                 </div>
 
                 {/* 키보드 레이아웃 감지 */}
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-900 dark:text-white">키보드 레이아웃 자동 감지</span>
-                  <button
-                    onClick={() => setLocalSettings(prev => ({ ...prev, enableKeyboardDetection: !prev.enableKeyboardDetection }))}
-                    className={`w-12 h-6 rounded-full p-1 transition-colors ${
-                      localSettings.enableKeyboardDetection ? 'bg-blue-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <div
-                      className={`w-4 h-4 rounded-full bg-white transition-transform ${
-                        localSettings.enableKeyboardDetection ? 'translate-x-6' : 'translate-x-0'
-                      }`}
-                    />
-                  </button>
+                <div className="settings-row">
+                  <div className="settings-label">
+                    <span>키보드 레이아웃 자동 감지</span>
+                  </div>
+                  <div className="toggle-container">
+                    <button
+                      onClick={() => setLocalSettings(prev => ({ ...prev, enableKeyboardDetection: !prev.enableKeyboardDetection }))}
+                      className={`toggle-switch ${localSettings.enableKeyboardDetection ? 'active' : ''}`}
+                      role="switch"
+                      aria-checked={localSettings.enableKeyboardDetection}
+                      aria-label="키보드 레이아웃 자동 감지 토글"
+                    >
+                      <div className="toggle-thumb" />
+                    </button>
+                  </div>
                 </div>
 
                 {/* 타이핑 패턴 학습 */}
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-900 dark:text-white">타이핑 패턴 학습</span>
-                  <button
-                    onClick={() => setLocalSettings(prev => ({ ...prev, enablePatternLearning: !prev.enablePatternLearning }))}
-                    className={`w-12 h-6 rounded-full p-1 transition-colors ${
-                      localSettings.enablePatternLearning ? 'bg-blue-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <div
-                      className={`w-4 h-4 rounded-full bg-white transition-transform ${
-                        localSettings.enablePatternLearning ? 'translate-x-6' : 'translate-x-0'
-                      }`}
-                    />
-                  </button>
+                <div className="settings-row">
+                  <div className="settings-label">
+                    <span>타이핑 패턴 학습</span>
+                  </div>
+                  <div className="toggle-container">
+                    <button
+                      onClick={() => setLocalSettings(prev => ({ ...prev, enablePatternLearning: !prev.enablePatternLearning }))}
+                      className={`toggle-switch ${localSettings.enablePatternLearning ? 'active' : ''}`}
+                      role="switch"
+                      aria-checked={localSettings.enablePatternLearning}
+                      aria-label="타이핑 패턴 학습 토글"
+                    >
+                      <div className="toggle-thumb" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -600,130 +565,43 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
         );
 
       case 'performance':
+        const performanceTabs = [
+          { id: 'settings' as PerformanceTab, label: '성능 설정', icon: Activity },
+          { id: 'memory' as PerformanceTab, label: '메모리 모니터', icon: HardDrive },
+          { id: 'activity' as PerformanceTab, label: '활성 상태', icon: Gauge },
+          { id: 'system' as PerformanceTab, label: '시스템 정보', icon: Database },
+        ];
+
         return (
           <div className="space-y-6">
-            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                <Activity className="h-5 w-5 mr-2" />
-                성능 설정
-              </h3>
-              
-              <div className="space-y-4">
-                {/* GPU 가속 */}
-                <div className="flex items-center justify-between">
-                  <div className="flex flex-col">
-                    <span className="text-gray-900 dark:text-white">GPU 가속</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                      변경 시 애플리케이션이 재시작됩니다
-                    </span>
-                  </div>
-                  <button
-                    onClick={handleGPUAccelerationToggle}
-                    className={`w-12 h-6 rounded-full p-1 transition-colors ${
-                      localSettings.enableGPUAcceleration ? 'bg-blue-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <div
-                      className={`w-4 h-4 rounded-full bg-white transition-transform ${
-                        localSettings.enableGPUAcceleration ? 'translate-x-6' : 'translate-x-0'
+            {/* 탭 네비게이션 */}
+            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+              <div className="flex border-b border-gray-200 dark:border-gray-700">
+                {performanceTabs.map((tab) => {
+                  const Icon = tab.icon;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActivePerformanceTab(tab.id)}
+                      className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium rounded-t-lg transition-colors ${
+                        activePerformanceTab === tab.id
+                          ? 'bg-blue-50 dark:bg-blue-900/20 border-b-2 border-blue-500 text-blue-700 dark:text-blue-300'
+                          : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
                       }`}
-                    />
-                  </button>
-                </div>
-
-                {/* 메모리 최적화 */}
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-900 dark:text-white">메모리 최적화</span>
-                  <button
-                    onClick={handleMemoryOptimization}
-                    className={`w-12 h-6 rounded-full p-1 transition-colors ${
-                      localSettings.enableMemoryOptimization ? 'bg-blue-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <div
-                      className={`w-4 h-4 rounded-full bg-white transition-transform ${
-                        localSettings.enableMemoryOptimization ? 'translate-x-6' : 'translate-x-0'
-                      }`}
-                    />
-                  </button>
-                </div>
-
-                {/* 처리 모드 */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">처리 모드</label>
-                  <div className="space-y-2">
-                    {[
-                      { value: 'balanced', label: '균형 모드', description: '성능과 전력 소비의 균형' },
-                      { value: 'performance', label: '성능 우선', description: '최대 성능 모드' },
-                      { value: 'powerSaver', label: '절전 모드', description: '최소 전력 소비' },
-                      { value: 'gpu-intensive', label: 'GPU 집약적', description: 'GPU 활용 최대화 (재시작 필요)' },
-                      { value: 'cpu-intensive', label: 'CPU 집약적', description: 'CPU 활용 최대화 (재시작 필요)' }
-                    ].map((mode) => (
-                      <button
-                        key={mode.value}
-                        onClick={() => handleProcessingModeChange(mode.value as SettingsState['processingMode'])}
-                        className={`w-full flex flex-col items-start space-y-1 px-4 py-3 rounded-lg border transition-colors ${
-                          localSettings.processingMode === mode.value
-                            ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300'
-                            : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-                        }`}
-                      >
-                        <span className="font-medium">{mode.label}</span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">{mode.description}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* 메모리 임계값 */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    메모리 임계값: {localSettings.maxMemoryThreshold}MB
-                  </label>
-                  <input
-                    type="range"
-                    min="50"
-                    max="500"
-                    step="10"
-                    value={localSettings.maxMemoryThreshold}
-                    onChange={(e) => setLocalSettings(prev => ({ ...prev, maxMemoryThreshold: parseInt(e.target.value) }))}
-                    className="w-full"
-                  />
-                </div>
+                    >
+                      <Icon className="h-4 w-4" />
+                      {tab.label}
+                    </button>
+                  );
+                })}
               </div>
-            </div>
-
-            {/* 시스템 모니터링 섹션 */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                <Monitor className="h-5 w-5 mr-2" />
-                시스템 모니터링
-              </h3>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-                  <h4 className="text-md font-medium text-gray-900 dark:text-white mb-2 flex items-center">
-                    <HardDrive className="h-4 w-4 mr-2" />
-                    메모리 모니터
-                  </h4>
-                  <MemoryMonitor />
-                </div>
-                
-                <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
-                  <h4 className="text-md font-medium text-gray-900 dark:text-white mb-2 flex items-center">
-                    <Gauge className="h-4 w-4 mr-2" />
-                    활성 상태
-                  </h4>
-                  <ActivityMonitor />
-                </div>
-                
-                <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 md:col-span-2">
-                  <h4 className="text-md font-medium text-gray-900 dark:text-white mb-2 flex items-center">
-                    <Database className="h-4 w-4 mr-2" />
-                    시스템 정보
-                  </h4>
-                  <NativeModuleStatus />
-                </div>
+              {/* 탭 컨텐츠 */}
+              <div className="p-6">
+                {activePerformanceTab === 'settings' && renderPerformanceSettings()}
+                {activePerformanceTab === 'memory' && renderMemoryMonitor()}
+                {activePerformanceTab === 'activity' && renderActivityMonitor()}
+                {activePerformanceTab === 'system' && renderSystemInfo()}
               </div>
             </div>
           </div>
@@ -740,47 +618,49 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
               
               <div className="space-y-4">
                 {/* 데이터 수집 허용 */}
-                <div className="flex items-center justify-between">
-                  <div className="flex flex-col">
-                    <span className="text-gray-900 dark:text-white">데이터 수집 허용</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                      앱 개선을 위한 익명 사용 데이터 수집
-                    </span>
+                <div className="settings-row">
+                  <div className="settings-label">
+                    <div className="flex flex-col">
+                      <span>데이터 수집 허용</span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                        앱 개선을 위한 익명 사용 데이터 수집
+                      </span>
+                    </div>
                   </div>
-                  <button
-                    onClick={() => setLocalSettings(prev => ({ ...prev, enableDataCollection: !prev.enableDataCollection }))}
-                    className={`w-12 h-6 rounded-full p-1 transition-colors ${
-                      localSettings.enableDataCollection ? 'bg-blue-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <div
-                      className={`w-4 h-4 rounded-full bg-white transition-transform ${
-                        localSettings.enableDataCollection ? 'translate-x-6' : 'translate-x-0'
-                      }`}
-                    />
-                  </button>
+                  <div className="toggle-container">
+                    <button
+                      onClick={() => setLocalSettings(prev => ({ ...prev, enableDataCollection: !prev.enableDataCollection }))}
+                      className={`toggle-switch ${localSettings.enableDataCollection ? 'active' : ''}`}
+                      role="switch"
+                      aria-checked={localSettings.enableDataCollection}
+                      aria-label="데이터 수집 허용 토글"
+                    >
+                      <div className="toggle-thumb" />
+                    </button>
+                  </div>
                 </div>
 
                 {/* 자동 저장 */}
-                <div className="flex items-center justify-between">
-                  <div className="flex flex-col">
-                    <span className="text-gray-900 dark:text-white">자동 저장</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                      설정 변경 시 자동으로 저장
-                    </span>
+                <div className="settings-row">
+                  <div className="settings-label">
+                    <div className="flex flex-col">
+                      <span>자동 저장</span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                        설정 변경 시 자동으로 저장
+                      </span>
+                    </div>
                   </div>
-                  <button
-                    onClick={() => setLocalSettings(prev => ({ ...prev, enableAutoSave: !prev.enableAutoSave }))}
-                    className={`w-12 h-6 rounded-full p-1 transition-colors ${
-                      localSettings.enableAutoSave ? 'bg-blue-600' : 'bg-gray-300'
-                    }`}
-                  >
-                    <div
-                      className={`w-4 h-4 rounded-full bg-white transition-transform ${
-                        localSettings.enableAutoSave ? 'translate-x-6' : 'translate-x-0'
-                      }`}
-                    />
-                  </button>
+                  <div className="toggle-container">
+                    <button
+                      onClick={() => setLocalSettings(prev => ({ ...prev, enableAutoSave: !prev.enableAutoSave }))}
+                      className={`toggle-switch ${localSettings.enableAutoSave ? 'active' : ''}`}
+                      role="switch"
+                      aria-checked={localSettings.enableAutoSave}
+                      aria-label="자동 저장 토글"
+                    >
+                      <div className="toggle-thumb" />
+                    </button>
+                  </div>
                 </div>
 
                 {/* 데이터 보관 기간 */}
@@ -844,7 +724,134 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
     }
   };
 
+  // 성능 설정 탭별 렌더링 함수들
+  const renderPerformanceSettings = () => (
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+        <Activity className="h-5 w-5 mr-2" />
+        성능 설정
+      </h3>
+      
+      <div className="space-y-4">
+        {/* GPU 가속 */}
+        <div className="settings-row">
+          <div className="settings-label">
+            <div className="flex flex-col">
+              <span>GPU 가속</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                변경 시 애플리케이션이 재시작됩니다
+              </span>
+            </div>
+          </div>
+          <div className="toggle-container">
+            <button
+              onClick={handleGPUAccelerationToggle}
+              className={`toggle-switch ${localSettings.enableGPUAcceleration ? 'active' : ''}`}
+              role="switch"
+              aria-checked={localSettings.enableGPUAcceleration}
+              aria-label="GPU 가속 토글"
+            >
+              <div className="toggle-thumb" />
+            </button>
+          </div>
+        </div>
+
+        {/* 메모리 최적화 */}
+        <div className="settings-row">
+          <div className="settings-label">
+            <span>메모리 최적화</span>
+          </div>
+          <div className="toggle-container">
+            <button
+              onClick={handleMemoryOptimization}
+              className={`toggle-switch ${localSettings.enableMemoryOptimization ? 'active' : ''}`}
+              role="switch"
+              aria-checked={localSettings.enableMemoryOptimization}
+              aria-label="메모리 최적화 토글"
+            >
+              <div className="toggle-thumb" />
+            </button>
+          </div>
+        </div>
+
+        {/* 처리 모드 */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">처리 모드</label>
+          <div className="space-y-2">
+            {[
+              { value: 'balanced', label: '균형 모드', description: '성능과 전력 소비의 균형' },
+              { value: 'performance', label: '성능 우선', description: '최대 성능 모드' },
+              { value: 'powerSaver', label: '절전 모드', description: '최소 전력 소비' },
+              { value: 'gpu-intensive', label: 'GPU 집약적', description: 'GPU 활용 최대화 (재시작 필요)' },
+              { value: 'cpu-intensive', label: 'CPU 집약적', description: 'CPU 활용 최대화 (재시작 필요)' }
+            ].map((mode) => (
+              <button
+                key={mode.value}
+                onClick={() => handleProcessingModeChange(mode.value as SettingsState['processingMode'])}
+                className={`w-full flex flex-col items-start space-y-1 px-4 py-3 rounded-lg border transition-colors ${
+                  localSettings.processingMode === mode.value
+                    ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300'
+                    : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                }`}
+              >
+                <span className="font-medium">{mode.label}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">{mode.description}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* 메모리 임계값 */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            메모리 임계값: {localSettings.maxMemoryThreshold}MB
+          </label>
+          <input
+            type="range"
+            min="50"
+            max="500"
+            step="10"
+            value={localSettings.maxMemoryThreshold}
+            onChange={(e) => setLocalSettings(prev => ({ ...prev, maxMemoryThreshold: parseInt(e.target.value) }))}
+            className="w-full"
+          />
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderMemoryMonitor = () => (
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+        <HardDrive className="h-5 w-5 mr-2" />
+        메모리 모니터
+      </h3>
+      <MemoryMonitor />
+    </div>
+  );
+
+  const renderActivityMonitor = () => (
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+        <Gauge className="h-5 w-5 mr-2" />
+        활성 상태
+      </h3>
+      <ActivityMonitor />
+    </div>
+  );
+
+  const renderSystemInfo = () => (
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+        <Database className="h-5 w-5 mr-2" />
+        시스템 정보
+      </h3>
+      <NativeModuleStatus />
+    </div>
+  );
+
   if (isLoading) {
+    console.log('Settings: Loading state'); // 디버깅용
     return (
       <div className="flex items-center justify-center p-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -852,10 +859,12 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
     );
   }
 
+  console.log('Settings: Rendering main component'); // 디버깅용
+
   return (
     <div className="flex h-full bg-gray-100 dark:bg-gray-950">
-      {/* 좌측 카테고리 네비게이션 */}
-      <div className="w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex flex-col">
+      {/* 좌측 카테고리 네비게이션 - border-radius 제거 */}
+      <div className="w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex flex-col settings-navigation">
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
             <SettingsIcon className="h-5 w-5 mr-2" />
@@ -868,10 +877,10 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
             {settingCategories.map((category) => (
               <li key={category.id}>
                 <button
-                  onClick={() => setActiveCategory(category.id)}
-                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+                  onClick={() => handleCategoryChange(category.id)}
+                  className={`w-full flex items-center gap-3 px-3 py-2 transition-all duration-200 settings-action-button ${
                     activeCategory === category.id
-                      ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
+                      ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 active'
                       : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                   }`}
                 >
@@ -883,11 +892,11 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
           </ul>
         </nav>
 
-        {/* 저장/초기화 버튼 */}
+        {/* 저장/초기화 버튼 - border-radius 제거, 슬라이드 효과 추가 */}
         <div className="p-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
           <button
             onClick={handleSave}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 transition-all duration-200 hover:translate-x-0.5 focus:outline-none focus:ring-0"
           >
             <Save className="h-4 w-4" />
             저장
@@ -895,7 +904,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
           
           <button
             onClick={handleReset}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-400 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-400 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 hover:translate-x-0.5 focus:outline-none focus:ring-0"
           >
             <RotateCcw className="h-4 w-4" />
             초기화
@@ -903,15 +912,44 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
         </div>
       </div>
 
-      {/* 우측 콘텐츠 영역 */}
-      <div className="flex-1 overflow-auto p-6">
-        {renderCategoryContent()}
+      {/* 우측 콘텐츠 영역 - 순수 슬라이드 애니메이션 */}
+      <div className="flex-1 settings-content-container">
+        {/* 현재 활성 카테고리 */}
+        <div 
+          className={`settings-content-page active ${
+            isTransitioning 
+              ? (animationDirection === 'right' ? 'settings-slide-out-left' : 'settings-slide-out-right')
+              : ''
+          }`}
+          style={{ position: isTransitioning ? 'absolute' : 'relative' }}
+        >
+          <div className="p-6 min-h-full">
+            {renderCategoryContent()}
+          </div>
+        </div>
+        
+        {/* 전환 중인 다음 카테고리 */}
+        {isTransitioning && nextCategory && (
+          <div 
+            className={`settings-content-page ${
+              animationDirection === 'right' ? 'settings-slide-in-right' : 'settings-slide-in-left'
+            }`}
+            style={{ position: 'absolute' }}
+          >
+            <div className="p-6 min-h-full">
+              {nextCategory && renderCategoryContent(nextCategory)}
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* 저장 확인 메시지 */}
+      {/* 저장 확인 메시지 - 개선된 스타일 */}
       {showSaveConfirm && (
-        <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50">
-          설정이 저장되었습니다!
+        <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 shadow-lg z-50 flex items-center space-x-2">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+          <span className="font-medium">설정이 성공적으로 저장되었습니다!</span>
         </div>
       )}
 

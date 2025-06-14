@@ -5,6 +5,7 @@ import { useState } from 'react'
 import ThemeProvider from './components/ui/ThemeProvider'
 import HydrationFix from './components/ui/HydrationFix'
 import { ToastProvider } from './components/ui/toast'
+import { NotificationProvider } from './components/notifications/NotificationProvider'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient({
@@ -21,7 +22,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <ThemeProvider>
         <HydrationFix />
         <ToastProvider>
-          {children}
+          <NotificationProvider>
+            {children}
+          </NotificationProvider>
         </ToastProvider>
       </ThemeProvider>
     </QueryClientProvider>

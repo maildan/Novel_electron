@@ -8,13 +8,19 @@
 
 /* 전역 다크모드 스타일 */
 body {
-  font-family: var(--font-inter);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   background-color: var(--background);
   color: var(--text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
-  line-height: 1.6;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'liga' 1, 'kern' 1, 'calt' 1, 'ss01' 1;
+  text-rendering: optimizeLegibility;
+  font-weight: 400;
+  letter-spacing: -0.011em;
+  font-variant-numeric: tabular-nums;
+  font-size: 16px;
 }
 
 /* 라이트 모드 기본 스타일 강화 */
@@ -94,6 +100,7 @@ a {
   color: var(--accent-primary);
   text-decoration: none;
   transition: color 0.2s ease;
+  font-weight: 500; /* 링크 텍스트 굵기 증가 */
 }
 
 a:hover {
@@ -101,137 +108,579 @@ a:hover {
   text-decoration: underline;
 }
 
-/* 제목 스타일 */
+/* 제목 스타일 - 실무적인 타이포그래피 */
 h1, h2, h3, h4, h5, h6 {
   color: var(--text-primary);
   font-weight: 600;
-  line-height: 1.25;
-  margin-bottom: 0.5em;
+  line-height: 1.3;
+  margin-bottom: 0.75em;
+  letter-spacing: -0.025em;
+  font-feature-settings: 'liga' 1, 'kern' 1, 'ss01' 1;
 }
 
-/* 폼 요소 기본 스타일 */
+h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 1.875rem;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+h5 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+h6 {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 2.25rem;
+  letter-spacing: -0.05em;
+  line-height: 1.1;
+}
+
+h2 {
+  font-weight: 650;
+  font-size: 1.875rem;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+}
+
+h3 {
+  font-weight: 600;
+  font-size: 1.5rem;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+h4 {
+  font-weight: 600;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+h5, h6 {
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+}
+
+/* 본문 텍스트 스타일 */
+p {
+  line-height: 1.65;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  margin-bottom: 1em;
+  color: var(--text-primary);
+}
+
+/* 강조 텍스트 */
+strong, b {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* 작은 텍스트 (captions, labels 등) */
+small, .text-small {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: 0.005em;
+  color: var(--text-secondary);
+}
+
+/* 라벨 텍스트 */
+.text-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* 큰 텍스트 스타일 */
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.65;
+  letter-spacing: -0.017em;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  letter-spacing: -0.022em;
+}
+
+/* 코드 및 모노스페이스 폰트 */
+code, kbd, samp, pre {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', Consolas, 'Ubuntu Mono', monospace;
+  font-feature-settings: 'liga' 0;
+  font-variant-ligatures: none;
+}
+
+/* 숫자 전용 스타일 */
+.font-numeric {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+}
+
+h3 {
+  font-weight: 600;
+  font-size: 1.5rem;
+  letter-spacing: -0.03em;
+}
+
+/* 폼 요소 기본 스타일 - 이전 버전과 통합됨 */
+
+/* 플레이스홀더 텍스트 개선 */
+::placeholder {
+  color: var(--text-tertiary);
+  opacity: 1;
+  font-weight: 400;
+}
+
+/* 기본 버튼 호버 스타일 */
+button:hover:not(:disabled) {
+  background-color: var(--surface-hover);
+  border-color: var(--accent-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 기본 버튼 포커스 스타일 */
+button:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+/* 프라이머리 버튼 */
+.btn-primary, button.bg-blue-600 {
+  background-color: var(--accent-primary);
+  color: white;
+  font-weight: 600;
+  border: none;
+}
+
+.btn-primary:hover, button.bg-blue-600:hover {
+  background-color: var(--accent-secondary);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.25);
+}
+
+/* 입력 필드 스타일 강화 */
 input, textarea, select {
   font-family: inherit;
-  font-size: inherit;
+  font-size: 16px;
   color: var(--text-primary);
   background-color: var(--surface-primary);
-  border: 1px solid var(--border-primary);
-  border-radius: 6px;
-  padding: 8px 12px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  border: 2px solid var(--border-primary);
+  border-radius: 8px;
+  padding: 12px 16px;
+  transition: all 0.2s ease;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  line-height: 1.5;
+  min-height: 44px;
 }
 
 input:focus, textarea:focus, select:focus {
-  border-color: #3b82f6; /* 파란색으로 변경 */
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); /* 파란색 그림자로 변경 */
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  outline: none;
 }
 
-/* 버튼 기본 스타일 */
-button {
-  font-family: inherit;
-  font-size: inherit;
-  cursor: pointer;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 16px;
-  transition: all 0.2s ease;
-  background-color: var(--surface-primary);
+/* 라벨 스타일 강화 */
+label {
+  font-weight: 500;
   color: var(--text-primary);
+  font-size: 14px;
+  letter-spacing: -0.005em;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* 카드 컴포넌트 스타일 */
+.card {
+  background: var(--surface-primary);
   border: 1px solid var(--border-primary);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
 }
 
-button:hover {
-  background-color: var(--surface-hover);
-  border-color: #3b82f6; /* 파란색으로 변경 */
+.card:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
 }
 
-button:focus-visible {
-  outline: var(--focus-ring-width) solid #3b82f6; /* 파란색으로 변경 */
-  outline-offset: var(--focus-ring-offset);
+/* 네비게이션 아이템 스타일 */
+nav button {
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  font-size: 15px;
 }
 
-button:disabled {
+/* 헤더 텍스트 강화 */
+header {
+  font-weight: 500;
+}
+
+header h1 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* 토글 스위치 라벨 */
+.toggle-container + label,
+.settings-label {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+input:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   pointer-events: none;
 }
 
-/* 이미지 기본 스타일 */
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
+/* ===== Utilities ===== */
+
+/* 마진 유틸리티 */
+.m-0 {
+  margin: 0 !important;
 }
 
-/* 테이블 기본 스타일 */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 1rem;
+.mt-0 {
+  margin-top: 0 !important;
 }
 
-th, td {
-  padding: 8px 12px;
-  text-align: left;
-  border-bottom: 1px solid var(--border-primary);
+.mb-0 {
+  margin-bottom: 0 !important;
 }
 
-th {
-  background-color: var(--surface-secondary);
-  font-weight: 600;
-  color: var(--text-primary);
+.ml-0 {
+  margin-left: 0 !important;
 }
 
-/* 코드 스타일 */
-code {
-  font-family: var(--font-mono);
-  background-color: var(--surface-secondary);
-  padding: 2px 4px;
-  border-radius: 3px;
-  font-size: 0.875em;
+.mr-0 {
+  margin-right: 0 !important;
 }
 
-pre {
-  font-family: var(--font-mono);
-  background-color: var(--surface-secondary);
-  padding: 1rem;
-  border-radius: 6px;
-  overflow-x: auto;
-  margin-bottom: 1rem;
+.mx-0 {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
 
-pre code {
-  background: none;
-  padding: 0;
+.my-0 {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }
 
-/* 인용구 스타일 */
-blockquote {
-  border-left: 4px solid var(--accent-primary);
-  padding-left: 1rem;
-  margin: 1rem 0;
-  font-style: italic;
-  color: var(--text-secondary);
+/* 패딩 유틸리티 */
+.p-0 {
+  padding: 0 !important;
 }
 
-/* 수평선 스타일 */
-hr {
-  border: none;
-  border-top: 1px solid var(--border-primary);
-  margin: 2rem 0;
+.pt-0 {
+  padding-top: 0 !important;
 }
 
-/* 리스트 스타일 */
-ul, ol {
-  padding-left: 1.5rem;
-  margin-bottom: 1rem;
+.pb-0 {
+  padding-bottom: 0 !important;
 }
 
-li {
-  margin-bottom: 0.25rem;
+.pl-0 {
+  padding-left: 0 !important;
 }
 
-/* 프린트 스타일 */
+.pr-0 {
+  padding-right: 0 !important;
+}
+
+.px-0 {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.py-0 {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* 디스플레이 유틸리티 */
+.hidden {
+  display: none !important;
+}
+
+.block {
+  display: block !important;
+}
+
+.inline {
+  display: inline !important;
+}
+
+.inline-block {
+  display: inline-block !important;
+}
+
+.flex {
+  display: flex !important;
+}
+
+.inline-flex {
+  display: inline-flex !important;
+}
+
+.grid {
+  display: grid !important;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* 정렬 유틸리티 */
+.items-center {
+  align-items: center !important;
+}
+
+.items-start {
+  align-items: flex-start !important;
+}
+
+.items-end {
+  align-items: flex-end !important;
+}
+
+.justify-center {
+  justify-content: center !important;
+}
+
+.justify-start {
+  justify-content: flex-start !important;
+}
+
+.justify-end {
+  justify-content: flex-end !important;
+}
+
+/* 플렉스 방향 유틸리티 */
+.flex-col {
+  flex-direction: column !important;
+}
+
+.flex-row {
+  flex-direction: row !important;
+}
+
+/* 그리드 템플릿 유틸리티 */
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+.grid-cols-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+}
+
+/* 반응형 유틸리티 */
+@media (min-width: 640px) {
+  .sm\:block {
+    display: block !important;
+  }
+
+  .sm\:hidden {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .md\:block {
+    display: block !important;
+  }
+
+  .md\:hidden {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .lg\:block {
+    display: block !important;
+  }
+
+  .lg\:hidden {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  .xl\:block {
+    display: block !important;
+  }
+
+  .xl\:hidden {
+    display: none !important;
+  }
+}
+
+/* 커스텀 유틸리티 클래스 */
+.text-center {
+  text-align: center !important;
+}
+
+.text-right {
+  text-align: right !important;
+}
+
+.text-left {
+  text-align: left !important;
+}
+
+.uppercase {
+  text-transform: uppercase !important;
+}
+
+.lowercase {
+  text-transform: lowercase !important;
+}
+
+.capitalize {
+  text-transform: capitalize !important;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.whitespace-normal {
+  white-space: normal !important;
+}
+
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+.cursor-default {
+  cursor: default !important;
+}
+
+.opacity-0 {
+  opacity: 0 !important;
+}
+
+.opacity-100 {
+  opacity: 1 !important;
+}
+
+.scale-100 {
+  transform: scale(1) !important;
+}
+
+.scale-105 {
+  transform: scale(1.05) !important;
+}
+
+.scale-110 {
+  transform: scale(1.1) !important;
+}
+
+.rotate-0 {
+  transform: rotate(0deg) !important;
+}
+
+.rotate-45 {
+  transform: rotate(45deg) !important;
+}
+
+.rotate-90 {
+  transform: rotate(90deg) !important;
+}
+
+.rotate-180 {
+  transform: rotate(180deg) !important;
+}
+
+.translate-x-0 {
+  transform: translateX(0) !important;
+}
+
+.translate-x-1 {
+  transform: translateX(0.25rem) !important;
+}
+
+.translate-x-2 {
+  transform: translateX(0.5rem) !important;
+}
+
+.translate-x-3 {
+  transform: translateX(0.75rem) !important;
+}
+
+.translate-x-4 {
+  transform: translateX(1rem) !important;
+}
+
+.translate-y-0 {
+  transform: translateY(0) !important;
+}
+
+.translate-y-1 {
+  transform: translateY(0.25rem) !important;
+}
+
+.translate-y-2 {
+  transform: translateY(0.5rem) !important;
+}
+
+.translate-y-3 {
+  transform: translateY(0.75rem) !important;
+}
+
+.translate-y-4 {
+  transform: translateY(1rem) !important;
+}
+
+/* ===== Print Styles ===== */
 @media print {
   * {
     background: white !important;
@@ -261,16 +710,14 @@ li {
 @media (prefers-contrast: high) {
   :root {
     --text-primary: #000000;
-    --background: #ffffff;
-    --border-primary: #000000;
-    --accent-primary: #0000ff;
+    --text-secondary: #333333;
+    --border-primary: #666666;
   }
   
   .dark {
     --text-primary: #ffffff;
-    --background: #000000;
-    --border-primary: #ffffff;
-    --accent-primary: #00ffff;
+    --text-secondary: #cccccc;
+    --border-primary: #999999;
   }
 }
 
@@ -297,28 +744,55 @@ li {
   outline: none !important;
 }
 
-/* 버튼, 링크 등 상호작용 요소의 호버/포커스 시 아웃라인 완전 제거 */
-button:hover,
-button:focus,
-button:focus-visible,
-a:hover,
-a:focus,
-a:focus-visible,
-input:hover,
-input:focus,
-input:focus-visible,
-textarea:hover,
-textarea:focus,
-textarea:focus-visible,
-select:hover,
-select:focus,
-select:focus-visible,
-[role="button"]:hover,
-[role="button"]:focus,
-[role="button"]:focus-visible,
-[tabindex]:hover,
-[tabindex]:focus,
-[tabindex]:focus-visible {
+/* 모든 버튼, 인풋, 토글의 아웃라인 완전 제거 */
+button, input, textarea, select, .toggle-switch, [role="switch"], [role="button"] {
   outline: none !important;
   box-shadow: none !important;
+}
+
+button:hover, input:hover, textarea:hover, select:hover, .toggle-switch:hover {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+button:focus, input:focus, textarea:focus, select:focus, .toggle-switch:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, .toggle-switch:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* 모든 pseudo-class 조합에 대한 포괄적 제거 */
+*:hover:focus, *:hover:focus-visible, *:focus:hover, *:active, *:active:focus, *:active:hover {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Tailwind CSS 클래스들의 아웃라인 완전 제거 */
+.focus\:outline-none, .focus\:ring-0, .hover\:outline-none {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* focus:ring과 관련된 모든 클래스 무효화 */
+[class*="focus:ring"], [class*="hover:ring"], [class*="active:ring"] {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* 브라우저 기본 outline 스타일 강제 제거 */
+button:-webkit-any-link, input:-webkit-any-link, textarea:-webkit-any-link, select:-webkit-any-link {
+  outline: none !important;
+}
+
+/* 모든 요소의 outline 속성을 강제로 none으로 설정 */
+* {
+  outline: none !important;
+}
+
+*:before, *:after {
+  outline: none !important;
 }

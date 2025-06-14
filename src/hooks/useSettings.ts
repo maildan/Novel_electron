@@ -179,15 +179,46 @@ export function useSettings() {
           console.debug('✅ useSettings: 설정 로드 성공:', loadedSettings);
           
           if (loadedSettings && typeof loadedSettings === 'object') {
-            setSettings({ ...defaultSettings, ...loadedSettings });
+            // 백엔드에서 로드된 설정이 있으면 해당 설정을 우선 사용
+            const mergedSettings = { ...defaultSettings, ...loadedSettings };
+            setSettings(mergedSettings);
+            console.debug('📝 useSettings: 백엔드 설정으로 상태 업데이트 완료');
           } else {
-            console.warn('⚠️ useSettings: 로드된 설정이 유효하지 않음, 기본값 사용');
-            setSettings(defaultSettings);
+            console.warn('⚠️ useSettings: 백엔드에서 유효한 설정을 가져오지 못함');
+            // 백엔드 로드 실패 시 localStorage 시도
+            try {
+              const storedSettings = localStorage.getItem('loop-settings');
+              if (storedSettings) {
+                const parsedSettings = JSON.parse(storedSettings);
+                console.debug('✅ useSettings: localStorage 백업에서 설정 로드:', parsedSettings);
+                setSettings({ ...defaultSettings, ...parsedSettings });
+              } else {
+                console.debug('📝 useSettings: 백업 설정도 없음, 기본값 사용');
+                setSettings(defaultSettings);
+              }
+            } catch (storageError) {
+              console.error('❌ useSettings: localStorage 백업 로드도 실패:', storageError);
+              setSettings(defaultSettings);
+            }
           }
         } catch (ipcError) {
           console.error('❌ useSettings: IPC 설정 로드 실패:', ipcError);
-          setError(`설정 로드 실패: ${ipcError}`);
-          setSettings(defaultSettings);
+          // IPC 실패 시 localStorage에서 시도
+          try {
+            const storedSettings = localStorage.getItem('loop-settings');
+            if (storedSettings) {
+              const parsedSettings = JSON.parse(storedSettings);
+              console.debug('✅ useSettings: IPC 실패 후 localStorage에서 설정 로드:', parsedSettings);
+              setSettings({ ...defaultSettings, ...parsedSettings });
+            } else {
+              console.debug('📝 useSettings: localStorage도 없음, 기본값 사용');
+              setSettings(defaultSettings);
+            }
+          } catch (storageError) {
+            console.error('❌ useSettings: 모든 설정 로드 실패, 기본값 사용');
+            setError(`설정 로드 실패: ${ipcError}`);
+            setSettings(defaultSettings);
+          }
         }
       } else {
         console.debug('🌐 useSettings: 웹 환경에서 localStorage 사용');

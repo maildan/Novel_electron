@@ -198,12 +198,19 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
     });
   }, []);
 
-  // 서버 렌더링 시에는 children만 반환
-  if (!mounted) {
-    return <>{children}</>;
-  }
+  // 기본 context 값 (서버 렌더링 또는 초기화 중)
+  const defaultContextValue: ThemeContextType = {
+    theme: 'system',
+    resolvedTheme: 'light',
+    isDarkMode: false,
+    toggleTheme: () => {},
+    toggleDarkMode: () => {},
+    setTheme: () => {},
+    setDarkMode: () => {}
+  };
 
-  const contextValue: ThemeContextType = {
+  // mounted 상태에 따라 context 값 결정
+  const contextValue: ThemeContextType = mounted ? {
     theme: settings.theme,
     resolvedTheme,
     isDarkMode: resolvedTheme === 'dark',
@@ -211,7 +218,7 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
     toggleDarkMode,
     setTheme,
     setDarkMode
-  };
+  } : defaultContextValue;
 
   return (
     <ThemeContext.Provider value={contextValue}>

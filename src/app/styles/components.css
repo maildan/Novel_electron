@@ -149,6 +149,68 @@
 .settings-content {
   max-width: 100%;
   box-sizing: border-box;
+  min-height: 100vh;
+  width: 100%;
+  background: inherit;
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+}
+
+/* 설정 컨텐츠 가시성 보장 */
+.settings-content-container {
+  min-height: 100vh;
+  background: var(--color-bg-primary);
+  visibility: visible !important;
+}
+
+.settings-content-page {
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+  background: transparent;
+}
+
+/* 설정 페이지 네비게이션 스타일 - border-radius 제거, 슬라이드 효과만 사용 */
+.settings-navigation {
+  border-radius: 0 !important;
+}
+
+.settings-navigation button {
+  border-radius: 0 !important;
+  transition: transform 0.2s ease-out !important;
+}
+
+.settings-navigation button:hover {
+  transform: translateX(4px) !important;
+  border-radius: 0 !important;
+}
+
+.settings-navigation button.active {
+  border-radius: 0 !important;
+  transform: translateX(8px) !important;
+}
+
+/* 설정 저장/초기화 버튼 스타일 - border-radius 제거 */
+.settings-action-button {
+  border-radius: 0 !important;
+  transition: transform 0.2s ease-out !important;
+}
+
+.settings-action-button:hover {
+  transform: translateX(4px) !important;
+  border-radius: 0 !important;
+}
+
+/* 설정 카드 및 컨테이너 스타일 - border-radius 제거 */
+.settings-card {
+  border-radius: 0 !important;
+}
+
+.settings-card .rounded-lg,
+.settings-card .rounded,
+.settings-card .rounded-md {
+  border-radius: 0 !important;
 }
 
 /* 긴 텍스트 처리 */
@@ -350,4 +412,47 @@ button, .btn, .toggle-switch {
   background-color: var(--error);
   color: white;
   border-color: var(--error);
+}
+
+/* 네비게이션 버튼 스타일 */
+nav button {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+nav button:hover,
+nav button:focus,
+nav button:focus-visible,
+nav button:active {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  transform: none !important;
+}
+
+/* 글로벌 아웃라인 제거 */
+* {
+  outline: none !important;
+}
+
+*:hover,
+*:focus,
+*:focus-visible,
+*:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+button {
+  outline: none !important;
+  border: none;
+}
+
+button:hover,
+button:focus,
+button:focus-visible,
+button:active {
+  outline: none !important;
+  box-shadow: none !important;
 }

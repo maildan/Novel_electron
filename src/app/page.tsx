@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { TypingBox } from './components/ui/typing-box';
 import { StatsChart } from './components/ui/stats-chart';
 import MemoryMonitor from './components/ui/memory-monitor';
@@ -10,17 +9,9 @@ import NativeModuleStatus from './components/ui/native-module-status';
 import { Settings } from './components/ui/settings';
 import ActivityMonitor from './components/ui/activity-monitor';
 import initStyles from './utils/init-styles';
-import { 
-  Home, 
-  BarChart3, 
-  Settings as SettingsIcon, 
-  Activity, 
-  Database,
-  Cpu,
-  Monitor,
-  Menu
-} from 'lucide-react';
+import { AppHeader } from './components/layout';
 import ClientIcon from './components/ui/client-icon';
+import { Zap, Target, TrendingUp, Clock, Award, BarChart3 } from 'lucide-react';
 
 interface Log {
   id?: string;
@@ -89,50 +80,169 @@ export default function HomePage() {
   };
 
   const navItems = [
-    { id: 'home' as ActiveTab, label: '홈', icon: Home },
-    { id: 'stats' as ActiveTab, label: '통계', icon: BarChart3 },
-    { id: 'analysis' as ActiveTab, label: '분석', icon: Activity },
-    { id: 'settings' as ActiveTab, label: '설정', icon: SettingsIcon },
+    { id: 'home' as ActiveTab, label: '홈' },
+    { id: 'stats' as ActiveTab, label: '통계' },
+    { id: 'analysis' as ActiveTab, label: '분석' },
+    { id: 'settings' as ActiveTab, label: '설정' },
   ];
 
   const renderContent = () => {
     switch (activeTab) {
       case 'home':
         return (
-          <div className="space-y-6">
-            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                Loop
-              </h1>
-              <p className="text-gray-600 dark:text-gray-300 mb-6">
-                실시간 타이핑 분석, GPU 가속, 메모리 최적화를 지원하는 고성능 데스크톱 애플리케이션입니다.
-              </p>
+          <div className="space-y-8">
+            {/* Hero Section */}
+            <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-blue-900/20 dark:to-purple-900/20 rounded-2xl p-8 md:p-12">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 dark:from-blue-400/5 dark:to-purple-400/5"></div>
+              <div className="relative z-10">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                    <Zap className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                      Loop
+                    </h1>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">AI 타이핑 분석 플랫폼</p>
+                  </div>
+                </div>
+                <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 max-w-2xl">
+                  실시간 타이핑 분석, GPU 가속, 메모리 최적화를 지원하는 고성능 데스크톱 애플리케이션으로 
+                  당신의 타이핑 실력을 향상시켜보세요.
+                </p>
+                
+                {/* Quick Stats Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                  <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-xl p-4 border border-white/20 dark:border-gray-700/50">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                        <Target className="h-5 w-5 text-green-600 dark:text-green-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">총 타이핑 횟수</p>
+                        <p className="text-xl font-bold text-gray-900 dark:text-white">{logs.length}</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-xl p-4 border border-white/20 dark:border-gray-700/50">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                        <TrendingUp className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">평균 타수</p>
+                        <p className="text-xl font-bold text-gray-900 dark:text-white">
+                          {logs.length > 0 
+                            ? Math.round(logs.reduce((sum, log) => sum + (log.typingTime > 0 ? (log.keyCount / log.typingTime) * 60 : 0), 0) / logs.length)
+                            : 0
+                          }
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-xl p-4 border border-white/20 dark:border-gray-700/50">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                        <Clock className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">총 시간</p>
+                        <p className="text-xl font-bold text-gray-900 dark:text-white">
+                          {Math.round(logs.reduce((sum, log) => sum + log.typingTime, 0))}초
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            
+            {/* Typing Practice Section */}
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
+                  <Target className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">타이핑 연습</h2>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">지금 바로 타이핑 실력을 테스트해보세요</p>
+                </div>
+              </div>
+              <TypingBox onComplete={handleTypingComplete} />
             </div>
             
-            <TypingBox onComplete={handleTypingComplete} />
-            
+            {/* Recent Records */}
             {logs.length > 0 && (
-              <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">최근 기록</h2>
-                <div className="space-y-2">
+              <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center">
+                      <Clock className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-semibold text-gray-900 dark:text-white">최근 기록</h2>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">최근 5개의 타이핑 기록</p>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => setActiveTab('stats')}
+                    className="px-4 py-2 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg text-sm font-medium transition-colors"
+                  >
+                    전체 보기
+                  </button>
+                </div>
+                <div className="space-y-3">
                   {logs.slice(0, 5).map((log, index) => (
-                    <div key={log.id || index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-md">
+                    <div key={log.id || index} className="group flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                       <div className="flex-1">
-                        <p className="text-sm text-gray-900 dark:text-gray-100 truncate">
+                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate mb-1">
                           {log.content.substring(0, 50)}...
                         </p>
-                        <div className="flex items-center gap-4 mt-1 text-xs text-gray-500 dark:text-gray-400">
-                          <span>타자: {log.keyCount}</span>
-                          <span>시간: {log.typingTime}초</span>
-                          <span>타수: {log.typingTime > 0 ? Math.round((log.keyCount / log.typingTime) * 60) : 0}타/분</span>
+                        <div className="flex items-center gap-6 text-xs text-gray-500 dark:text-gray-400">
+                          <div className="flex items-center gap-1">
+                            <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                            <span>타자: {log.keyCount}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                            <span>시간: {log.typingTime}초</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                            <span>타수: {log.typingTime > 0 ? Math.round((log.keyCount / log.typingTime) * 60) : 0}타/분</span>
+                          </div>
                         </div>
                       </div>
-                      <span className="text-xs text-gray-400 dark:text-gray-500">
-                        {new Date(log.timestamp).toLocaleString()}
-                      </span>
+                      <div className="text-right">
+                        <span className="text-xs text-gray-400 dark:text-gray-500">
+                          {new Date(log.timestamp).toLocaleDateString()}
+                        </span>
+                        <div className="text-xs text-gray-400 dark:text-gray-500">
+                          {new Date(log.timestamp).toLocaleTimeString()}
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
+              </div>
+            )}
+
+            {/* Empty State for New Users */}
+            {logs.length === 0 && (
+              <div className="text-center py-12">
+                <div className="w-20 h-20 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Target className="h-10 w-10 text-gray-500 dark:text-gray-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                  첫 번째 타이핑을 시작해보세요!
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
+                  위의 타이핑 연습 섹션에서 텍스트를 입력하여 타이핑 능력을 향상시켜보세요.
+                </p>
               </div>
             )}
           </div>
@@ -145,6 +255,7 @@ export default function HomePage() {
         return <TypingAnalyzer />;
 
       case 'settings':
+        console.log('Setting tab activated'); // 디버깅용
         return <Settings />;
 
       default:
@@ -154,72 +265,13 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-950">
-      {/* Main Header with Navigation */}
-      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Left: Logo and Brand */}
-            <div className="flex items-center gap-3 flex-shrink-0">
-              <div className="w-8 h-8 rounded-lg overflow-hidden bg-blue-500 flex items-center justify-center relative">
-                {!imageError ? (
-                  <Image 
-                    src="/appIcon.webp" 
-                    alt="Loop 6 Logo" 
-                    width={32}
-                    height={32}
-                    className="w-full h-full object-cover"
-                    onError={() => setImageError(true)}
-                  />
-                ) : (
-                  <span className="text-white font-bold text-sm">L6</span>
-                )}
-              </div>
-              <div className="hidden sm:block">
-                <h1 className="text-lg font-bold text-gray-900 dark:text-white">Loop 6</h1>
-                <span className="text-xs text-gray-500 dark:text-gray-400">타이핑 분석 시스템</span>
-              </div>
-            </div>
-            
-            {/* Center: Empty space for balance */}
-            <div className="flex-1"></div>
-            
-            {/* Right: Navigation */}
-            <nav className="flex items-center space-x-6 max-w-md">
-              {navItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`flex flex-col items-center gap-1 px-4 py-3 rounded-lg transition-all duration-200 min-w-0 flex-shrink-0 ${
-                    activeTab === item.id
-                      ? 'bg-blue-500 text-white shadow-sm'
-                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'
-                  }`}
-                >
-                  <ClientIcon icon={item.icon} className="w-5 h-5 flex-shrink-0" />
-                  <span className="text-xs font-medium whitespace-nowrap">{item.label}</span>
-                  {/* 각 nav의 설명을 라벨과 함께 표시 */}
-                  <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap opacity-75">
-                    {item.id === 'home' && '타이핑 연습'}
-                    {item.id === 'stats' && '성과 분석'}
-                    {item.id === 'analysis' && '상세 분석'}
-                    {item.id === 'settings' && '앱 설정'}
-                  </span>
-                </button>
-              ))}
-            </nav>
-
-            {/* Right: Status */}
-            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 flex-shrink-0">
-              {loading && (
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                  <span className="hidden sm:inline">로딩 중</span>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* 새로운 AppHeader 사용 */}
+      <AppHeader 
+        activeTab={activeTab}
+        onTabChange={(tab) => setActiveTab(tab as ActiveTab)}
+        isRefreshing={loading}
+        onRefresh={loadLogs}
+      />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

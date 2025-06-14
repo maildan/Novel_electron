@@ -1845,14 +1845,14 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
     };
     // 메모리 정보 카드 컴포넌트
     const MemoryCard = ({ title, icon, info })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-            className: "bg-gray-50 rounded-lg p-4",
+            className: "bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-100 dark:border-gray-700",
             children: [
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "flex items-center gap-2 mb-3",
                     children: [
                         icon,
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
-                            className: "font-medium text-gray-900",
+                            className: "font-medium text-gray-900 dark:text-white",
                             children: title
                         }, void 0, false, {
                             fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
@@ -1872,7 +1872,7 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                             className: "flex justify-between text-sm",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                    className: "text-gray-600",
+                                    className: "text-gray-600 dark:text-gray-400",
                                     children: "사용됨"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
@@ -1899,7 +1899,7 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                             columnNumber: 9
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "w-full bg-gray-200 rounded-full h-2",
+                            className: "w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2",
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: `h-2 rounded-full transition-all duration-300 ${getProgressBarColor(info.percentage)}`,
                                 style: {
@@ -1916,7 +1916,7 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                             columnNumber: 9
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "flex justify-between text-xs text-gray-500",
+                            className: "flex justify-between text-xs text-gray-500 dark:text-gray-400",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                     children: [
@@ -1957,7 +1957,7 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
             columnNumber: 5
         }, this);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: `bg-white rounded-lg border border-gray-200 p-6 ${className}`,
+        className: `bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6 ${className}`,
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "flex items-center justify-between mb-6",
@@ -1973,7 +1973,7 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                className: "text-lg font-semibold text-gray-900",
+                                className: "text-lg font-semibold text-gray-900 dark:text-white",
                                 children: "메모리 모니터"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
@@ -1994,18 +1994,27 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "flex items-center gap-2",
+                        className: "flex items-center gap-3",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                 onClick: fetchMemoryInfo,
                                 disabled: isLoading,
-                                className: "p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors",
+                                className: `
+              relative inline-flex items-center justify-center
+              w-10 h-6 rounded-full transition-all duration-300 cursor-pointer
+              ${isLoading ? 'bg-blue-500 opacity-60 cursor-not-allowed' : 'bg-gray-300 dark:bg-gray-600 hover:bg-blue-400 dark:hover:bg-blue-500'}
+              focus:outline-none focus:ring-0
+            `,
                                 title: "새로고침",
+                                style: {
+                                    outline: 'none',
+                                    boxShadow: 'none'
+                                },
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$refresh$2d$cw$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__RefreshCw$3e$__["RefreshCw"], {
-                                    className: `w-4 h-4 ${isLoading ? 'animate-spin' : ''}`
+                                    className: `w-3 h-3 text-white transition-transform duration-300 ${isLoading ? 'animate-spin' : ''}`
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                    lineNumber: 197,
+                                    lineNumber: 206,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
@@ -2016,29 +2025,47 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                 onClick: runGarbageCollection,
                                 disabled: isGCRunning,
-                                className: "px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 transition-colors",
+                                className: `
+              relative inline-flex items-center justify-center
+              px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 cursor-pointer
+              ${isGCRunning ? 'bg-blue-500 text-white opacity-60 cursor-not-allowed' : 'bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 hover:bg-blue-500 hover:text-white dark:hover:bg-blue-500'}
+              focus:outline-none focus:ring-0
+            `,
                                 title: "가비지 컬렉션 실행",
+                                style: {
+                                    outline: 'none',
+                                    boxShadow: 'none'
+                                },
                                 children: isGCRunning ? '실행 중...' : 'GC'
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                lineNumber: 200,
+                                lineNumber: 209,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                 onClick: optimizeMemory,
                                 disabled: isLoading,
-                                className: "px-3 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50 transition-colors",
+                                className: `
+              relative inline-flex items-center justify-center
+              w-10 h-6 rounded-full transition-all duration-300 cursor-pointer
+              ${isLoading ? 'bg-green-500 opacity-60 cursor-not-allowed' : 'bg-gray-300 dark:bg-gray-600 hover:bg-green-500 dark:hover:bg-green-500'}
+              focus:outline-none focus:ring-0
+            `,
                                 title: "메모리 최적화",
+                                style: {
+                                    outline: 'none',
+                                    boxShadow: 'none'
+                                },
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$zap$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Zap$3e$__["Zap"], {
-                                    className: "w-3 h-3"
+                                    className: "w-3 h-3 text-white"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                    lineNumber: 215,
+                                    lineNumber: 242,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                lineNumber: 209,
+                                lineNumber: 227,
                                 columnNumber: 11
                             }, this)
                         ]
@@ -2060,7 +2087,7 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                         className: "w-4 h-4 text-red-500"
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                        lineNumber: 222,
+                        lineNumber: 249,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2068,50 +2095,50 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                         children: error
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                        lineNumber: 223,
+                        lineNumber: 250,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                lineNumber: 221,
+                lineNumber: 248,
                 columnNumber: 9
             }, this),
             memoryData ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "space-y-4",
                 children: [
                     memoryData.application && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "bg-blue-50 border border-blue-200 rounded-lg p-4",
+                        className: "bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "flex items-center gap-2 mb-3",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$zap$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Zap$3e$__["Zap"], {
-                                        className: "w-5 h-5 text-blue-600"
+                                        className: "w-5 h-5 text-blue-600 dark:text-blue-400"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                        lineNumber: 233,
+                                        lineNumber: 260,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
-                                        className: "font-semibold text-blue-900",
+                                        className: "font-semibold text-blue-900 dark:text-blue-200",
                                         children: "애플리케이션 총 메모리 사용량"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                        lineNumber: 234,
+                                        lineNumber: 261,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                lineNumber: 232,
+                                lineNumber: 259,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "flex justify-between items-center",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "text-sm text-blue-700",
+                                        className: "text-sm text-blue-700 dark:text-blue-300",
                                         children: [
                                             formatMemorySize(memoryData.application.used),
                                             " / ",
@@ -2119,7 +2146,7 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                        lineNumber: 237,
+                                        lineNumber: 264,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2130,17 +2157,17 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                        lineNumber: 240,
+                                        lineNumber: 267,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                lineNumber: 236,
+                                lineNumber: 263,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "w-full bg-blue-200 rounded-full h-3 mt-2",
+                                className: "w-full bg-blue-200 dark:bg-blue-800 rounded-full h-3 mt-2",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: `h-3 rounded-full transition-all duration-300 ${getProgressBarColor(memoryData.application.percentage)}`,
                                     style: {
@@ -2148,18 +2175,18 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                                     }
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                    lineNumber: 245,
+                                    lineNumber: 272,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                lineNumber: 244,
+                                lineNumber: 271,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                        lineNumber: 231,
+                        lineNumber: 258,
                         columnNumber: 13
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2171,13 +2198,13 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                                     className: "w-4 h-4 text-blue-500"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                    lineNumber: 257,
+                                    lineNumber: 284,
                                     columnNumber: 21
                                 }, void 0),
                                 info: memoryData.main
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                lineNumber: 255,
+                                lineNumber: 282,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(MemoryCard, {
@@ -2186,13 +2213,13 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                                     className: "w-4 h-4 text-green-500"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                    lineNumber: 263,
+                                    lineNumber: 290,
                                     columnNumber: 21
                                 }, void 0),
                                 info: memoryData.renderer
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                lineNumber: 261,
+                                lineNumber: 288,
                                 columnNumber: 13
                             }, this),
                             memoryData.gpu && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(MemoryCard, {
@@ -2201,13 +2228,13 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                                     className: "w-4 h-4 text-purple-500"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                    lineNumber: 270,
+                                    lineNumber: 297,
                                     columnNumber: 23
                                 }, void 0),
                                 info: memoryData.gpu
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                lineNumber: 268,
+                                lineNumber: 295,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(MemoryCard, {
@@ -2216,30 +2243,30 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                                     className: "w-4 h-4 text-orange-500"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                    lineNumber: 277,
+                                    lineNumber: 304,
                                     columnNumber: 21
                                 }, void 0),
                                 info: memoryData.system
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                lineNumber: 275,
+                                lineNumber: 302,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                        lineNumber: 254,
+                        lineNumber: 281,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "bg-gray-50 rounded-lg p-4",
+                        className: "bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-100 dark:border-gray-700",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
-                                className: "font-medium text-gray-900 mb-3",
+                                className: "font-medium text-gray-900 dark:text-white mb-3",
                                 children: "메모리 사용량 상세"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                lineNumber: 284,
+                                lineNumber: 311,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2252,15 +2279,15 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                                                 className: "flex justify-between",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        className: "text-gray-600",
+                                                        className: "text-gray-600 dark:text-gray-400",
                                                         children: "메인 프로세스"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                                        lineNumber: 288,
+                                                        lineNumber: 315,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        className: "font-medium",
+                                                        className: "font-medium dark:text-gray-200",
                                                         children: [
                                                             formatMemorySize(memoryData.main.used),
                                                             " / ",
@@ -2268,28 +2295,28 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                                        lineNumber: 289,
+                                                        lineNumber: 316,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                                lineNumber: 287,
+                                                lineNumber: 314,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "flex justify-between",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        className: "text-gray-600",
+                                                        className: "text-gray-600 dark:text-gray-400",
                                                         children: "렌더러 프로세스"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                                        lineNumber: 294,
+                                                        lineNumber: 321,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        className: "font-medium",
+                                                        className: "font-medium dark:text-gray-200",
                                                         children: [
                                                             formatMemorySize(memoryData.renderer.used),
                                                             " / ",
@@ -2297,23 +2324,23 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                                        lineNumber: 295,
+                                                        lineNumber: 322,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                                lineNumber: 293,
+                                                lineNumber: 320,
                                                 columnNumber: 17
                                             }, this),
                                             memoryData.application && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "flex justify-between font-semibold text-blue-700 border-t pt-2",
+                                                className: "flex justify-between font-semibold text-blue-700 dark:text-blue-300 border-t border-gray-200 dark:border-gray-600 pt-2",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: "애플리케이션 합계"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                                        lineNumber: 301,
+                                                        lineNumber: 328,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2324,19 +2351,19 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                                        lineNumber: 302,
+                                                        lineNumber: 329,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                                lineNumber: 300,
+                                                lineNumber: 327,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                        lineNumber: 286,
+                                        lineNumber: 313,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2346,90 +2373,90 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                                                 className: "flex justify-between",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        className: "text-gray-600",
+                                                        className: "text-gray-600 dark:text-gray-400",
                                                         children: "시스템 총 메모리"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                                        lineNumber: 310,
+                                                        lineNumber: 337,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        className: "font-medium",
+                                                        className: "font-medium dark:text-gray-200",
                                                         children: formatMemorySize(memoryData.system.total)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                                        lineNumber: 311,
+                                                        lineNumber: 338,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                                lineNumber: 309,
+                                                lineNumber: 336,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "flex justify-between",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        className: "text-gray-600",
+                                                        className: "text-gray-600 dark:text-gray-400",
                                                         children: "시스템 사용 중"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                                        lineNumber: 316,
+                                                        lineNumber: 343,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        className: "font-medium",
+                                                        className: "font-medium dark:text-gray-200",
                                                         children: formatMemorySize(memoryData.system.used)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                                        lineNumber: 317,
+                                                        lineNumber: 344,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                                lineNumber: 315,
+                                                lineNumber: 342,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "flex justify-between",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        className: "text-gray-600",
+                                                        className: "text-gray-600 dark:text-gray-400",
                                                         children: "시스템 여유"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                                        lineNumber: 322,
+                                                        lineNumber: 349,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        className: "font-medium text-green-600",
+                                                        className: "font-medium text-green-600 dark:text-green-400",
                                                         children: formatMemorySize(memoryData.system.free)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                                        lineNumber: 323,
+                                                        lineNumber: 350,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                                lineNumber: 321,
+                                                lineNumber: 348,
                                                 columnNumber: 17
                                             }, this),
                                             memoryData.gpu && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "flex justify-between border-t pt-2",
+                                                className: "flex justify-between border-t border-gray-200 dark:border-gray-600 pt-2",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        className: "text-gray-600",
+                                                        className: "text-gray-600 dark:text-gray-400",
                                                         children: "GPU 메모리"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                                        lineNumber: 329,
+                                                        lineNumber: 356,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        className: "font-medium",
+                                                        className: "font-medium dark:text-gray-200",
                                                         children: [
                                                             formatMemorySize(memoryData.gpu.used),
                                                             " / ",
@@ -2437,31 +2464,31 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                                        lineNumber: 330,
+                                                        lineNumber: 357,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                                lineNumber: 328,
+                                                lineNumber: 355,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                        lineNumber: 308,
+                                        lineNumber: 335,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                lineNumber: 285,
+                                lineNumber: 312,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                        lineNumber: 283,
+                        lineNumber: 310,
                         columnNumber: 11
                     }, this),
                     memoryData.application && memoryData.application.percentage > 85 || memoryData.system.percentage > 90 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2474,7 +2501,7 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                                         className: "w-4 h-4 text-red-600"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                        lineNumber: 343,
+                                        lineNumber: 370,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2482,13 +2509,13 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                                         children: "높은 메모리 사용량 경고"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                        lineNumber: 344,
+                                        lineNumber: 371,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                lineNumber: 342,
+                                lineNumber: 369,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2500,13 +2527,13 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                lineNumber: 346,
+                                lineNumber: 373,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                        lineNumber: 341,
+                        lineNumber: 368,
                         columnNumber: 13
                     }, this) : memoryData.application && memoryData.application.percentage > 70 || memoryData.system.percentage > 80 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "bg-yellow-50 border border-yellow-200 rounded-lg p-3",
@@ -2518,7 +2545,7 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                                         className: "w-4 h-4 text-yellow-600"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                        lineNumber: 357,
+                                        lineNumber: 384,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2526,13 +2553,13 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                                         children: "메모리 사용량 주의"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                        lineNumber: 358,
+                                        lineNumber: 385,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                lineNumber: 356,
+                                lineNumber: 383,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2540,41 +2567,41 @@ const MemoryMonitor = ({ className = '', autoRefresh = true, refreshInterval = 2
                                 children: "메모리 사용량이 증가하고 있습니다. 메모리 정리를 실행하여 성능을 개선할 수 있습니다."
                             }, void 0, false, {
                                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                                lineNumber: 360,
+                                lineNumber: 387,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                        lineNumber: 355,
+                        lineNumber: 382,
                         columnNumber: 13
                     }, this) : null
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                lineNumber: 228,
+                lineNumber: 255,
                 columnNumber: 9
             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "text-center py-8 text-gray-500",
+                className: "text-center py-8 text-gray-500 dark:text-gray-400",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$memory$2d$stick$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__MemoryStick$3e$__["MemoryStick"], {
-                        className: "w-12 h-12 mx-auto mb-3 text-gray-300"
+                        className: "w-12 h-12 mx-auto mb-3 text-gray-300 dark:text-gray-600"
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                        lineNumber: 368,
+                        lineNumber: 395,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                         children: "메모리 정보를 불러오는 중..."
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                        lineNumber: 369,
+                        lineNumber: 396,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/components/ui/memory-monitor.tsx",
-                lineNumber: 367,
+                lineNumber: 394,
                 columnNumber: 9
             }, this)
         ]
@@ -7314,38 +7341,24 @@ function HomePage() {
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
-                                className: "flex items-center space-x-4 max-w-md",
+                                className: "flex items-center space-x-1",
                                 children: navItems.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                         onClick: ()=>setActiveTab(item.id),
-                                        className: `flex flex-col items-center gap-1 px-4 py-3 rounded-lg transition-all duration-200 min-w-0 flex-shrink-0 ${activeTab === item.id ? 'bg-blue-500 text-white shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'}`,
+                                        className: `flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 outline-none ${activeTab === item.id ? 'bg-blue-500 text-white' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'}`,
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ui$2f$client$2d$icon$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                                                 icon: item.icon,
-                                                className: "w-5 h-5 flex-shrink-0"
+                                                className: "w-4 h-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/page.tsx",
                                                 lineNumber: 198,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                className: "text-xs font-medium hidden sm:inline",
                                                 children: item.label
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/page.tsx",
                                                 lineNumber: 199,
-                                                columnNumber: 19
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                className: "text-xs text-gray-500 dark:text-gray-400 hidden lg:inline whitespace-nowrap",
-                                                children: [
-                                                    item.id === 'home' && '타이핑 연습',
-                                                    item.id === 'stats' && '성과 분석',
-                                                    item.id === 'analysis' && '상세 분석',
-                                                    item.id === 'settings' && '앱 설정'
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/src/app/page.tsx",
-                                                lineNumber: 201,
                                                 columnNumber: 19
                                             }, this)
                                         ]
@@ -7368,7 +7381,7 @@ function HomePage() {
                                             className: "w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/page.tsx",
-                                            lineNumber: 215,
+                                            lineNumber: 208,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -7376,18 +7389,18 @@ function HomePage() {
                                             children: "로딩 중"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/page.tsx",
-                                            lineNumber: 216,
+                                            lineNumber: 209,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/page.tsx",
-                                    lineNumber: 214,
+                                    lineNumber: 207,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/page.tsx",
-                                lineNumber: 212,
+                                lineNumber: 205,
                                 columnNumber: 13
                             }, this)
                         ]
@@ -7415,7 +7428,7 @@ function HomePage() {
                             className: "animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"
                         }, void 0, false, {
                             fileName: "[project]/src/app/page.tsx",
-                            lineNumber: 228,
+                            lineNumber: 221,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -7423,18 +7436,18 @@ function HomePage() {
                             children: "로딩 중..."
                         }, void 0, false, {
                             fileName: "[project]/src/app/page.tsx",
-                            lineNumber: 229,
+                            lineNumber: 222,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/page.tsx",
-                    lineNumber: 227,
+                    lineNumber: 220,
                     columnNumber: 11
                 }, this) : renderContent()
             }, void 0, false, {
                 fileName: "[project]/src/app/page.tsx",
-                lineNumber: 225,
+                lineNumber: 218,
                 columnNumber: 7
             }, this)
         ]

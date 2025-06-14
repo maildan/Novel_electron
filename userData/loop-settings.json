@@ -3,16 +3,12 @@
 		"docs": true,
 		"office": true,
 		"coding": true,
-		"sns": true,
-		"browser": true,
-		"game": false,
-		"media": true,
-		"other": true
+		"sns": true
 	},
 	"autoStartMonitoring": true,
 	"resumeAfterIdle": true,
 	"idleTimeout": 300,
-	"theme": "system",
+	"theme": "dark",
 	"windowMode": "windowed",
 	"darkMode": false,
 	"minimizeToTray": true,
@@ -77,13 +73,19 @@
 	"enableDiskMonitoring": false,
 	"enableNotifications": true,
 	"enableTrayNotifications": true,
-	"enableDebugMode": true,
+	"enableDebugMode": false,
 	"enableConsoleLogging": true,
 	"enableErrorReporting": true,
-	"logLevel": "debug",
+	"logLevel": "info",
 	"__internal__": {
 		"migrations": {
 			"version": "36.4.0"
 		}
-	}
+	},
+	"enableTypingAnalysis": true,
+	"enableRealTimeAnalysis": true,
+	"statsCollectionInterval": 5,
+	"enableKeyboardDetection": true,
+	"enablePatternLearning": true,
+	"enableGPUFallback": true
 }

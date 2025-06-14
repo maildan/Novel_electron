@@ -147,28 +147,28 @@ export const MemoryMonitor: React.FC<MemoryMonitorProps> = ({
     icon: React.ReactNode
     info: MemoryInfo
   }> = ({ title, icon, info }) => (
-    <div className="bg-gray-50 rounded-lg p-4">
+    <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-100 dark:border-gray-700">
       <div className="flex items-center gap-2 mb-3">
         {icon}
-        <h4 className="font-medium text-gray-900">{title}</h4>
+        <h4 className="font-medium text-gray-900 dark:text-white">{title}</h4>
       </div>
       
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
-          <span className="text-gray-600">사용됨</span>
+          <span className="text-gray-600 dark:text-gray-400">사용됨</span>
           <span className={`font-medium ${getUsageColor(info.percentage)}`}>
             {formatMemorySize(info.used)} ({info.percentage.toFixed(1)}%)
           </span>
         </div>
         
-        <div className="w-full bg-gray-200 rounded-full h-2">
+        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
           <div 
             className={`h-2 rounded-full transition-all duration-300 ${getProgressBarColor(info.percentage)}`}
             style={{ width: `${Math.min(info.percentage, 100)}%` }}
           />
         </div>
         
-        <div className="flex justify-between text-xs text-gray-500">
+        <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
           <span>여유: {formatMemorySize(info.free)}</span>
           <span>전체: {formatMemorySize(info.total)}</span>
         </div>
@@ -177,31 +177,49 @@ export const MemoryMonitor: React.FC<MemoryMonitorProps> = ({
   )
 
   return (
-    <div className={`bg-white rounded-lg border border-gray-200 p-6 ${className}`}>
+    <div className={`bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6 ${className}`}>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <MemoryStick className="w-5 h-5 text-blue-500" />
-          <h3 className="text-lg font-semibold text-gray-900">메모리 모니터</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">메모리 모니터</h3>
           {isLoading && (
             <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-500 border-t-transparent"></div>
           )}
         </div>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <button
             onClick={fetchMemoryInfo}
             disabled={isLoading}
-            className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors"
+            className={`
+              relative inline-flex items-center justify-center
+              w-10 h-6 rounded-full transition-all duration-300 cursor-pointer
+              ${isLoading 
+                ? 'bg-blue-500 opacity-60 cursor-not-allowed' 
+                : 'bg-gray-300 dark:bg-gray-600 hover:bg-blue-400 dark:hover:bg-blue-500'
+              }
+              focus:outline-none focus:ring-0
+            `}
             title="새로고침"
+            style={{ outline: 'none', boxShadow: 'none' }}
           >
-            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-3 h-3 text-white transition-transform duration-300 ${isLoading ? 'animate-spin' : ''}`} />
           </button>
           
           <button
             onClick={runGarbageCollection}
             disabled={isGCRunning}
-            className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 transition-colors"
+            className={`
+              relative inline-flex items-center justify-center
+              px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 cursor-pointer
+              ${isGCRunning 
+                ? 'bg-blue-500 text-white opacity-60 cursor-not-allowed' 
+                : 'bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 hover:bg-blue-500 hover:text-white dark:hover:bg-blue-500'
+              }
+              focus:outline-none focus:ring-0
+            `}
             title="가비지 컬렉션 실행"
+            style={{ outline: 'none', boxShadow: 'none' }}
           >
             {isGCRunning ? '실행 중...' : 'GC'}
           </button>
@@ -209,10 +227,19 @@ export const MemoryMonitor: React.FC<MemoryMonitorProps> = ({
           <button
             onClick={optimizeMemory}
             disabled={isLoading}
-            className="px-3 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50 transition-colors"
+            className={`
+              relative inline-flex items-center justify-center
+              w-10 h-6 rounded-full transition-all duration-300 cursor-pointer
+              ${isLoading 
+                ? 'bg-green-500 opacity-60 cursor-not-allowed' 
+                : 'bg-gray-300 dark:bg-gray-600 hover:bg-green-500 dark:hover:bg-green-500'
+              }
+              focus:outline-none focus:ring-0
+            `}
             title="메모리 최적화"
+            style={{ outline: 'none', boxShadow: 'none' }}
           >
-            <Zap className="w-3 h-3" />
+            <Zap className="w-3 h-3 text-white" />
           </button>
         </div>
       </div>
@@ -228,20 +255,20 @@ export const MemoryMonitor: React.FC<MemoryMonitorProps> = ({
         <div className="space-y-4">
           {/* 애플리케이션 총 사용량 요약 (맨 위에 표시) */}
           {memoryData.application && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-3">
-                <Zap className="w-5 h-5 text-blue-600" />
-                <h4 className="font-semibold text-blue-900">애플리케이션 총 메모리 사용량</h4>
+                <Zap className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <h4 className="font-semibold text-blue-900 dark:text-blue-200">애플리케이션 총 메모리 사용량</h4>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-blue-700">
+                <span className="text-sm text-blue-700 dark:text-blue-300">
                   {formatMemorySize(memoryData.application.used)} / {formatMemorySize(memoryData.application.total)}
                 </span>
                 <span className={`text-lg font-bold ${getUsageColor(memoryData.application.percentage)}`}>
                   {memoryData.application.percentage.toFixed(1)}%
                 </span>
               </div>
-              <div className="w-full bg-blue-200 rounded-full h-3 mt-2">
+              <div className="w-full bg-blue-200 dark:bg-blue-800 rounded-full h-3 mt-2">
                 <div 
                   className={`h-3 rounded-full transition-all duration-300 ${getProgressBarColor(memoryData.application.percentage)}`}
                   style={{ width: `${Math.min(memoryData.application.percentage, 100)}%` }}
@@ -280,24 +307,24 @@ export const MemoryMonitor: React.FC<MemoryMonitorProps> = ({
           </div>
 
           {/* 상세 메모리 사용량 정보 */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h4 className="font-medium text-gray-900 mb-3">메모리 사용량 상세</h4>
+          <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-100 dark:border-gray-700">
+            <h4 className="font-medium text-gray-900 dark:text-white mb-3">메모리 사용량 상세</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">메인 프로세스</span>
-                  <span className="font-medium">
+                  <span className="text-gray-600 dark:text-gray-400">메인 프로세스</span>
+                  <span className="font-medium dark:text-gray-200">
                     {formatMemorySize(memoryData.main.used)} / {formatMemorySize(memoryData.main.total)}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">렌더러 프로세스</span>
-                  <span className="font-medium">
+                  <span className="text-gray-600 dark:text-gray-400">렌더러 프로세스</span>
+                  <span className="font-medium dark:text-gray-200">
                     {formatMemorySize(memoryData.renderer.used)} / {formatMemorySize(memoryData.renderer.total)}
                   </span>
                 </div>
                 {memoryData.application && (
-                  <div className="flex justify-between font-semibold text-blue-700 border-t pt-2">
+                  <div className="flex justify-between font-semibold text-blue-700 dark:text-blue-300 border-t border-gray-200 dark:border-gray-600 pt-2">
                     <span>애플리케이션 합계</span>
                     <span>
                       {formatMemorySize(memoryData.application.used)} / {formatMemorySize(memoryData.application.total)}
@@ -307,27 +334,27 @@ export const MemoryMonitor: React.FC<MemoryMonitorProps> = ({
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">시스템 총 메모리</span>
-                  <span className="font-medium">
+                  <span className="text-gray-600 dark:text-gray-400">시스템 총 메모리</span>
+                  <span className="font-medium dark:text-gray-200">
                     {formatMemorySize(memoryData.system.total)}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">시스템 사용 중</span>
-                  <span className="font-medium">
+                  <span className="text-gray-600 dark:text-gray-400">시스템 사용 중</span>
+                  <span className="font-medium dark:text-gray-200">
                     {formatMemorySize(memoryData.system.used)}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">시스템 여유</span>
-                  <span className="font-medium text-green-600">
+                  <span className="text-gray-600 dark:text-gray-400">시스템 여유</span>
+                  <span className="font-medium text-green-600 dark:text-green-400">
                     {formatMemorySize(memoryData.system.free)}
                   </span>
                 </div>
                 {memoryData.gpu && (
-                  <div className="flex justify-between border-t pt-2">
-                    <span className="text-gray-600">GPU 메모리</span>
-                    <span className="font-medium">
+                  <div className="flex justify-between border-t border-gray-200 dark:border-gray-600 pt-2">
+                    <span className="text-gray-600 dark:text-gray-400">GPU 메모리</span>
+                    <span className="font-medium dark:text-gray-200">
                       {formatMemorySize(memoryData.gpu.used)} / {formatMemorySize(memoryData.gpu.total)}
                     </span>
                   </div>
@@ -364,8 +391,8 @@ export const MemoryMonitor: React.FC<MemoryMonitorProps> = ({
           ) : null}
         </div>
       ) : (
-        <div className="text-center py-8 text-gray-500">
-          <MemoryStick className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+          <MemoryStick className="w-12 h-12 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
           <p>메모리 정보를 불러오는 중...</p>
         </div>
       )}

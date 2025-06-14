@@ -487,13 +487,18 @@ function ThemeProvider({ children }) {
             resolvedTheme: initialResolvedTheme
         });
     }, []);
-    // 서버 렌더링 시에는 children만 반환
-    if (!mounted) {
-        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
-            children: children
-        }, void 0, false);
-    }
-    const contextValue = {
+    // 기본 context 값 (서버 렌더링 또는 초기화 중)
+    const defaultContextValue = {
+        theme: 'system',
+        resolvedTheme: 'light',
+        isDarkMode: false,
+        toggleTheme: ()=>{},
+        toggleDarkMode: ()=>{},
+        setTheme: ()=>{},
+        setDarkMode: ()=>{}
+    };
+    // mounted 상태에 따라 context 값 결정
+    const contextValue = mounted ? {
         theme: settings.theme,
         resolvedTheme,
         isDarkMode: resolvedTheme === 'dark',
@@ -501,13 +506,13 @@ function ThemeProvider({ children }) {
         toggleDarkMode,
         setTheme,
         setDarkMode
-    };
+    } : defaultContextValue;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(ThemeContext.Provider, {
         value: contextValue,
         children: children
     }, void 0, false, {
         fileName: "[project]/src/app/components/ui/ThemeProvider.tsx",
-        lineNumber: 217,
+        lineNumber: 224,
         columnNumber: 5
     }, this);
 }
@@ -769,25 +774,25 @@ function Providers({ children }) {
             children: [
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ui$2f$HydrationFix$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                     fileName: "[project]/src/app/providers.tsx",
-                    lineNumber: 22,
+                    lineNumber: 23,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$ui$2f$toast$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ToastProvider"], {
                     children: children
                 }, void 0, false, {
                     fileName: "[project]/src/app/providers.tsx",
-                    lineNumber: 23,
+                    lineNumber: 24,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/app/providers.tsx",
-            lineNumber: 21,
+            lineNumber: 22,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/app/providers.tsx",
-        lineNumber: 20,
+        lineNumber: 21,
         columnNumber: 5
     }, this);
 }
