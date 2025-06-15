@@ -50,19 +50,24 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
       darkMode: settings.darkMode
     });
     
-    // 1순위: theme 설정이 명시적으로 light 또는 dark인 경우
+    // 1순위: theme 설정이 명시적으로 light 또는 dark인 경우 (가장 높은 우선순위)
     if (settings.theme === 'light') {
       return 'light';
     } else if (settings.theme === 'dark') {
       return 'dark';
     }
     
-    // 2순위: darkMode 설정이 있는 경우
+    // 2순위: system 테마인 경우 시스템 설정 사용
+    if (settings.theme === 'system') {
+      return getSystemTheme();
+    }
+    
+    // 3순위: darkMode 설정이 있는 경우 (하위 호환성)
     if (typeof settings.darkMode === 'boolean') {
       return settings.darkMode ? 'dark' : 'light';
     }
     
-    // 3순위: system 테마이거나 설정이 없는 경우 시스템 테마 사용
+    // 4순위: 기본값 - 시스템 테마 사용
     return getSystemTheme();
   };
 

@@ -13,7 +13,7 @@
 	"resumeAfterIdle": true,
 	"idleTimeout": 300,
 	"theme": "dark",
-	"windowMode": "windowed",
+	"windowMode": "fullscreenAutoHide",
 	"darkMode": false,
 	"minimizeToTray": true,
 	"showTrayNotifications": true,
