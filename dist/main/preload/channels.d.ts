@@ -98,5 +98,7 @@ export declare const CHANNELS: {
     readonly SETTINGS_LOAD: "settings:load";
     readonly GET_APP_INFO: "app:getInfo";
     readonly GET_VERSION: "app:getVersion";
+    readonly APP_RESTART: "app:restart";
+    readonly APP_QUIT: "app:quit";
 };
 //# sourceMappingURL=channels.d.ts.map

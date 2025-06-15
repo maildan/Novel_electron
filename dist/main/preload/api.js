@@ -170,6 +170,7 @@ const appAPI = {
     getPath: (name) => electron_1.ipcRenderer.invoke('app:getPath', name),
     quit: () => electron_1.ipcRenderer.invoke('app:quit'),
     relaunch: () => electron_1.ipcRenderer.invoke('app:relaunch'),
+    restart: () => electron_1.ipcRenderer.invoke(channels_1.CHANNELS.APP_RESTART),
     isPackaged: () => electron_1.ipcRenderer.invoke('app:isPackaged'),
     getLocale: () => electron_1.ipcRenderer.invoke('app:getLocale'),
     focus: () => electron_1.ipcRenderer.invoke('app:focus'),

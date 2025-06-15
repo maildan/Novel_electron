@@ -4062,6 +4062,23 @@ button:hover, button:focus, button:focus-visible, button:active {
   }
 }
 
+.no-animations *, .no-animations :before, .no-animations :after {
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+}
+
+:root, .animations-enabled {
+  --animation-duration: .3s;
+  --transition-duration: .2s;
+}
+
+.no-animations {
+  --animation-duration: 0s;
+  --transition-duration: 0s;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -4369,19 +4386,19 @@ button:hover, button:focus, button:focus-visible, button:active {
 }
 
 .settings-slide-in-right {
-  animation: .3s cubic-bezier(.4, 0, .2, 1) forwards settingsSlideInRight;
+  animation: settingsSlideInRight var(--animation-duration, .3s) cubic-bezier(.4, 0, .2, 1) forwards;
 }
 
 .settings-slide-out-left {
-  animation: .3s cubic-bezier(.4, 0, .2, 1) forwards settingsSlideOutLeft;
+  animation: settingsSlideOutLeft var(--animation-duration, .3s) cubic-bezier(.4, 0, .2, 1) forwards;
 }
 
 .settings-slide-in-left {
-  animation: .3s cubic-bezier(.4, 0, .2, 1) forwards settingsSlideInLeft;
+  animation: settingsSlideInLeft var(--animation-duration, .3s) cubic-bezier(.4, 0, .2, 1) forwards;
 }
 
 .settings-slide-out-right {
-  animation: .3s cubic-bezier(.4, 0, .2, 1) forwards settingsSlideOutRight;
+  animation: settingsSlideOutRight var(--animation-duration, .3s) cubic-bezier(.4, 0, .2, 1) forwards;
 }
 
 .settings-content-container {

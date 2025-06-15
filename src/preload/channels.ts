@@ -127,5 +127,9 @@ export const CHANNELS = {
 
   // 앱 정보
   GET_APP_INFO: 'app:getInfo',
-  GET_VERSION: 'app:getVersion'
+  GET_VERSION: 'app:getVersion',
+  
+  // 앱 제어
+  APP_RESTART: 'app:restart',
+  APP_QUIT: 'app:quit'
 } as const;

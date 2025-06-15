@@ -71,7 +71,7 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
     return getSystemTheme();
   };
 
-  // DOM에 테마 적용
+  // DOM에 테마 및 애니메이션 설정 적용
   const applyThemeToDOM = (theme: 'light' | 'dark') => {
     console.log('🎨 ThemeProvider: DOM에 테마 적용', theme);
     
@@ -97,12 +97,43 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
     // data-theme 속성 설정
     root.setAttribute('data-theme', theme);
     body.setAttribute('data-theme', theme);
-
+    
+    // 애니메이션 설정 적용
+    applyAnimationSettings();
+    
     console.log('✅ ThemeProvider: 테마 DOM 적용 완료', {
       theme,
       rootClasses: root.className,
       bodyClasses: body.className
     });
+  };
+
+  // 애니메이션 설정 적용 함수
+  const applyAnimationSettings = () => {
+    console.log('🎭 ThemeProvider: 애니메이션 설정 적용', settings.enableAnimations);
+    
+    if (typeof document === 'undefined') return;
+
+    const root = document.documentElement;
+    const body = document.body;
+
+    // 애니메이션 설정에 따라 클래스 토글
+    if (settings.enableAnimations) {
+      root.classList.remove('no-animations');
+      body.classList.remove('no-animations');
+      root.classList.add('animations-enabled');
+      body.classList.add('animations-enabled');
+    } else {
+      root.classList.remove('animations-enabled');
+      body.classList.remove('animations-enabled');
+      root.classList.add('no-animations');
+      body.classList.add('no-animations');
+    }
+
+    // CSS 변수로도 제어
+    root.style.setProperty('--animations-enabled', settings.enableAnimations ? '1' : '0');
+    root.style.setProperty('--animation-duration', settings.enableAnimations ? '0.3s' : '0s');
+    root.style.setProperty('--transition-duration', settings.enableAnimations ? '0.2s' : '0s');
   };
 
   // 다크모드 설정 함수
@@ -196,6 +227,14 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
     mediaQuery.addEventListener('change', handleSystemThemeChange);
     return () => mediaQuery.removeEventListener('change', handleSystemThemeChange);
   }, [settings.theme]);
+
+  // 애니메이션 설정 변경시 적용
+  useEffect(() => {
+    if (!mounted) return;
+
+    console.log('🎭 ThemeProvider: 애니메이션 설정 변경 감지', settings.enableAnimations);
+    applyAnimationSettings();
+  }, [settings.enableAnimations, mounted]);
 
   // 설정 변경시 테마 적용
   useEffect(() => {

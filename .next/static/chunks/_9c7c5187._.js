@@ -600,7 +600,7 @@ function ThemeProvider({ children }) {
         // 4순위: 기본값 - 시스템 테마 사용
         return getSystemTheme();
     };
-    // DOM에 테마 적용
+    // DOM에 테마 및 애니메이션 설정 적용
     const applyThemeToDOM = (theme)=>{
         console.log('🎨 ThemeProvider: DOM에 테마 적용', theme);
         if (typeof document === 'undefined') return;
@@ -620,11 +620,36 @@ function ThemeProvider({ children }) {
         // data-theme 속성 설정
         root.setAttribute('data-theme', theme);
         body.setAttribute('data-theme', theme);
+        // 애니메이션 설정 적용
+        applyAnimationSettings();
         console.log('✅ ThemeProvider: 테마 DOM 적용 완료', {
             theme,
             rootClasses: root.className,
             bodyClasses: body.className
         });
+    };
+    // 애니메이션 설정 적용 함수
+    const applyAnimationSettings = ()=>{
+        console.log('🎭 ThemeProvider: 애니메이션 설정 적용', settings.enableAnimations);
+        if (typeof document === 'undefined') return;
+        const root = document.documentElement;
+        const body = document.body;
+        // 애니메이션 설정에 따라 클래스 토글
+        if (settings.enableAnimations) {
+            root.classList.remove('no-animations');
+            body.classList.remove('no-animations');
+            root.classList.add('animations-enabled');
+            body.classList.add('animations-enabled');
+        } else {
+            root.classList.remove('animations-enabled');
+            body.classList.remove('animations-enabled');
+            root.classList.add('no-animations');
+            body.classList.add('no-animations');
+        }
+        // CSS 변수로도 제어
+        root.style.setProperty('--animations-enabled', settings.enableAnimations ? '1' : '0');
+        root.style.setProperty('--animation-duration', settings.enableAnimations ? '0.3s' : '0s');
+        root.style.setProperty('--transition-duration', settings.enableAnimations ? '0.2s' : '0s');
     };
     // 다크모드 설정 함수
     const setDarkMode = async (enabled)=>{
@@ -712,6 +737,17 @@ function ThemeProvider({ children }) {
     }["ThemeProvider.useEffect"], [
         settings.theme
     ]);
+    // 애니메이션 설정 변경시 적용
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "ThemeProvider.useEffect": ()=>{
+            if (!mounted) return;
+            console.log('🎭 ThemeProvider: 애니메이션 설정 변경 감지', settings.enableAnimations);
+            applyAnimationSettings();
+        }
+    }["ThemeProvider.useEffect"], [
+        settings.enableAnimations,
+        mounted
+    ]);
     // 설정 변경시 테마 적용
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "ThemeProvider.useEffect": ()=>{
@@ -771,11 +807,11 @@ function ThemeProvider({ children }) {
         children: children
     }, void 0, false, {
         fileName: "[project]/src/app/components/ui/ThemeProvider.tsx",
-        lineNumber: 256,
+        lineNumber: 295,
         columnNumber: 5
     }, this);
 }
-_s1(ThemeProvider, "56NSNYj2dFkoMq8SNsjnNcmFiAY=", false, function() {
+_s1(ThemeProvider, "SxfzCnepTWrpPwerDcbX6wXrinA=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$useSettings$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSettings"]
     ];

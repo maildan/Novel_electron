@@ -302,6 +302,25 @@ export class IpcHandlers {
    * 유틸리티 핸들러 등록
    */
   private registerUtilityHandlers(): void {
+    // 앱 재시작
+    ipcMain.handle('app:restart', async () => {
+      try {
+        console.log('[IPC] 앱 재시작 요청 받음');
+        
+        // 짧은 지연 후 앱 재시작 (UI가 응답을 받을 시간 제공)
+        setTimeout(() => {
+          const { app } = require('electron');
+          app.relaunch();
+          app.exit(0);
+        }, 500);
+        
+        return { success: true, message: 'App restart initiated' };
+      } catch (error) {
+        console.error('[IPC] App restart error:', error);
+        return { success: false, error: error instanceof Error ? error.message : String(error) };
+      }
+    });
+    
     // 시스템 상태 확인
     ipcMain.handle('system-health-check', async () => {
       try {
@@ -369,6 +388,8 @@ export class IpcHandlers {
 
     // 모든 핸들러 목록
     const handlers = [
+      // 앱 제어
+      'app:restart',
       // 데이터 동기화
       'data-sync-status', 'data-sync-manual', 'data-sync-update-config', 'data-sync-retry-failed',
       // 통계

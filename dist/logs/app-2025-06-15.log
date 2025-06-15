@@ -1498,3 +1498,873 @@
 [2025-06-15T07:05:46.393Z] DEBUG: 설정 변경 적용: enableNotifications = true
 [2025-06-15T07:05:46.393Z] DEBUG: 설정 변경 적용: windowSettings = [object Object]
 [2025-06-15T07:05:46.393Z] DEBUG: 설정 변경 적용: keyboard = [object Object]
+[2025-06-15T07:33:46.752Z] DEBUG: [UpdateManager] Auto-update disabled in development mode
+[2025-06-15T07:33:46.903Z] DEBUG: 설정 로드 중...
+[2025-06-15T07:33:46.907Z] DEBUG: 레거시 설정 발견, 마이그레이션 중...
+[2025-06-15T07:33:46.908Z] DEBUG: 설정 로드 완료: {
+  "enabledCategories": {
+    "docs": true,
+    "office": true,
+    "coding": true,
+    "sns": true,
+    "browser": true,
+    "game": false,
+    "media": true,
+    "other": true
+  },
+  "autoStartMonitoring": true,
+  "resumeAfterIdle": true,
+  "idleTimeout": 300,
+  "theme": "dark",
+  "windowMode": "fullscreenAutoHide",
+  "darkMode": false,
+  "minimizeToTray": true,
+  "showTrayNotifications": true,
+  "enableMiniView": true,
+  "enableAnimations": false,
+  "fontSize": 14,
+  "fontFamily": "system-ui",
+  "useHardwareAcceleration": false,
+  "enableGPUAcceleration": true,
+  "gpuAccelerationLevel": 1,
+  "processingMode": "auto",
+  "reduceMemoryInBackground": true,
+  "enableMemoryOptimization": true,
+  "enableBackgroundCleanup": true,
+  "garbageCollectionInterval": 60000,
+  "maxMemoryThreshold": 100,
+  "memoryCleanupInterval": 300000,
+  "memoryThreshold": 80,
+  "autoCleanupLogs": true,
+  "maxHistoryItems": 500,
+  "logRetentionDays": 30,
+  "enableDataCollection": true,
+  "enableAnalytics": false,
+  "dataRetentionDays": 30,
+  "enableAutoSave": true,
+  "autoSaveInterval": 10000,
+  "enableWPMDisplay": true,
+  "enableAccuracyDisplay": true,
+  "enableRealTimeStats": true,
+  "enableTypingSound": false,
+  "enableKeyboardShortcuts": true,
+  "statsFilePath": "",
+  "enableTypingAnalysis": true,
+  "enableRealTimeAnalysis": false,
+  "statsCollectionInterval": 5000,
+  "enableKeyboardDetection": true,
+  "enablePatternLearning": false,
+  "keyboard": {
+    "autoStart": true,
+    "enableHangulSupport": true,
+    "enableJamoTracking": false,
+    "hangulMode": "auto",
+    "jamoSeparation": false,
+    "trackingInterval": 100
+  },
+  "windowSettings": {
+    "miniSize": {
+      "width": 300,
+      "height": 200
+    },
+    "opacity": 0.9,
+    "alwaysOnTop": false,
+    "autoHide": false,
+    "position": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  "windowOpacity": 1,
+  "alwaysOnTop": false,
+  "enableSystemMonitoring": false,
+  "enablePerformanceLogging": false,
+  "monitoringInterval": 5000,
+  "enableCPUMonitoring": false,
+  "enableMemoryMonitoring": false,
+  "enableDiskMonitoring": false,
+  "enableNotifications": true,
+  "enableTrayNotifications": true,
+  "enableDebugMode": false,
+  "enableConsoleLogging": false,
+  "enableErrorReporting": true,
+  "logLevel": "info",
+  "enableGPUFallback": true,
+  "__internal__": {
+    "migrations": {
+      "version": "36.4.0"
+    }
+  }
+}
+[2025-06-15T07:33:47.021Z] DEBUG: 키보드 관련 IPC 핸들러 등록 완료
+[2025-06-15T07:33:47.021Z] DEBUG: 키보드 관련 IPC 핸들러 등록 중...
+[2025-06-15T07:33:46.908Z] DEBUG: 설정 관리자 IPC 핸들러 등록 완료
+[2025-06-15T07:33:47.021Z] DEBUG: 추적 관련 IPC 핸들러 등록 중...
+[2025-06-15T07:33:47.021Z] DEBUG: 추적 관련 IPC 핸들러 등록 완료
+[2025-06-15T07:33:47.094Z] DEBUG: 키보드 핸들러 초기화 완료
+[2025-06-15T07:33:47.094Z] DEBUG: 데이터 동기화 모듈 초기화 중...
+[2025-06-15T07:33:47.102Z] DEBUG: 통계 처리 시스템 초기화 시작
+[2025-06-15T07:33:47.103Z] DEBUG: 통계 워커 초기화 시작됨
+[2025-06-15T07:33:47.094Z] DEBUG: 키보드 리스너 설정 성공
+[2025-06-15T07:33:47.094Z] DEBUG: 데이터베이스 클라이언트가 없어 폴백 모드로 실행
+[2025-06-15T07:33:47.221Z] DEBUG: 통계 처리 시스템 초기화 완료
+[2025-06-15T07:33:47.221Z] DEBUG: 브라우저 감지 시스템 초기화 시작
+[2025-06-15T07:33:47.249Z] DEBUG: 브라우저 감지 시스템 초기화 완료
+[2025-06-15T07:33:47.249Z] DEBUG: active-win 모듈 로드 실패, 폴백 모드 사용: {
+  "code": "ERR_DLOPEN_FAILED"
+}
+[2025-06-15T07:33:47.353Z] DEBUG: 대기 중인 작업 0개 처리 시작
+[2025-06-15T07:33:47.353Z] DEBUG: 워커 초기화 완료: 2025-06-15T07:33:47.138Z
+[2025-06-15T07:33:49.095Z] DEBUG: 설정에 따라 자동 모니터링 시작
+[2025-06-15T07:33:49.095Z] DEBUG: 타이핑 추적 시작됨
+[2025-06-15T07:34:03.726Z] DEBUG: 설정 변경 적용: keyboard = [object Object]
+[2025-06-15T07:34:03.726Z] DEBUG: 설정 변경 적용: enabledCategories = [object Object]
+[2025-06-15T07:34:03.726Z] DEBUG: 설정 변경 적용: windowSettings = [object Object]
+[2025-06-15T07:34:03.726Z] DEBUG: 설정 변경 적용: enableAnimations = true
+[2025-06-15T07:34:06.097Z] DEBUG: 설정 변경 적용: keyboard = [object Object]
+[2025-06-15T07:34:06.097Z] DEBUG: 설정 변경 적용: enabledCategories = [object Object]
+[2025-06-15T07:34:06.097Z] DEBUG: 설정 변경 적용: windowSettings = [object Object]
+[2025-06-15T07:34:06.097Z] DEBUG: 설정 변경 적용: enableAnimations = false
+[2025-06-15T07:34:33.259Z] DEBUG: 설정 변경 적용: enabledCategories = [object Object]
+[2025-06-15T07:34:33.259Z] DEBUG: 설정 변경 적용: dataRetentionDays = 28
+[2025-06-15T07:34:33.259Z] DEBUG: 설정 변경 적용: keyboard = [object Object]
+[2025-06-15T07:34:33.259Z] DEBUG: 설정 변경 적용: windowSettings = [object Object]
+[2025-06-15T07:34:34.366Z] DEBUG: 설정 변경 적용: enabledCategories = [object Object]
+[2025-06-15T07:34:34.366Z] DEBUG: 설정 변경 적용: windowSettings = [object Object]
+[2025-06-15T07:34:34.366Z] DEBUG: 설정 변경 적용: keyboard = [object Object]
+[2025-06-15T07:34:39.548Z] DEBUG: 설정 변경 적용: enabledCategories = [object Object]
+[2025-06-15T07:34:39.548Z] DEBUG: 설정 변경 적용: enableAnimations = true
+[2025-06-15T07:34:39.548Z] DEBUG: 설정 변경 적용: keyboard = [object Object]
+[2025-06-15T07:34:39.548Z] DEBUG: 설정 변경 적용: windowSettings = [object Object]
+[2025-06-15T07:46:20.741Z] DEBUG: [UpdateManager] Auto-update disabled in development mode
+[2025-06-15T07:46:20.922Z] DEBUG: 설정 로드 중...
+[2025-06-15T07:46:20.924Z] DEBUG: 레거시 설정 발견, 마이그레이션 중...
+[2025-06-15T07:46:20.984Z] DEBUG: 키보드 관련 IPC 핸들러 등록 중...
+[2025-06-15T07:46:20.924Z] DEBUG: 설정 관리자 IPC 핸들러 등록 완료
+[2025-06-15T07:46:20.984Z] DEBUG: 키보드 관련 IPC 핸들러 등록 완료
+[2025-06-15T07:46:20.985Z] DEBUG: 추적 관련 IPC 핸들러 등록 완료
+[2025-06-15T07:46:20.984Z] DEBUG: 추적 관련 IPC 핸들러 등록 중...
+[2025-06-15T07:46:21.018Z] DEBUG: 키보드 리스너 설정 성공
+[2025-06-15T07:46:21.018Z] DEBUG: 키보드 핸들러 초기화 완료
+[2025-06-15T07:46:21.019Z] DEBUG: 데이터 동기화 모듈 초기화 중...
+[2025-06-15T07:46:21.019Z] DEBUG: 데이터베이스 클라이언트가 없어 폴백 모드로 실행
+[2025-06-15T07:46:21.028Z] DEBUG: 통계 처리 시스템 초기화 시작
+[2025-06-15T07:46:21.029Z] DEBUG: 통계 워커 초기화 시작됨
+[2025-06-15T07:46:20.924Z] DEBUG: 설정 로드 완료: {
+  "enabledCategories": {
+    "docs": true,
+    "office": true,
+    "coding": true,
+    "sns": true,
+    "browser": true,
+    "game": true,
+    "media": true,
+    "other": true
+  },
+  "autoStartMonitoring": true,
+  "resumeAfterIdle": true,
+  "idleTimeout": 300,
+  "theme": "dark",
+  "windowMode": "fullscreenAutoHide",
+  "darkMode": false,
+  "minimizeToTray": true,
+  "showTrayNotifications": true,
+  "enableMiniView": true,
+  "enableAnimations": true,
+  "fontSize": 14,
+  "fontFamily": "system-ui",
+  "useHardwareAcceleration": false,
+  "enableGPUAcceleration": true,
+  "gpuAccelerationLevel": 1,
+  "processingMode": "auto",
+  "reduceMemoryInBackground": true,
+  "enableMemoryOptimization": true,
+  "enableBackgroundCleanup": true,
+  "garbageCollectionInterval": 60000,
+  "maxMemoryThreshold": 100,
+  "memoryCleanupInterval": 300000,
+  "memoryThreshold": 80,
+  "autoCleanupLogs": true,
+  "maxHistoryItems": 500,
+  "logRetentionDays": 30,
+  "enableDataCollection": true,
+  "enableAnalytics": false,
+  "dataRetentionDays": 28,
+  "enableAutoSave": true,
+  "autoSaveInterval": 10000,
+  "enableWPMDisplay": true,
+  "enableAccuracyDisplay": true,
+  "enableRealTimeStats": true,
+  "enableTypingSound": false,
+  "enableKeyboardShortcuts": true,
+  "statsFilePath": "",
+  "enableTypingAnalysis": true,
+  "enableRealTimeAnalysis": false,
+  "statsCollectionInterval": 5000,
+  "enableKeyboardDetection": true,
+  "enablePatternLearning": false,
+  "keyboard": {
+    "autoStart": true,
+    "enableHangulSupport": true,
+    "enableJamoTracking": false,
+    "hangulMode": "auto",
+    "jamoSeparation": false,
+    "trackingInterval": 100
+  },
+  "windowSettings": {
+    "miniSize": {
+      "width": 300,
+      "height": 200
+    },
+    "opacity": 0.9,
+    "alwaysOnTop": false,
+    "autoHide": false,
+    "position": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  "windowOpacity": 1,
+  "alwaysOnTop": false,
+  "enableSystemMonitoring": false,
+  "enablePerformanceLogging": false,
+  "monitoringInterval": 5000,
+  "enableCPUMonitoring": false,
+  "enableMemoryMonitoring": false,
+  "enableDiskMonitoring": false,
+  "enableNotifications": true,
+  "enableTrayNotifications": true,
+  "enableDebugMode": false,
+  "enableConsoleLogging": false,
+  "enableErrorReporting": true,
+  "logLevel": "info",
+  "enableGPUFallback": true,
+  "__internal__": {
+    "migrations": {
+      "version": "36.4.0"
+    }
+  }
+}
+[2025-06-15T07:46:21.145Z] DEBUG: 통계 처리 시스템 초기화 완료
+[2025-06-15T07:46:21.145Z] DEBUG: 브라우저 감지 시스템 초기화 시작
+[2025-06-15T07:46:21.172Z] DEBUG: active-win 모듈 로드 실패, 폴백 모드 사용: {
+  "code": "ERR_DLOPEN_FAILED"
+}
+[2025-06-15T07:46:21.172Z] DEBUG: 브라우저 감지 시스템 초기화 완료
+[2025-06-15T07:46:21.281Z] DEBUG: 대기 중인 작업 0개 처리 시작
+[2025-06-15T07:46:21.281Z] DEBUG: 워커 초기화 완료: 2025-06-15T07:46:21.064Z
+[2025-06-15T07:46:23.019Z] DEBUG: 설정에 따라 자동 모니터링 시작
+[2025-06-15T07:46:23.019Z] DEBUG: 타이핑 추적 시작됨
+[2025-06-15T07:46:26.038Z] DEBUG: 설정 변경 적용: windowSettings = [object Object]
+[2025-06-15T07:46:26.038Z] DEBUG: 설정 변경 적용: keyboard = [object Object]
+[2025-06-15T07:46:26.038Z] DEBUG: 설정 변경 적용: enableAnimations = false
+[2025-06-15T07:46:26.038Z] DEBUG: 설정 변경 적용: enabledCategories = [object Object]
+[2025-06-15T07:57:24.021Z] DEBUG: [UpdateManager] Auto-update disabled in development mode
+[2025-06-15T07:57:24.549Z] DEBUG: 설정 로드 중...
+[2025-06-15T07:57:24.555Z] DEBUG: 레거시 설정 발견, 마이그레이션 중...
+[2025-06-15T07:57:24.555Z] DEBUG: 설정 로드 완료: {
+  "enabledCategories": {
+    "docs": true,
+    "office": true,
+    "coding": true,
+    "sns": true,
+    "browser": true,
+    "game": true,
+    "media": true,
+    "other": true
+  },
+  "autoStartMonitoring": true,
+  "resumeAfterIdle": true,
+  "idleTimeout": 300,
+  "theme": "dark",
+  "windowMode": "fullscreenAutoHide",
+  "darkMode": false,
+  "minimizeToTray": true,
+  "showTrayNotifications": true,
+  "enableMiniView": true,
+  "enableAnimations": false,
+  "fontSize": 14,
+  "fontFamily": "system-ui",
+  "useHardwareAcceleration": false,
+  "enableGPUAcceleration": true,
+  "gpuAccelerationLevel": 1,
+  "processingMode": "auto",
+  "reduceMemoryInBackground": true,
+  "enableMemoryOptimization": true,
+  "enableBackgroundCleanup": true,
+  "garbageCollectionInterval": 60000,
+  "maxMemoryThreshold": 100,
+  "memoryCleanupInterval": 300000,
+  "memoryThreshold": 80,
+  "autoCleanupLogs": true,
+  "maxHistoryItems": 500,
+  "logRetentionDays": 30,
+  "enableDataCollection": true,
+  "enableAnalytics": false,
+  "dataRetentionDays": 28,
+  "enableAutoSave": true,
+  "autoSaveInterval": 10000,
+  "enableWPMDisplay": true,
+  "enableAccuracyDisplay": true,
+  "enableRealTimeStats": true,
+  "enableTypingSound": false,
+  "enableKeyboardShortcuts": true,
+  "statsFilePath": "",
+  "enableTypingAnalysis": true,
+  "enableRealTimeAnalysis": false,
+  "statsCollectionInterval": 5000,
+  "enableKeyboardDetection": true,
+  "enablePatternLearning": false,
+  "keyboard": {
+    "autoStart": true,
+    "enableHangulSupport": true,
+    "enableJamoTracking": false,
+    "hangulMode": "auto",
+    "jamoSeparation": false,
+    "trackingInterval": 100
+  },
+  "windowSettings": {
+    "miniSize": {
+      "width": 300,
+      "height": 200
+    },
+    "opacity": 0.9,
+    "alwaysOnTop": false,
+    "autoHide": false,
+    "position": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  "windowOpacity": 1,
+  "alwaysOnTop": false,
+  "enableSystemMonitoring": false,
+  "enablePerformanceLogging": false,
+  "monitoringInterval": 5000,
+  "enableCPUMonitoring": false,
+  "enableMemoryMonitoring": false,
+  "enableDiskMonitoring": false,
+  "enableNotifications": true,
+  "enableTrayNotifications": true,
+  "enableDebugMode": false,
+  "enableConsoleLogging": false,
+  "enableErrorReporting": true,
+  "logLevel": "info",
+  "enableGPUFallback": true,
+  "__internal__": {
+    "migrations": {
+      "version": "36.4.0"
+    }
+  }
+}
+[2025-06-15T07:57:24.556Z] DEBUG: 설정 관리자 IPC 핸들러 등록 완료
+[2025-06-15T07:57:24.637Z] DEBUG: 키보드 관련 IPC 핸들러 등록 완료
+[2025-06-15T07:57:24.637Z] DEBUG: 추적 관련 IPC 핸들러 등록 완료
+[2025-06-15T07:57:24.637Z] DEBUG: 추적 관련 IPC 핸들러 등록 중...
+[2025-06-15T07:57:24.636Z] DEBUG: 키보드 관련 IPC 핸들러 등록 중...
+[2025-06-15T07:57:24.749Z] DEBUG: 키보드 리스너 설정 성공
+[2025-06-15T07:57:24.749Z] DEBUG: 키보드 핸들러 초기화 완료
+[2025-06-15T07:57:24.750Z] DEBUG: 데이터 동기화 모듈 초기화 중...
+[2025-06-15T07:57:24.750Z] DEBUG: 데이터베이스 클라이언트가 없어 폴백 모드로 실행
+[2025-06-15T07:57:24.761Z] DEBUG: 통계 처리 시스템 초기화 시작
+[2025-06-15T07:57:24.762Z] DEBUG: 통계 워커 초기화 시작됨
+[2025-06-15T07:57:24.918Z] DEBUG: 통계 처리 시스템 초기화 완료
+[2025-06-15T07:57:24.918Z] DEBUG: 브라우저 감지 시스템 초기화 시작
+[2025-06-15T07:57:24.948Z] DEBUG: active-win 모듈 로드 실패, 폴백 모드 사용: {
+  "code": "ERR_DLOPEN_FAILED"
+}
+[2025-06-15T07:57:24.948Z] DEBUG: 브라우저 감지 시스템 초기화 완료
+[2025-06-15T07:57:25.082Z] DEBUG: 대기 중인 작업 0개 처리 시작
+[2025-06-15T07:57:25.082Z] DEBUG: 워커 초기화 완료: 2025-06-15T07:57:24.825Z
+[2025-06-15T07:57:26.756Z] DEBUG: 설정에 따라 자동 모니터링 시작
+[2025-06-15T07:57:26.756Z] DEBUG: 타이핑 추적 시작됨
+[2025-06-15T07:57:41.750Z] DEBUG: 설정 변경 적용: keyboard = [object Object]
+[2025-06-15T07:57:41.750Z] DEBUG: 설정 변경 적용: windowSettings = [object Object]
+[2025-06-15T07:57:41.750Z] DEBUG: 설정 변경 적용: enableAnimations = true
+[2025-06-15T07:57:41.750Z] DEBUG: 설정 변경 적용: enabledCategories = [object Object]
+[2025-06-15T08:21:53.139Z] DEBUG: [UpdateManager] Auto-update disabled in development mode
+[2025-06-15T08:21:53.467Z] DEBUG: 설정 로드 중...
+[2025-06-15T08:21:53.471Z] DEBUG: 레거시 설정 발견, 마이그레이션 중...
+[2025-06-15T08:21:53.471Z] DEBUG: 설정 로드 완료: {
+  "enabledCategories": {
+    "docs": true,
+    "office": true,
+    "coding": true,
+    "sns": true,
+    "browser": true,
+    "game": true,
+    "media": true,
+    "other": true
+  },
+  "autoStartMonitoring": true,
+  "resumeAfterIdle": true,
+  "idleTimeout": 300,
+  "theme": "dark",
+  "windowMode": "fullscreenAutoHide",
+  "darkMode": false,
+  "minimizeToTray": true,
+  "showTrayNotifications": true,
+  "enableMiniView": true,
+  "enableAnimations": true,
+  "fontSize": 14,
+  "fontFamily": "system-ui",
+  "useHardwareAcceleration": false,
+  "enableGPUAcceleration": true,
+  "gpuAccelerationLevel": 1,
+  "processingMode": "auto",
+  "reduceMemoryInBackground": true,
+  "enableMemoryOptimization": true,
+  "enableBackgroundCleanup": true,
+  "garbageCollectionInterval": 60000,
+  "maxMemoryThreshold": 100,
+  "memoryCleanupInterval": 300000,
+  "memoryThreshold": 80,
+  "autoCleanupLogs": true,
+  "maxHistoryItems": 500,
+  "logRetentionDays": 30,
+  "enableDataCollection": true,
+  "enableAnalytics": false,
+  "dataRetentionDays": 28,
+  "enableAutoSave": true,
+  "autoSaveInterval": 10000,
+  "enableWPMDisplay": true,
+  "enableAccuracyDisplay": true,
+  "enableRealTimeStats": true,
+  "enableTypingSound": false,
+  "enableKeyboardShortcuts": true,
+  "statsFilePath": "",
+  "enableTypingAnalysis": true,
+  "enableRealTimeAnalysis": false,
+  "statsCollectionInterval": 5000,
+  "enableKeyboardDetection": true,
+  "enablePatternLearning": false,
+  "keyboard": {
+    "autoStart": true,
+    "enableHangulSupport": true,
+    "enableJamoTracking": false,
+    "hangulMode": "auto",
+    "jamoSeparation": false,
+    "trackingInterval": 100
+  },
+  "windowSettings": {
+    "miniSize": {
+      "width": 300,
+      "height": 200
+    },
+    "opacity": 0.9,
+    "alwaysOnTop": false,
+    "autoHide": false,
+    "position": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  "windowOpacity": 1,
+  "alwaysOnTop": false,
+  "enableSystemMonitoring": false,
+  "enablePerformanceLogging": false,
+  "monitoringInterval": 5000,
+  "enableCPUMonitoring": false,
+  "enableMemoryMonitoring": false,
+  "enableDiskMonitoring": false,
+  "enableNotifications": true,
+  "enableTrayNotifications": true,
+  "enableDebugMode": false,
+  "enableConsoleLogging": false,
+  "enableErrorReporting": true,
+  "logLevel": "info",
+  "enableGPUFallback": true,
+  "__internal__": {
+    "migrations": {
+      "version": "36.4.0"
+    }
+  }
+}
+[2025-06-15T08:21:53.747Z] DEBUG: 키보드 관련 IPC 핸들러 등록 완료
+[2025-06-15T08:21:53.747Z] DEBUG: 추적 관련 IPC 핸들러 등록 완료
+[2025-06-15T08:21:53.747Z] DEBUG: 추적 관련 IPC 핸들러 등록 중...
+[2025-06-15T08:21:53.747Z] DEBUG: 키보드 관련 IPC 핸들러 등록 중...
+[2025-06-15T08:21:53.795Z] DEBUG: 키보드 핸들러 초기화 완료
+[2025-06-15T08:21:53.795Z] DEBUG: 키보드 리스너 설정 성공
+[2025-06-15T08:21:53.795Z] DEBUG: 데이터베이스 클라이언트가 없어 폴백 모드로 실행
+[2025-06-15T08:21:53.795Z] DEBUG: 데이터 동기화 모듈 초기화 중...
+[2025-06-15T08:21:53.801Z] DEBUG: 통계 워커 초기화 시작됨
+[2025-06-15T08:21:53.800Z] DEBUG: 통계 처리 시스템 초기화 시작
+[2025-06-15T08:21:53.474Z] DEBUG: 설정 관리자 IPC 핸들러 등록 완료
+[2025-06-15T08:21:53.933Z] DEBUG: 통계 처리 시스템 초기화 완료
+[2025-06-15T08:21:53.933Z] DEBUG: 브라우저 감지 시스템 초기화 시작
+[2025-06-15T08:21:53.961Z] DEBUG: active-win 모듈 로드 실패, 폴백 모드 사용: {
+  "code": "ERR_DLOPEN_FAILED"
+}
+[2025-06-15T08:21:53.961Z] DEBUG: 브라우저 감지 시스템 초기화 완료
+[2025-06-15T08:21:54.051Z] DEBUG: 워커 초기화 완료: 2025-06-15T08:21:53.852Z
+[2025-06-15T08:21:54.051Z] DEBUG: 대기 중인 작업 0개 처리 시작
+[2025-06-15T08:21:55.799Z] DEBUG: 설정에 따라 자동 모니터링 시작
+[2025-06-15T08:21:55.799Z] DEBUG: 타이핑 추적 시작됨
+[2025-06-15T08:22:00.828Z] DEBUG: 설정 변경 적용: enableAnimations = false
+[2025-06-15T08:22:00.828Z] DEBUG: 설정 변경 적용: windowSettings = [object Object]
+[2025-06-15T08:22:00.828Z] DEBUG: 설정 변경 적용: keyboard = [object Object]
+[2025-06-15T08:22:00.827Z] DEBUG: 설정 변경 적용: enabledCategories = [object Object]
+[2025-06-15T08:22:08.069Z] DEBUG: GPU 설정 변경 알림 전송
+[2025-06-15T08:22:10.800Z] DEBUG: [UpdateManager] Auto-update disabled in development mode
+[2025-06-15T08:22:10.865Z] DEBUG: 설정 로드 중...
+[2025-06-15T08:22:10.866Z] DEBUG: 레거시 설정 발견, 마이그레이션 중...
+[2025-06-15T08:22:10.866Z] DEBUG: 설정 로드 완료: {
+  "enabledCategories": {
+    "docs": true,
+    "office": true,
+    "coding": true,
+    "sns": true,
+    "browser": true,
+    "game": true,
+    "media": true,
+    "other": true
+  },
+  "autoStartMonitoring": true,
+  "resumeAfterIdle": true,
+  "idleTimeout": 300,
+  "theme": "dark",
+  "windowMode": "fullscreenAutoHide",
+  "darkMode": false,
+  "minimizeToTray": true,
+  "showTrayNotifications": true,
+  "enableMiniView": true,
+  "enableAnimations": false,
+  "fontSize": 14,
+  "fontFamily": "system-ui",
+  "useHardwareAcceleration": false,
+  "enableGPUAcceleration": false,
+  "gpuAccelerationLevel": 1,
+  "processingMode": "auto",
+  "reduceMemoryInBackground": true,
+  "enableMemoryOptimization": true,
+  "enableBackgroundCleanup": true,
+  "garbageCollectionInterval": 60000,
+  "maxMemoryThreshold": 100,
+  "memoryCleanupInterval": 300000,
+  "memoryThreshold": 80,
+  "autoCleanupLogs": true,
+  "maxHistoryItems": 500,
+  "logRetentionDays": 30,
+  "enableDataCollection": true,
+  "enableAnalytics": false,
+  "dataRetentionDays": 28,
+  "enableAutoSave": true,
+  "autoSaveInterval": 10000,
+  "enableWPMDisplay": true,
+  "enableAccuracyDisplay": true,
+  "enableRealTimeStats": true,
+  "enableTypingSound": false,
+  "enableKeyboardShortcuts": true,
+  "statsFilePath": "",
+  "enableTypingAnalysis": true,
+  "enableRealTimeAnalysis": false,
+  "statsCollectionInterval": 5000,
+  "enableKeyboardDetection": true,
+  "enablePatternLearning": false,
+  "keyboard": {
+    "autoStart": true,
+    "enableHangulSupport": true,
+    "enableJamoTracking": false,
+    "hangulMode": "auto",
+    "jamoSeparation": false,
+    "trackingInterval": 100
+  },
+  "windowSettings": {
+    "miniSize": {
+      "width": 300,
+      "height": 200
+    },
+    "opacity": 0.9,
+    "alwaysOnTop": false,
+    "autoHide": false,
+    "position": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  "windowOpacity": 1,
+  "alwaysOnTop": false,
+  "enableSystemMonitoring": false,
+  "enablePerformanceLogging": false,
+  "monitoringInterval": 5000,
+  "enableCPUMonitoring": false,
+  "enableMemoryMonitoring": false,
+  "enableDiskMonitoring": false,
+  "enableNotifications": true,
+  "enableTrayNotifications": true,
+  "enableDebugMode": false,
+  "enableConsoleLogging": false,
+  "enableErrorReporting": true,
+  "logLevel": "info",
+  "enableGPUFallback": true,
+  "__internal__": {
+    "migrations": {
+      "version": "36.4.0"
+    }
+  }
+}
+[2025-06-15T08:22:10.866Z] DEBUG: 설정 관리자 IPC 핸들러 등록 완료
+[2025-06-15T08:22:10.876Z] DEBUG: 키보드 관련 IPC 핸들러 등록 중...
+[2025-06-15T08:22:10.876Z] DEBUG: 키보드 관련 IPC 핸들러 등록 완료
+[2025-06-15T08:22:10.876Z] DEBUG: 추적 관련 IPC 핸들러 등록 중...
+[2025-06-15T08:22:10.876Z] DEBUG: 추적 관련 IPC 핸들러 등록 완료
+[2025-06-15T08:22:10.922Z] DEBUG: 키보드 리스너 설정 성공
+[2025-06-15T08:22:10.922Z] DEBUG: 키보드 핸들러 초기화 완료
+[2025-06-15T08:22:10.922Z] DEBUG: 데이터 동기화 모듈 초기화 중...
+[2025-06-15T08:22:10.922Z] DEBUG: 데이터베이스 클라이언트가 없어 폴백 모드로 실행
+[2025-06-15T08:22:10.924Z] DEBUG: 통계 처리 시스템 초기화 시작
+[2025-06-15T08:22:10.925Z] DEBUG: 통계 워커 초기화 시작됨
+[2025-06-15T08:22:10.990Z] DEBUG: 통계 처리 시스템 초기화 완료
+[2025-06-15T08:22:10.990Z] DEBUG: 브라우저 감지 시스템 초기화 시작
+[2025-06-15T08:22:11.012Z] DEBUG: active-win 모듈 로드 실패, 폴백 모드 사용: {
+  "code": "ERR_DLOPEN_FAILED"
+}
+[2025-06-15T08:22:11.012Z] DEBUG: 브라우저 감지 시스템 초기화 완료
+[2025-06-15T08:22:11.077Z] DEBUG: 워커 초기화 완료: 2025-06-15T08:22:10.957Z
+[2025-06-15T08:22:11.077Z] DEBUG: 대기 중인 작업 0개 처리 시작
+[2025-06-15T08:22:12.924Z] DEBUG: 설정에 따라 자동 모니터링 시작
+[2025-06-15T08:22:12.924Z] DEBUG: 타이핑 추적 시작됨
+[2025-06-15T08:22:15.794Z] DEBUG: 설정 변경 적용: enabledCategories = [object Object]
+[2025-06-15T08:22:15.794Z] DEBUG: 설정 변경 적용: enableAnimations = true
+[2025-06-15T08:22:15.794Z] DEBUG: 설정 변경 적용: keyboard = [object Object]
+[2025-06-15T08:22:15.794Z] DEBUG: 설정 변경 적용: windowSettings = [object Object]
+[2025-06-15T08:22:25.402Z] DEBUG: GPU 설정 변경 알림 전송
+[2025-06-15T08:22:28.241Z] DEBUG: [UpdateManager] Auto-update disabled in development mode
+[2025-06-15T08:22:28.314Z] DEBUG: 설정 로드 중...
+[2025-06-15T08:22:28.316Z] DEBUG: 레거시 설정 발견, 마이그레이션 중...
+[2025-06-15T08:22:28.316Z] DEBUG: 설정 로드 완료: {
+  "enabledCategories": {
+    "docs": true,
+    "office": true,
+    "coding": true,
+    "sns": true,
+    "browser": true,
+    "game": true,
+    "media": true,
+    "other": true
+  },
+  "autoStartMonitoring": true,
+  "resumeAfterIdle": true,
+  "idleTimeout": 300,
+  "theme": "dark",
+  "windowMode": "fullscreenAutoHide",
+  "darkMode": false,
+  "minimizeToTray": true,
+  "showTrayNotifications": true,
+  "enableMiniView": true,
+  "enableAnimations": true,
+  "fontSize": 14,
+  "fontFamily": "system-ui",
+  "useHardwareAcceleration": false,
+  "enableGPUAcceleration": true,
+  "gpuAccelerationLevel": 1,
+  "processingMode": "auto",
+  "reduceMemoryInBackground": true,
+  "enableMemoryOptimization": true,
+  "enableBackgroundCleanup": true,
+  "garbageCollectionInterval": 60000,
+  "maxMemoryThreshold": 100,
+  "memoryCleanupInterval": 300000,
+  "memoryThreshold": 80,
+  "autoCleanupLogs": true,
+  "maxHistoryItems": 500,
+  "logRetentionDays": 30,
+  "enableDataCollection": true,
+  "enableAnalytics": false,
+  "dataRetentionDays": 28,
+  "enableAutoSave": true,
+  "autoSaveInterval": 10000,
+  "enableWPMDisplay": true,
+  "enableAccuracyDisplay": true,
+  "enableRealTimeStats": true,
+  "enableTypingSound": false,
+  "enableKeyboardShortcuts": true,
+  "statsFilePath": "",
+  "enableTypingAnalysis": true,
+  "enableRealTimeAnalysis": false,
+  "statsCollectionInterval": 5000,
+  "enableKeyboardDetection": true,
+  "enablePatternLearning": false,
+  "keyboard": {
+    "autoStart": true,
+    "enableHangulSupport": true,
+    "enableJamoTracking": false,
+    "hangulMode": "auto",
+    "jamoSeparation": false,
+    "trackingInterval": 100
+  },
+  "windowSettings": {
+    "miniSize": {
+      "width": 300,
+      "height": 200
+    },
+    "opacity": 0.9,
+    "alwaysOnTop": false,
+    "autoHide": false,
+    "position": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  "windowOpacity": 1,
+  "alwaysOnTop": false,
+  "enableSystemMonitoring": false,
+  "enablePerformanceLogging": false,
+  "monitoringInterval": 5000,
+  "enableCPUMonitoring": false,
+  "enableMemoryMonitoring": false,
+  "enableDiskMonitoring": false,
+  "enableNotifications": true,
+  "enableTrayNotifications": true,
+  "enableDebugMode": false,
+  "enableConsoleLogging": false,
+  "enableErrorReporting": true,
+  "logLevel": "info",
+  "enableGPUFallback": true,
+  "__internal__": {
+    "migrations": {
+      "version": "36.4.0"
+    }
+  }
+}
+[2025-06-15T08:22:28.326Z] DEBUG: 키보드 관련 IPC 핸들러 등록 완료
+[2025-06-15T08:22:28.326Z] DEBUG: 추적 관련 IPC 핸들러 등록 중...
+[2025-06-15T08:22:28.326Z] DEBUG: 키보드 관련 IPC 핸들러 등록 중...
+[2025-06-15T08:22:28.326Z] DEBUG: 추적 관련 IPC 핸들러 등록 완료
+[2025-06-15T08:22:28.366Z] DEBUG: 키보드 핸들러 초기화 완료
+[2025-06-15T08:22:28.366Z] DEBUG: 데이터 동기화 모듈 초기화 중...
+[2025-06-15T08:22:28.366Z] DEBUG: 데이터베이스 클라이언트가 없어 폴백 모드로 실행
+[2025-06-15T08:22:28.368Z] DEBUG: 통계 처리 시스템 초기화 시작
+[2025-06-15T08:22:28.366Z] DEBUG: 키보드 리스너 설정 성공
+[2025-06-15T08:22:28.369Z] DEBUG: 통계 워커 초기화 시작됨
+[2025-06-15T08:22:28.316Z] DEBUG: 설정 관리자 IPC 핸들러 등록 완료
+[2025-06-15T08:22:28.438Z] DEBUG: 통계 처리 시스템 초기화 완료
+[2025-06-15T08:22:28.438Z] DEBUG: 브라우저 감지 시스템 초기화 시작
+[2025-06-15T08:22:28.464Z] DEBUG: active-win 모듈 로드 실패, 폴백 모드 사용: {
+  "code": "ERR_DLOPEN_FAILED"
+}
+[2025-06-15T08:22:28.464Z] DEBUG: 브라우저 감지 시스템 초기화 완료
+[2025-06-15T08:22:28.525Z] DEBUG: 대기 중인 작업 0개 처리 시작
+[2025-06-15T08:22:28.525Z] DEBUG: 워커 초기화 완료: 2025-06-15T08:22:28.405Z
+[2025-06-15T08:22:30.367Z] DEBUG: 설정에 따라 자동 모니터링 시작
+[2025-06-15T08:22:30.367Z] DEBUG: 타이핑 추적 시작됨
+[2025-06-15T08:22:39.436Z] DEBUG: [UpdateManager] Auto-update disabled in development mode
+[2025-06-15T08:22:39.490Z] DEBUG: 설정 로드 중...
+[2025-06-15T08:22:39.491Z] DEBUG: 레거시 설정 발견, 마이그레이션 중...
+[2025-06-15T08:22:39.492Z] DEBUG: 설정 로드 완료: {
+  "enabledCategories": {
+    "docs": true,
+    "office": true,
+    "coding": true,
+    "sns": true,
+    "browser": true,
+    "game": true,
+    "media": true,
+    "other": true
+  },
+  "autoStartMonitoring": true,
+  "resumeAfterIdle": true,
+  "idleTimeout": 300,
+  "theme": "dark",
+  "windowMode": "fullscreenAutoHide",
+  "darkMode": false,
+  "minimizeToTray": true,
+  "showTrayNotifications": true,
+  "enableMiniView": true,
+  "enableAnimations": true,
+  "fontSize": 14,
+  "fontFamily": "system-ui",
+  "useHardwareAcceleration": false,
+  "enableGPUAcceleration": true,
+  "gpuAccelerationLevel": 1,
+  "processingMode": "auto",
+  "reduceMemoryInBackground": true,
+  "enableMemoryOptimization": true,
+  "enableBackgroundCleanup": true,
+  "garbageCollectionInterval": 60000,
+  "maxMemoryThreshold": 100,
+  "memoryCleanupInterval": 300000,
+  "memoryThreshold": 80,
+  "autoCleanupLogs": true,
+  "maxHistoryItems": 500,
+  "logRetentionDays": 30,
+  "enableDataCollection": true,
+  "enableAnalytics": false,
+  "dataRetentionDays": 28,
+  "enableAutoSave": true,
+  "autoSaveInterval": 10000,
+  "enableWPMDisplay": true,
+  "enableAccuracyDisplay": true,
+  "enableRealTimeStats": true,
+  "enableTypingSound": false,
+  "enableKeyboardShortcuts": true,
+  "statsFilePath": "",
+  "enableTypingAnalysis": true,
+  "enableRealTimeAnalysis": false,
+  "statsCollectionInterval": 5000,
+  "enableKeyboardDetection": true,
+  "enablePatternLearning": false,
+  "keyboard": {
+    "autoStart": true,
+    "enableHangulSupport": true,
+    "enableJamoTracking": false,
+    "hangulMode": "auto",
+    "jamoSeparation": false,
+    "trackingInterval": 100
+  },
+  "windowSettings": {
+    "miniSize": {
+      "width": 300,
+      "height": 200
+    },
+    "opacity": 0.9,
+    "alwaysOnTop": false,
+    "autoHide": false,
+    "position": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  "windowOpacity": 1,
+  "alwaysOnTop": false,
+  "enableSystemMonitoring": false,
+  "enablePerformanceLogging": false,
+  "monitoringInterval": 5000,
+  "enableCPUMonitoring": false,
+  "enableMemoryMonitoring": false,
+  "enableDiskMonitoring": false,
+  "enableNotifications": true,
+  "enableTrayNotifications": true,
+  "enableDebugMode": false,
+  "enableConsoleLogging": false,
+  "enableErrorReporting": true,
+  "logLevel": "info",
+  "enableGPUFallback": true,
+  "__internal__": {
+    "migrations": {
+      "version": "36.4.0"
+    }
+  }
+}
+[2025-06-15T08:22:39.502Z] DEBUG: 키보드 관련 IPC 핸들러 등록 완료
+[2025-06-15T08:22:39.502Z] DEBUG: 키보드 관련 IPC 핸들러 등록 중...
+[2025-06-15T08:22:39.492Z] DEBUG: 설정 관리자 IPC 핸들러 등록 완료
+[2025-06-15T08:22:39.502Z] DEBUG: 추적 관련 IPC 핸들러 등록 중...
+[2025-06-15T08:22:39.502Z] DEBUG: 추적 관련 IPC 핸들러 등록 완료
+[2025-06-15T08:22:39.537Z] DEBUG: 키보드 리스너 설정 성공
+[2025-06-15T08:22:39.537Z] DEBUG: 키보드 핸들러 초기화 완료
+[2025-06-15T08:22:39.538Z] DEBUG: 데이터 동기화 모듈 초기화 중...
+[2025-06-15T08:22:39.538Z] DEBUG: 데이터베이스 클라이언트가 없어 폴백 모드로 실행
+[2025-06-15T08:22:39.540Z] DEBUG: 통계 처리 시스템 초기화 시작
+[2025-06-15T08:22:39.541Z] DEBUG: 통계 워커 초기화 시작됨
+[2025-06-15T08:22:39.606Z] DEBUG: 통계 처리 시스템 초기화 완료
+[2025-06-15T08:22:39.606Z] DEBUG: 브라우저 감지 시스템 초기화 시작
+[2025-06-15T08:22:39.626Z] DEBUG: active-win 모듈 로드 실패, 폴백 모드 사용: {
+  "code": "ERR_DLOPEN_FAILED"
+}
+[2025-06-15T08:22:39.627Z] DEBUG: 브라우저 감지 시스템 초기화 완료
+[2025-06-15T08:22:39.696Z] DEBUG: 워커 초기화 완료: 2025-06-15T08:22:39.577Z
+[2025-06-15T08:22:39.696Z] DEBUG: 대기 중인 작업 0개 처리 시작
+[2025-06-15T08:22:41.540Z] DEBUG: 설정에 따라 자동 모니터링 시작
+[2025-06-15T08:22:41.540Z] DEBUG: 타이핑 추적 시작됨

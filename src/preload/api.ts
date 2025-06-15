@@ -216,6 +216,7 @@ const appAPI = {
   getPath: (name: string) => ipcRenderer.invoke('app:getPath', name),
   quit: () => ipcRenderer.invoke('app:quit'),
   relaunch: () => ipcRenderer.invoke('app:relaunch'),
+  restart: () => ipcRenderer.invoke(CHANNELS.APP_RESTART),
   isPackaged: () => ipcRenderer.invoke('app:isPackaged'),
   getLocale: () => ipcRenderer.invoke('app:getLocale'),
   focus: () => ipcRenderer.invoke('app:focus'),

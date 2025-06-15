@@ -70,25 +70,13 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
   const [showRestartDialog, setShowRestartDialog] = useState(false);
   const [activePerformanceTab, setActivePerformanceTab] = useState<PerformanceTab>('settings');
   const [restartReason, setRestartReason] = useState('');
-  const [localSettings, setLocalSettings] = useState<SettingsState>(settings);
   const [activeCategory, setActiveCategory] = useState<SettingCategory>('general');
+  const [isGPUOnlyChange, setIsGPUOnlyChange] = useState(false);
   
   // 슬라이드 애니메이션 관련 상태
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [nextCategory, setNextCategory] = useState<SettingCategory | null>(null);
   const [animationDirection, setAnimationDirection] = useState<'left' | 'right'>('right');
-
-  // 설정이 변경될 때 로컬 상태 업데이트
-  useEffect(() => {
-    setLocalSettings(settings);
-  }, [settings]);
-
-  // 초기 설정이 제공된 경우 업데이트
-  useEffect(() => {
-    if (initialSettings) {
-      setLocalSettings(initialSettings);
-    }
-  }, [initialSettings]);
 
   // 통합 설정 업데이트 및 저장 헬퍼 함수
   const updateSettingAndSave = async <K extends keyof SettingsState>(
@@ -97,26 +85,31 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
   ) => {
     console.log(`⚙️ Settings: ${key} 설정 변경:`, value);
     
-    // 로컬 상태 업데이트
-    setLocalSettings((prev: SettingsState) => ({ ...prev, [key]: value }));
+    // GPU 가속화가 아닌 다른 설정 변경 시 GPU 전용 변경 플래그 리셋
+    if (key !== 'enableGPUAcceleration' && key !== 'gpuAccelerationLevel') {
+      setIsGPUOnlyChange(false);
+    }
     
     try {
-      // 백엔드에 저장
-      const updatedSettings = { ...localSettings, [key]: value };
-      await saveSettings(updatedSettings);
-      console.log(`✅ Settings: ${key} 설정 저장 완료`);
+      // useSettings의 saveSettings를 직접 호출하여 백엔드 저장 + 전역 상태 업데이트
+      await saveSettings({ [key]: value } as Partial<SettingsState>);
+      console.log(`✅ Settings: ${key} 설정 저장 및 상태 동기화 완료`);
     } catch (error) {
       console.error(`❌ Settings: ${key} 설정 저장 실패:`, error);
-      // 오류 발생 시 설정 롤백
-      setLocalSettings((prev: SettingsState) => ({ ...prev, [key]: localSettings[key] }));
     }
   };
 
-  // 카테고리 전환 핸들러 - 순수 슬라이드 애니메이션
+  // 카테고리 전환 핸들러 - 애니메이션 설정에 따라 동작
   const handleCategoryChange = (newCategory: SettingCategory) => {
     if (newCategory === activeCategory || isTransitioning) return;
     
-    // 애니메이션 방향 결정 (카테고리 순서 기반)
+    // 애니메이션이 비활성화된 경우 즉시 전환
+    if (!settings.enableAnimations) {
+      setActiveCategory(newCategory);
+      return;
+    }
+    
+    // 애니메이션이 활성화된 경우 슬라이드 애니메이션 적용
     const currentIndex = settingCategories.findIndex(cat => cat.id === activeCategory);
     const newIndex = settingCategories.findIndex(cat => cat.id === newCategory);
     const direction = newIndex > currentIndex ? 'right' : 'left';
@@ -135,7 +128,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
 
   // GPU 가속 토글 핸들러 - 사용자 확인 추가
   const handleGPUAccelerationToggle = async () => {
-    const newValue = !localSettings.enableGPUAcceleration;
+    const newValue = !settings.enableGPUAcceleration;
     
     // 사용자 확인 다이얼로그
     const actionText = newValue ? '활성화' : '비활성화';
@@ -148,6 +141,9 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
     if (!userConfirmed) {
       return; // 사용자가 취소한 경우 아무것도 하지 않음
     }
+    
+    // GPU 전용 변경임을 표시
+    setIsGPUOnlyChange(true);
     
     // 설정 저장
     await updateSettingAndSave('enableGPUAcceleration', newValue);
@@ -169,11 +165,13 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
       console.error('GPU 가속 설정 실패:', error);
       // 오류 발생 시 설정 롤백
       await updateSettingAndSave('enableGPUAcceleration', !newValue);
+      // GPU 전용 변경 플래그도 리셋
+      setIsGPUOnlyChange(false);
     }
   };
 
   const handleProcessingModeChange = async (mode: SettingsState['processingMode']) => {
-    const currentMode = localSettings.processingMode;
+    const currentMode = settings.processingMode;
     
     // 같은 모드를 선택한 경우 아무것도 하지 않음
     if (currentMode === mode) {
@@ -225,7 +223,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
   };
 
   const handleMemoryOptimization = async () => {
-    const newValue = !localSettings.enableMemoryOptimization;
+    const newValue = !settings.enableMemoryOptimization;
     
     // 설정 저장
     await updateSettingAndSave('enableMemoryOptimization', newValue);
@@ -259,7 +257,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
         
         try {
           // 백엔드에 설정 저장 요청
-          const result = await (window as any).electronAPI.settings.updateMultiple(localSettings);
+          const result = await (window as any).electronAPI.settings.updateMultiple(settings);
           console.log('📡 Settings: 백엔드 응답:', result);
           
           if (result === true || (result && result.success !== false)) {
@@ -270,7 +268,25 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
             setTimeout(() => setShowSaveConfirm(false), 3000);
             
             // 부모 컴포넌트에 저장 완료 알림
-            onSave?.(localSettings);
+            onSave?.(settings);
+
+            // GPU 가속화 설정만 변경된 경우가 아니라면 앱 새로고침
+            if (!isGPUOnlyChange) {
+              console.log('🔄 Settings: GPU 가속화 외 설정 변경으로 인한 앱 새로고침');
+              setTimeout(() => {
+                if (typeof window !== 'undefined' && (window as any).electronAPI?.app?.restart) {
+                  // Electron 환경에서는 앱 재시작
+                  (window as any).electronAPI.app.restart();
+                } else {
+                  // 웹 환경에서는 페이지 새로고침
+                  window.location.reload();
+                }
+              }, 1000); // 저장 완료 메시지를 보여준 후 새로고침
+            } else {
+              console.log('🎯 Settings: GPU 가속화만 변경됨 - 새로고침 건너뜀');
+              // GPU 전용 변경 플래그 리셋
+              setIsGPUOnlyChange(false);
+            }
           } else {
             throw new Error('백엔드 저장 실패: ' + (result?.error || '알 수 없는 오류'));
           }
@@ -282,14 +298,26 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
         console.log('🌐 Settings: 웹 환경에서 localStorage 저장');
         
         // 웹 환경에서는 localStorage 사용
-        localStorage.setItem('loop-settings', JSON.stringify(localSettings));
+        localStorage.setItem('loop-settings', JSON.stringify(settings));
         
         // 저장 성공 메시지 표시
         setShowSaveConfirm(true);
         setTimeout(() => setShowSaveConfirm(false), 3000);
         
         // 부모 컴포넌트에 저장 완료 알림
-        onSave?.(localSettings);
+        onSave?.(settings);
+
+        // GPU 가속화 설정만 변경된 경우가 아니라면 페이지 새로고침
+        if (!isGPUOnlyChange) {
+          console.log('🔄 Settings: GPU 가속화 외 설정 변경으로 인한 페이지 새로고침');
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000); // 저장 완료 메시지를 보여준 후 새로고침
+        } else {
+          console.log('🎯 Settings: GPU 가속화만 변경됨 - 새로고침 건너뜀');
+          // GPU 전용 변경 플래그 리셋
+          setIsGPUOnlyChange(false);
+        }
       }
       
     } catch (error) {
@@ -304,7 +332,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
   const handleReset = async () => {
     try {
       await resetSettings();
-      setLocalSettings(settings);
+      // settings는 useSettings 훅에서 관리되므로 별도 상태 업데이트 불필요
       setNeedsRestart(false);
     } catch (error) {
       console.error('설정 초기화 실패:', error);
@@ -315,7 +343,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
     console.log('⚙️ Settings: 다크모드 토글 버튼 클릭');
     
     // 현재 다크모드 상태의 반대값으로 설정
-    const newDarkMode = !localSettings.darkMode;
+    const newDarkMode = !settings.darkMode;
     
     // 백엔드에 저장
     await updateSettingAndSave('darkMode', newDarkMode);
@@ -378,8 +406,8 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                       <button
                         key={mode.value}
                         onClick={() => handleWindowModeChange(mode.value as WindowModeType)}
-                        className={`w-full flex items-center space-x-3 px-4 py-3 border transition-colors settings-action-button ${
-                          localSettings.windowMode === mode.value
+                        className={`w-full flex items-center space-x-3 px-4 py-3 border ${settings.enableAnimations ? 'transition-colors' : ''} settings-action-button ${
+                          settings.windowMode === mode.value
                             ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300'
                             : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                         }`}
@@ -398,10 +426,10 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                   </div>
                   <div className="toggle-container">
                     <button
-                      onClick={() => updateSettingAndSave('enableAnimations', !localSettings.enableAnimations)}
-                      className={`toggle-switch ${localSettings.enableAnimations ? 'active' : ''}`}
+                      onClick={() => updateSettingAndSave('enableAnimations', !settings.enableAnimations)}
+                      className={`toggle-switch ${settings.enableAnimations ? 'active' : ''}`}
                       role="switch"
-                      aria-checked={localSettings.enableAnimations}
+                      aria-checked={settings.enableAnimations}
                       aria-label="애니메이션 효과 토글"
                     >
                       <div className="toggle-thumb" />
@@ -419,10 +447,10 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                   </div>
                   <div className="toggle-container">
                     <button
-                      onClick={() => updateSettingAndSave('enableNotifications', !localSettings.enableNotifications)}
-                      className={`toggle-switch ${localSettings.enableNotifications ? 'active' : ''}`}
+                      onClick={() => updateSettingAndSave('enableNotifications', !settings.enableNotifications)}
+                      className={`toggle-switch ${settings.enableNotifications ? 'active' : ''}`}
                       role="switch"
-                      aria-checked={localSettings.enableNotifications}
+                      aria-checked={settings.enableNotifications}
                       aria-label="알림 활성화 토글"
                     >
                       <div className="toggle-thumb" />
@@ -445,7 +473,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
               
               <div className="space-y-4">
                 {/* 분석 카테고리 토글들 */}
-                {Object.entries(localSettings.enabledCategories).map(([category, enabled]) => (
+                {Object.entries(settings.enabledCategories).map(([category, enabled]) => (
                   <div key={category} className="settings-row">
                     <div className="settings-label">
                       <span>
@@ -462,7 +490,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                     <div className="toggle-container">
                       <button
                         onClick={() => updateSettingAndSave('enabledCategories', {
-                          ...localSettings.enabledCategories,
+                          ...settings.enabledCategories,
                           [category]: !enabled
                         })}
                         className={`toggle-switch ${enabled ? 'active' : ''}`}
@@ -483,10 +511,10 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                   </div>
                   <div className="toggle-container">
                     <button
-                      onClick={() => updateSettingAndSave('enableRealTimeStats', !localSettings.enableRealTimeStats)}
-                      className={`toggle-switch ${localSettings.enableRealTimeStats ? 'active' : ''}`}
+                      onClick={() => updateSettingAndSave('enableRealTimeStats', !settings.enableRealTimeStats)}
+                      className={`toggle-switch ${settings.enableRealTimeStats ? 'active' : ''}`}
                       role="switch"
-                      aria-checked={localSettings.enableRealTimeStats}
+                      aria-checked={settings.enableRealTimeStats}
                       aria-label="실시간 통계 토글"
                     >
                       <div className="toggle-thumb" />
@@ -515,10 +543,10 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                   </div>
                   <div className="toggle-container">
                     <button
-                      onClick={() => updateSettingAndSave('enableTypingAnalysis', !localSettings.enableTypingAnalysis)}
-                      className={`toggle-switch ${localSettings.enableTypingAnalysis ? 'active' : ''}`}
+                      onClick={() => updateSettingAndSave('enableTypingAnalysis', !settings.enableTypingAnalysis)}
+                      className={`toggle-switch ${settings.enableTypingAnalysis ? 'active' : ''}`}
                       role="switch"
-                      aria-checked={localSettings.enableTypingAnalysis}
+                      aria-checked={settings.enableTypingAnalysis}
                       aria-label="타이핑 분석 활성화 토글"
                     >
                       <div className="toggle-thumb" />
@@ -533,10 +561,10 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                   </div>
                   <div className="toggle-container">
                     <button
-                      onClick={() => updateSettingAndSave('enableRealTimeAnalysis', !localSettings.enableRealTimeAnalysis)}
-                      className={`toggle-switch ${localSettings.enableRealTimeAnalysis ? 'active' : ''}`}
+                      onClick={() => updateSettingAndSave('enableRealTimeAnalysis', !settings.enableRealTimeAnalysis)}
+                      className={`toggle-switch ${settings.enableRealTimeAnalysis ? 'active' : ''}`}
                       role="switch"
-                      aria-checked={localSettings.enableRealTimeAnalysis}
+                      aria-checked={settings.enableRealTimeAnalysis}
                       aria-label="실시간 분석 토글"
                     >
                       <div className="toggle-thumb" />
@@ -547,15 +575,19 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                 {/* 통계 수집 주기 */}
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    통계 수집 주기: {localSettings.statsCollectionInterval}초
+                    통계 수집 주기: {settings.statsCollectionInterval}초
                   </label>
                   <input
                     type="range"
                     min="1"
                     max="60"
                     step="1"
-                    value={localSettings.statsCollectionInterval}
-                    onChange={(e) => setLocalSettings((prev: SettingsState) => ({ ...prev, statsCollectionInterval: parseInt(e.target.value) }))}
+                    value={settings.statsCollectionInterval}
+                    onChange={(e) => {
+                      // 슬라이더 이동 중에는 시각적 업데이트만, 실제 저장은 onMouseUp에서
+                      const newValue = parseInt(e.target.value);
+                      // 임시로 DOM 값을 업데이트 (시각적 피드백)
+                    }}
                     onMouseUp={(e) => updateSettingAndSave('statsCollectionInterval', parseInt((e.target as HTMLInputElement).value))}
                     className="w-full"
                   />
@@ -568,10 +600,10 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                   </div>
                   <div className="toggle-container">
                     <button
-                      onClick={() => updateSettingAndSave('enableKeyboardDetection', !localSettings.enableKeyboardDetection)}
-                      className={`toggle-switch ${localSettings.enableKeyboardDetection ? 'active' : ''}`}
+                      onClick={() => updateSettingAndSave('enableKeyboardDetection', !settings.enableKeyboardDetection)}
+                      className={`toggle-switch ${settings.enableKeyboardDetection ? 'active' : ''}`}
                       role="switch"
-                      aria-checked={localSettings.enableKeyboardDetection}
+                      aria-checked={settings.enableKeyboardDetection}
                       aria-label="키보드 레이아웃 자동 감지 토글"
                     >
                       <div className="toggle-thumb" />
@@ -586,10 +618,10 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                   </div>
                   <div className="toggle-container">
                     <button
-                      onClick={() => updateSettingAndSave('enablePatternLearning', !localSettings.enablePatternLearning)}
-                      className={`toggle-switch ${localSettings.enablePatternLearning ? 'active' : ''}`}
+                      onClick={() => updateSettingAndSave('enablePatternLearning', !settings.enablePatternLearning)}
+                      className={`toggle-switch ${settings.enablePatternLearning ? 'active' : ''}`}
                       role="switch"
-                      aria-checked={localSettings.enablePatternLearning}
+                      aria-checked={settings.enablePatternLearning}
                       aria-label="타이핑 패턴 학습 토글"
                     >
                       <div className="toggle-thumb" />
@@ -620,7 +652,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                     <button
                       key={tab.id}
                       onClick={() => setActivePerformanceTab(tab.id)}
-                      className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium rounded-t-lg transition-colors ${
+                      className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium rounded-t-lg ${settings.enableAnimations ? 'transition-colors' : ''} ${
                         activePerformanceTab === tab.id
                           ? 'bg-blue-50 dark:bg-blue-900/20 border-b-2 border-blue-500 text-blue-700 dark:text-blue-300'
                           : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
@@ -666,10 +698,10 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                   </div>
                   <div className="toggle-container">
                     <button
-                      onClick={() => updateSettingAndSave('enableDataCollection', !localSettings.enableDataCollection)}
-                      className={`toggle-switch ${localSettings.enableDataCollection ? 'active' : ''}`}
+                      onClick={() => updateSettingAndSave('enableDataCollection', !settings.enableDataCollection)}
+                      className={`toggle-switch ${settings.enableDataCollection ? 'active' : ''}`}
                       role="switch"
-                      aria-checked={localSettings.enableDataCollection}
+                      aria-checked={settings.enableDataCollection}
                       aria-label="데이터 수집 허용 토글"
                     >
                       <div className="toggle-thumb" />
@@ -689,10 +721,10 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                   </div>
                   <div className="toggle-container">
                     <button
-                      onClick={() => updateSettingAndSave('enableAutoSave', !localSettings.enableAutoSave)}
-                      className={`toggle-switch ${localSettings.enableAutoSave ? 'active' : ''}`}
+                      onClick={() => updateSettingAndSave('enableAutoSave', !settings.enableAutoSave)}
+                      className={`toggle-switch ${settings.enableAutoSave ? 'active' : ''}`}
                       role="switch"
-                      aria-checked={localSettings.enableAutoSave}
+                      aria-checked={settings.enableAutoSave}
                       aria-label="자동 저장 토글"
                     >
                       <div className="toggle-thumb" />
@@ -703,15 +735,17 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                 {/* 데이터 보관 기간 */}
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    데이터 보관 기간: {localSettings.dataRetentionDays}일
+                    데이터 보관 기간: {settings.dataRetentionDays}일
                   </label>
                   <input
                     type="range"
                     min="7"
                     max="365"
                     step="7"
-                    value={localSettings.dataRetentionDays}
-                    onChange={(e) => setLocalSettings((prev: SettingsState) => ({ ...prev, dataRetentionDays: parseInt(e.target.value) }))}
+                    value={settings.dataRetentionDays}
+                    onChange={(e) => {
+                      // 슬라이더 이동 중에는 시각적 업데이트만, 실제 저장은 onMouseUp에서
+                    }}
                     onMouseUp={(e) => updateSettingAndSave('dataRetentionDays', parseInt((e.target as HTMLInputElement).value))}
                     className="w-full"
                   />
@@ -729,7 +763,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                         // 데이터 내보내기 로직 (향후 구현)
                         console.log('데이터 내보내기 요청');
                       }}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                      className={`w-full flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 ${settings.enableAnimations ? 'transition-colors' : ''}`}
                     >
                       <Database className="h-4 w-4" />
                       데이터 내보내기
@@ -745,7 +779,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                           console.log('데이터 삭제 요청');
                         }
                       }}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                      className={`w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 ${settings.enableAnimations ? 'transition-colors' : ''}`}
                     >
                       <Shield className="h-4 w-4" />
                       모든 데이터 삭제
@@ -784,9 +818,9 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
           <div className="toggle-container">
             <button
               onClick={handleGPUAccelerationToggle}
-              className={`toggle-switch ${localSettings.enableGPUAcceleration ? 'active' : ''}`}
+              className={`toggle-switch ${settings.enableGPUAcceleration ? 'active' : ''}`}
               role="switch"
-              aria-checked={localSettings.enableGPUAcceleration}
+              aria-checked={settings.enableGPUAcceleration}
               aria-label="GPU 가속 토글"
             >
               <div className="toggle-thumb" />
@@ -802,9 +836,9 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
           <div className="toggle-container">
             <button
               onClick={handleMemoryOptimization}
-              className={`toggle-switch ${localSettings.enableMemoryOptimization ? 'active' : ''}`}
+              className={`toggle-switch ${settings.enableMemoryOptimization ? 'active' : ''}`}
               role="switch"
-              aria-checked={localSettings.enableMemoryOptimization}
+              aria-checked={settings.enableMemoryOptimization}
               aria-label="메모리 최적화 토글"
             >
               <div className="toggle-thumb" />
@@ -826,8 +860,8 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
               <button
                 key={mode.value}
                 onClick={() => handleProcessingModeChange(mode.value as SettingsState['processingMode'])}
-                className={`w-full flex flex-col items-start space-y-1 px-4 py-3 rounded-lg border transition-colors ${
-                  localSettings.processingMode === mode.value
+                className={`w-full flex flex-col items-start space-y-1 px-4 py-3 rounded-lg border ${settings.enableAnimations ? 'transition-colors' : ''} ${
+                  settings.processingMode === mode.value
                     ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300'
                     : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                 }`}
@@ -842,15 +876,17 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
         {/* 메모리 임계값 */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            메모리 임계값: {localSettings.maxMemoryThreshold}MB
+            메모리 임계값: {settings.maxMemoryThreshold}MB
           </label>
           <input
             type="range"
             min="50"
             max="500"
             step="10"
-            value={localSettings.maxMemoryThreshold}
-            onChange={(e) => setLocalSettings((prev: SettingsState) => ({ ...prev, maxMemoryThreshold: parseInt(e.target.value) }))}
+            value={settings.maxMemoryThreshold}
+            onChange={(e) => {
+              // 슬라이더 이동 중에는 시각적 업데이트만, 실제 저장은 onMouseUp에서
+            }}
             onMouseUp={(e) => updateSettingAndSave('maxMemoryThreshold', parseInt((e.target as HTMLInputElement).value))}
             className="w-full"
           />
@@ -917,7 +953,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
               <li key={category.id}>
                 <button
                   onClick={() => handleCategoryChange(category.id)}
-                  className={`w-full flex items-center gap-3 px-3 py-2 transition-all duration-200 settings-action-button ${
+                  className={`w-full flex items-center gap-3 px-3 py-2 ${settings.enableAnimations ? 'transition-all duration-200' : ''} settings-action-button ${
                     activeCategory === category.id
                       ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 active'
                       : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
@@ -935,7 +971,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
         <div className="p-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
           <button
             onClick={handleSave}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 transition-all duration-200 hover:translate-x-0.5 focus:outline-none focus:ring-0"
+            className={`w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 ${settings.enableAnimations ? 'transition-all duration-200 hover:translate-x-0.5' : ''} focus:outline-none focus:ring-0`}
           >
             <Save className="h-4 w-4" />
             저장
@@ -943,7 +979,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
           
           <button
             onClick={handleReset}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-400 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 hover:translate-x-0.5 focus:outline-none focus:ring-0"
+            className={`w-full flex items-center justify-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-400 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 ${settings.enableAnimations ? 'transition-all duration-200 hover:translate-x-0.5' : ''} focus:outline-none focus:ring-0`}
           >
             <RotateCcw className="h-4 w-4" />
             초기화
@@ -956,7 +992,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
         {/* 현재 활성 카테고리 */}
         <div 
           className={`settings-content-page active ${
-            isTransitioning 
+            isTransitioning && settings.enableAnimations
               ? (animationDirection === 'right' ? 'settings-slide-out-left' : 'settings-slide-out-right')
               : ''
           }`}
@@ -971,7 +1007,9 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
         {isTransitioning && nextCategory && (
           <div 
             className={`settings-content-page ${
-              animationDirection === 'right' ? 'settings-slide-in-right' : 'settings-slide-in-left'
+              settings.enableAnimations
+                ? (animationDirection === 'right' ? 'settings-slide-in-right' : 'settings-slide-in-left')
+                : ''
             }`}
             style={{ position: 'absolute' }}
           >

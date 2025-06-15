@@ -14,6 +14,32 @@
   }
 }
 
+/* 애니메이션 비활성화 규칙 */
+.no-animations *,
+.no-animations *::before,
+.no-animations *::after {
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
+}
+
+/* 애니메이션 활성화 시에만 적용되는 CSS 변수 기반 제어 */
+:root {
+  --animation-duration: 0.3s;
+  --transition-duration: 0.2s;
+}
+
+.animations-enabled {
+  --animation-duration: 0.3s;
+  --transition-duration: 0.2s;
+}
+
+.no-animations {
+  --animation-duration: 0s;
+  --transition-duration: 0s;
+}
+
 /* 기본 애니메이션 */
 @keyframes fadeIn {
   from {
@@ -337,19 +363,19 @@
 
 /* 설정 페이지 애니메이션 클래스 */
 .settings-slide-in-right {
-  animation: settingsSlideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: settingsSlideInRight var(--animation-duration, 0.3s) cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .settings-slide-out-left {
-  animation: settingsSlideOutLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: settingsSlideOutLeft var(--animation-duration, 0.3s) cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .settings-slide-in-left {
-  animation: settingsSlideInLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: settingsSlideInLeft var(--animation-duration, 0.3s) cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .settings-slide-out-right {
-  animation: settingsSlideOutRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: settingsSlideOutRight var(--animation-duration, 0.3s) cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 /* 설정 콘텐츠 컨테이너 */

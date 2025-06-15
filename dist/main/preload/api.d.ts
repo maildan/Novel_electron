@@ -112,6 +112,7 @@ export declare const electronAPI: {
         getPath: (name: string) => Promise<any>;
         quit: () => Promise<any>;
         relaunch: () => Promise<any>;
+        restart: () => Promise<any>;
         isPackaged: () => Promise<any>;
         getLocale: () => Promise<any>;
         focus: () => Promise<any>;
