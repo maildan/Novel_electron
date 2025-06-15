@@ -4,6 +4,7 @@ const electron_1 = require("electron");
 const config_1 = require("./config");
 const window_1 = require("./window");
 const keyboard_1 = require("./keyboard");
+const ipc_handlers_1 = require("./ipc-handlers");
 class ElectronApp {
     constructor() {
         this.windowManager = window_1.WindowManager.getInstance();
@@ -96,10 +97,13 @@ class ElectronApp {
     async onReady() {
         console.log('[App] Electron 앱 준비 완료');
         try {
-            // 1. 키보드 매니저 초기화
+            // 1. IPC 핸들러 등록 (설정 관리자 포함)
+            console.log('[App] IPC 핸들러 등록 중...');
+            await ipc_handlers_1.ipcHandlers.register();
+            // 2. 키보드 매니저 초기화
             console.log('[App] 키보드 매니저 초기화 중...');
             await this.keyboardManager.initialize();
-            // 2. 메인 윈도우 생성
+            // 3. 메인 윈도우 생성
             console.log('[App] 메인 윈도우 생성 중...');
             await this.windowManager.createMainWindow();
             console.log('[App] 애플리케이션 초기화 완료');

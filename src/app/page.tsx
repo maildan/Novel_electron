@@ -103,13 +103,8 @@ export default function HomePage() {
                     <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                       Loop
                     </h1>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">AI 타이핑 분석 플랫폼</p>
                   </div>
                 </div>
-                <p className="text-lg text-gray-700 dark:text-gray-300 mb-6 max-w-2xl">
-                  실시간 타이핑 분석, GPU 가속, 메모리 최적화를 지원하는 고성능 데스크톱 애플리케이션으로 
-                  당신의 타이핑 실력을 향상시켜보세요.
-                </p>
                 
                 {/* Quick Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
@@ -158,20 +153,9 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-
-
             
             {/* Typing Practice Section */}
             <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
-                  <Target className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">타이핑 연습</h2>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">지금 바로 타이핑 실력을 테스트해보세요</p>
-                </div>
-              </div>
               <TypingBox onComplete={handleTypingComplete} />
             </div>
             
@@ -179,15 +163,7 @@ export default function HomePage() {
             {logs.length > 0 && (
               <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center">
-                      <Clock className="h-5 w-5 text-white" />
-                    </div>
-                    <div>
-                      <h2 className="text-xl font-semibold text-gray-900 dark:text-white">최근 기록</h2>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">최근 5개의 타이핑 기록</p>
-                    </div>
-                  </div>
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">최근 기록</h2>
                   <button 
                     onClick={() => setActiveTab('stats')}
                     className="px-4 py-2 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg text-sm font-medium transition-colors"
@@ -238,11 +214,8 @@ export default function HomePage() {
                   <Target className="h-10 w-10 text-gray-500 dark:text-gray-400" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                  첫 번째 타이핑을 시작해보세요!
+                  타이핑을 시작해보세요!
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-                  위의 타이핑 연습 섹션에서 텍스트를 입력하여 타이핑 능력을 향상시켜보세요.
-                </p>
               </div>
             )}
           </div>

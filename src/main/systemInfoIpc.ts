@@ -204,7 +204,7 @@ function getLoopProcesses(allProcesses: ProcessInfo[]): ProcessInfo[] {
  */
 export function registerSystemInfoIpcHandlers(): void {
   // 전체 시스템 정보 가져오기
-  ipcMain.handle('system:getInfo', async () => {
+  ipcMain.handle('systemGetInfo', async () => {
     try {
       const systemInfo = await getSystemInfo();
       return {
@@ -221,7 +221,7 @@ export function registerSystemInfoIpcHandlers(): void {
   });
 
   // CPU 정보만 가져오기
-  ipcMain.handle('system:getCpuInfo', async () => {
+  ipcMain.handle('systemGetCpuInfo', async () => {
     try {
       const cpus = os.cpus();
       const usage = await calculateCPUUsage();
@@ -248,7 +248,7 @@ export function registerSystemInfoIpcHandlers(): void {
   });
 
   // 프로세스 정보 가져오기
-  ipcMain.handle('system:getProcesses', async () => {
+  ipcMain.handle('systemGetProcesses', async () => {
     try {
       const processes = await getProcessInfo();
       return {
@@ -265,7 +265,7 @@ export function registerSystemInfoIpcHandlers(): void {
   });
 
   // Loop 프로세스만 가져오기
-  ipcMain.handle('system:getLoopProcesses', async () => {
+  ipcMain.handle('systemGetLoopProcesses', async () => {
     try {
       const allProcesses = await getProcessInfo();
       const loopProcesses = getLoopProcesses(allProcesses);

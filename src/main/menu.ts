@@ -536,7 +536,7 @@ function createNewWindow(): void {
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
-        preload: path.join(__dirname, '../preload/preload.js')
+        preload: path.join(__dirname, 'preload.js')
       }
     });
 

@@ -52,12 +52,6 @@ interface ElectronAPI {
   // IPC 호출을 위한 invoke 메서드
   invoke: (channel: string, ...args: any[]) => Promise<any>;
   
-  settings: {
-    get: (key: string) => Promise<any>;
-    set: (key: string, value: any) => Promise<void>;
-    getAll: () => Promise<Record<string, any>>;
-    reset: () => Promise<void>;
-  };
   system: {
     getInfo: () => Promise<any>;
     getCurrentMetrics: () => Promise<any>;
@@ -78,6 +72,19 @@ interface ElectronAPI {
     minimize: () => void;
     toggleMaximize: () => void;
     close: () => void;
+  };
+  settings: {
+    get: () => Promise<any>;
+    getSetting: (key: string) => Promise<any>;
+    update: (key: string, value: any) => Promise<any>;
+    updateMultiple: (settings: Record<string, any>) => Promise<any>;
+    reset: () => Promise<any>;
+    export: (filePath: string) => Promise<any>;
+    import: (filePath: string) => Promise<any>;
+    validate: (settings: Record<string, any>) => Promise<any>;
+    createBackup: () => Promise<any>;
+    getHistory: () => Promise<any>;
+    clearHistory: () => Promise<any>;
   };
   config: {
     getAll: () => Promise<any>;

@@ -32,14 +32,15 @@ export function AppHeader({ activeTab, onTabChange, isRefreshing, onRefresh }: A
   ];
 
   return (
-    <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+    <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 relative overflow-visible">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 w-full">
+        <div className="flex items-center justify-between h-16 w-full overflow-visible">
           {/* 로고 - appIcon.webp로 교체하고 홈 링크 추가 */}
           <div className="flex items-center">
             <Link 
               href="/" 
-              className="flex items-center hover:opacity-80 transition-opacity duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg"
+              onClick={() => onTabChange('home')}
+              className="flex items-center hover:opacity-80 transition-opacity duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg p-1"
               aria-label="Loop 6 홈으로 이동"
             >
               <img 
@@ -47,9 +48,6 @@ export function AppHeader({ activeTab, onTabChange, isRefreshing, onRefresh }: A
                 alt="Loop 6" 
                 className="h-8 w-8 object-contain"
               />
-              <span className="ml-2 text-lg font-semibold text-gray-900 dark:text-white">
-                Loop 6
-              </span>
             </Link>
           </div>
 
@@ -76,10 +74,10 @@ export function AppHeader({ activeTab, onTabChange, isRefreshing, onRefresh }: A
               ))}
             </nav>
 
-            {/* 컨트롤 버튼들 - 알림만 유지 */}
-            <div className="flex items-center">
+            {/* 컨트롤 버튼들 - 알림 버튼 배지 잘림 방지를 위한 충분한 여백과 overflow visible */}
+            <div className="flex items-center pr-4 overflow-visible relative" style={{ minHeight: '64px' }}>
               {/* 알림 드롭다운 - 배지 잘림 방지를 위한 여백 추가 */}
-              <div className="relative">
+              <div className="relative overflow-visible" style={{ padding: '16px 8px' }}>
                 <NotificationDropdown />
               </div>
             </div>

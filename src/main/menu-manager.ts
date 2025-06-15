@@ -625,7 +625,7 @@ export class MenuManager {
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
-        preload: path.join(app.getAppPath(), 'preload.js')
+        preload: path.join(app.getAppPath(), 'dist', 'main', 'main', 'preload.js')
       }
     });
 

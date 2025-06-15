@@ -2,6 +2,7 @@ import { app, BrowserWindow } from 'electron';
 import { AppConfig } from './config';
 import { WindowManager } from './window';
 import { KeyboardManager } from './keyboard';
+import { ipcHandlers } from './ipc-handlers';
 
 class ElectronApp {
   private windowManager: WindowManager;
@@ -116,11 +117,15 @@ class ElectronApp {
     console.log('[App] Electron 앱 준비 완료');
     
     try {
-      // 1. 키보드 매니저 초기화
+      // 1. IPC 핸들러 등록 (설정 관리자 포함)
+      console.log('[App] IPC 핸들러 등록 중...');
+      await ipcHandlers.register();
+      
+      // 2. 키보드 매니저 초기화
       console.log('[App] 키보드 매니저 초기화 중...');
       await this.keyboardManager.initialize();
       
-      // 2. 메인 윈도우 생성
+      // 3. 메인 윈도우 생성
       console.log('[App] 메인 윈도우 생성 중...');
       await this.windowManager.createMainWindow();
       

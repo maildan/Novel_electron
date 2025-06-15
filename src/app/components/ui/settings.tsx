@@ -127,7 +127,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
       return; // 사용자가 취소한 경우 아무것도 하지 않음
     }
     
-    setLocalSettings(prev => ({ ...prev, enableGPUAcceleration: newValue }));
+    setLocalSettings((prev: SettingsState) => ({ ...prev, enableGPUAcceleration: newValue }));
     
     // GPU 설정 변경 시 IPC 호출 및 재시작 권장
     try {
@@ -145,7 +145,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
     } catch (error) {
       console.error('GPU 가속 설정 실패:', error);
       // 오류 발생 시 설정 롤백
-      setLocalSettings(prev => ({ ...prev, enableGPUAcceleration: !newValue }));
+      setLocalSettings((prev: SettingsState) => ({ ...prev, enableGPUAcceleration: !newValue }));
     }
   };
 
@@ -210,7 +210,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
 
   const handleMemoryOptimization = async () => {
     const newValue = !localSettings.enableMemoryOptimization;
-    setLocalSettings(prev => ({ ...prev, enableMemoryOptimization: newValue }));
+    setLocalSettings((prev: SettingsState) => ({ ...prev, enableMemoryOptimization: newValue }));
     
     // 메모리 최적화가 활성화되면 실제 최적화 실행
     if (newValue) {
@@ -241,7 +241,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
         
         try {
           // 백엔드에 설정 저장 요청
-          const result = await (window as any).electronAPI.ipcRenderer.invoke('settings:update-multiple', localSettings);
+          const result = await (window as any).electronAPI.settings.updateMultiple(localSettings);
           console.log('📡 Settings: 백엔드 응답:', result);
           
           if (result === true || (result && result.success !== false)) {
@@ -368,7 +368,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                   </div>
                   <div className="toggle-container">
                     <button
-                      onClick={() => setLocalSettings(prev => ({ ...prev, enableAnimations: !prev.enableAnimations }))}
+                      onClick={() => setLocalSettings((prev: SettingsState) => ({ ...prev, enableAnimations: !prev.enableAnimations }))}
                       className={`toggle-switch ${localSettings.enableAnimations ? 'active' : ''}`}
                       role="switch"
                       aria-checked={localSettings.enableAnimations}
@@ -389,7 +389,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                   </div>
                   <div className="toggle-container">
                     <button
-                      onClick={() => setLocalSettings(prev => ({ ...prev, enableNotifications: !prev.enableNotifications }))}
+                      onClick={() => setLocalSettings((prev: SettingsState) => ({ ...prev, enableNotifications: !prev.enableNotifications }))}
                       className={`toggle-switch ${localSettings.enableNotifications ? 'active' : ''}`}
                       role="switch"
                       aria-checked={localSettings.enableNotifications}
@@ -418,11 +418,20 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                 {Object.entries(localSettings.enabledCategories).map(([category, enabled]) => (
                   <div key={category} className="settings-row">
                     <div className="settings-label">
-                      <span className="capitalize">{category}</span>
+                      <span>
+                        {category === 'docs' && '문서'}
+                        {category === 'office' && '오피스'}
+                        {category === 'coding' && '코딩'}
+                        {category === 'sns' && 'SNS'}
+                        {category === 'browser' && '브라우저'}
+                        {category === 'game' && '게임'}
+                        {category === 'media' && '미디어'}
+                        {category === 'other' && '기타'}
+                      </span>
                     </div>
                     <div className="toggle-container">
                       <button
-                        onClick={() => setLocalSettings(prev => ({
+                        onClick={() => setLocalSettings((prev: SettingsState) => ({
                           ...prev,
                           enabledCategories: {
                             ...prev.enabledCategories,
@@ -431,7 +440,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                         }))}
                         className={`toggle-switch ${enabled ? 'active' : ''}`}
                         role="switch"
-                        aria-checked={enabled}
+                        aria-checked={enabled as boolean}
                         aria-label={`${category} 분석 토글`}
                       >
                         <div className="toggle-thumb" />
@@ -447,7 +456,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                   </div>
                   <div className="toggle-container">
                     <button
-                      onClick={() => setLocalSettings(prev => ({ ...prev, enableRealTimeStats: !prev.enableRealTimeStats }))}
+                      onClick={() => setLocalSettings((prev: SettingsState) => ({ ...prev, enableRealTimeStats: !prev.enableRealTimeStats }))}
                       className={`toggle-switch ${localSettings.enableRealTimeStats ? 'active' : ''}`}
                       role="switch"
                       aria-checked={localSettings.enableRealTimeStats}
@@ -479,7 +488,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                   </div>
                   <div className="toggle-container">
                     <button
-                      onClick={() => setLocalSettings(prev => ({ ...prev, enableTypingAnalysis: !prev.enableTypingAnalysis }))}
+                      onClick={() => setLocalSettings((prev: SettingsState) => ({ ...prev, enableTypingAnalysis: !prev.enableTypingAnalysis }))}
                       className={`toggle-switch ${localSettings.enableTypingAnalysis ? 'active' : ''}`}
                       role="switch"
                       aria-checked={localSettings.enableTypingAnalysis}
@@ -497,7 +506,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                   </div>
                   <div className="toggle-container">
                     <button
-                      onClick={() => setLocalSettings(prev => ({ ...prev, enableRealTimeAnalysis: !prev.enableRealTimeAnalysis }))}
+                      onClick={() => setLocalSettings((prev: SettingsState) => ({ ...prev, enableRealTimeAnalysis: !prev.enableRealTimeAnalysis }))}
                       className={`toggle-switch ${localSettings.enableRealTimeAnalysis ? 'active' : ''}`}
                       role="switch"
                       aria-checked={localSettings.enableRealTimeAnalysis}
@@ -519,7 +528,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                     max="60"
                     step="1"
                     value={localSettings.statsCollectionInterval}
-                    onChange={(e) => setLocalSettings(prev => ({ ...prev, statsCollectionInterval: parseInt(e.target.value) }))}
+                    onChange={(e) => setLocalSettings((prev: SettingsState) => ({ ...prev, statsCollectionInterval: parseInt(e.target.value) }))}
                     className="w-full"
                   />
                 </div>
@@ -531,7 +540,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                   </div>
                   <div className="toggle-container">
                     <button
-                      onClick={() => setLocalSettings(prev => ({ ...prev, enableKeyboardDetection: !prev.enableKeyboardDetection }))}
+                      onClick={() => setLocalSettings((prev: SettingsState) => ({ ...prev, enableKeyboardDetection: !prev.enableKeyboardDetection }))}
                       className={`toggle-switch ${localSettings.enableKeyboardDetection ? 'active' : ''}`}
                       role="switch"
                       aria-checked={localSettings.enableKeyboardDetection}
@@ -549,7 +558,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                   </div>
                   <div className="toggle-container">
                     <button
-                      onClick={() => setLocalSettings(prev => ({ ...prev, enablePatternLearning: !prev.enablePatternLearning }))}
+                      onClick={() => setLocalSettings((prev: SettingsState) => ({ ...prev, enablePatternLearning: !prev.enablePatternLearning }))}
                       className={`toggle-switch ${localSettings.enablePatternLearning ? 'active' : ''}`}
                       role="switch"
                       aria-checked={localSettings.enablePatternLearning}
@@ -629,7 +638,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                   </div>
                   <div className="toggle-container">
                     <button
-                      onClick={() => setLocalSettings(prev => ({ ...prev, enableDataCollection: !prev.enableDataCollection }))}
+                      onClick={() => setLocalSettings((prev: SettingsState) => ({ ...prev, enableDataCollection: !prev.enableDataCollection }))}
                       className={`toggle-switch ${localSettings.enableDataCollection ? 'active' : ''}`}
                       role="switch"
                       aria-checked={localSettings.enableDataCollection}
@@ -652,7 +661,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                   </div>
                   <div className="toggle-container">
                     <button
-                      onClick={() => setLocalSettings(prev => ({ ...prev, enableAutoSave: !prev.enableAutoSave }))}
+                      onClick={() => setLocalSettings((prev: SettingsState) => ({ ...prev, enableAutoSave: !prev.enableAutoSave }))}
                       className={`toggle-switch ${localSettings.enableAutoSave ? 'active' : ''}`}
                       role="switch"
                       aria-checked={localSettings.enableAutoSave}
@@ -674,7 +683,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                     max="365"
                     step="7"
                     value={localSettings.dataRetentionDays}
-                    onChange={(e) => setLocalSettings(prev => ({ ...prev, dataRetentionDays: parseInt(e.target.value) }))}
+                    onChange={(e) => setLocalSettings((prev: SettingsState) => ({ ...prev, dataRetentionDays: parseInt(e.target.value) }))}
                     className="w-full"
                   />
                   <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
@@ -812,7 +821,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
             max="500"
             step="10"
             value={localSettings.maxMemoryThreshold}
-            onChange={(e) => setLocalSettings(prev => ({ ...prev, maxMemoryThreshold: parseInt(e.target.value) }))}
+            onChange={(e) => setLocalSettings((prev: SettingsState) => ({ ...prev, maxMemoryThreshold: parseInt(e.target.value) }))}
             className="w-full"
           />
         </div>

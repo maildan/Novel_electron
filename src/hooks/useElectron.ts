@@ -38,6 +38,17 @@ interface ConfigAPI {
   reset: () => Promise<any>;
 }
 
+interface SettingsAPI {
+  get: (key?: string) => Promise<any>;
+  set: (key: string, value: any) => Promise<any>;
+  getAll: () => Promise<any>;
+  update: (key: string, value: any) => Promise<any>;
+  updateMultiple: (settings: Record<string, any>) => Promise<any>;
+  reset: () => Promise<any>;
+  save: () => Promise<any>;
+  load: () => Promise<any>;
+}
+
 interface ElectronAPI {
   ipcRenderer: {
     on: (channel: string, listener: (event: any, ...args: any[]) => void) => void;
@@ -49,6 +60,7 @@ interface ElectronAPI {
   system: SystemAPI;
   memory: MemoryAPI;
   config: ConfigAPI;
+  settings: SettingsAPI;
 }
 
 interface UseElectronResult {

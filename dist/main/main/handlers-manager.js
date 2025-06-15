@@ -47,8 +47,11 @@ let handlersState = {
  */
 function registerSettingsHandlers() {
     try {
-        // 새로운 설정 IPC 핸들러 등록
+        // 설정 IPC 핸들러 등록 (setProcessingMode 등)
         settingsIpcHandlers_1.default.register();
+        // 설정 관리자 초기화 및 IPC 핸들러 등록
+        const { initializeSettingsManager } = require('./settings-manager');
+        initializeSettingsManager();
         debugLog('설정 관련 핸들러 등록 완료');
         handlersState.registeredHandlers.add('settings');
     }

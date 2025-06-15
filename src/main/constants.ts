@@ -295,6 +295,13 @@ export interface AppSettings {
   enableKeyboardShortcuts: boolean;
   statsFilePath: string;
   
+  // 분석 설정
+  enableTypingAnalysis: boolean;
+  enableRealTimeAnalysis: boolean;
+  statsCollectionInterval: number;
+  enableKeyboardDetection: boolean;
+  enablePatternLearning: boolean;
+  
   // 키보드 설정
   keyboard: {
     autoStart: boolean;
@@ -399,6 +406,13 @@ export const DEFAULT_SETTINGS: AppSettings = {
   enableTypingSound: false,
   enableKeyboardShortcuts: true,
   statsFilePath: 'typing-stats.json',
+  
+  // 분석 설정
+  enableTypingAnalysis: true,
+  enableRealTimeAnalysis: true,
+  statsCollectionInterval: 30,
+  enableKeyboardDetection: true,
+  enablePatternLearning: true,
   
   // 키보드 설정
   keyboard: {

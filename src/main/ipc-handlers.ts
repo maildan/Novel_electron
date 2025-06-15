@@ -5,6 +5,7 @@ import browserDetector from './browser-detector';
 import { autoLaunch } from './auto-launch-manager';
 import { security } from './security-manager';
 import menuManager, { MenuOptions } from './menu-manager';
+import SettingsManager from './settings-manager';
 
 export class IpcHandlers {
   private static instance: IpcHandlers;
@@ -30,6 +31,9 @@ export class IpcHandlers {
     console.log('[IPC] IPC 핸들러 등록 시작');
 
     try {
+      // 설정 관리자 초기화
+      await SettingsManager.initialize();
+
       // 메뉴 관리자 초기화
       await menuManager.initialize();
 

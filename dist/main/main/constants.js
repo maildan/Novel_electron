@@ -174,6 +174,12 @@ exports.DEFAULT_SETTINGS = {
     enableTypingSound: false,
     enableKeyboardShortcuts: true,
     statsFilePath: 'typing-stats.json',
+    // 분석 설정
+    enableTypingAnalysis: true,
+    enableRealTimeAnalysis: true,
+    statsCollectionInterval: 30,
+    enableKeyboardDetection: true,
+    enablePatternLearning: true,
     // 키보드 설정
     keyboard: {
         autoStart: true,

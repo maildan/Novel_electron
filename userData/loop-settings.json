@@ -3,7 +3,11 @@
 		"docs": true,
 		"office": true,
 		"coding": true,
-		"sns": true
+		"sns": true,
+		"browser": true,
+		"game": false,
+		"media": true,
+		"other": true
 	},
 	"autoStartMonitoring": true,
 	"resumeAfterIdle": true,
@@ -14,7 +18,7 @@
 	"minimizeToTray": true,
 	"showTrayNotifications": true,
 	"enableMiniView": true,
-	"enableAnimations": true,
+	"enableAnimations": false,
 	"fontSize": 14,
 	"fontFamily": "system-ui",
 	"useHardwareAcceleration": false,
@@ -41,40 +45,40 @@
 	"enableRealTimeStats": true,
 	"enableTypingSound": false,
 	"enableKeyboardShortcuts": true,
-	"statsFilePath": "typing-stats.json",
+	"statsFilePath": "",
 	"keyboard": {
 		"autoStart": true,
 		"enableHangulSupport": true,
-		"enableJamoTracking": true,
+		"enableJamoTracking": false,
 		"hangulMode": "auto",
-		"jamoSeparation": true,
-		"trackingInterval": 50
+		"jamoSeparation": false,
+		"trackingInterval": 100
 	},
 	"windowSettings": {
 		"miniSize": {
-			"width": 400,
-			"height": 300
+			"width": 300,
+			"height": 200
 		},
-		"opacity": 1,
+		"opacity": 0.9,
 		"alwaysOnTop": false,
 		"autoHide": false,
 		"position": {
-			"x": 100,
-			"y": 100
+			"x": 0,
+			"y": 0
 		}
 	},
 	"windowOpacity": 1,
 	"alwaysOnTop": false,
-	"enableSystemMonitoring": true,
+	"enableSystemMonitoring": false,
 	"enablePerformanceLogging": false,
-	"monitoringInterval": 1000,
-	"enableCPUMonitoring": true,
-	"enableMemoryMonitoring": true,
+	"monitoringInterval": 5000,
+	"enableCPUMonitoring": false,
+	"enableMemoryMonitoring": false,
 	"enableDiskMonitoring": false,
 	"enableNotifications": true,
 	"enableTrayNotifications": true,
 	"enableDebugMode": false,
-	"enableConsoleLogging": true,
+	"enableConsoleLogging": false,
 	"enableErrorReporting": true,
 	"logLevel": "info",
 	"__internal__": {
@@ -83,9 +87,9 @@
 		}
 	},
 	"enableTypingAnalysis": true,
-	"enableRealTimeAnalysis": true,
-	"statsCollectionInterval": 5,
+	"enableRealTimeAnalysis": false,
+	"statsCollectionInterval": 5000,
 	"enableKeyboardDetection": true,
-	"enablePatternLearning": true,
+	"enablePatternLearning": false,
 	"enableGPUFallback": true
 }

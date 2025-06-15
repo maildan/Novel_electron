@@ -170,7 +170,7 @@ function registerMemoryIpcHandlers() {
         }
     });
     // 네이티브 모듈 상태 조회
-    electron_1.ipcMain.handle('system:native:getStatus', () => {
+    electron_1.ipcMain.handle('systemNativeGetStatus', () => {
         try {
             const status = native_client_1.nativeClient.getStatus();
             const available = native_client_1.nativeClient.isAvailable();

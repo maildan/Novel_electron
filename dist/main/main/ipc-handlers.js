@@ -11,6 +11,7 @@ const browser_detector_1 = __importDefault(require("./browser-detector"));
 const auto_launch_manager_1 = require("./auto-launch-manager");
 const security_manager_1 = require("./security-manager");
 const menu_manager_1 = __importDefault(require("./menu-manager"));
+const settings_manager_1 = __importDefault(require("./settings-manager"));
 class IpcHandlers {
     constructor() {
         this.isInitialized = false;
@@ -30,6 +31,8 @@ class IpcHandlers {
         }
         console.log('[IPC] IPC 핸들러 등록 시작');
         try {
+            // 설정 관리자 초기화
+            await settings_manager_1.default.initialize();
             // 메뉴 관리자 초기화
             await menu_manager_1.default.initialize();
             // 보안 관리자 초기화 (키보드 이벤트 핸들러 포함)

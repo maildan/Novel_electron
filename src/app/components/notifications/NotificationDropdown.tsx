@@ -111,12 +111,12 @@ export function NotificationDropdown() {
 
   return (
     <div className="relative z-50">
-      {/* 알림 버튼 - 실무적인 hover 효과, 잘림 방지를 위한 여백 확보 */}
+      {/* 알림 버튼 - 배지 잘림 방지를 위한 충분한 여백 확보 */}
       <button
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
         className="
-          relative p-3 mr-2
+          relative p-2
           bg-gray-100 dark:bg-gray-700 
           text-gray-600 dark:text-gray-400
           hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400
@@ -125,24 +125,25 @@ export function NotificationDropdown() {
           border border-transparent hover:border-red-200 dark:hover:border-red-700
           rounded-lg
         "
+        style={{ minWidth: '40px', minHeight: '40px' }}
         aria-label={`알림 ${unreadCount > 0 ? `(${unreadCount}개의 읽지 않은 알림)` : ''}`}
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
         <Bell className="w-5 h-5" />
         
-        {/* 읽지 않은 알림 배지 - 완전히 보이고 접근성 높도록 조정 */}
+        {/* 읽지 않은 알림 배지 - 버튼 내부에 위치하여 잘림 방지 */}
         {unreadCount > 0 && (
           <span className="
-            absolute -top-0.5 -right-0.5 
+            absolute -top-1 -right-1
             min-w-[20px] h-[20px] 
             bg-red-500 text-white 
             text-xs font-bold 
             rounded-full 
             flex items-center justify-center
-            z-50
+            z-[200]
             border-2 border-white dark:border-gray-800
-            shadow-md
+            shadow-lg
             px-1
           ">
             {unreadCount > 99 ? '99+' : unreadCount}

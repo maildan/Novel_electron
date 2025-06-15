@@ -76,6 +76,7 @@ async function ensureDirectoryExists(dirPath) {
 let store;
 let currentSettings = { ...constants_1.DEFAULT_SETTINGS };
 let isInitialized = false;
+let handlersRegistered = false; // IPC 핸들러 등록 상태 추적
 const settingsListeners = [];
 const settingsHistory = [];
 let hasUnsavedChanges = false;
@@ -83,6 +84,10 @@ let hasUnsavedChanges = false;
  * 설정 관리자 초기화
  */
 async function initializeSettingsManager() {
+    if (isInitialized) {
+        console.log('⚠️ 설정 관리자가 이미 초기화되어 있습니다');
+        return;
+    }
     try {
         console.log('🚀 설정 관리자 초기화 시작...');
         console.log('📁 사용할 userData 경로:', constants_1.PATHS.userData);
@@ -110,8 +115,10 @@ async function initializeSettingsManager() {
         await loadSettings();
         // IPC 핸들러 등록
         registerIPCHandlers();
+        console.log('🔥 IPC 핸들러 등록 완료');
         isInitialized = true;
         console.log('✅ 설정 관리자 초기화 완료');
+        console.log('🔥 현재 설정:', Object.keys(currentSettings));
     }
     catch (error) {
         console.error('❌ 설정 관리자 초기화 실패:', error);
@@ -606,51 +613,121 @@ async function resetSettings() {
  * IPC 핸들러 등록
  */
 function registerIPCHandlers() {
+    // 중복 등록 방지
+    if (handlersRegistered) {
+        (0, utils_1.debugLog)('설정 IPC 핸들러가 이미 등록되어 있습니다');
+        return;
+    }
     // 설정 가져오기
-    electron_1.ipcMain.handle('settings:get', () => {
+    electron_1.ipcMain.handle('settingsGet', () => {
         return currentSettings;
     });
     // 개별 설정 가져오기
-    electron_1.ipcMain.handle('settings:get-setting', (_, key) => {
+    electron_1.ipcMain.handle('settingsGetSetting', (_, key) => {
         return currentSettings[key];
     });
     // 설정 업데이트
-    electron_1.ipcMain.handle('settings:update', async (_, key, value) => {
+    electron_1.ipcMain.handle('settingsUpdate', async (_, key, value) => {
         return await saveSettings({ [key]: value });
     });
     // 다중 설정 업데이트
-    electron_1.ipcMain.handle('settings:update-multiple', async (_, settings) => {
-        return await saveSettings(settings);
+    electron_1.ipcMain.handle('settingsUpdateMultiple', async (_, settings) => {
+        console.log('🔥 IPC 핸들러 호출됨 - settingsUpdateMultiple:', settings);
+        try {
+            const result = await saveSettings(settings);
+            console.log('🔥 저장 결과:', result);
+            return result;
+        }
+        catch (error) {
+            console.error('🔥 저장 중 오류:', error);
+            throw error;
+        }
     });
     // 설정 초기화
-    electron_1.ipcMain.handle('settings:reset', async () => {
+    electron_1.ipcMain.handle('settingsReset', async () => {
         return await resetSettings();
     });
     // 설정 내보내기
-    electron_1.ipcMain.handle('settings:export', async (_, filePath) => {
+    electron_1.ipcMain.handle('settingsExport', async (_, filePath) => {
         return await exportSettings(filePath);
     });
     // 설정 가져오기
-    electron_1.ipcMain.handle('settings:import', async (_, filePath) => {
+    electron_1.ipcMain.handle('settingsImport', async (_, filePath) => {
         return await importSettings(filePath);
     });
     // 설정 유효성 검사
-    electron_1.ipcMain.handle('settings:validate', (_, settings) => {
+    electron_1.ipcMain.handle('settingsValidate', (_, settings) => {
         return validateSettings(settings);
     });
     // 설정 백업 생성
-    electron_1.ipcMain.handle('settings:create-backup', async () => {
+    electron_1.ipcMain.handle('settingsCreateBackup', async () => {
         return await createSettingsBackup();
     });
     // 설정 변경 이력 가져오기
-    electron_1.ipcMain.handle('settings:get-history', () => {
+    electron_1.ipcMain.handle('settingsGetHistory', () => {
         return settingsHistory;
     });
     // 설정 변경 이력 지우기
-    electron_1.ipcMain.handle('settings:clear-history', () => {
+    electron_1.ipcMain.handle('settingsClearHistory', () => {
         settingsHistory.splice(0);
         return true;
     });
+    // 새로운 CHANNELS 상수와 일치하는 핸들러들 추가
+    electron_1.ipcMain.handle('settings:get', (_, key) => {
+        if (key) {
+            return currentSettings[key];
+        }
+        return currentSettings;
+    });
+    electron_1.ipcMain.handle('settings:getAll', () => {
+        return currentSettings;
+    });
+    electron_1.ipcMain.handle('settings:set', async (_, key, value) => {
+        return await saveSettings({ [key]: value });
+    });
+    electron_1.ipcMain.handle('settings:update', async (_, key, value) => {
+        return await saveSettings({ [key]: value });
+    });
+    electron_1.ipcMain.handle('settings:update-multiple', async (_, settings) => {
+        console.log('🔥 IPC 핸들러 호출됨 - settings:update-multiple:', settings);
+        try {
+            const result = await saveSettings(settings);
+            console.log('🔥 저장 결과:', result);
+            return result;
+        }
+        catch (error) {
+            console.error('🔥 저장 중 오류:', error);
+            throw error;
+        }
+    });
+    electron_1.ipcMain.handle('settings:reset', async () => {
+        return await resetSettings();
+    });
+    electron_1.ipcMain.handle('settings:save', async () => {
+        // 현재 설정을 파일에 저장
+        try {
+            const success = await saveSettings(currentSettings);
+            console.debug('✅ settings-manager: 설정 저장 완료');
+            return success;
+        }
+        catch (error) {
+            console.error('❌ settings-manager: 설정 저장 실패:', error);
+            return false;
+        }
+    });
+    electron_1.ipcMain.handle('settings:load', async () => {
+        // 파일에서 설정 로드
+        try {
+            await loadSettings();
+            console.debug('✅ settings-manager: 설정 로드 완료');
+            return currentSettings;
+        }
+        catch (error) {
+            console.error('❌ settings-manager: 설정 로드 실패:', error);
+            return null;
+        }
+    });
+    handlersRegistered = true; // 등록 완료 표시
     (0, utils_1.debugLog)('설정 관리자 IPC 핸들러 등록 완료');
 }
 /**

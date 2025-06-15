@@ -152,11 +152,13 @@ export declare function getMemoryPools(): MemoryPool[];
  */
 export declare function checkAndOptimizeMemoryIfNeeded(): Promise<void>;
 /**
- * IPC 핸들러 등록
+ * IPC 핸들러 등록 (memory-ipc.ts로 이동됨)
+ * 중복 방지를 위해 주석 처리
  */
 export declare function registerMemoryIpcHandlers(): void;
 /**
- * IPC 핸들러 정리
+ * IPC 핸들러 정리 (memory-ipc.ts로 이동됨)
+ * 중복 방지를 위해 주석 처리
  */
 export declare function cleanupMemoryIpcHandlers(): void;
 export default memoryManager;

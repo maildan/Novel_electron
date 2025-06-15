@@ -545,87 +545,20 @@ async function checkAndOptimizeMemoryIfNeeded() {
     }
 }
 /**
- * IPC 핸들러 등록
+ * IPC 핸들러 등록 (memory-ipc.ts로 이동됨)
+ * 중복 방지를 위해 주석 처리
  */
 function registerMemoryIpcHandlers() {
-    (0, utils_1.debugLog)('메모리 관련 IPC 핸들러 등록 시작');
-    // 메모리 정보 조회
-    electron_1.ipcMain.handle('memory:getInfo', async () => {
-        try {
-            const manager = getMemoryManager();
-            const memoryInfo = await manager.getMemoryInfo();
-            return { success: true, data: memoryInfo };
-        }
-        catch (error) {
-            (0, utils_1.errorLog)('메모리 정보 조회 오류:', error);
-            return {
-                success: false,
-                error: error instanceof Error ? error.message : String(error)
-            };
-        }
-    });
-    // 메모리 최적화 실행
-    electron_1.ipcMain.handle('memory:optimize', async (_, level) => {
-        try {
-            const manager = getMemoryManager();
-            const result = await manager.optimizeMemory();
-            return { success: true, data: result };
-        }
-        catch (error) {
-            (0, utils_1.errorLog)('메모리 최적화 오류:', error);
-            return {
-                success: false,
-                error: error instanceof Error ? error.message : String(error)
-            };
-        }
-    });
-    // 강제 가비지 컬렉션
-    electron_1.ipcMain.handle('memory:forceGc', async () => {
-        try {
-            const manager = getMemoryManager();
-            if (global.gc) {
-                global.gc();
-                (0, utils_1.debugLog)('강제 가비지 컬렉션 실행됨');
-                return { success: true, message: '가비지 컬렉션 완료' };
-            }
-            else {
-                return { success: false, error: '가비지 컬렉션 기능이 비활성화됨' };
-            }
-        }
-        catch (error) {
-            (0, utils_1.errorLog)('강제 가비지 컬렉션 오류:', error);
-            return {
-                success: false,
-                error: error instanceof Error ? error.message : String(error)
-            };
-        }
-    });
-    // 메모리 임계값 설정
-    electron_1.ipcMain.handle('memory:setThreshold', async (_, threshold) => {
-        try {
-            const manager = getMemoryManager();
-            await manager.updateSettings({ threshold });
-            return { success: true, message: `메모리 임계값을 ${threshold}%로 설정` };
-        }
-        catch (error) {
-            (0, utils_1.errorLog)('메모리 임계값 설정 오류:', error);
-            return {
-                success: false,
-                error: error instanceof Error ? error.message : String(error)
-            };
-        }
-    });
-    (0, utils_1.debugLog)('메모리 관련 IPC 핸들러 등록 완료');
+    (0, utils_1.debugLog)('메모리 관련 IPC 핸들러는 memory-ipc.ts에서 관리됩니다');
+    // 실제 핸들러 등록은 memory-ipc.ts에서 수행됨
 }
 /**
- * IPC 핸들러 정리
+ * IPC 핸들러 정리 (memory-ipc.ts로 이동됨)
+ * 중복 방지를 위해 주석 처리
  */
 function cleanupMemoryIpcHandlers() {
-    electron_1.ipcMain.removeHandler('memory:get-info');
-    electron_1.ipcMain.removeHandler('memory:optimize');
-    electron_1.ipcMain.removeHandler('memory:force-gc');
-    electron_1.ipcMain.removeHandler('memory:set-threshold');
-    (0, utils_1.debugLog)('메모리 관련 IPC 핸들러 정리 완료');
+    (0, utils_1.debugLog)('메모리 관련 IPC 핸들러 정리는 memory-ipc.ts에서 관리됩니다');
+    // 실제 핸들러 정리는 memory-ipc.ts에서 수행됨
 }
 exports.default = memoryManager;
 //# sourceMappingURL=memory-manager.js.map

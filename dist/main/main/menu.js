@@ -463,7 +463,7 @@ function createNewWindow() {
             webPreferences: {
                 nodeIntegration: false,
                 contextIsolation: true,
-                preload: path.join(__dirname, '../preload/preload.js')
+                preload: path.join(__dirname, 'preload.js')
             }
         });
         const port = process.env.PORT || 5500;

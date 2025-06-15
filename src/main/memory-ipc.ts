@@ -180,7 +180,7 @@ export function registerMemoryIpcHandlers(): void {
   });
 
   // 네이티브 모듈 상태 조회
-  ipcMain.handle('system:native:getStatus', () => {
+  ipcMain.handle('systemNativeGetStatus', () => {
     try {
       const status = nativeClient.getStatus();
       const available = nativeClient.isAvailable();

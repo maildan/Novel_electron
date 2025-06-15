@@ -89,6 +89,34 @@
         "x-next-revalidate-tag-token"
       ]
     },
+    "/api/getLogs": {
+      "initialHeaders": {
+        "content-type": "application/json",
+        "x-next-cache-tags": "_N_T_/layout,_N_T_/api/layout,_N_T_/api/getLogs/layout,_N_T_/api/getLogs/route,_N_T_/api/getLogs/"
+      },
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/api/getLogs",
+      "dataRoute": null,
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/api/logs/search": {
       "initialHeaders": {
         "content-type": "application/json",
@@ -140,41 +168,13 @@
         "x-next-revalidated-tags",
         "x-next-revalidate-tag-token"
       ]
-    },
-    "/api/getLogs": {
-      "initialHeaders": {
-        "content-type": "application/json",
-        "x-next-cache-tags": "_N_T_/layout,_N_T_/api/layout,_N_T_/api/getLogs/layout,_N_T_/api/getLogs/route,_N_T_/api/getLogs/"
-      },
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "Next-Action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/api/getLogs",
-      "dataRoute": null,
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
     }
   },
   "dynamicRoutes": {},
   "notFoundRoutes": [],
   "preview": {
-    "previewModeId": "f37987ef9a54b48f5985bffa29a6fcdb",
-    "previewModeSigningKey": "cbf62770459e26595da12c537eef0c221ca847f26de7585cbf98cf894ea6dd26",
-    "previewModeEncryptionKey": "8e92e5f0f3b84aafed4bf40415cca947d988128a436347b818f3e29ed65be270"
+    "previewModeId": "0682315b014da5609d6a9c3aff9d3535",
+    "previewModeSigningKey": "85298eacbdd38d04d27a08be358d34f57f8214895177107fdd686904f63e655e",
+    "previewModeEncryptionKey": "34a911a420ff86761749668c2eb5dac7986d40739499398ff26059b6c9285f9b"
   }
 }

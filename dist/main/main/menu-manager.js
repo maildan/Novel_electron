@@ -444,7 +444,7 @@ class MenuManager {
             webPreferences: {
                 nodeIntegration: false,
                 contextIsolation: true,
-                preload: path_1.default.join(electron_1.app.getAppPath(), 'preload.js')
+                preload: path_1.default.join(electron_1.app.getAppPath(), 'dist', 'main', 'main', 'preload.js')
             }
         });
         const port = process.env.PORT || 3000;

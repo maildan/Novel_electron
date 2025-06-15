@@ -215,6 +215,11 @@ export interface AppSettings {
     enableTypingSound: boolean;
     enableKeyboardShortcuts: boolean;
     statsFilePath: string;
+    enableTypingAnalysis: boolean;
+    enableRealTimeAnalysis: boolean;
+    statsCollectionInterval: number;
+    enableKeyboardDetection: boolean;
+    enablePatternLearning: boolean;
     keyboard: {
         autoStart: boolean;
         enableHangulSupport: boolean;

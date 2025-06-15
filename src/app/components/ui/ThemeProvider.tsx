@@ -45,16 +45,25 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
 
   // 실제 적용할 테마 계산
   const calculateResolvedTheme = (): 'light' | 'dark' => {
-    // darkMode 설정이 우선순위를 가짐
+    console.log('🔍 ThemeProvider: 테마 계산 중', {
+      theme: settings.theme,
+      darkMode: settings.darkMode
+    });
+    
+    // 1순위: theme 설정이 명시적으로 light 또는 dark인 경우
+    if (settings.theme === 'light') {
+      return 'light';
+    } else if (settings.theme === 'dark') {
+      return 'dark';
+    }
+    
+    // 2순위: darkMode 설정이 있는 경우
     if (typeof settings.darkMode === 'boolean') {
       return settings.darkMode ? 'dark' : 'light';
     }
     
-    // theme 설정이 있을 때
-    if (settings.theme === 'system') {
-      return getSystemTheme();
-    }
-    return settings.theme as 'light' | 'dark';
+    // 3순위: system 테마이거나 설정이 없는 경우 시스템 테마 사용
+    return getSystemTheme();
   };
 
   // DOM에 테마 적용
@@ -93,28 +102,46 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
 
   // 다크모드 설정 함수
   const setDarkMode = async (enabled: boolean) => {
-    console.log('🌙 ThemeProvider: 다크모드 설정', enabled);
+    console.log('🌙 ThemeProvider: 다크모드 설정 시작', enabled);
+    console.log('🔍 ThemeProvider: 현재 설정 상태:', { 
+      darkMode: settings.darkMode, 
+      theme: settings.theme 
+    });
     
     try {
       const newTheme = enabled ? 'dark' : 'light';
       
-      // settings에 동시에 업데이트
+      // 1단계: 설정 업데이트
+      console.log('1️⃣ ThemeProvider: darkMode 설정 업데이트 중...', enabled);
       await updateSetting('darkMode', enabled);
+      
+      console.log('2️⃣ ThemeProvider: theme 설정 업데이트 중...', newTheme);
       await updateSetting('theme', newTheme);
       
-      // 즉시 DOM에 적용
+      // 2단계: 즉시 DOM에 적용
+      console.log('3️⃣ ThemeProvider: DOM에 테마 적용 중...', enabled ? 'dark' : 'light');
       setResolvedTheme(enabled ? 'dark' : 'light');
       applyThemeToDOM(enabled ? 'dark' : 'light');
       
-      // 로컬 스토리지에도 저장 (백업용)
+      // 3단계: localStorage에도 저장 (백업용)
       try {
         localStorage.setItem('darkMode', enabled.toString());
         localStorage.setItem('theme', newTheme);
+        console.log('4️⃣ ThemeProvider: localStorage 백업 저장 완료');
       } catch (error) {
         console.error('❌ ThemeProvider: localStorage 저장 실패', error);
       }
       
-      console.log('✅ ThemeProvider: 다크모드 설정 완료', { enabled, theme: newTheme });
+      // 4단계: 최종 확인
+      console.log('✅ ThemeProvider: 다크모드 설정 완료', { 
+        enabled, 
+        theme: newTheme,
+        localStorage: {
+          darkMode: localStorage.getItem('darkMode'),
+          theme: localStorage.getItem('theme')
+        }
+      });
+      
     } catch (error) {
       console.error('❌ ThemeProvider: 다크모드 설정 실패', error);
     }
