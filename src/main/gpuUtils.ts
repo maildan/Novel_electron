@@ -9,7 +9,7 @@ import * as fs from 'fs';
 import { debugLog, errorLog } from '../shared/utils';
 import { nativeModuleLoader } from '../native-modules';
 
-// GPU 설정 인터페이스
+// GPU Setup 인터페이스
 interface GPUSettings {
   acceleration: boolean;
   batteryOptimization: boolean;
@@ -48,14 +48,14 @@ class GPUManager {
   private gpuInfo: GPUInfo | null = null;
 
   constructor() {
-    // 사용자 데이터 경로 설정
+    // 사용자 데이터 경로 Setup
     const userDataPath = process.env.NODE_ENV === 'development'
       ? path.join(__dirname, '../../userData')
       : app.getPath('userData');
     
     this.configPath = path.join(userDataPath, 'gpu-settings.json');
     
-    // 기본 설정
+    // 기본 Setup
     this.settings = {
       acceleration: true,
       batteryOptimization: true,
@@ -73,49 +73,49 @@ class GPUManager {
     try {
       debugLog('GPU 관리자 초기화 시작');
       
-      // 설정 파일 로드
+      // Setup 파일 로드
       await this.loadSettings();
       
       // GPU 정보 수집
       await this.collectGPUInfo();
       
-      // 환경 변수 기반 설정 적용
+      // 환경 변수 기반 Setup 적용
       this.applyEnvironmentSettings();
       
       // 네이티브 모듈을 통한 GPU 초기화
       await this.initializeNativeGPU();
       
       this.isInitialized = true;
-      debugLog('GPU 관리자 초기화 완료');
+      debugLog('GPU 관리자 초기화 Completed');
       
     } catch (error) {
-      errorLog('GPU 관리자 초기화 중 오류:', error);
+      errorLog('GPU 관리자 초기화 중 Error:', error);
       this.isInitialized = false;
     }
   }
 
   /**
-   * 설정 파일 로드
-   */
+ * Setup 파일 로드
+ */
   private async loadSettings(): Promise<void> {
     try {
       if (fs.existsSync(this.configPath)) {
         const data = fs.readFileSync(this.configPath, 'utf8');
         const loadedSettings = JSON.parse(data);
         this.settings = { ...this.settings, ...loadedSettings };
-        debugLog('GPU 설정 로드 완료');
+        debugLog('GPU Setup 로드 Completed');
       } else {
         await this.saveSettings();
-        debugLog('기본 GPU 설정 생성 완료');
+        debugLog('기본 GPU Setup 생성 Completed');
       }
     } catch (error) {
-      errorLog('GPU 설정 로드 중 오류:', error);
+      errorLog('GPU Setup 로드 중 Error:', error);
     }
   }
 
   /**
-   * 설정 파일 저장
-   */
+ * Setup 파일 저장
+ */
   private async saveSettings(): Promise<void> {
     try {
       const dir = path.dirname(this.configPath);
@@ -125,10 +125,10 @@ class GPUManager {
       
       this.settings.lastUpdated = new Date().toISOString();
       fs.writeFileSync(this.configPath, JSON.stringify(this.settings, null, 2));
-      debugLog('GPU 설정 저장 완료');
+      debugLog('GPU Setup 저장 Completed');
       
     } catch (error) {
-      errorLog('GPU 설정 저장 중 오류:', error);
+      errorLog('GPU Setup Saving Error:', error);
     }
   }
 
@@ -142,7 +142,7 @@ class GPUManager {
       
       if (nativeModule.isAvailable && nativeModule.getGpuInfo) {
         this.gpuInfo = nativeModule.getGpuInfo();
-        debugLog('네이티브 모듈을 통한 GPU 정보 수집 완료:', this.gpuInfo);
+        debugLog('네이티브 모듈을 통한 GPU 정보 수집 Completed:', this.gpuInfo);
       } else {
         // JavaScript 폴백으로 기본 GPU 정보 생성
         this.gpuInfo = {
@@ -155,19 +155,19 @@ class GPUManager {
         debugLog('JavaScript 폴백으로 GPU 정보 생성');
       }
     } catch (error) {
-      errorLog('GPU 정보 수집 중 오류:', error);
+      errorLog('GPU 정보 수집 중 Error:', error);
       this.gpuInfo = null;
     }
   }
 
   /**
-   * 환경 변수 기반 설정 적용
-   */
+ * 환경 변수 기반 Setup 적용
+ */
   private applyEnvironmentSettings(): void {
     const envGpuMode = process.env.GPU_MODE;
     
     if (envGpuMode) {
-      debugLog(`환경 변수 GPU_MODE: ${envGpuMode}`);
+      debugLog('환경 변수 GPU_MODE: ${envGpuMode}');
       
       switch (envGpuMode.toLowerCase()) {
         case 'software':
@@ -189,7 +189,7 @@ class GPUManager {
           break;
       }
       
-      debugLog('환경 변수 기반 GPU 설정 적용 완료');
+      debugLog('환경 변수 기반 GPU Setup 적용 Completed');
     }
   }
 
@@ -201,7 +201,7 @@ class GPUManager {
       const nativeModule = await nativeModuleLoader.loadModule();
       
       if (nativeModule.isAvailable) {
-        // GPU 가속화 설정
+        // GPU 가속화 Setup
         if (this.settings.acceleration && nativeModule.gpuAccelerate) {
           const result = nativeModule.gpuAccelerate('initialize', {
             highPerformance: this.settings.processingMode === 'gpu-intensive',
@@ -221,13 +221,13 @@ class GPUManager {
         }
       }
     } catch (error) {
-      errorLog('네이티브 GPU 초기화 중 오류:', error);
+      errorLog('네이티브 GPU 초기화 중 Error:', error);
     }
   }
 
   /**
-   * 하드웨어 가속 토글
-   */
+ * 하드웨어 가속 토글
+ */
   async toggleHardwareAcceleration(enable: boolean): Promise<boolean> {
     try {
       this.settings.acceleration = enable;
@@ -241,14 +241,14 @@ class GPUManager {
         if (!enable) {
           app.disableHardwareAcceleration();
         }
-        debugLog(`하드웨어 가속 ${enable ? '활성화' : '비활성화'} 완료`);
+        debugLog(`하드웨어 가속 ${enable ? '활성화' : '비활성화'} Completed`);
       }
       
       await this.saveSettings();
       return true;
       
     } catch (error) {
-      errorLog('하드웨어 가속 토글 중 오류:', error);
+      errorLog('하드웨어 가속 토글 중 Error:', error);
       return false;
     }
   }
@@ -284,7 +284,7 @@ class GPUManager {
         return this.runJavaScriptFallback(task, data);
       }
     } catch (error) {
-      errorLog('GPU 가속화 실행 중 오류:', error);
+      errorLog('GPU 가속화 실행 중 Error:', error);
       return this.runJavaScriptFallback(task, data);
     }
   }
@@ -293,7 +293,7 @@ class GPUManager {
    * JavaScript 폴백 구현
    */
   private runJavaScriptFallback(task: string, data: any): any {
-    debugLog(`JavaScript 폴백으로 ${task} 작업 실행`);
+    debugLog('JavaScript 폴백으로 ${task} 작업 실행');
     
     switch (task) {
       case 'typing-analysis':
@@ -322,7 +322,7 @@ class GPUManager {
         calculated_with: 'javascript_fallback'
       };
     } catch (error) {
-      errorLog('JavaScript 타이핑 분석 중 오류:', error);
+      errorLog('JavaScript 타이핑 분석 중 Error:', error);
       return { success: false, error: error instanceof Error ? error.message : String(error) };
     }
   }
@@ -336,8 +336,8 @@ class GPUManager {
   }
 
   /**
-   * 성능 메트릭 기록
-   */
+ * 성능 메트릭 기록
+ */
   private recordPerformanceMetrics(metrics: GPUPerformanceMetrics): void {
     this.performanceMetrics.push(metrics);
     
@@ -348,8 +348,8 @@ class GPUManager {
   }
 
   /**
-   * 배터리 최적화 모드 설정
-   */
+ * 배터리 최적화 모드 Setup
+ */
   async setBatteryOptimization(enable: boolean): Promise<void> {
     this.settings.batteryOptimization = enable;
     
@@ -364,7 +364,7 @@ class GPUManager {
   }
 
   /**
-   * GPU 설정 가져오기
+   * GPU Setup 가져오기
    */
   getSettings(): GPUSettings {
     return { ...this.settings };
@@ -378,15 +378,15 @@ class GPUManager {
   }
 
   /**
-   * 성능 메트릭 가져오기
-   */
+ * 성능 메트릭 가져오기
+ */
   getPerformanceMetrics(): GPUPerformanceMetrics[] {
     return [...this.performanceMetrics];
   }
 
   /**
-   * 하드웨어 가속 활성화 상태 확인
-   */
+ * 하드웨어 가속 활성화 상태 확인
+ */
   isHardwareAccelerationEnabled(): boolean {
     return this.settings.acceleration;
   }
@@ -412,7 +412,7 @@ class GPUManager {
         };
       }
     } catch (error) {
-      errorLog('GPU 벤치마크 실행 중 오류:', error);
+      errorLog('GPU 벤치마크 실행 중 Error:', error);
       return {
         score: 0,
         gpu: false,
@@ -436,7 +436,7 @@ export function getGPUManager(): GPUManager {
 }
 
 /**
- * GPU 가속 설정
+ * GPU 가속 Setup
  */
 export async function setupGpuAcceleration(enable: boolean): Promise<void> {
   const manager = getGPUManager();

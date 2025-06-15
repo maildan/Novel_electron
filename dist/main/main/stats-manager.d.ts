@@ -47,53 +47,53 @@ export declare class StatsManager {
     private constructor();
     static getInstance(): StatsManager;
     /**
-     * 통계 시스템 초기화
-     */
+   * 통계 시스템 초기화
+   */
     initialize(): Promise<boolean>;
     /**
-     * 워커 초기화
-     */
+   * 워커 초기화
+   */
     private initializeWorker;
     /**
-     * 워커 메시지 처리
-     */
+   * 워커 메시지 처리
+   */
     private handleWorkerMessage;
     /**
-     * 키 입력 처리
-     */
+   * 키 입력 처리
+   */
     processKeyInput(data: TypingData): Promise<void>;
     /**
-     * 한글 입력 처리
-     */
+   * 한글 입력 처리
+   */
     private isHangulInput;
     private processHangulInput;
     /**
-     * 타이핑 패턴 업데이트
-     */
+   * 타이핑 패턴 업데이트
+   */
     private updateTypingPattern;
     /**
-     * 워커 메모리 정보 업데이트
-     */
+   * 워커 메모리 정보 업데이트
+   */
     private updateWorkerMemoryInfo;
     /**
-     * 대기 중인 작업 처리
-     */
+   * 대기 중인 작업 처리
+   */
     private processPendingTasks;
     /**
-     * 저메모리 모드로 전환
-     */
+   * 저메모리 모드로 전환
+   */
     private switchToLowMemoryMode;
     /**
-     * 폴백 모드로 전환
-     */
+   * 폴백 모드로 전환
+   */
     private switchToFallbackMode;
     /**
-     * 워커 오류 처리
+     * 워커 Error 처리
      */
     private handleWorkerError;
     /**
-     * 통계 상태 조회
-     */
+   * 통계 상태 조회
+   */
     getStatsStatus(): {
         workerInitialized: boolean;
         processingMode: ProcessingMode;
@@ -102,32 +102,32 @@ export declare class StatsManager {
         hangulState: HangulState;
     };
     /**
-     * 통계 데이터 가져오기
-     */
+   * 통계 데이터 가져오기
+   */
     getStats(options?: any): Promise<any>;
     /**
-     * 타이핑 패턴 분석
-     */
+   * 타이핑 패턴 분석
+   */
     analyzeTypingPattern(data: any): Promise<any>;
     /**
-     * 설정 업데이트
-     */
+   * Setup 업데이트
+   */
     updateSettings(settings: any): Promise<any>;
     /**
-     * 메모리 최적화
-     */
+   * 메모리 최적화
+   */
     optimizeMemory(): Promise<any>;
     /**
-     * 모듈 재시작
-     */
+   * 모듈 재시작
+   */
     restart(): Promise<void>;
     /**
-     * 초기화 상태 확인
-     */
+   * 초기화 상태 확인
+   */
     isInitialized(): boolean;
     /**
-     * 정리 작업
-     */
+   * Cleanup 작업
+   */
     cleanup(): Promise<void>;
 }
 export declare const statsManager: StatsManager;

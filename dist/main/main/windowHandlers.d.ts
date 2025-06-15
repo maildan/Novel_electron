@@ -10,7 +10,7 @@ import { WindowModeType } from './constants';
  */
 declare function applyWindowMode(mode: WindowModeType): boolean;
 /**
- * 윈도우 위치 및 크기 설정
+ * 윈도우 위치 및 크기 Setup
  */
 declare function setWindowBounds(bounds: {
     x?: number;
@@ -23,11 +23,11 @@ declare function setWindowBounds(bounds: {
  */
 declare function getWindowStatus(): any;
 /**
- * 윈도우 투명도 설정
+ * 윈도우 투명도 Setup
  */
 declare function setWindowOpacity(opacity: number): boolean;
 /**
- * 윈도우 항상 위에 설정
+ * 윈도우 항상 위에 Setup
  */
 declare function setAlwaysOnTop(alwaysOnTop: boolean): boolean;
 /**
@@ -43,7 +43,7 @@ export declare function registerWindowHandlers(): void;
  */
 export declare function initializeWindowHandlers(): void;
 /**
- * 윈도우 핸들러 정리
+ * 윈도우 핸들러 Cleanup
  */
 export declare function cleanupWindowHandlers(): void;
 declare const _default: {

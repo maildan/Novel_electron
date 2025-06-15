@@ -85,11 +85,11 @@ const DEFAULT_SECURITY_CONFIG = {
     enableCORS: true,
     strictMode: !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
 };
-// Global state
+// 전역 상태
 let protocolsInitialized = false;
 let securityConfig = { ...DEFAULT_SECURITY_CONFIG };
 /**
- * Convert file path to protocol URL
+ * 파일 경로를 프로토콜 URL로 변환
  */
 function filePathToProtocolUrl(filePath) {
     const relativePath = path.relative(electron_1.app.getAppPath(), filePath);
@@ -131,13 +131,13 @@ function validateFileAccess(filePath) {
         }
         // Check file extension
         if (!isAllowedFileExtension(filePath)) {
-            (0, debug_1.debugLog)(`File extension not allowed: ${path.extname(filePath)}`);
+            (0, debug_1.debugLog)('허용되지 않은 파일 확장자: ${path.extname(filePath)}');
             return false;
         }
         // Check file size
         const stats = fs.statSync(filePath);
         if (stats.size > securityConfig.maxFileSize) {
-            (0, debug_1.debugLog)(`File too large: ${stats.size} bytes`);
+            (0, debug_1.debugLog)('파일이 너무 큼: ${stats.size} bytes');
             return false;
         }
         // Additional security checks in strict mode
@@ -147,14 +147,14 @@ function validateFileAccess(filePath) {
             const userDataPath = electron_1.app.getPath('userData');
             const resolvedPath = path.resolve(filePath);
             if (!resolvedPath.startsWith(appPath) && !resolvedPath.startsWith(userDataPath)) {
-                (0, debug_1.debugLog)(`File access denied - outside allowed directories: ${resolvedPath}`);
+                (0, debug_1.debugLog)('파일 Access denied - 허용된 디렉토리 밖: ${resolvedPath}');
                 return false;
             }
         }
         return true;
     }
     catch (error) {
-        (0, debug_1.debugLog)(`File access validation error: ${error}`);
+        (0, debug_1.debugLog)('파일 접근 유효성 검사 Error: ${error}');
         return false;
     }
 }
@@ -185,10 +185,10 @@ function createSecurityHeaders() {
 function handleProtocolRequest(request) {
     try {
         const url = new url_1.URL(request.url);
-        (0, debug_1.debugLog)(`Protocol request: ${request.url}`);
+        (0, debug_1.debugLog)('프로토콜 요청: ${request.url}');
         // Convert to file path
         const filePath = protocolUrlToFilePath(request.url);
-        (0, debug_1.debugLog)(`Resolved file path: ${filePath}`);
+        (0, debug_1.debugLog)('해결된 파일 경로: ${filePath}');
         // Validate file access
         if (!validateFileAccess(filePath)) {
             return {
@@ -212,7 +212,7 @@ function handleProtocolRequest(request) {
         };
     }
     catch (error) {
-        console.error(`Protocol request error: ${error}`);
+        console.error('Protocol request error: ${error}');
         return {
             statusCode: 404,
             headers: createSecurityHeaders(),
@@ -238,7 +238,7 @@ function registerProtocolScheme() {
                 }
             }
         ]);
-        (0, debug_1.debugLog)(`Protocol scheme registered: ${APP_PROTOCOL}`);
+        (0, debug_1.debugLog)('Protocol scheme registered: ${APP_PROTOCOL}');
     }
     catch (error) {
         console.error('Protocol scheme registration error:', error);
@@ -254,10 +254,10 @@ function registerProtocolHandler() {
             callback(response);
         });
         if (success) {
-            (0, debug_1.debugLog)(`Protocol handler registered: ${APP_PROTOCOL}`);
+            (0, debug_1.debugLog)('Protocol handler registered: ${APP_PROTOCOL}');
         }
         else {
-            console.error(`Failed to register protocol handler: ${APP_PROTOCOL}`);
+            console.error('Failed to register protocol handler: ${APP_PROTOCOL}');
         }
     }
     catch (error) {
@@ -284,7 +284,7 @@ function setupDeepLinkHandler() {
     // Handle open-url event (macOS)
     electron_1.app.on('open-url', (event, url) => {
         event.preventDefault();
-        (0, debug_1.debugLog)(`Open URL event: ${url}`);
+        (0, debug_1.debugLog)('Open URL event: ${url}');
         handleDeepLink(url);
     });
 }
@@ -293,7 +293,7 @@ function setupDeepLinkHandler() {
  */
 function handleDeepLink(url) {
     try {
-        (0, debug_1.debugLog)(`Handling deep link: ${url}`);
+        (0, debug_1.debugLog)('Handling deep link: ${url}');
         const parsedUrl = new url_1.URL(url);
         // Get main window
         const mainWindow = electron_1.BrowserWindow.getAllWindows()[0];
@@ -350,7 +350,7 @@ function updateSecurityConfig(config) {
 function addAllowedOrigin(origin) {
     if (!securityConfig.allowedOrigins.includes(origin)) {
         securityConfig.allowedOrigins.push(origin);
-        (0, debug_1.debugLog)(`Added allowed origin: ${origin}`);
+        (0, debug_1.debugLog)('Added allowed origin: ${origin}');
     }
 }
 /**
@@ -360,7 +360,7 @@ function removeAllowedOrigin(origin) {
     const index = securityConfig.allowedOrigins.indexOf(origin);
     if (index > -1) {
         securityConfig.allowedOrigins.splice(index, 1);
-        (0, debug_1.debugLog)(`Removed allowed origin: ${origin}`);
+        (0, debug_1.debugLog)('Removed allowed origin: ${origin}');
     }
 }
 /**

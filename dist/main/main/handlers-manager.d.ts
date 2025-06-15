@@ -28,7 +28,7 @@ export declare function getInitializationOrder(): string[];
  */
 export declare function reregisterHandler(handlerName: string): boolean;
 /**
- * 모든 핸들러 정리
+ * 모든 핸들러 Cleanup
  */
 export declare function cleanupAllHandlers(): void;
 /**

@@ -2,7 +2,7 @@
  * 애플리케이션 상수 및 초기 상태 정의
  *
  * Loop 6의 핵심 상수, 타입 정의, 그리고 초기 상태를 관리합니다.
- * 모든 모듈에서 공통으로 사용되는 설정값과 열거형을 포함합니다.
+ * 모든 모듈에서 공통으로 사용되는 Setup값과 열거형을 포함합니다.
  */
 export declare const isDev: boolean;
 export declare const APP_VERSION: string;

@@ -41,7 +41,7 @@ const localShortcuts = new Map<number, Map<string, LocalShortcutData>>();
 const shortcutHistory = new Array<{ action: string; accelerator: string; timestamp: number }>();
 const conflictMap = new Map<string, string[]>();
 
-// 설정
+// Setup
 const MAX_HISTORY_ENTRIES = 100;
 const SHORTCUT_CATEGORIES = {
   SYSTEM: 'system',
@@ -75,7 +75,7 @@ function parseShortcut(accelerator: string): ParsedShortcut {
     };
 
   } catch (error) {
-    console.error(`단축키 파싱 오류 (${accelerator}):`, error);
+    console.error('단축키 파싱 Error (${accelerator}):', error);
     return { modifiers: [], key: '', isValid: false };
   }
 }
@@ -129,7 +129,7 @@ function addToHistory(action: string, accelerator: string): void {
 }
 
 /**
- * 전역 단축키 등록
+ * Register global shortcuts
  */
 export function registerGlobalShortcut(
   accelerator: string,
@@ -155,18 +155,18 @@ export function registerGlobalShortcut(
 
     // 이미 등록된 단축키 확인
     if (registeredShortcuts.has(accelerator)) {
-      console.warn(`단축키가 이미 등록되어 있습니다: ${accelerator}`);
+      console.warn('단축키가 이미 등록되어 있습니다: ${accelerator}');
       return false;
     }
 
     // 충돌 검사
     const conflicts = checkShortcutConflict(accelerator);
     if (conflicts.length > 0) {
-      console.warn(`단축키 충돌 감지 (${accelerator}):`, conflicts);
+      console.warn('단축키 충돌 감지 (${accelerator}):', conflicts);
       conflictMap.set(accelerator, conflicts);
     }
 
-    // 전역 단축키 등록
+    // Register global shortcuts
     const success = globalShortcut.register(accelerator, () => {
       try {
         const shortcutData = registeredShortcuts.get(accelerator);
@@ -175,12 +175,12 @@ export function registerGlobalShortcut(
           addToHistory('triggered', accelerator);
         }
       } catch (error) {
-        console.error(`단축키 실행 오류 (${accelerator}):`, error);
+        console.error('단축키 실행 Error (${accelerator}):', error);
       }
     });
 
     if (success) {
-      // 등록 성공 시 데이터 저장
+      // 등록 Success 시 데이터 저장
       registeredShortcuts.set(accelerator, {
         callback,
         description,
@@ -190,15 +190,15 @@ export function registerGlobalShortcut(
       });
 
       addToHistory('registered', accelerator);
-      console.log(`전역 단축키 등록 성공: ${accelerator} (${description})`);
+      console.log('Register global shortcuts Success: ${accelerator} (${description})');
       return true;
     } else {
-      console.error(`전역 단축키 등록 실패: ${accelerator}`);
+      console.error('Register global shortcuts Failed: ${accelerator}');
       return false;
     }
 
   } catch (error) {
-    console.error(`단축키 등록 오류 (${accelerator}):`, error);
+    console.error('단축키 등록 Error (${accelerator}):', error);
     return false;
   }
 }
@@ -209,7 +209,7 @@ export function registerGlobalShortcut(
 export function unregisterGlobalShortcut(accelerator: string): boolean {
   try {
     if (!registeredShortcuts.has(accelerator)) {
-      console.warn(`등록되지 않은 단축키입니다: ${accelerator}`);
+      console.warn('등록되지 않은 단축키입니다: ${accelerator}');
       return false;
     }
 
@@ -221,11 +221,11 @@ export function unregisterGlobalShortcut(accelerator: string): boolean {
     conflictMap.delete(accelerator);
 
     addToHistory('unregistered', accelerator);
-    console.log(`전역 단축키 해제 성공: ${accelerator}`);
+    console.log('전역 단축키 해제 Success: ${accelerator}');
     return true;
 
   } catch (error) {
-    console.error(`단축키 해제 오류 (${accelerator}):`, error);
+    console.error('단축키 해제 Error (${accelerator}):', error);
     return false;
   }
 }
@@ -247,7 +247,7 @@ export function unregisterAllGlobalShortcuts(): void {
 
     console.log('모든 전역 단축키가 해제되었습니다.');
   } catch (error) {
-    console.error('모든 단축키 해제 중 오류 발생:', error);
+    console.error('모든 단축키 해제 중 Error 발생:', error);
   }
 }
 
@@ -269,7 +269,7 @@ export function toggleGlobalShortcut(accelerator: string, enabled: boolean): boo
     return true;
 
   } catch (error) {
-    console.error(`단축키 토글 오류 (${accelerator}):`, error);
+    console.error('단축키 토글 Error (${accelerator}):', error);
     return false;
   }
 }
@@ -304,7 +304,7 @@ export function registerLocalShortcut(
 
     // 기존 단축키 확인
     if (windowShortcuts.has(accelerator)) {
-      console.warn(`윈도우에 이미 등록된 단축키입니다: ${accelerator}`);
+      console.warn('윈도우에 이미 등록된 단축키입니다: ${accelerator}');
     }
 
     // 리스너 제한 확인 및 조정
@@ -314,7 +314,7 @@ export function registerLocalShortcut(
     if (currentListenerCount >= webContents.getMaxListeners() - 2) {
       const newMaxListeners = Math.max(30, webContents.getMaxListeners() * 1.5);
       webContents.setMaxListeners(newMaxListeners);
-      console.log(`리스너 최대 수 증가: ${newMaxListeners}`);
+      console.log('리스너 최대 수 증가: ${newMaxListeners}');
     }
 
     // 단축키 이벤트 리스너 등록
@@ -329,10 +329,10 @@ export function registerLocalShortcut(
             const shortcutData = windowShortcuts.get(accelerator);
             if (shortcutData?.enabled !== false) {
               callback();
-              console.log(`로컬 단축키 실행: ${accelerator}`);
+              console.log('로컬 단축키 실행: ${accelerator}');
             }
           } catch (error) {
-            console.error(`로컬 단축키 실행 오류 (${accelerator}):`, error);
+            console.error('로컬 단축키 실행 Error (${accelerator}):', error);
           }
         }
       }
@@ -347,16 +347,16 @@ export function registerLocalShortcut(
       enabled: true
     });
 
-    // 윈도우 종료 시 정리
+    // 윈도우 종료 시 Cleanup
     window.once('closed', () => {
       localShortcuts.delete(windowId);
     });
 
-    console.log(`로컬 단축키 등록 성공: ${accelerator} (윈도우 ID: ${windowId})`);
+    console.log('로컬 단축키 등록 Success: ${accelerator} (윈도우 ID: ${windowId})');
     return true;
 
   } catch (error) {
-    console.error(`로컬 단축키 등록 오류 (${accelerator}):`, error);
+    console.error('로컬 단축키 등록 Error (${accelerator}):', error);
     return false;
   }
 }
@@ -392,7 +392,7 @@ function matchShortcutInput(accelerator: string, input: Electron.Input): boolean
     );
 
   } catch (error) {
-    console.error(`단축키 매칭 오류 (${accelerator}):`, error);
+    console.error('단축키 매칭 Error (${accelerator}):', error);
     return false;
   }
 }
@@ -414,15 +414,15 @@ export function initializeShortcuts(): void {
     console.log('단축키 관리 시스템이 초기화되었습니다.');
 
   } catch (error) {
-    console.error('단축키 초기화 오류:', error);
+    console.error('단축키 초기화 Error:', error);
   }
 }
 
 /**
- * IPC 핸들러 설정
+ * IPC 핸들러 Setup
  */
 function setupIpcHandlers(): void {
-  // 전역 단축키 등록 요청
+  // Register global shortcuts 요청
   ipcMain.handle('shortcuts:registerGlobal', (event, config: ShortcutConfig) => {
     return registerGlobalShortcut(
       config.accelerator,
@@ -480,7 +480,7 @@ function setupIpcHandlers(): void {
 }
 
 /**
- * 기본 앱 단축키 설정
+ * 기본 앱 단축키 Setup
  */
 export function setupDefaultShortcuts(): void {
   try {
@@ -511,7 +511,7 @@ export function setupDefaultShortcuts(): void {
     // UI 단축키
     defaultShortcuts.push({
       accelerator: 'CommandOrControl+,',
-      description: '설정 열기',
+      description: 'Setup 열기',
       category: SHORTCUT_CATEGORIES.UI
     });
 
@@ -525,14 +525,14 @@ export function setupDefaultShortcuts(): void {
       );
 
       if (!success) {
-        console.warn(`기본 단축키 등록 실패: ${shortcut.accelerator}`);
+        console.warn('기본 단축키 등록 Failed: ${shortcut.accelerator}');
       }
     }
 
-    console.log(`기본 단축키 ${defaultShortcuts.length}개 등록 완료`);
+    console.log('기본 단축키 ${defaultShortcuts.length}개 등록 Completed');
 
   } catch (error) {
-    console.error('기본 단축키 설정 오류:', error);
+    console.error('기본 단축키 Setup Error:', error);
   }
 }
 
@@ -567,7 +567,7 @@ function handleDefaultShortcut(accelerator: string): void {
       break;
 
     default:
-      console.log(`처리되지 않은 기본 단축키: ${accelerator}`);
+      console.log('처리되지 않은 기본 단축키: ${accelerator}');
   }
 }
 

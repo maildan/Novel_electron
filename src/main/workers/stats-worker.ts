@@ -17,7 +17,7 @@ function debugLog(message: string, data?: any): void {
   console.log(logMessage);
 }
 
-// 초기 설정값
+// 초기 Setup값
 const memoryLimit = workerData?.memoryLimit || 100 * 1024 * 1024; // 100MB
 let processingMode = workerData?.initialMode || 'normal'; // 'normal', 'cpu-intensive', 'gpu-intensive'
 let shouldOptimizeMemory = false;
@@ -42,16 +42,16 @@ try {
     if (fs.existsSync(modulePath)) {
       try {
         nativeModule = require(modulePath);
-        debugLog('네이티브 모듈 로드 성공', { path: modulePath });
+        debugLog('네이티브 모듈 로드 Success', { path: modulePath });
         moduleLoaded = true;
         break;
       } catch (err: any) {
-        debugLog('네이티브 모듈 로드 실패', { path: modulePath, error: err.message });
+        debugLog('네이티브 모듈 로드 Failed', { path: modulePath, error: err.message });
       }
     }
   }
   
-  // 모듈 로드 실패 시 폴백 구현
+  // 모듈 로드 Failed 시 폴백 구현
   if (!moduleLoaded) {
     debugLog('폴백 구현 사용 중');
     nativeModule = {
@@ -77,7 +77,7 @@ try {
     };
   }
 } catch (error: any) {
-  debugLog('네이티브 모듈 초기화 오류', { error: error.message });
+  debugLog('네이티브 모듈 초기화 Error', { error: error.message });
   nativeModule = null;
 }
 
@@ -132,7 +132,7 @@ function calculateStats(data: any): any {
         const endTime = process.hrtime.bigint();
         const processingTime = Number(endTime - startTime) / 1000000; // ms로 변환
         
-        debugLog('네이티브 모듈로 통계 계산 완료', { 
+        debugLog('네이티브 모듈로 통계 계산 Completed', { 
           wpm, 
           accuracy, 
           processingTime: `${processingTime.toFixed(2)}ms` 
@@ -146,7 +146,7 @@ function calculateStats(data: any): any {
           memoryUsage: process.memoryUsage().heapUsed
         };
       } catch (error: any) {
-        debugLog('네이티브 모듈 계산 오류, 폴백 사용', { error: error.message });
+        debugLog('네이티브 모듈 계산 Error, 폴백 사용', { error: error.message });
       }
     }
     
@@ -158,7 +158,7 @@ function calculateStats(data: any): any {
     const endTime = process.hrtime.bigint();
     const processingTime = Number(endTime - startTime) / 1000000;
     
-    debugLog('폴백 계산으로 통계 완료', { 
+    debugLog('폴백 계산으로 통계 Completed', { 
       wpm, 
       accuracy, 
       processingTime: `${processingTime.toFixed(2)}ms` 
@@ -173,14 +173,14 @@ function calculateStats(data: any): any {
     };
     
   } catch (error: any) {
-    debugLog('통계 계산 중 오류 발생', { error: error.message });
+    debugLog('통계 계산 중 Error 발생', { error: error.message });
     throw error;
   }
 }
 
 // 워커 메시지 처리
 if (parentPort) {
-  debugLog('통계 워커 시작됨', { workerData });
+  debugLog('통계 워커 Started', { workerData });
   
   parentPort.on('message', (data: any) => {
     try {
@@ -259,7 +259,7 @@ if (parentPort) {
             dataCache = null;
             performGC();
             shouldOptimizeMemory = false;
-            debugLog('🧹 메모리 정리 완료');
+            debugLog('🧹 메모리 Cleanup Completed');
           }
           parentPort?.postMessage({
             type: 'cleanup-complete',
@@ -307,7 +307,7 @@ if (parentPort) {
           });
       }
     } catch (error: any) {
-      debugLog('💥 메시지 처리 중 오류', { 
+      debugLog('💥 메시지 Processing Error', { 
         error: error.message,
         stack: error.stack,
         messageType: data?.type 
@@ -329,7 +329,7 @@ if (parentPort) {
     }
   }, 30000); // 30초마다
   
-  debugLog('통계 워커 초기화 완료');
+  debugLog('통계 워커 초기화 Completed');
 } else {
   debugLog('부모 포트가 없어 워커 종료');
   process.exit(1);

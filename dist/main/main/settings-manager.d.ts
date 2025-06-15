@@ -1,8 +1,8 @@
 /**
- * Loop 6 설정 관리 시스템
+ * Loop 6 Setup 관리 시스템
  *
- * 앱 설정의 로드, 저장, 유효성 검사 및 적용을 담당하는 종합적인 설정 관리자입니다.
- * electron-store를 기반으로 하며, Loop 3의 설정 시스템을 완전히 마이그레이션했습니다.
+ * 앱 Setup의 로드, 저장, 유효성 검사 및 적용을 담당하는 종합적인 Setup 관리자입니다.
+ * electron-store를 기반으로 하며, Loop 3의 Setup 시스템을 완전히 마이그레이션했습니다.
  */
 import { AppSettings } from './constants';
 export interface SettingsChangeEvent {
@@ -35,59 +35,59 @@ export interface SettingsManager {
 }
 type SettingsListener = (event: SettingsChangeEvent) => void;
 /**
- * 설정 관리자 초기화
+ * Setup 관리자 초기화
  */
 export declare function initializeSettingsManager(): Promise<void>;
 /**
- * 설정 저장
+ * Setup 저장
  */
 declare function saveSettings(settings: Partial<AppSettings>): Promise<boolean>;
 /**
- * 설정 유효성 검사
+ * Setup 유효성 검사
  */
 export declare function validateSettings(settings: Partial<AppSettings>): SettingsValidationResult;
 /**
- * 설정 내보내기
+ * Setup 내보내기
  */
 export declare function exportSettings(filePath: string): Promise<boolean>;
 /**
- * 설정 가져오기
+ * Setup 가져오기
  */
 export declare function importSettings(filePath: string): Promise<boolean>;
 /**
- * 설정 백업 생성
+ * Setup 백업 생성
  */
 export declare function createSettingsBackup(): Promise<string>;
 /**
- * 설정 초기화
+ * Setup 초기화
  */
 export declare function resetSettings(): Promise<boolean>;
 /**
- * 설정 변경 리스너 추가
+ * Setup 변경 리스너 추가
  */
 export declare function addSettingsListener(listener: SettingsListener): void;
 /**
- * 설정 변경 리스너 제거
+ * Setup 변경 리스너 제거
  */
 export declare function removeSettingsListener(listener: SettingsListener): void;
 /**
- * 현재 설정 가져오기
+ * 현재 Setup 가져오기
  */
 export declare function getSettings(): AppSettings;
 /**
- * 개별 설정 가져오기
+ * 개별 Setup 가져오기
  */
 export declare function getSetting<K extends keyof AppSettings>(key: K): AppSettings[K];
 /**
- * 설정 변경 여부 확인
+ * Setup 변경 여부 확인
  */
 export declare function hasUnsavedSettingsChanges(): boolean;
 /**
- * 설정 관리자 정리
+ * Setup 관리자 Cleanup
  */
 export declare function cleanupSettingsManager(): void;
 /**
- * 설정 관리자 객체
+ * Setup 관리자 객체
  */
 declare const SettingsManager: {
     initialize: typeof initializeSettingsManager;

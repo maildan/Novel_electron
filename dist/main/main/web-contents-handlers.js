@@ -2,12 +2,12 @@
 /**
  * 웹 콘텐츠 이벤트 핸들러 모듈
  *
- * Electron 웹 콘텐츠 관련 이벤트 처리 및 보안 설정을 관리합니다.
+ * Electron 웹 콘텐츠 관련 이벤트 처리 및 보안 Setup을 관리합니다.
  * - 새 윈도우 열기 제한 및 보안 검사
- * - 컨텍스트 메뉴 설정 및 커스터마이징
+ * - 컨텍스트 메뉴 Setup 및 커스터마이징
  * - 권한 요청 처리 (알림, 카메라, 마이크 등)
- * - 오류 처리 및 충돌 복구
- * - iframe/webview 보안 설정
+ * - Error 처리 및 충돌 복구
+ * - iframe/webview 보안 Setup
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.URLManager = void 0;
@@ -46,16 +46,16 @@ class URLManager {
             url.startsWith('file://');
     }
     /**
-     * 허용된 패턴 추가
-     */
+   * 허용된 패턴 추가
+   */
     static addAllowedPattern(pattern) {
         if (!this.allowedPatterns.includes(pattern)) {
             this.allowedPatterns.push(pattern);
         }
     }
     /**
-     * 차단된 패턴 추가
-     */
+   * 차단된 패턴 추가
+   */
     static addBlockedPattern(pattern) {
         if (!this.blockedPatterns.includes(pattern)) {
             this.blockedPatterns.push(pattern);
@@ -85,8 +85,8 @@ class ContextMenuBuilder {
         this.items = [];
     }
     /**
-     * 링크 관련 메뉴 항목 추가
-     */
+   * 링크 관련 메뉴 항목 추가
+   */
     addLinkItems(linkURL) {
         if (linkURL) {
             this.items.push({
@@ -100,8 +100,8 @@ class ContextMenuBuilder {
         return this;
     }
     /**
-     * 텍스트 선택 관련 메뉴 항목 추가
-     */
+   * 텍스트 선택 관련 메뉴 항목 추가
+   */
     addSelectionItems(selectionText) {
         if (selectionText) {
             this.items.push({
@@ -115,8 +115,8 @@ class ContextMenuBuilder {
         return this;
     }
     /**
-     * 편집 관련 메뉴 항목 추가
-     */
+   * 편집 관련 메뉴 항목 추가
+   */
     addEditItems(isEditable, editFlags) {
         if (isEditable) {
             const editItems = [];
@@ -143,8 +143,8 @@ class ContextMenuBuilder {
         return this;
     }
     /**
-     * 이미지 관련 메뉴 항목 추가
-     */
+   * 이미지 관련 메뉴 항목 추가
+   */
     addImageItems(srcURL, hasImageContents) {
         if (hasImageContents && srcURL) {
             this.items.push({ type: 'separator' }, {
@@ -155,7 +155,7 @@ class ContextMenuBuilder {
                         electron_1.clipboard.writeImage(nativeImage);
                     }
                     catch (error) {
-                        console.error('이미지 복사 실패:', error);
+                        console.error('이미지 복사 Failed:', error);
                     }
                 }
             }, {
@@ -169,8 +169,8 @@ class ContextMenuBuilder {
         return this;
     }
     /**
-     * 개발자 도구 메뉴 항목 추가
-     */
+   * 개발자 도구 메뉴 항목 추가
+   */
     addDeveloperItems(contents) {
         if (process.env.NODE_ENV === 'development') {
             this.items.push({ type: 'separator' }, {
@@ -184,8 +184,8 @@ class ContextMenuBuilder {
         return this;
     }
     /**
-     * 메뉴 빌드 및 표시
-     */
+   * 메뉴 빌드 및 표시
+   */
     build(contents, x, y) {
         if (this.items.length === 0)
             return;
@@ -200,7 +200,7 @@ class ContextMenuBuilder {
             x,
             y,
             callback: () => {
-                // 메뉴가 닫힐 때 정리 작업
+                // 메뉴가 닫힐 때 Cleanup 작업
                 this.items = [];
             }
         });
@@ -211,17 +211,17 @@ class ContextMenuBuilder {
  */
 class PermissionManager {
     /**
-     * 권한 요청 처리
-     */
+   * 권한 요청 처리
+   */
     static handlePermissionRequest(webContents, permission, callback, details) {
         // 개발 환경에서는 대부분의 권한 허용
         if (process.env.NODE_ENV === 'development') {
-            console.log(`[개발 모드] 권한 허용: ${permission}`);
+            console.log('[개발 모드] 권한 허용: ${permission}');
             return callback(true);
         }
         // 허용된 권한
         if (this.allowedPermissions.has(permission)) {
-            console.log(`권한 허용: ${permission}`);
+            console.log('권한 허용: ${permission}');
             return callback(true);
         }
         // 제한된 권한은 사용자에게 확인
@@ -230,12 +230,12 @@ class PermissionManager {
             return;
         }
         // 기본적으로 거부
-        console.warn(`권한 거부: ${permission}`);
+        console.warn('권한 거부: ${permission}');
         callback(false);
     }
     /**
-     * 권한 요청 다이얼로그 표시
-     */
+   * 권한 요청 다이얼로그 표시
+   */
     static async showPermissionDialog(permission, callback) {
         const permissionNames = {
             'camera': '카메라',
@@ -258,7 +258,7 @@ class PermissionManager {
             callback(result.response === 0);
         }
         catch (error) {
-            console.error('권한 다이얼로그 오류:', error);
+            console.error('권한 다이얼로그 Error:', error);
             callback(false);
         }
     }
@@ -276,22 +276,22 @@ PermissionManager.restrictedPermissions = new Set([
     'background-sync'
 ]);
 /**
- * 웹 콘텐츠 생성 시 보안 및 기능 설정
+ * 웹 콘텐츠 생성 시 보안 및 기능 Setup
  */
 function setupWebContentsHandlers(contents) {
     // 새 윈도우 열기 제한
     contents.setWindowOpenHandler(({ url }) => {
-        console.log(`새 윈도우 요청: ${url}`);
+        console.log('새 윈도우 요청: ${url}');
         if (URLManager.isAllowed(url)) {
             // 허용된 URL은 외부 브라우저에서 열기
             electron_1.shell.openExternal(url);
         }
         else {
-            console.warn(`차단된 URL: ${url}`);
+            console.warn('차단된 URL: ${url}');
         }
         return { action: 'deny' };
     });
-    // 컨텍스트 메뉴 설정
+    // 컨텍스트 메뉴 Setup
     contents.on('context-menu', (event, params) => {
         const menuBuilder = new ContextMenuBuilder();
         menuBuilder
@@ -312,24 +312,24 @@ function setupWebContentsHandlers(contents) {
         const levelName = levels[level] || 'info';
         // 개발 환경에서만 상세 로그 출력
         if (process.env.NODE_ENV === 'development') {
-            console.log(`[WebContents ${levelName.toUpperCase()}] ${message} (${sourceId}:${line})`);
+            console.log('[WebContents ${levelName.toUpperCase()}] ${message} (${sourceId}:${line})');
         }
         else if (level >= 2) { // warning, error만 프로덕션에서 출력
-            console.log(`[WebContents ${levelName.toUpperCase()}] ${message}`);
+            console.log('[WebContents ${levelName.toUpperCase()}] ${message}');
         }
     });
-    // 페이지 로드 실패 처리
+    // 페이지 로드 Failed 처리
     contents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL, isMainFrame) => {
         if (!isMainFrame)
             return; // 메인 프레임만 처리
-        console.error(`페이지 로드 실패: ${errorDescription} (${errorCode}) - ${validatedURL}`);
-        // 네트워크 오류일 경우
+        console.error('페이지 로드 Failed: ${errorDescription} (${errorCode}) - ${validatedURL}');
+        // 네트워크 Error일 경우
         if (errorCode === -3 || errorCode === -106 || errorCode === -21) {
             const offlinePage = `
         <!DOCTYPE html>
         <html>
         <head>
-          <title>연결 오류</title>
+          <title>연결 Error</title>
           <meta charset="utf-8">
           <style>
             body { font-family: system-ui; text-align: center; padding: 50px; }
@@ -356,7 +356,7 @@ function setupWebContentsHandlers(contents) {
     // 렌더러 프로세스 충돌 처리
     contents.on('render-process-gone', async (event, details) => {
         const { reason, exitCode } = details;
-        console.error(`렌더러 프로세스 종료: ${reason} (exit code: ${exitCode})`);
+        console.error('렌더러 프로세스 종료: ${reason} (exit code: ${exitCode})');
         // 충돌 통계 수집 (개발용)
         if (process.env.NODE_ENV === 'development') {
             console.log('Process gone details:', details);
@@ -364,8 +364,8 @@ function setupWebContentsHandlers(contents) {
         try {
             const result = await electron_1.dialog.showMessageBox({
                 type: 'error',
-                title: '애플리케이션 오류',
-                message: '예상치 못한 오류가 발생했습니다.',
+                title: '애플리케이션 Error',
+                message: '예상치 못한 Error가 발생했습니다.',
                 detail: reason === 'crashed'
                     ? '애플리케이션이 비정상적으로 종료되었습니다. 다시 시작하시겠습니까?'
                     : '애플리케이션을 다시 시작해주세요.',
@@ -379,7 +379,7 @@ function setupWebContentsHandlers(contents) {
             electron_1.app.exit(exitCode || 1);
         }
         catch (error) {
-            console.error('오류 다이얼로그 표시 실패:', error);
+            console.error('Error 다이얼로그 표시 Failed:', error);
             electron_1.app.exit(1);
         }
     });
@@ -400,7 +400,7 @@ function setupWebContentsHandlers(contents) {
             }
         }
         catch (error) {
-            console.error('응답없음 다이얼로그 오류:', error);
+            console.error('응답없음 다이얼로그 Error:', error);
         }
     });
     // 응답 복구
@@ -409,30 +409,30 @@ function setupWebContentsHandlers(contents) {
     });
 }
 /**
- * 앱 전체 웹 콘텐츠 이벤트 핸들러 설정
+ * 앱 전체 웹 콘텐츠 이벤트 핸들러 Setup
  */
 function initializeWebContentsHandlers() {
     console.log('웹 콘텐츠 핸들러 초기화 중...');
-    // 보안 설정 초기화
+    // 보안 Setup 초기화
     try {
         // initializeSecuritySettings(); // 현재 사용할 수 없음
-        console.log('보안 설정 초기화 스킵됨');
+        console.log('보안 Setup 초기화 스킵됨');
     }
     catch (error) {
-        console.error('보안 설정 초기화 실패:', error);
+        console.error('보안 Setup 초기화 Failed:', error);
     }
     // 새로운 웹 콘텐츠 생성 감지
     electron_1.app.on('web-contents-created', (event, contents) => {
-        console.log(`새 웹 콘텐츠 생성: ${contents.getType()}`);
+        console.log('새 웹 콘텐츠 생성: ${contents.getType()}');
         setupWebContentsHandlers(contents);
-        // iframe, webview 보안 설정
+        // iframe, webview 보안 Setup
         contents.on('will-attach-webview', (event, webPreferences, params) => {
-            console.log(`webview 연결 시도: ${params.src}`);
-            // 보안 설정 강화
+            console.log('webview 연결 시도: ${params.src}');
+            // 보안 Setup 강화
             delete webPreferences.nodeIntegration;
             delete webPreferences.nodeIntegrationInWorker;
             delete webPreferences.experimentalFeatures;
-            // 필수 보안 옵션 설정
+            // 필수 보안 옵션 Setup
             webPreferences.contextIsolation = true;
             webPreferences.sandbox = true;
             webPreferences.webSecurity = true;
@@ -442,11 +442,11 @@ function initializeWebContentsHandlers() {
             // webPreferences.enableRemoteModule = false; // 더 이상 사용되지 않음
             // URL 유효성 검사
             if (!URLManager.isSafeForWebview(params.src)) {
-                console.warn(`안전하지 않은 webview URL 차단: ${params.src}`);
+                console.warn('안전하지 않은 webview URL 차단: ${params.src}');
                 event.preventDefault();
                 return;
             }
-            console.log(`webview 연결 허용: ${params.src}`);
+            console.log('webview 연결 허용: ${params.src}');
         });
         // 자식 프로세스 스폰 방지
         contents.on('will-prevent-unload', (event) => {
@@ -454,7 +454,7 @@ function initializeWebContentsHandlers() {
             console.log('페이지 unload 방지 시도');
         });
     });
-    console.log('웹 콘텐츠 핸들러 초기화 완료');
+    console.log('웹 콘텐츠 핸들러 초기화 Completed');
 }
 /**
  * 기본 내보내기

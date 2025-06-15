@@ -24,7 +24,7 @@
 	"useHardwareAcceleration": false,
 	"enableGPUAcceleration": true,
 	"gpuAccelerationLevel": 1,
-	"processingMode": "auto",
+	"processingMode": "cpu-intensive",
 	"reduceMemoryInBackground": true,
 	"enableMemoryOptimization": true,
 	"enableBackgroundCleanup": true,

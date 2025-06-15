@@ -103,12 +103,12 @@ const CHANNELS = {
     TOGGLE_MAXIMIZE: 'window:toggleMaximize',
     CLOSE_WINDOW: 'closeWindow',
     TOGGLE_DEVTOOLS: 'window:toggleDevtools',
-    // 설정 관리 (기존 config)
+    // Setup 관리 (기존 config)
     GET_CONFIG: 'config:get',
     SET_CONFIG: 'config:set',
     GET_ALL_CONFIG: 'config:getAllConfig',
     RESET_CONFIG: 'config:reset',
-    // 설정 관리 (새로운 settings)
+    // Setup 관리 (새로운 settings)
     SETTINGS_GET: 'settings:get',
     SETTINGS_SET: 'settings:set',
     SETTINGS_GET_ALL: 'settings:getAll',
@@ -227,7 +227,7 @@ const memoryAPI = {
     forceGc: () => electron_1.ipcRenderer.invoke('memoryForceGc'),
     setThreshold: (threshold) => electron_1.ipcRenderer.invoke('memory:setThreshold', threshold),
 };
-// 설정 API - preload/index.ts와 통합된 완전한 settings API
+// Setup API - preload/index.ts와 통합된 완전한 settings API
 const settingsAPI = {
     // 기본 CRUD
     get: (key) => electron_1.ipcRenderer.invoke(CHANNELS.SETTINGS_GET, key),
@@ -399,7 +399,7 @@ const electronAPI = {
             env: process.env.NODE_ENV
         }),
         log: (message, ...args) => {
-            console.log(`[Preload] ${message}`, ...args);
+            console.log('[Preload] ${message}', ...args);
         }
     }
 };
@@ -539,7 +539,7 @@ const injectStyles = () => {
       }
     }
     
-    /* 모션 감소 설정 지원 */
+    /* 모션 감소 Setup 지원 */
     @media (prefers-reduced-motion: reduce) {
       * {
         animation-duration: 0.01ms !important;
@@ -555,17 +555,17 @@ const injectStyles = () => {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
         link.href = href;
-        link.onerror = () => console.warn(`⚠️ 스타일시트 로드 실패: ${href}`);
+        link.onerror = () => console.warn('⚠️ 스타일시트 로드 Failed: ${href}');
         document.head.appendChild(link);
     };
     // 로드할 스타일 목록
     try {
         loadStylesheet('/assets/fonts/font.css');
         loadStylesheet('/assets/styles/electron-styles.css');
-        console.log('✅ 스타일 시트 주입 성공');
+        console.log('✅ 스타일 시트 주입 Success');
     }
     catch (error) {
-        console.warn('⚠️ 외부 스타일시트 로드 중 오류:', error);
+        console.warn('⚠️ 외부 스타일시트 로드 중 Error:', error);
     }
     return true;
 };
@@ -574,7 +574,7 @@ try {
     electron_1.contextBridge.exposeInMainWorld('electronAPI', electronAPI);
     // 디버깅을 위해 실제 노출된 키들 확인
     const exposedKeys = Object.keys(electronAPI);
-    console.log('✅ Electron API가 성공적으로 노출되었습니다.');
+    console.log('✅ Electron API가 Success적으로 노출되었습니다.');
     console.log('🔌 사용 가능한 API:', exposedKeys);
     // native API가 포함되었는지 확인
     if (electronAPI.native) {
@@ -592,7 +592,7 @@ try {
     electron_1.contextBridge.exposeInMainWorld('injectStyles', injectStyles);
 }
 catch (error) {
-    console.error('❌ Preload script: electronAPI 노출 실패:', error);
+    console.error('❌ Preload script: electronAPI 노출 Failed:', error);
 }
 // 개발 모드에서 디버깅 정보
 if (process.env.NODE_ENV === 'development') {

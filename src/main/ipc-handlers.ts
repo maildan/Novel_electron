@@ -61,16 +61,16 @@ export class IpcHandlers {
       this.registerUtilityHandlers();
 
       this.isInitialized = true;
-      console.log('[IPC] IPC 핸들러 등록 완료');
+      console.log('[IPC] IPC 핸들러 등록 Completed');
     } catch (error) {
-      console.error('[IPC] IPC 핸들러 등록 실패:', error);
+      console.error('[IPC] IPC 핸들러 등록 Failed:', error);
       throw error;
     }
   }
 
   /**
-   * 데이터 동기화 핸들러 등록
-   */
+ * 데이터 동기화 핸들러 등록
+ */
   private registerDataSyncHandlers(): void {
     // 데이터 동기화 상태 확인
     ipcMain.handle('data-sync-status', async () => {
@@ -92,7 +92,7 @@ export class IpcHandlers {
       }
     });
 
-    // 동기화 설정 업데이트
+    // 동기화 Setup 업데이트
     ipcMain.handle('data-sync-update-config', async (event, config) => {
       try {
         return await dataSyncManager.updateConfig(config);
@@ -114,8 +114,8 @@ export class IpcHandlers {
   }
 
   /**
-   * 통계 핸들러 등록
-   */
+ * 통계 핸들러 등록
+ */
   private registerStatsHandlers(): void {
     // 통계 데이터 가져오기
     ipcMain.handle('stats-get-data', async (event, options) => {
@@ -137,7 +137,7 @@ export class IpcHandlers {
       }
     });
 
-    // 통계 설정 업데이트
+    // 통계 Setup 업데이트
     ipcMain.handle('stats-update-settings', async (event, settings) => {
       try {
         return await statsManager.updateSettings(settings);
@@ -159,8 +159,8 @@ export class IpcHandlers {
   }
 
   /**
-   * 브라우저 감지 핸들러 등록
-   */
+ * 브라우저 감지 핸들러 등록
+ */
   private registerBrowserHandlers(): void {
     // 활성 브라우저 정보 가져오기
     ipcMain.handle('browser-get-active', async () => {
@@ -192,7 +192,7 @@ export class IpcHandlers {
       }
     });
 
-    // 브라우저 감지 설정 업데이트
+    // 브라우저 감지 Setup 업데이트
     ipcMain.handle('browser-update-settings', async (event, settings) => {
       try {
         return await browserDetector.updateSettings(settings);
@@ -204,8 +204,8 @@ export class IpcHandlers {
   }
 
   /**
-   * 자동 시작 핸들러 등록
-   */
+ * 자동 시작 핸들러 등록
+ */
   private registerAutoLaunchHandlers(): void {
     // 자동 시작 상태 확인
     ipcMain.handle('auto-launch-status', async () => {
@@ -249,8 +249,8 @@ export class IpcHandlers {
   }
 
   /**
-   * 보안 핸들러 등록
-   */
+ * 보안 핸들러 등록
+ */
   private registerSecurityHandlers(): void {
     // CSP 업데이트
     ipcMain.handle('security-update-csp', async (event, config) => {
@@ -283,7 +283,7 @@ export class IpcHandlers {
       }
     });
 
-    // 창에 보안 설정 적용
+    // 창에 보안 Setup 적용
     ipcMain.handle('security-setup-window', async (event) => {
       try {
         const window = BrowserWindow.fromWebContents(event.sender);
@@ -299,8 +299,8 @@ export class IpcHandlers {
   }
 
   /**
-   * 유틸리티 핸들러 등록
-   */
+ * 유틸리티 핸들러 등록
+ */
   private registerUtilityHandlers(): void {
     // 앱 재시작
     ipcMain.handle('app:restart', async () => {
@@ -364,8 +364,8 @@ export class IpcHandlers {
             dataSync: dataSyncManager.isInitialized(),
             stats: statsManager.isInitialized(),
             browser: browserDetector.isInitialized(),
-            security: true, // 보안 관리자는 항상 초기화됨
-            autoLaunch: true // 자동 시작 관리자는 항상 초기화됨
+            security: true, // 보안 관리자는 항상 Initialized
+            autoLaunch: true // 자동 시작 관리자는 항상 Initialized
           },
           timestamp: Date.now()
         };
@@ -377,14 +377,14 @@ export class IpcHandlers {
   }
 
   /**
-   * 핸들러 제거
-   */
+ * 핸들러 제거
+ */
   cleanup(): void {
     if (!this.isInitialized) {
       return;
     }
 
-    console.log('[IPC] IPC 핸들러 정리 시작');
+    console.log('[IPC] IPC 핸들러 Cleanup 시작');
 
     // 모든 핸들러 목록
     const handlers = [
@@ -414,15 +414,15 @@ export class IpcHandlers {
     });
 
     this.isInitialized = false;
-    console.log('[IPC] IPC 핸들러 정리 완료');
+    console.log('[IPC] IPC 핸들러 Cleanup Completed');
   }
 
   /**
-   * 리소스 정리
-   */
+ * 리소스 Cleanup
+ */
   dispose(): void {
-    // IPC 핸들러 정리 로직
-    console.log('[IPC] IPC 핸들러 정리 완료');
+    // IPC 핸들러 Cleanup 로직
+    console.log('[IPC] IPC 핸들러 Cleanup Completed');
   }
 }
 

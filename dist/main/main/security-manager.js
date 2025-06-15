@@ -1,6 +1,6 @@
 "use strict";
 /**
- * 보안 설정 관리 모듈
+ * 보안 Setup 관리 모듈
  *
  * Electron 앱의 보안 헤더, CSP(Content Security Policy), 요청 필터링 등을 관리합니다.
  * 개발 환경과 프로덕션 환경에서 다른 보안 정책을 적용합니다.
@@ -26,14 +26,14 @@ class SecurityManager {
         };
     }
     /**
-     * 보안 관리자 초기화
-     */
+   * 보안 관리자 초기화
+   */
     async initialize() {
         if (this.isInitialized) {
             return true;
         }
         try {
-            console.log(`[Security] Initializing security manager (dev: ${isDev}, disableSecurity: ${disableSecurity})`);
+            console.log('[Security] Initializing security manager (dev: ${isDev}, disableSecurity: ${disableSecurity})');
             if (disableSecurity) {
                 console.log('[Security] Security disabled by environment variable');
                 this.isInitialized = true;
@@ -43,9 +43,9 @@ class SecurityManager {
             if (this.config.csp.enabled && !disableCSP) {
                 await this.applyCSPToAllSessions();
             }
-            // 키보드 이벤트 핸들러 설정
+            // 키보드 이벤트 핸들러 Setup
             this.setupKeyboardEventHandlers();
-            // 웹 콘텐츠 보안 설정
+            // 웹 콘텐츠 보안 Setup
             this.setupWebContentsSecurity();
             this.isInitialized = true;
             console.log('[Security] Security manager initialized successfully');
@@ -57,8 +57,8 @@ class SecurityManager {
         }
     }
     /**
-     * 특정 창에 대한 요청 보안 검사 설정
-     */
+   * 특정 창에 대한 요청 보안 검사 Setup
+   */
     setupRequestSecurity(window) {
         try {
             if (!window?.webContents) {
@@ -70,13 +70,13 @@ class SecurityManager {
                 if (this.isUrlAllowedForWindow(url)) {
                     return { action: 'allow' };
                 }
-                console.warn(`[Security] Blocked window open for URL: ${url}`);
+                console.warn('[Security] Blocked window open for URL: ${url}');
                 return { action: 'deny' };
             });
             // 네비게이션 제어
             webContents.on('will-navigate', (event, url) => {
                 if (!this.isUrlAllowedForNavigation(url)) {
-                    console.warn(`[Security] Blocked navigation to URL: ${url}`);
+                    console.warn('[Security] Blocked navigation to URL: ${url}');
                     event.preventDefault();
                 }
             });
@@ -119,8 +119,8 @@ class SecurityManager {
         };
     }
     /**
-     * 기본 설정 가져오기
-     */
+   * 기본 Setup 가져오기
+   */
     getDefaultConfig(customConfig) {
         const defaultConfig = {
             csp: {
@@ -149,8 +149,8 @@ class SecurityManager {
         return this.mergeConfig(defaultConfig, customConfig);
     }
     /**
-     * 설정 병합
-     */
+   * Setup 병합
+   */
     mergeConfig(defaultConfig, customConfig) {
         if (!customConfig) {
             return defaultConfig;
@@ -192,8 +192,8 @@ class SecurityManager {
         return directives.join('; ');
     }
     /**
-     * 보안 헤더 생성
-     */
+   * 보안 헤더 생성
+   */
     getSecurityHeaders() {
         const headers = {};
         if (this.config.csp.enabled) {
@@ -207,8 +207,8 @@ class SecurityManager {
         return headers;
     }
     /**
-     * 보안 헤더 적용
-     */
+   * 보안 헤더 적용
+   */
     applySecurityHeaders(details, callback) {
         if (details.responseHeaders) {
             const securityHeaders = this.getSecurityHeaders();
@@ -234,11 +234,11 @@ class SecurityManager {
         try {
             // 기존 리스너 제거 (중복 방지)
             sess.webRequest.onHeadersReceived(null);
-            // 새 CSP 설정 적용
+            // 새 CSP Setup 적용
             sess.webRequest.onHeadersReceived({ urls: ['*://*/*'] }, (details, callback) => {
                 this.applySecurityHeaders(details, callback);
             });
-            console.log(`[Security] CSP registered for session (strict: ${this.config.csp.strictMode})`);
+            console.log('[Security] CSP registered for session (strict: ${this.config.csp.strictMode})');
             return true;
         }
         catch (error) {
@@ -255,14 +255,14 @@ class SecurityManager {
             this.registerCSPForSession(electron_1.session.defaultSession);
             // 모든 세션에 CSP 적용 (파티션된 세션 포함)
             const allSessions = electron_1.session.getAllSessions?.() || [];
-            console.log(`[Security] Applying CSP to all sessions (count: ${allSessions.length + 1})`);
+            console.log('[Security] Applying CSP to all sessions (count: ${allSessions.length + 1})');
             allSessions.forEach((sess, idx) => {
                 try {
-                    console.log(`[Security] Applying CSP to session #${idx + 1}`);
+                    console.log('[Security] Applying CSP to session #${idx + 1}');
                     this.registerCSPForSession(sess);
                 }
                 catch (error) {
-                    console.error(`[Security] Failed to apply CSP to session #${idx + 1}:`, error);
+                    console.error('[Security] Failed to apply CSP to session #${idx + 1}:', error);
                 }
             });
             console.log('[Security] CSP applied to all sessions');
@@ -270,7 +270,7 @@ class SecurityManager {
         }
         catch (error) {
             console.error('[Security] Failed to apply CSP to all sessions:', error);
-            // 오류가 발생한 경우에도 기본 세션만이라도 시도
+            // Error가 발생한 경우에도 기본 세션만이라도 시도
             try {
                 console.warn('[Security] Fallback: Applying CSP to default session only');
                 this.registerCSPForSession(electron_1.session.defaultSession);
@@ -283,8 +283,8 @@ class SecurityManager {
         }
     }
     /**
-     * 웹 콘텐츠 보안 설정
-     */
+   * 웹 콘텐츠 보안 Setup
+   */
     setupWebContentsSecurity() {
         electron_1.app.on('web-contents-created', (event, contents) => {
             // 팝업 차단
@@ -292,13 +292,13 @@ class SecurityManager {
                 if (this.isUrlAllowedForWindow(url)) {
                     return { action: 'allow' };
                 }
-                console.log(`[Security] Blocked external URL open: ${url}`);
+                console.log('[Security] Blocked external URL open: ${url}');
                 return { action: 'deny' };
             });
             // 탐색 차단
             contents.on('will-navigate', (evt, navUrl) => {
                 if (!this.isUrlAllowedForNavigation(navUrl)) {
-                    console.log(`[Security] Blocked navigation: ${navUrl}`);
+                    console.log('[Security] Blocked navigation: ${navUrl}');
                     evt.preventDefault();
                 }
             });
@@ -339,8 +339,8 @@ class SecurityManager {
         }
     }
     /**
-     * 키보드 이벤트 핸들러 설정
-     */
+   * 키보드 이벤트 핸들러 Setup
+   */
     setupKeyboardEventHandlers() {
         try {
             // 기존 핸들러 제거 (중복 방지)
@@ -451,8 +451,8 @@ class SecurityManager {
         }
     }
     /**
-     * 기존 키보드 핸들러 제거
-     */
+   * 기존 키보드 핸들러 제거
+   */
     removeExistingKeyboardHandlers() {
         try {
             const handlers = [
@@ -509,13 +509,13 @@ function getSecurityManager(config) {
 exports.security = {
     /**
      * 보안 관리자 초기화
-     */
+   */
     async initialize(config) {
         return await getSecurityManager(config).initialize();
     },
     /**
-     * 특정 창에 요청 보안 설정
-     */
+   * 특정 창에 요청 보안 Setup
+   */
     setupRequestSecurity(window) {
         return getSecurityManager().setupRequestSecurity(window);
     },

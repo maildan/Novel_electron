@@ -168,8 +168,8 @@ export class BrowserDetector {
   }
 
   /**
-   * 브라우저 감지 시스템 초기화
-   */
+ * 브라우저 감지 시스템 초기화
+ */
   async initialize(): Promise<boolean> {
     try {
       debugLog('브라우저 감지 시스템 초기화 시작');
@@ -183,10 +183,10 @@ export class BrowserDetector {
         await this.initializeLinux();
       }
       
-      debugLog('브라우저 감지 시스템 초기화 완료');
+      debugLog('브라우저 감지 시스템 초기화 Completed');
       return true;
     } catch (error) {
-      console.error('브라우저 감지 시스템 초기화 오류:', error);
+      console.error('브라우저 감지 시스템 초기화 Error:', error);
       return false;
     }
   }
@@ -198,9 +198,9 @@ export class BrowserDetector {
     try {
       // active-win 모듈 동적 로드
       const activeWin = await import('active-win');
-      debugLog('macOS 브라우저 감지 모듈 로드 완료');
+      debugLog('macOS 브라우저 감지 모듈 로드 Completed');
     } catch (error) {
-      debugLog('active-win 모듈 로드 실패, 폴백 모드 사용:', error);
+      debugLog('active-win 모듈 로드 Failed, 폴백 모드 사용:', error);
     }
   }
 
@@ -221,8 +221,8 @@ export class BrowserDetector {
   }
 
   /**
-   * 현재 활성 브라우저 이름 감지
-   */
+ * 현재 활성 브라우저 이름 감지
+ */
   async detectBrowserName(): Promise<string | null> {
     try {
       // 1. 활성 윈도우 정보 가져오기
@@ -255,14 +255,14 @@ export class BrowserDetector {
 
       return null;
     } catch (error) {
-      console.error('브라우저 이름 감지 오류:', error);
+      console.error('브라우저 이름 감지 Error:', error);
       return null;
     }
   }
 
   /**
-   * 활성 윈도우 정보 가져오기
-   */
+ * 활성 윈도우 정보 가져오기
+ */
   private async getActiveWindow(): Promise<WindowInfo | null> {
     try {
       if (process.platform === 'darwin') {
@@ -274,14 +274,14 @@ export class BrowserDetector {
         return null;
       }
     } catch (error) {
-      debugLog('활성 윈도우 정보 가져오기 실패:', error);
+      debugLog('활성 윈도우 정보 가져오기 Failed:', error);
       return null;
     }
   }
 
   /**
-   * 프로세스 이름으로 브라우저 감지
-   */
+ * 프로세스 이름으로 브라우저 감지
+ */
   private detectFromProcessName(windowInfo: WindowInfo): string | null {
     if (!windowInfo.owner?.name) {
       return null;
@@ -308,8 +308,8 @@ export class BrowserDetector {
   }
 
   /**
-   * 창 제목에서 브라우저 감지
-   */
+ * 창 제목에서 브라우저 감지
+ */
   private detectFromTitle(title: string): string | null {
     const titleParts = title.split(' - ');
     const lastPart = titleParts[titleParts.length - 1];
@@ -325,7 +325,7 @@ export class BrowserDetector {
           );
           
           if (matches) {
-            debugLog(`타이틀 기반 웹사이트 감지: ${key}`);
+            debugLog('타이틀 기반 웹사이트 감지: ${key}');
             return key;
           }
         }
@@ -367,7 +367,7 @@ export class BrowserDetector {
 
       return false;
     } catch (error) {
-      console.error('Google Docs 윈도우 감지 오류:', error);
+      console.error('Google Docs 윈도우 감지 Error:', error);
       return false;
     }
   }
@@ -399,7 +399,7 @@ export class BrowserDetector {
       }
       
     } catch (error) {
-      debugLog('URL 패턴 감지 오류:', error);
+      debugLog('URL 패턴 감지 Error:', error);
     }
     
     return patterns;
@@ -446,8 +446,8 @@ export class BrowserDetector {
   }
 
   /**
-   * 브라우저 정보 업데이트
-   */
+ * 브라우저 정보 업데이트
+ */
   updateBrowserInfo(info: Partial<BrowserInfo>): void {
     this.lastKnownBrowserInfo = {
       ...this.lastKnownBrowserInfo,
@@ -457,15 +457,15 @@ export class BrowserDetector {
   }
 
   /**
-   * 마지막 브라우저 정보 조회
-   */
+ * 마지막 브라우저 정보 조회
+ */
   getLastKnownBrowserInfo(): BrowserInfo {
     return { ...this.lastKnownBrowserInfo };
   }
 
   /**
-   * 브라우저 감지 상태 조회
-   */
+ * 브라우저 감지 상태 조회
+ */
   getDetectorStatus() {
     return {
       cacheSize: this.urlCache.size,
@@ -476,24 +476,24 @@ export class BrowserDetector {
   }
 
   /**
-   * 캐시 정리
-   */
+ * 캐시 Cleanup
+ */
   clearCache(): void {
     this.urlCache.clear();
-    debugLog('브라우저 감지 캐시 정리 완료');
+    debugLog('브라우저 감지 캐시 Cleanup Completed');
   }
 
   /**
-   * 정리 작업
-   */
+ * Cleanup 작업
+ */
   cleanup(): void {
     this.clearCache();
-    debugLog('브라우저 감지 시스템 정리 완료');
+    debugLog('브라우저 감지 시스템 Cleanup Completed');
   }
 
   /**
-   * 활성 브라우저 정보 가져오기
-   */
+ * 활성 브라우저 정보 가져오기
+ */
   async getActiveBrowser(): Promise<BrowserInfo | null> {
     try {
       const windowInfo = await this.getActiveWindow();
@@ -515,20 +515,20 @@ export class BrowserDetector {
         urlPatterns: []
       };
     } catch (error) {
-      console.error('활성 브라우저 감지 오류:', error);
+      console.error('활성 브라우저 감지 Error:', error);
       return null;
     }
   }
 
   /**
-   * 설치된 브라우저 목록 가져오기
-   */
+ * 설치된 브라우저 목록 가져오기
+ */
   async getInstalledBrowsers(): Promise<string[]> {
     try {
       // 설치된 브라우저 감지 로직
       return Object.values(BROWSER_PROCESS_NAMES);
     } catch (error) {
-      console.error('설치된 브라우저 목록 가져오기 오류:', error);
+      console.error('설치된 브라우저 목록 가져오기 Error:', error);
       return [];
     }
   }
@@ -551,17 +551,17 @@ export class BrowserDetector {
       
       return googleDocsPatterns.some(pattern => pattern.test(browserInfo.url || ''));
     } catch (error) {
-      console.error('Google Docs 감지 오류:', error);
+      console.error('Google Docs 감지 Error:', error);
       return false;
     }
   }
 
   /**
-   * 설정 업데이트
-   */
+ * Setup 업데이트
+ */
   async updateSettings(settings: any): Promise<{ success: boolean; error?: string }> {
     try {
-      // 설정 업데이트 로직
+      // Setup 업데이트 로직
       return { success: true };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -570,16 +570,16 @@ export class BrowserDetector {
   }
 
   /**
-   * 모듈 재시작
-   */
+ * 모듈 재시작
+ */
   async restart(): Promise<void> {
     // 재시작 로직
     await this.initialize();
   }
 
   /**
-   * 초기화 상태 확인
-   */
+ * 초기화 상태 확인
+ */
   isInitialized(): boolean {
     return true; // 간단한 구현
   }

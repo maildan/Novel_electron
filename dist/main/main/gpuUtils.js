@@ -55,12 +55,12 @@ class GPUManager {
         this.isInitialized = false;
         this.performanceMetrics = [];
         this.gpuInfo = null;
-        // 사용자 데이터 경로 설정
+        // 사용자 데이터 경로 Setup
         const userDataPath = process.env.NODE_ENV === 'development'
             ? path.join(__dirname, '../../userData')
             : electron_1.app.getPath('userData');
         this.configPath = path.join(userDataPath, 'gpu-settings.json');
-        // 기본 설정
+        // 기본 Setup
         this.settings = {
             acceleration: true,
             batteryOptimization: true,
@@ -76,45 +76,45 @@ class GPUManager {
     async initialize() {
         try {
             (0, utils_1.debugLog)('GPU 관리자 초기화 시작');
-            // 설정 파일 로드
+            // Setup 파일 로드
             await this.loadSettings();
             // GPU 정보 수집
             await this.collectGPUInfo();
-            // 환경 변수 기반 설정 적용
+            // 환경 변수 기반 Setup 적용
             this.applyEnvironmentSettings();
             // 네이티브 모듈을 통한 GPU 초기화
             await this.initializeNativeGPU();
             this.isInitialized = true;
-            (0, utils_1.debugLog)('GPU 관리자 초기화 완료');
+            (0, utils_1.debugLog)('GPU 관리자 초기화 Completed');
         }
         catch (error) {
-            (0, utils_1.errorLog)('GPU 관리자 초기화 중 오류:', error);
+            (0, utils_1.errorLog)('GPU 관리자 초기화 중 Error:', error);
             this.isInitialized = false;
         }
     }
     /**
-     * 설정 파일 로드
-     */
+   * Setup 파일 로드
+   */
     async loadSettings() {
         try {
             if (fs.existsSync(this.configPath)) {
                 const data = fs.readFileSync(this.configPath, 'utf8');
                 const loadedSettings = JSON.parse(data);
                 this.settings = { ...this.settings, ...loadedSettings };
-                (0, utils_1.debugLog)('GPU 설정 로드 완료');
+                (0, utils_1.debugLog)('GPU Setup 로드 Completed');
             }
             else {
                 await this.saveSettings();
-                (0, utils_1.debugLog)('기본 GPU 설정 생성 완료');
+                (0, utils_1.debugLog)('기본 GPU Setup 생성 Completed');
             }
         }
         catch (error) {
-            (0, utils_1.errorLog)('GPU 설정 로드 중 오류:', error);
+            (0, utils_1.errorLog)('GPU Setup 로드 중 Error:', error);
         }
     }
     /**
-     * 설정 파일 저장
-     */
+   * Setup 파일 저장
+   */
     async saveSettings() {
         try {
             const dir = path.dirname(this.configPath);
@@ -123,10 +123,10 @@ class GPUManager {
             }
             this.settings.lastUpdated = new Date().toISOString();
             fs.writeFileSync(this.configPath, JSON.stringify(this.settings, null, 2));
-            (0, utils_1.debugLog)('GPU 설정 저장 완료');
+            (0, utils_1.debugLog)('GPU Setup 저장 Completed');
         }
         catch (error) {
-            (0, utils_1.errorLog)('GPU 설정 저장 중 오류:', error);
+            (0, utils_1.errorLog)('GPU Setup Saving Error:', error);
         }
     }
     /**
@@ -138,7 +138,7 @@ class GPUManager {
             const nativeModule = await native_modules_1.nativeModuleLoader.loadModule();
             if (nativeModule.isAvailable && nativeModule.getGpuInfo) {
                 this.gpuInfo = nativeModule.getGpuInfo();
-                (0, utils_1.debugLog)('네이티브 모듈을 통한 GPU 정보 수집 완료:', this.gpuInfo);
+                (0, utils_1.debugLog)('네이티브 모듈을 통한 GPU 정보 수집 Completed:', this.gpuInfo);
             }
             else {
                 // JavaScript 폴백으로 기본 GPU 정보 생성
@@ -153,17 +153,17 @@ class GPUManager {
             }
         }
         catch (error) {
-            (0, utils_1.errorLog)('GPU 정보 수집 중 오류:', error);
+            (0, utils_1.errorLog)('GPU 정보 수집 중 Error:', error);
             this.gpuInfo = null;
         }
     }
     /**
-     * 환경 변수 기반 설정 적용
-     */
+   * 환경 변수 기반 Setup 적용
+   */
     applyEnvironmentSettings() {
         const envGpuMode = process.env.GPU_MODE;
         if (envGpuMode) {
-            (0, utils_1.debugLog)(`환경 변수 GPU_MODE: ${envGpuMode}`);
+            (0, utils_1.debugLog)('환경 변수 GPU_MODE: ${envGpuMode}');
             switch (envGpuMode.toLowerCase()) {
                 case 'software':
                     this.settings.acceleration = false;
@@ -181,7 +181,7 @@ class GPUManager {
                     this.settings.processingMode = 'auto';
                     break;
             }
-            (0, utils_1.debugLog)('환경 변수 기반 GPU 설정 적용 완료');
+            (0, utils_1.debugLog)('환경 변수 기반 GPU Setup 적용 Completed');
         }
     }
     /**
@@ -191,7 +191,7 @@ class GPUManager {
         try {
             const nativeModule = await native_modules_1.nativeModuleLoader.loadModule();
             if (nativeModule.isAvailable) {
-                // GPU 가속화 설정
+                // GPU 가속화 Setup
                 if (this.settings.acceleration && nativeModule.gpuAccelerate) {
                     const result = nativeModule.gpuAccelerate('initialize', {
                         highPerformance: this.settings.processingMode === 'gpu-intensive',
@@ -210,12 +210,12 @@ class GPUManager {
             }
         }
         catch (error) {
-            (0, utils_1.errorLog)('네이티브 GPU 초기화 중 오류:', error);
+            (0, utils_1.errorLog)('네이티브 GPU 초기화 중 Error:', error);
         }
     }
     /**
-     * 하드웨어 가속 토글
-     */
+   * 하드웨어 가속 토글
+   */
     async toggleHardwareAcceleration(enable) {
         try {
             this.settings.acceleration = enable;
@@ -229,13 +229,13 @@ class GPUManager {
                 if (!enable) {
                     electron_1.app.disableHardwareAcceleration();
                 }
-                (0, utils_1.debugLog)(`하드웨어 가속 ${enable ? '활성화' : '비활성화'} 완료`);
+                (0, utils_1.debugLog)(`하드웨어 가속 ${enable ? '활성화' : '비활성화'} Completed`);
             }
             await this.saveSettings();
             return true;
         }
         catch (error) {
-            (0, utils_1.errorLog)('하드웨어 가속 토글 중 오류:', error);
+            (0, utils_1.errorLog)('하드웨어 가속 토글 중 Error:', error);
             return false;
         }
     }
@@ -268,7 +268,7 @@ class GPUManager {
             }
         }
         catch (error) {
-            (0, utils_1.errorLog)('GPU 가속화 실행 중 오류:', error);
+            (0, utils_1.errorLog)('GPU 가속화 실행 중 Error:', error);
             return this.runJavaScriptFallback(task, data);
         }
     }
@@ -276,7 +276,7 @@ class GPUManager {
      * JavaScript 폴백 구현
      */
     runJavaScriptFallback(task, data) {
-        (0, utils_1.debugLog)(`JavaScript 폴백으로 ${task} 작업 실행`);
+        (0, utils_1.debugLog)('JavaScript 폴백으로 ${task} 작업 실행');
         switch (task) {
             case 'typing-analysis':
                 return this.analyzeTypingJS(data);
@@ -302,7 +302,7 @@ class GPUManager {
             };
         }
         catch (error) {
-            (0, utils_1.errorLog)('JavaScript 타이핑 분석 중 오류:', error);
+            (0, utils_1.errorLog)('JavaScript 타이핑 분석 중 Error:', error);
             return { success: false, error: error instanceof Error ? error.message : String(error) };
         }
     }
@@ -314,8 +314,8 @@ class GPUManager {
         return { success: true, processed: false, method: 'javascript_fallback' };
     }
     /**
-     * 성능 메트릭 기록
-     */
+   * 성능 메트릭 기록
+   */
     recordPerformanceMetrics(metrics) {
         this.performanceMetrics.push(metrics);
         // 최근 100개 메트릭만 유지
@@ -324,8 +324,8 @@ class GPUManager {
         }
     }
     /**
-     * 배터리 최적화 모드 설정
-     */
+   * 배터리 최적화 모드 Setup
+   */
     async setBatteryOptimization(enable) {
         this.settings.batteryOptimization = enable;
         if (enable) {
@@ -337,7 +337,7 @@ class GPUManager {
         (0, utils_1.debugLog)(`배터리 최적화 모드 ${enable ? '활성화' : '비활성화'}`);
     }
     /**
-     * GPU 설정 가져오기
+     * GPU Setup 가져오기
      */
     getSettings() {
         return { ...this.settings };
@@ -349,14 +349,14 @@ class GPUManager {
         return this.gpuInfo ? { ...this.gpuInfo } : null;
     }
     /**
-     * 성능 메트릭 가져오기
-     */
+   * 성능 메트릭 가져오기
+   */
     getPerformanceMetrics() {
         return [...this.performanceMetrics];
     }
     /**
-     * 하드웨어 가속 활성화 상태 확인
-     */
+   * 하드웨어 가속 활성화 상태 확인
+   */
     isHardwareAccelerationEnabled() {
         return this.settings.acceleration;
     }
@@ -382,7 +382,7 @@ class GPUManager {
             }
         }
         catch (error) {
-            (0, utils_1.errorLog)('GPU 벤치마크 실행 중 오류:', error);
+            (0, utils_1.errorLog)('GPU 벤치마크 실행 중 Error:', error);
             return {
                 score: 0,
                 gpu: false,
@@ -403,7 +403,7 @@ function getGPUManager() {
     return gpuManager;
 }
 /**
- * GPU 가속 설정
+ * GPU 가속 Setup
  */
 async function setupGpuAcceleration(enable) {
     const manager = getGPUManager();

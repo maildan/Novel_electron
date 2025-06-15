@@ -15,8 +15,8 @@ class MenuManager {
         this.isInitialized = false;
     }
     /**
-     * 싱글톤 인스턴스 반환
-     */
+   * 싱글톤 인스턴스 반환
+   */
     static getInstance() {
         if (!MenuManager.instance) {
             MenuManager.instance = new MenuManager();
@@ -24,27 +24,27 @@ class MenuManager {
         return MenuManager.instance;
     }
     /**
-     * 메뉴 매니저 초기화
-     */
+   * 메뉴 매니저 초기화
+   */
     async initialize() {
         if (this.isInitialized) {
             return;
         }
         console.log('[Menu] 메뉴 매니저 초기화 시작');
         try {
-            // 전역 컨텍스트 메뉴 이벤트 설정
+            // 전역 컨텍스트 메뉴 이벤트 Setup
             this.setupContextMenuEvents();
             this.isInitialized = true;
-            console.log('[Menu] 메뉴 매니저 초기화 완료');
+            console.log('[Menu] 메뉴 매니저 초기화 Completed');
         }
         catch (error) {
-            console.error('[Menu] 메뉴 매니저 초기화 실패:', error);
+            console.error('[Menu] 메뉴 매니저 초기화 Failed:', error);
             throw error;
         }
     }
     /**
-     * 플랫폼 체크 헬퍼
-     */
+   * 플랫폼 체크 헬퍼
+   */
     get platformInfo() {
         return {
             isMac: process.platform === 'darwin',
@@ -54,11 +54,11 @@ class MenuManager {
         };
     }
     /**
-     * 메인 애플리케이션 메뉴 생성
-     */
+   * 메인 애플리케이션 메뉴 생성
+   */
     createApplicationMenu(options = {}) {
         const { isMac, isWindows, isDev } = this.platformInfo;
-        // 기본 옵션
+        // Default options
         const defaultOptions = {
             showPreferences: true,
             showAbout: true,
@@ -101,7 +101,7 @@ class MenuManager {
         submenu.push({ type: 'separator' });
         if (options.showPreferences) {
             submenu.push({
-                label: '환경설정...',
+                label: '환경Setup...',
                 accelerator: 'Command+,',
                 click: () => this.sendMenuAction({ action: 'open-settings' })
             });
@@ -116,8 +116,8 @@ class MenuManager {
         };
     }
     /**
-     * 파일 메뉴 생성
-     */
+   * 파일 메뉴 생성
+   */
     createFileMenu(options, recentFiles, isWindows, isMac) {
         const submenu = [
             {
@@ -154,10 +154,10 @@ class MenuManager {
             accelerator: 'CmdOrCtrl+Shift+S',
             click: () => this.sendMenuAction({ action: 'save-as' })
         }, { type: 'separator' });
-        // Windows 환경설정 메뉴
+        // Windows 환경Setup 메뉴
         if (isWindows && options.showPreferences) {
             submenu.push({
-                label: '환경설정',
+                label: '환경Setup',
                 accelerator: 'Ctrl+,',
                 click: () => this.sendMenuAction({ action: 'open-settings' })
             }, { type: 'separator' });
@@ -175,8 +175,8 @@ class MenuManager {
         };
     }
     /**
-     * 편집 메뉴 생성
-     */
+   * 편집 메뉴 생성
+   */
     createEditMenu(isMac) {
         const submenu = [
             { role: 'undo' },
@@ -204,8 +204,8 @@ class MenuManager {
         };
     }
     /**
-     * 보기 메뉴 생성
-     */
+   * 보기 메뉴 생성
+   */
     createViewMenu(showDevTools) {
         const submenu = [
             { role: 'reload' },
@@ -225,8 +225,8 @@ class MenuManager {
         };
     }
     /**
-     * 창 메뉴 생성
-     */
+   * 창 메뉴 생성
+   */
     createWindowMenu(isMac) {
         const submenu = [
             { role: 'minimize' },
@@ -244,8 +244,8 @@ class MenuManager {
         };
     }
     /**
-     * 도움말 메뉴 생성
-     */
+   * 도움말 메뉴 생성
+   */
     createHelpMenu(options, isMac) {
         const submenu = [
             {
@@ -314,8 +314,8 @@ class MenuManager {
         return electron_1.Menu.buildFromTemplate(template);
     }
     /**
-     * 트레이 메뉴 생성
-     */
+   * 트레이 메뉴 생성
+   */
     createTrayMenu(options = {}) {
         const appName = options.appName || electron_1.app.getName();
         const template = [
@@ -334,7 +334,7 @@ class MenuManager {
             },
             { type: 'separator' },
             {
-                label: '설정',
+                label: 'Setup',
                 click: () => {
                     this.showAllWindows();
                     this.sendMenuAction({ action: 'open-settings' });
@@ -353,15 +353,15 @@ class MenuManager {
         return electron_1.Menu.buildFromTemplate(template);
     }
     /**
-     * 애플리케이션 메뉴 설정
-     */
+   * 애플리케이션 메뉴 Setup
+   */
     setupApplicationMenu(options = {}) {
         const menu = this.createApplicationMenu(options);
         electron_1.Menu.setApplicationMenu(menu);
     }
     /**
-     * 전역 컨텍스트 메뉴 이벤트 설정
-     */
+   * 전역 컨텍스트 메뉴 이벤트 Setup
+   */
     setupContextMenuEvents() {
         electron_1.app.on('web-contents-created', (event, contents) => {
             contents.on('context-menu', (event, params) => {
@@ -370,8 +370,8 @@ class MenuManager {
         });
     }
     /**
-     * 컨텍스트 메뉴 처리
-     */
+   * 컨텍스트 메뉴 처리
+   */
     handleContextMenu(contents, params) {
         const { x, y, isEditable, selectionText, editFlags, linkURL } = params;
         const menuItems = [];
@@ -435,8 +435,8 @@ class MenuManager {
         }
     }
     /**
-     * 새 창 생성
-     */
+   * 새 창 생성
+   */
     createNewWindow() {
         const win = new electron_1.BrowserWindow({
             width: 1200,
@@ -451,8 +451,8 @@ class MenuManager {
         win.loadURL(`http://localhost:${port}`);
     }
     /**
-     * 파일 열기 대화상자
-     */
+   * 파일 열기 대화상자
+   */
     async openFile() {
         const mainWindow = electron_1.BrowserWindow.getFocusedWindow();
         if (!mainWindow)
@@ -470,12 +470,12 @@ class MenuManager {
             }
         }
         catch (error) {
-            console.error('[Menu] 파일 열기 오류:', error);
+            console.error('[Menu] 파일 열기 Error:', error);
         }
     }
     /**
-     * 모든 윈도우 표시
-     */
+   * 모든 윈도우 표시
+   */
     showAllWindows() {
         for (const win of electron_1.BrowserWindow.getAllWindows()) {
             if (!win.isDestroyed()) {
@@ -484,8 +484,8 @@ class MenuManager {
         }
     }
     /**
-     * 메뉴 액션 전송
-     */
+   * 메뉴 액션 전송
+   */
     sendMenuAction(payload) {
         for (const win of electron_1.BrowserWindow.getAllWindows()) {
             if (!win.isDestroyed()) {
@@ -494,8 +494,8 @@ class MenuManager {
         }
     }
     /**
-     * 시스템 정보 표시
-     */
+   * 시스템 정보 표시
+   */
     showSystemInfo() {
         const systemInfo = {
             platform: os_1.default.platform(),
@@ -532,12 +532,12 @@ class MenuManager {
         });
     }
     /**
-     * 정리 작업
-     */
+   * Cleanup 작업
+   */
     async cleanup() {
-        console.log('[Menu] 메뉴 매니저 정리 시작');
+        console.log('[Menu] 메뉴 매니저 Cleanup 시작');
         this.isInitialized = false;
-        console.log('[Menu] 메뉴 매니저 정리 완료');
+        console.log('[Menu] 메뉴 매니저 Cleanup Completed');
     }
 }
 exports.MenuManager = MenuManager;

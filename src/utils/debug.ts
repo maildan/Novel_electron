@@ -24,7 +24,7 @@ export function infoLog(...args: any[]): void {
 }
 
 /**
- * 경고 로그 출력
+ * Warning 로그 출력
  */
 export function warnLog(...args: any[]): void {
   console.warn('[WARN]', ...args);
@@ -45,7 +45,7 @@ export function startPerformanceTimer(label: string): () => number {
   
   return (): number => {
     const elapsed = performance.now() - start;
-    debugLog(`Performance [${label}]: ${elapsed.toFixed(2)}ms`);
+    debugLog('Performance [${label}]: ${elapsed.toFixed(2)}ms');
     return elapsed;
   };
 }

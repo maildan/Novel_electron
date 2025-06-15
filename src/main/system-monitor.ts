@@ -75,15 +75,15 @@ export class SystemMonitor extends EventEmitter {
   }
 
   /**
-   * 시스템 모니터 초기화
-   */
+ * 시스템 모니터 초기화
+ */
   private async initialize(): Promise<void> {
     console.log('[Monitor] 시스템 모니터 초기화');
 
     // 전원 상태 모니터링
     this.setupPowerMonitoring();
 
-    // 앱 종료 시 정리
+    // 앱 종료 시 Cleanup
     app.on('before-quit', () => {
       this.stopMonitoring();
     });
@@ -92,13 +92,13 @@ export class SystemMonitor extends EventEmitter {
     try {
       await this.dbManager.initialize();
     } catch (error) {
-      console.error('[Monitor] 데이터베이스 초기화 실패:', error);
+      console.error('[Monitor] 데이터베이스 초기화 Failed:', error);
     }
   }
 
   /**
-   * 모니터링 시작
-   */
+ * 모니터링 시작
+ */
   startMonitoring(): void {
     if (this.isMonitoring) {
       return;
@@ -113,7 +113,7 @@ export class SystemMonitor extends EventEmitter {
         const metrics = await this.collectMetrics();
         this.processMetrics(metrics);
       } catch (error) {
-        console.error('[Monitor] 메트릭 수집 실패:', error);
+        console.error('[Monitor] 메트릭 수집 Failed:', error);
       }
     }, 1000);
 
@@ -122,7 +122,7 @@ export class SystemMonitor extends EventEmitter {
       try {
         await this.updateNetworkStats();
       } catch (error) {
-        console.error('[Monitor] 네트워크 모니터링 실패:', error);
+        console.error('[Monitor] 네트워크 모니터링 Failed:', error);
       }
     }, 5000);
 
@@ -130,8 +130,8 @@ export class SystemMonitor extends EventEmitter {
   }
 
   /**
-   * 모니터링 중지
-   */
+ * 모니터링 중지
+ */
   stopMonitoring(): void {
     if (!this.isMonitoring) {
       return;
@@ -154,8 +154,8 @@ export class SystemMonitor extends EventEmitter {
   }
 
   /**
-   * 시스템 메트릭 수집
-   */
+ * 시스템 메트릭 수집
+ */
   private async collectMetrics(): Promise<SystemMetrics> {
     const [cpuMetrics, memoryMetrics, diskMetrics, powerMetrics] = await Promise.all([
       this.getCpuMetrics(),
@@ -236,8 +236,8 @@ export class SystemMonitor extends EventEmitter {
   }
 
   /**
-   * 메모리 메트릭 수집
-   */
+ * 메모리 메트릭 수집
+ */
   private getMemoryMetrics(): SystemMetrics['memory'] {
     const memoryStats = this.memoryManager.getCurrentMemoryUsage();
     const total = memoryStats.system.total;
@@ -266,8 +266,8 @@ export class SystemMonitor extends EventEmitter {
   }
 
   /**
-   * 디스크 메트릭 수집
-   */
+ * 디스크 메트릭 수집
+ */
   private async getDiskMetrics(): Promise<SystemMetrics['disk']> {
     try {
       const fs = require('fs');
@@ -291,8 +291,8 @@ export class SystemMonitor extends EventEmitter {
   }
 
   /**
-   * 전원 메트릭 수집
-   */
+ * 전원 메트릭 수집
+ */
   private getPowerMetrics(): SystemMetrics['power'] {
     return {
       isOnBattery: powerMonitor.isOnBatteryPower(),
@@ -302,8 +302,8 @@ export class SystemMonitor extends EventEmitter {
   }
 
   /**
-   * 배터리 레벨 조회
-   */
+ * 배터리 레벨 조회
+ */
   private getBatteryLevel(): number | undefined {
     try {
       // 플랫폼별 배터리 정보 조회
@@ -315,8 +315,8 @@ export class SystemMonitor extends EventEmitter {
   }
 
   /**
-   * 충전 상태 확인
-   */
+ * 충전 상태 확인
+ */
   private isCharging(): boolean | undefined {
     try {
       // 플랫폼별 충전 상태 확인
@@ -328,8 +328,8 @@ export class SystemMonitor extends EventEmitter {
   }
 
   /**
-   * 네트워크 통계 업데이트
-   */
+ * 네트워크 통계 업데이트
+ */
   private async updateNetworkStats(): Promise<void> {
     try {
       // 네이티브 모듈을 통한 네트워크 통계 조회
@@ -342,15 +342,15 @@ export class SystemMonitor extends EventEmitter {
         lastMetrics.network.uploadSpeed = currentStats.upload;
       }
     } catch (error) {
-      console.error('[Monitor] 네트워크 통계 업데이트 실패:', error);
+      console.error('[Monitor] 네트워크 통계 업데이트 Failed:', error);
     }
   }
 
   /**
-   * 메트릭 처리 및 분석
-   */
+ * 메트릭 처리 및 분석
+ */
   private async processMetrics(metrics: SystemMetrics): Promise<void> {
-    // 히스토리에 추가
+    // Add to history
     this.metricsHistory.push(metrics);
     if (this.metricsHistory.length > this.maxHistorySize) {
       this.metricsHistory.shift();
@@ -372,7 +372,7 @@ export class SystemMonitor extends EventEmitter {
           timestamp: new Date(metrics.timestamp),
         });
       } catch (error) {
-        console.error('[Monitor] 시스템 메트릭 저장 실패:', error);
+        console.error('[Monitor] 시스템 메트릭 저장 Failed:', error);
       }
     }
 
@@ -381,8 +381,8 @@ export class SystemMonitor extends EventEmitter {
   }
 
   /**
-   * 성능 알림 확인
-   */
+ * 성능 알림 확인
+ */
   private checkAlerts(metrics: SystemMetrics): PerformanceAlert[] {
     const alerts: PerformanceAlert[] = [];
     const now = Date.now();
@@ -445,11 +445,11 @@ export class SystemMonitor extends EventEmitter {
   }
 
   /**
-   * 전원 모니터링 설정
-   */
+ * 전원 모니터링 Setup
+ */
   private setupPowerMonitoring(): void {
     powerMonitor.on('on-ac', () => {
-      console.log('[Monitor] AC 전원 연결됨');
+      console.log('[Monitor] AC 전원 Connected');
       this.emit('power-state-changed', { isOnBattery: false });
     });
 
@@ -475,8 +475,8 @@ export class SystemMonitor extends EventEmitter {
   }
 
   /**
-   * 현재 메트릭 조회
-   */
+ * 현재 메트릭 조회
+ */
   getCurrentMetrics(): SystemMetrics | null {
     return this.metricsHistory.length > 0 
       ? this.metricsHistory[this.metricsHistory.length - 1] 
@@ -484,16 +484,16 @@ export class SystemMonitor extends EventEmitter {
   }
 
   /**
-   * 메트릭 히스토리 조회
-   */
+ * 메트릭 히스토리 조회
+ */
   getMetricsHistory(minutes = 5): SystemMetrics[] {
     const cutoff = Date.now() - (minutes * 60 * 1000);
     return this.metricsHistory.filter(m => m.timestamp > cutoff);
   }
 
   /**
-   * 평균 메트릭 계산
-   */
+ * 평균 메트릭 계산
+ */
   getAverageMetrics(minutes = 5): Partial<SystemMetrics> | null {
     const history = this.getMetricsHistory(minutes);
     if (history.length === 0) return null;
@@ -512,8 +512,8 @@ export class SystemMonitor extends EventEmitter {
   }
 
   /**
-   * 시스템 상태 확인
-   */
+ * 시스템 상태 확인
+ */
   getSystemHealth(): {
     status: 'good' | 'warning' | 'critical';
     issues: string[];
@@ -560,8 +560,8 @@ export class SystemMonitor extends EventEmitter {
   }
 
   /**
-   * 타이핑 메트릭 업데이트
-   */
+ * 타이핑 메트릭 업데이트
+ */
   updateTypingMetrics(data: any): void {
     try {
       if (!data || typeof data !== 'object') {
@@ -581,7 +581,7 @@ export class SystemMonitor extends EventEmitter {
 
       console.log('[Monitor] 타이핑 메트릭 업데이트:', typingMetrics);
     } catch (error) {
-      console.error('[Monitor] 타이핑 메트릭 업데이트 실패:', error);
+      console.error('[Monitor] 타이핑 메트릭 업데이트 Failed:', error);
     }
   }
 
@@ -614,7 +614,7 @@ export class SystemMonitor extends EventEmitter {
         electronVersion: process.versions.electron
       };
     } catch (error) {
-      console.error('[SystemMonitor] 시스템 정보 조회 실패:', error);
+      console.error('[SystemMonitor] 시스템 정보 조회 Failed:', error);
       throw error;
     }
   }
@@ -651,7 +651,7 @@ export class SystemMonitor extends EventEmitter {
         }))
       };
     } catch (error) {
-      console.error('[SystemMonitor] CPU 사용률 조회 실패:', error);
+      console.error('[SystemMonitor] CPU 사용률 조회 Failed:', error);
       throw error;
     }
   }
@@ -696,13 +696,13 @@ export class SystemMonitor extends EventEmitter {
             };
           }
         } catch (error) {
-          console.warn('[SystemMonitor] GPU 정보 조회 실패, 기본값 사용:', error);
+          console.warn('[SystemMonitor] GPU 정보 조회 Failed, 기본값 사용:', error);
         }
       }
       
       return gpuInfo;
     } catch (error) {
-      console.error('[SystemMonitor] GPU 정보 조회 실패:', error);
+      console.error('[SystemMonitor] GPU 정보 조회 Failed:', error);
       throw error;
     }
   }

@@ -46,40 +46,40 @@ declare class AdvancedMemoryManager {
     private memoryHistory;
     constructor();
     /**
-     * 메모리 관리자 초기화
-     */
+   * 메모리 관리자 초기화
+   */
     initialize(): Promise<void>;
     /**
-     * 설정 파일 로드
-     */
+   * Setup 파일 로드
+   */
     private loadSettings;
     /**
-     * 설정 파일 저장
-     */
+   * Setup 파일 저장
+   */
     private saveSettings;
     /**
-     * 네이티브 메모리 모듈 초기화
-     */
+   * 네이티브 메모리 모듈 초기화
+   */
     private initializeNativeMemory;
     /**
-     * 메모리 풀 초기화
-     */
+   * 메모리 풀 초기화
+   */
     private initializeMemoryPools;
     /**
-     * 주기적 메모리 모니터링 시작
-     */
+   * 주기적 메모리 모니터링 시작
+   */
     private startMemoryMonitoring;
     /**
-     * 메모리 체크 수행
-     */
+   * 메모리 체크 수행
+   */
     private performMemoryCheck;
     /**
-     * 메모리 풀 업데이트
-     */
+   * 메모리 풀 업데이트
+   */
     private updateMemoryPools;
     /**
-     * 앱 이벤트 리스너 설정
-     */
+   * 앱 이벤트 리스너 Setup
+   */
     private setupEventListeners;
     /**
      * 메모리 정보 가져오기 (RSS 기반)
@@ -90,36 +90,36 @@ declare class AdvancedMemoryManager {
      */
     private getMemoryInfoJS;
     /**
-     * 메모리 최적화 실행
-     */
+   * 메모리 최적화 실행
+   */
     optimizeMemory(): Promise<MemoryOptimizationResult>;
     /**
      * JavaScript 메모리 최적화
      */
     private optimizeMemoryJS;
     /**
-     * 메모리 설정 업데이트
-     */
+   * 메모리 Setup 업데이트
+   */
     updateSettings(newSettings: Partial<MemorySettings>): Promise<void>;
     /**
-     * 메모리 풀 정보 가져오기
-     */
+   * 메모리 풀 정보 가져오기
+   */
     getMemoryPools(): MemoryPool[];
     /**
-     * 메모리 히스토리 가져오기
-     */
+   * 메모리 히스토리 가져오기
+   */
     getMemoryHistory(): MemoryInfo[];
     /**
-     * 설정 가져오기
-     */
+   * Setup 가져오기
+   */
     getSettings(): MemorySettings;
     /**
-     * 초기화 상태 확인
-     */
+   * 초기화 상태 확인
+   */
     isMemoryManagerInitialized(): boolean;
     /**
-     * 정리 작업
-     */
+   * Cleanup 작업
+   */
     cleanup(): void;
 }
 declare let memoryManager: AdvancedMemoryManager | null;
@@ -128,7 +128,7 @@ declare let memoryManager: AdvancedMemoryManager | null;
  */
 export declare function getMemoryManager(): AdvancedMemoryManager;
 /**
- * 메모리 관리자 설정
+ * 메모리 관리자 Setup
  */
 export declare function setupMemoryManager(): Promise<void>;
 /**
@@ -140,7 +140,7 @@ export declare function getMemoryInfo(): Promise<MemoryInfo>;
  */
 export declare function optimizeMemory(): Promise<MemoryOptimizationResult>;
 /**
- * 메모리 설정 업데이트
+ * 메모리 Setup 업데이트
  */
 export declare function updateMemorySettings(settings: Partial<MemorySettings>): Promise<void>;
 /**
@@ -157,7 +157,7 @@ export declare function checkAndOptimizeMemoryIfNeeded(): Promise<void>;
  */
 export declare function registerMemoryIpcHandlers(): void;
 /**
- * IPC 핸들러 정리 (memory-ipc.ts로 이동됨)
+ * IPC 핸들러 Cleanup (memory-ipc.ts로 이동됨)
  * 중복 방지를 위해 주석 처리
  */
 export declare function cleanupMemoryIpcHandlers(): void;

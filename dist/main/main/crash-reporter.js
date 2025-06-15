@@ -2,8 +2,8 @@
 /**
  * 앱 충돌 보고 및 로깅 모듈
  *
- * 앱의 예상치 못한 종료, 오류, 충돌을 감지하고 보고하는 시스템입니다.
- * 오류 로깅, 충돌 보고서 수집, 복구 메커니즘을 제공합니다.
+ * 앱의 예상치 못한 종료, Error, 충돌을 감지하고 보고하는 시스템입니다.
+ * Error 로깅, 충돌 보고서 수집, 복구 메커니즘을 제공합니다.
  */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -94,11 +94,11 @@ function initializeCrashReporter(crashOptions = {}) {
         createLogDirectories();
         // 로그 스트림 초기화
         initializeLogStreams();
-        // 충돌 보고자 설정
+        // 충돌 보고자 Setup
         setupCrashReporter();
-        // 예외 처리기 설정
+        // 예외 처리기 Setup
         setupExceptionHandlers();
-        // IPC 핸들러 설정
+        // IPC 핸들러 Setup
         setupCrashReporterIpcHandlers();
         // 시작 로그
         logSystemStart();
@@ -107,7 +107,7 @@ function initializeCrashReporter(crashOptions = {}) {
         return true;
     }
     catch (error) {
-        console.error('충돌 보고 시스템 초기화 오류:', error);
+        console.error('충돌 보고 시스템 초기화 Error:', error);
         return false;
     }
 }
@@ -137,16 +137,16 @@ function initializeLogStreams() {
         // 스트림 생성
         errorLogStream = fs.createWriteStream(ERROR_LOG_FILE, { flags: 'a' });
         crashLogStream = fs.createWriteStream(CRASH_LOG_FILE, { flags: 'a' });
-        // 스트림 오류 처리
+        // 스트림 Error 처리
         errorLogStream.on('error', (error) => {
-            console.error('오류 로그 스트림 오류:', error);
+            console.error('Error 로그 스트림 Error:', error);
         });
         crashLogStream.on('error', (error) => {
-            console.error('충돌 로그 스트림 오류:', error);
+            console.error('충돌 로그 스트림 Error:', error);
         });
     }
     catch (error) {
-        console.error('로그 스트림 초기화 오류:', error);
+        console.error('로그 스트림 초기화 Error:', error);
     }
 }
 /**
@@ -160,16 +160,16 @@ function rotateLogFileIfNeeded(filePath) {
                 const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
                 const backupPath = `${filePath}.${timestamp}.bak`;
                 fs.renameSync(filePath, backupPath);
-                console.log(`로그 파일 회전: ${filePath} -> ${backupPath}`);
+                console.log('로그 파일 회전: ${filePath} -> ${backupPath}');
             }
         }
     }
     catch (error) {
-        console.error(`로그 파일 회전 오류 (${filePath}):`, error);
+        console.error('로그 파일 회전 Error (${filePath}):', error);
     }
 }
 /**
- * 충돌 보고자 설정
+ * 충돌 보고자 Setup
  */
 function setupCrashReporter() {
     try {
@@ -190,10 +190,10 @@ function setupCrashReporter() {
                 ...options.extra
             }
         });
-        console.log('Electron 충돌 보고자가 설정되었습니다.');
+        console.log('Electron 충돌 보고자가 Setup되었습니다.');
     }
     catch (error) {
-        console.error('충돌 보고자 설정 오류:', error);
+        console.error('충돌 보고자 Setup Error:', error);
     }
 }
 /**
@@ -212,7 +212,7 @@ function getSystemInfo() {
     };
 }
 /**
- * 예외 처리기 설정
+ * 예외 처리기 Setup
  */
 function setupExceptionHandlers() {
     // 메인 프로세스 처리되지 않은 예외
@@ -233,17 +233,17 @@ function setupExceptionHandlers() {
     electron_1.app.on('gpu-process-crashed', (event, killed) => {
         handleGpuCrash(killed);
     });
-    // 자식 프로세스 오류 (Node.js 16+에서 지원)
+    // 자식 프로세스 Error (Node.js 16+에서 지원)
     if ('child-process-gone' in electron_1.app) {
         electron_1.app.on('child-process-gone', (event, details) => {
             handleChildProcessCrash(details);
         });
     }
-    // 앱 종료 시 정리
+    // 앱 종료 시 Cleanup
     electron_1.app.on('will-quit', () => {
         handleAppShutdown();
     });
-    console.log('예외 처리기가 설정되었습니다.');
+    console.log('예외 처리기가 Setup되었습니다.');
 }
 /**
  * 처리되지 않은 예외 처리
@@ -264,7 +264,7 @@ function handleUncaughtException(error, type) {
         crashStats.lastCrashTime = Date.now();
         crashStats.uptimeAtLastCrash = Date.now() - startTime;
         // 로깅
-        console.error(`${type}:`, error);
+        console.error('${type}:', error);
         logError(errorInfo);
         logCrash({
             type,
@@ -272,7 +272,7 @@ function handleUncaughtException(error, type) {
             timestamp: errorInfo.timestamp,
             systemInfo: getSystemInfo()
         });
-        // 히스토리에 추가
+        // Add to history
         uncaughtExceptions.push(errorInfo);
         if (uncaughtExceptions.length > MAX_ERROR_HISTORY) {
             uncaughtExceptions.splice(0, uncaughtExceptions.length - MAX_ERROR_HISTORY);
@@ -281,7 +281,7 @@ function handleUncaughtException(error, type) {
         attemptRecovery(errorInfo);
     }
     catch (handlingError) {
-        console.error('예외 처리 중 오류 발생:', handlingError);
+        console.error('예외 Processing Error 발생:', handlingError);
     }
 }
 /**
@@ -309,10 +309,10 @@ function handleRendererCrash(webContents, killed) {
         if (window && !window.isDestroyed()) {
             showCrashRecoveryDialog(window, 'renderer', crashInfo);
         }
-        console.log(`렌더러 프로세스 충돌: ${windowTitle} (killed: ${killed})`);
+        console.log('렌더러 프로세스 충돌: ${windowTitle} (killed: ${killed})');
     }
     catch (error) {
-        console.error('렌더러 충돌 처리 오류:', error);
+        console.error('렌더러 충돌 처리 Error:', error);
     }
 }
 /**
@@ -338,10 +338,10 @@ function handleGpuCrash(killed) {
         if (focusedWindow) {
             showGpuCrashRecoveryDialog(focusedWindow);
         }
-        console.log(`GPU 프로세스 충돌 (killed: ${killed})`);
+        console.log('GPU 프로세스 충돌 (killed: ${killed})');
     }
     catch (error) {
-        console.error('GPU 충돌 처리 오류:', error);
+        console.error('GPU 충돌 처리 Error:', error);
     }
 }
 /**
@@ -359,10 +359,10 @@ function handleChildProcessCrash(details) {
         };
         logCrash(crashInfo);
         crashHistory.push(crashInfo);
-        console.log(`자식 프로세스 충돌: PID ${details.pid}, 종료 코드: ${details.exitCode}`);
+        console.log('자식 프로세스 충돌: PID ${details.pid}, 종료 코드: ${details.exitCode}');
     }
     catch (error) {
-        console.error('자식 프로세스 충돌 처리 오류:', error);
+        console.error('자식 프로세스 충돌 처리 Error:', error);
     }
 }
 /**
@@ -375,24 +375,24 @@ function attemptRecovery(errorInfo) {
         switch (errorInfo.severity) {
             case 'critical':
                 if (uncaughtExceptions.length >= MAX_UNCAUGHT_EXCEPTIONS) {
-                    // 심각한 오류가 연속으로 발생하면 강제 종료
+                    // 심각한 Error가 연속으로 발생하면 강제 종료
                     showCriticalErrorDialog();
                 }
                 break;
             case 'high':
-                // 메모리 정리 시도
+                // 메모리 Cleanup 시도
                 if (global.gc) {
                     global.gc();
                 }
                 break;
             case 'medium':
-                // 경고 로그만 기록
-                console.warn('중간 수준 오류 복구 시도');
+                // Warning 로그만 기록
+                console.warn('중간 수준 Error 복구 시도');
                 break;
         }
     }
     catch (error) {
-        console.error('복구 시도 중 오류 발생:', error);
+        console.error('복구 시도 중 Error 발생:', error);
     }
 }
 /**
@@ -428,7 +428,7 @@ async function showCrashRecoveryDialog(window, crashType, crashInfo) {
         }
     }
     catch (error) {
-        console.error('충돌 복구 다이얼로그 오류:', error);
+        console.error('충돌 복구 다이얼로그 Error:', error);
     }
 }
 /**
@@ -448,7 +448,7 @@ async function showGpuCrashRecoveryDialog(window) {
             electron_1.app.disableHardwareAcceleration();
             const { response: restartResponse } = await electron_1.dialog.showMessageBox(window, {
                 type: 'info',
-                message: '설정이 저장되었습니다. 변경사항을 적용하려면 앱을 다시 시작해야 합니다.',
+                message: 'Setup이 저장되었습니다. 변경사항을 적용하려면 앱을 다시 시작해야 합니다.',
                 buttons: ['다시 시작', '나중에'],
                 defaultId: 0
             });
@@ -459,30 +459,30 @@ async function showGpuCrashRecoveryDialog(window) {
         }
     }
     catch (error) {
-        console.error('GPU 충돌 복구 다이얼로그 오류:', error);
+        console.error('GPU 충돌 복구 다이얼로그 Error:', error);
     }
 }
 /**
- * 심각한 오류 다이얼로그
+ * 심각한 Error 다이얼로그
  */
 async function showCriticalErrorDialog() {
     try {
         const { response } = await electron_1.dialog.showMessageBox({
             type: 'error',
-            title: '심각한 오류',
-            message: '앱에 심각한 오류가 연속으로 발생했습니다.',
+            title: '심각한 Error',
+            message: '앱에 심각한 Error가 연속으로 발생했습니다.',
             detail: '앱을 안전하게 종료하고 다시 시작하는 것을 권장합니다.',
             buttons: ['안전 모드로 다시 시작', '강제 종료'],
             defaultId: 0
         });
         if (response === 0) {
-            // 안전 모드 플래그 설정
+            // 안전 모드 플래그 Setup
             electron_1.app.relaunch({ args: ['--safe-mode'] });
         }
         electron_1.app.exit(1);
     }
     catch (error) {
-        console.error('심각한 오류 다이얼로그 오류:', error);
+        console.error('심각한 Error 다이얼로그 Error:', error);
         electron_1.app.exit(1);
     }
 }
@@ -506,11 +506,11 @@ function createRecoveryWindow() {
         console.log('복구 창이 생성되었습니다.');
     }
     catch (error) {
-        console.error('복구 창 생성 오류:', error);
+        console.error('복구 창 생성 Error:', error);
     }
 }
 /**
- * 오류 로깅
+ * Error 로깅
  */
 function logError(errorInfo) {
     try {
@@ -520,7 +520,7 @@ function logError(errorInfo) {
         }
     }
     catch (error) {
-        console.error('오류 로깅 실패:', error);
+        console.error('Error 로깅 Failed:', error);
     }
 }
 /**
@@ -534,7 +534,7 @@ function logCrash(crashInfo) {
         }
     }
     catch (error) {
-        console.error('충돌 로깅 실패:', error);
+        console.error('충돌 로깅 Failed:', error);
     }
 }
 /**
@@ -554,7 +554,7 @@ function logSystemStart() {
         }
     }
     catch (error) {
-        console.error('시스템 시작 로깅 오류:', error);
+        console.error('시스템 시작 로깅 Error:', error);
     }
 }
 /**
@@ -577,14 +577,14 @@ function handleAppShutdown() {
         if (crashLogStream && !crashLogStream.destroyed) {
             crashLogStream.end();
         }
-        console.log('충돌 보고 시스템 정리 완료');
+        console.log('충돌 보고 시스템 Cleanup Completed');
     }
     catch (error) {
-        console.error('앱 종료 처리 오류:', error);
+        console.error('앱 종료 처리 Error:', error);
     }
 }
 /**
- * IPC 핸들러 설정
+ * IPC 핸들러 Setup
  */
 function setupCrashReporterIpcHandlers() {
     // 충돌 보고서 정보 조회
@@ -598,7 +598,7 @@ function setupCrashReporterIpcHandlers() {
             stats: crashStats
         };
     });
-    // 업로드 설정 변경
+    // 업로드 Setup 변경
     electron_1.ipcMain.handle('crashReporter:setUpload', (event, shouldUpload) => {
         electron_1.crashReporter.setUploadToServer(shouldUpload);
         return true;
@@ -614,7 +614,7 @@ function setupCrashReporterIpcHandlers() {
             crashLog: CRASH_LOG_FILE
         };
     });
-    // 수동 오류 보고
+    // 수동 Error 보고
     electron_1.ipcMain.handle('crash-reporter:report-error', (event, errorData) => {
         const errorInfo = {
             type: 'manual-report',
@@ -644,7 +644,7 @@ function getCrashReportInfo() {
     };
 }
 /**
- * 업로드 설정 변경
+ * 업로드 Setup 변경
  */
 function setUploadCrashReports(shouldUpload) {
     electron_1.crashReporter.setUploadToServer(shouldUpload);
@@ -660,7 +660,7 @@ function getLogPaths() {
     };
 }
 /**
- * 수동 오류 보고
+ * 수동 Error 보고
  */
 function reportError(message, stack, severity = 'medium', context) {
     const errorInfo = {

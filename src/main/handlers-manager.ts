@@ -15,7 +15,7 @@ import { registerNativeIpcHandlers } from './native-client';
 import { registerSystemInfoIpcHandlers } from './systemInfoIpc';
 import settingsIpcHandlers from './settingsIpcHandlers';
 
-// Simple debug logging
+// 간단한 디버그 로깅
 function debugLog(message: string, ...args: any[]): void {
   console.log(`[HandlersManager] ${message}`, ...args);
 }
@@ -39,7 +39,7 @@ let handlersState: HandlersState = {
 };
 
 /**
- * 설정 관련 핸들러 등록
+ * Setup 관련 핸들러 등록
  */
 function registerSettingsHandlers(): void {
   try {
@@ -50,10 +50,10 @@ function registerSettingsHandlers(): void {
     const { initializeSettingsManager } = require('./settings-manager');
     initializeSettingsManager();
     
-    debugLog('설정 관련 핸들러 등록 완료');
+    debugLog('Setup 관련 핸들러 등록 Completed');
     handlersState.registeredHandlers.add('settings');
   } catch (error) {
-    errorLog('설정 핸들러 등록 오류:', error);
+    errorLog('Setup 핸들러 등록 Error:', error);
   }
 }
 
@@ -64,10 +64,10 @@ function registerSystemInfoHandlers(): void {
   try {
     // 시스템 정보 핸들러를 실제로 등록
     registerSystemInfoIpcHandlers();
-    debugLog('시스템 정보 관련 핸들러 등록 완료');
+    debugLog('시스템 정보 관련 핸들러 등록 Completed');
     handlersState.registeredHandlers.add('system-info');
   } catch (error) {
-    errorLog('시스템 정보 핸들러 등록 오류:', error);
+    errorLog('시스템 정보 핸들러 등록 Error:', error);
   }
 }
 
@@ -78,10 +78,10 @@ function registerMemoryHandlers(): void {
   try {
     // 메모리 핸들러를 실제로 등록
     registerMemoryIpcHandlers();
-    debugLog('메모리 관련 핸들러 등록 완료');
+    debugLog('메모리 관련 핸들러 등록 Completed');
     handlersState.registeredHandlers.add('memory');
   } catch (error) {
-    errorLog('메모리 핸들러 등록 오류:', error);
+    errorLog('메모리 핸들러 등록 Error:', error);
   }
 }
 
@@ -92,10 +92,10 @@ function registerNativeHandlers(): void {
   try {
     // 네이티브 핸들러를 실제로 등록
     registerNativeIpcHandlers();
-    debugLog('네이티브 모듈 관련 핸들러 등록 완료');
+    debugLog('네이티브 모듈 관련 핸들러 등록 Completed');
     handlersState.registeredHandlers.add('native');
   } catch (error) {
-    errorLog('네이티브 핸들러 등록 오류:', error);
+    errorLog('네이티브 핸들러 등록 Error:', error);
   }
 }
 
@@ -106,10 +106,10 @@ function registerIntegratedHandlers(): void {
   try {
     const ipcHandlers = IpcHandlers.getInstance();
     ipcHandlers.register();
-    debugLog('통합 IPC 핸들러 등록 완료');
+    debugLog('통합 IPC 핸들러 등록 Completed');
     handlersState.registeredHandlers.add('integrated');
   } catch (error) {
-    errorLog('통합 IPC 핸들러 등록 오류:', error);
+    errorLog('통합 IPC 핸들러 등록 Error:', error);
   }
 }
 
@@ -119,10 +119,10 @@ function registerIntegratedHandlers(): void {
 function registerRestartHandlers(): void {
   try {
     // 재시작 핸들러는 app-lifecycle.ts에서 처리
-    debugLog('재시작 관련 핸들러 등록 완료');
+    debugLog('재시작 관련 핸들러 등록 Completed');
     handlersState.registeredHandlers.add('restart');
   } catch (error) {
-    errorLog('재시작 핸들러 등록 오류:', error);
+    errorLog('재시작 핸들러 등록 Error:', error);
   }
 }
 
@@ -130,9 +130,9 @@ function registerRestartHandlers(): void {
  * 모든 IPC 핸들러를 순서대로 등록
  */
 export async function setupAllHandlers(): Promise<boolean> {
-  // 이미 설정되었으면 중복 설정 방지
+  // 이미 Setup되었으면 중복 Setup 방지
   if (handlersState.isAllHandlersSetup) {
-    debugLog('모든 핸들러가 이미 설정되어 있습니다.');
+    debugLog('모든 핸들러가 이미 Setup되어 있습니다.');
     return true;
   }
 
@@ -141,7 +141,7 @@ export async function setupAllHandlers(): Promise<boolean> {
 
     // 초기화 순서 정의 (의존성 순서)
     const initOrder = [
-      'settings',      // 설정 먼저
+      'settings',      // Setup 먼저
       'integrated',    // 통합 IPC 핸들러 (네이티브 모듈 포함)
       'system-info',   // 시스템 정보
       'native',        // 네이티브 모듈
@@ -170,13 +170,13 @@ export async function setupAllHandlers(): Promise<boolean> {
     await initializeKeyboardHandlers();
     initializeAutoMonitoring();
 
-    // 핸들러 설정 완료
+    // 핸들러 Setup Completed
     handlersState.isAllHandlersSetup = true;
     
     debugLog(`모든 IPC 핸들러 등록 완료. 등록된 핸들러: ${Array.from(handlersState.registeredHandlers).join(', ')}`);
     return true;
   } catch (error) {
-    errorLog('핸들러 설정 중 오류 발생:', error);
+    errorLog('핸들러 Setup 중 Error 발생:', error);
     return false;
   }
 }
@@ -238,19 +238,19 @@ export function reregisterHandler(handlerName: string): boolean {
 
     return true;
   } catch (error) {
-    errorLog(`핸들러 재등록 오류 (${handlerName}):`, error);
+    errorLog(`핸들러 재등록 Error (${handlerName}):`, error);
     return false;
   }
 }
 
 /**
- * 모든 핸들러 정리
+ * 모든 핸들러 Cleanup
  */
 export function cleanupAllHandlers(): void {
   try {
-    debugLog('모든 핸들러 정리 시작...');
+    debugLog('모든 핸들러 Cleanup 시작...');
 
-    // 역순으로 정리
+    // 역순으로 Cleanup
     cleanupTrackingHandlers();
     cleanupKeyboardHandlers();
     cleanupWindowHandlers();
@@ -260,9 +260,9 @@ export function cleanupAllHandlers(): void {
     handlersState.registeredHandlers.clear();
     handlersState.initializationOrder = [];
 
-    debugLog('모든 핸들러 정리 완료');
+    debugLog('모든 핸들러 Cleanup Completed');
   } catch (error) {
-    errorLog('핸들러 정리 중 오류:', error);
+    errorLog('핸들러 Cleanup 중 Error:', error);
   }
 }
 
@@ -288,7 +288,7 @@ export function resetHandlersState(): void {
     registeredHandlers: new Set(),
     initializationOrder: []
   };
-  debugLog('핸들러 상태 리셋 완료');
+  debugLog('핸들러 상태 리셋 Completed');
 }
 
 // 레거시 호환성을 위한 개별 핸들러 노출

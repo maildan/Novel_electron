@@ -57,7 +57,7 @@ async function loadActiveWin() {
     return activeWinModule;
 }
 const debug_1 = require("../utils/debug");
-// Global state
+// 전역 상태
 let mainWindow = null;
 let systemInfoInitialized = false;
 let permissionErrorShown = false;
@@ -149,7 +149,7 @@ async function getCPUInfo() {
         }
     }
     catch (error) {
-        (0, debug_1.debugLog)('Failed to get CPU usage:', error);
+        (0, debug_1.debugLog)('CPU 사용량 가져오기 Failed:', error);
     }
     return { model, cores, usage };
 }
@@ -179,7 +179,7 @@ function getProcessList() {
         }).filter(proc => proc.name !== 'Unknown');
     }
     catch (error) {
-        (0, debug_1.debugLog)('Failed to get process list:', error);
+        (0, debug_1.debugLog)('프로세스 목록 가져오기 Failed:', error);
         return [];
     }
 }
@@ -206,7 +206,7 @@ async function checkSystemPermissions() {
             permissions.camera = electron_1.systemPreferences.getMediaAccessStatus('camera') === 'granted';
         }
         catch (error) {
-            (0, debug_1.debugLog)('Permission check error:', error);
+            (0, debug_1.debugLog)('권한 확인 Error:', error);
         }
     }
     return permissions;
@@ -236,7 +236,7 @@ async function requestSystemPermissions() {
             permissions.screenRecording = electron_1.systemPreferences.getMediaAccessStatus('screen') === 'granted';
         }
         catch (error) {
-            (0, debug_1.debugLog)('Permission request error:', error);
+            (0, debug_1.debugLog)('권한 요청 Error:', error);
         }
     }
     return permissions;
@@ -285,7 +285,7 @@ async function detectBrowserInfo() {
         };
     }
     catch (error) {
-        (0, debug_1.debugLog)('Browser detection error:', error);
+        (0, debug_1.debugLog)('브라우저 감지 Error:', error);
         return null;
     }
 }
@@ -306,7 +306,7 @@ async function getDiskUsage() {
         }
     }
     catch (error) {
-        (0, debug_1.debugLog)('Disk usage detection error:', error);
+        (0, debug_1.debugLog)('디스크 사용량 감지 Error:', error);
     }
     return { total: 0, used: 0, free: 0, percentage: 0 };
 }
@@ -395,7 +395,7 @@ function setupSystemInfoIpcHandlers() {
                 return true;
             }
             catch (error) {
-                (0, debug_1.debugLog)('Failed to open system preferences:', error);
+                (0, debug_1.debugLog)('시스템 환경Setup 열기 Failed:', error);
                 return false;
             }
         }
@@ -444,7 +444,7 @@ function initSystemInfo(window) {
         setupSystemInfoIpcHandlers();
         // Initial permission check
         checkSystemPermissions().then(permissions => {
-            (0, debug_1.debugLog)('Initial permission status:', permissions);
+            (0, debug_1.debugLog)('초기 권한 상태:', permissions);
         });
         systemInfoInitialized = true;
         (0, debug_1.debugLog)('System info module initialization completed');

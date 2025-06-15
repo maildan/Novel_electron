@@ -44,7 +44,7 @@ const electron_1 = require("electron");
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const debug_1 = require("../utils/debug");
-// Global state
+// 전역 상태
 let mainWindow = null;
 let screenshotInitialized = false;
 let screenshotHistory = [];
@@ -110,7 +110,7 @@ async function captureScreenshot(sourceId, options = {}) {
         // Get screen sources
         const sources = await electron_1.desktopCapturer.getSources({
             types: ['screen', 'window'],
-            thumbnailSize: { width: 0, height: 0 } // Full resolution
+            thumbnailSize: { width: 0, height: 0 } // 전체 해상도
         });
         const source = sources.find(s => s.id === sourceId);
         if (!source) {
@@ -145,7 +145,7 @@ async function captureScreenshot(sourceId, options = {}) {
         if (opts.autoSave) {
             const filePath = path.join(getScreenshotDirectory(), filename);
             fs.writeFileSync(filePath, buffer);
-            (0, debug_1.debugLog)(`Screenshot saved: ${filePath}`);
+            (0, debug_1.debugLog)('Screenshot saved: ${filePath}');
         }
         // Add to history
         screenshotHistory.unshift(metadata);
@@ -226,7 +226,7 @@ function loadScreenshot(filename) {
         return null;
     }
     catch (error) {
-        console.error(`Failed to load screenshot ${filename}:`, error);
+        console.error('Failed to load screenshot ${filename}:', error);
         return null;
     }
 }
@@ -240,13 +240,13 @@ function deleteScreenshot(filename) {
             fs.unlinkSync(filePath);
             // Remove from history
             screenshotHistory = screenshotHistory.filter(item => item.filename !== filename);
-            (0, debug_1.debugLog)(`Screenshot deleted: ${filename}`);
+            (0, debug_1.debugLog)('Screenshot deleted: ${filename}');
             return true;
         }
         return false;
     }
     catch (error) {
-        console.error(`Failed to delete screenshot ${filename}:`, error);
+        console.error('Failed to delete screenshot ${filename}:', error);
         return false;
     }
 }

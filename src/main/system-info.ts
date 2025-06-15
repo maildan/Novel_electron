@@ -1,13 +1,13 @@
 /**
- * Advanced system information and monitoring module
- * Handles system stats, browser detection, debug info, and permissions
+ * 고급 시스템 정보 및 모니터링 모듈
+ * 시스템 통계, 브라우저 감지, 디버그 정보, 권한을 처리합니다
  */
 import { ipcMain, app, dialog, BrowserWindow, systemPreferences } from 'electron';
 import * as os from 'os';
 import * as fs from 'fs';
 import * as path from 'path';
 import { execSync, exec } from 'child_process';
-// Dynamic import for active-win compatibility
+// active-win 호환성을 위한 동적 가져오기
 let activeWinModule: any = null;
 async function loadActiveWin() {
   if (!activeWinModule) {
@@ -57,7 +57,7 @@ interface BrowserInfo {
   windowTitle?: string;
 }
 
-// Global state
+// 전역 상태
 let mainWindow: BrowserWindow | null = null;
 let systemInfoInitialized = false;
 let permissionErrorShown = false;
@@ -65,7 +65,7 @@ let isInFallbackMode = false;
 let lastPermissionCheckTime = 0;
 const PERMISSION_CHECK_COOLDOWN = 5000; // 5 seconds
 
-// Permission tracking for development apps
+// 개발 앱의 권한 추적
 const permissionApps = {
   terminal: {
     name: 'Terminal',
@@ -147,7 +147,7 @@ async function getCPUInfo(): Promise<{
   const model = cpus[0]?.model || 'Unknown';
   const cores = cpus.length;
   
-  // Calculate CPU usage
+  // CPU 사용률 계산
   let usage = 0;
   try {
     if (process.platform === 'darwin') {
@@ -164,7 +164,7 @@ async function getCPUInfo(): Promise<{
       }
     }
   } catch (error) {
-    debugLog('Failed to get CPU usage:', error);
+    debugLog('CPU 사용량 가져오기 Failed:', error);
   }
   
   return { model, cores, usage };
@@ -195,7 +195,7 @@ function getProcessList(): ProcessInfo[] {
       };
     }).filter(proc => proc.name !== 'Unknown');
   } catch (error) {
-    debugLog('Failed to get process list:', error);
+    debugLog('프로세스 목록 가져오기 Failed:', error);
     return [];
   }
 }
@@ -214,20 +214,20 @@ async function checkSystemPermissions(): Promise<PermissionStatus> {
   
   if (process.platform === 'darwin') {
     try {
-      // Check accessibility permission
+      // 접근성 권한 확인
       permissions.accessibility = systemPreferences.isTrustedAccessibilityClient(false);
       
-      // Check screen recording permission
+      // 화면 녹화 권한 확인
       permissions.screenRecording = systemPreferences.getMediaAccessStatus('screen') === 'granted';
       
-      // Check microphone permission
+      // 마이크 권한 확인
       permissions.microphone = systemPreferences.getMediaAccessStatus('microphone') === 'granted';
       
-      // Check camera permission
+      // 카메라 권한 확인
       permissions.camera = systemPreferences.getMediaAccessStatus('camera') === 'granted';
       
     } catch (error) {
-      debugLog('Permission check error:', error);
+      debugLog('권한 확인 Error:', error);
     }
   }
   
@@ -248,22 +248,22 @@ async function requestSystemPermissions(): Promise<PermissionStatus> {
   
   if (process.platform === 'darwin') {
     try {
-      // Request accessibility permission
+      // 접근성 권한 요청
       permissions.accessibility = systemPreferences.isTrustedAccessibilityClient(true);
       
-      // Request microphone permission
+      // 마이크 권한 요청
       const microphoneAccess = await systemPreferences.askForMediaAccess('microphone');
       permissions.microphone = microphoneAccess;
       
-      // Request camera permission
+      // 카메라 권한 요청
       const cameraAccess = await systemPreferences.askForMediaAccess('camera');
       permissions.camera = cameraAccess;
       
-      // Screen recording permission requires system dialog
+      // 화면 녹화 권한은 시스템 대화상자가 필요함
       permissions.screenRecording = systemPreferences.getMediaAccessStatus('screen') === 'granted';
       
     } catch (error) {
-      debugLog('Permission request error:', error);
+      debugLog('권한 요청 Error:', error);
     }
   }
   
@@ -283,7 +283,7 @@ async function detectBrowserInfo(): Promise<BrowserInfo | null> {
     const appName = activeWindow.owner?.name?.toLowerCase() || '';
     const windowTitle = activeWindow.title || '';
     
-    // Browser detection
+    // 브라우저 감지
     let browserName = 'Unknown';
     if (appName.includes('chrome')) {
       browserName = 'Google Chrome';
@@ -299,7 +299,7 @@ async function detectBrowserInfo(): Promise<BrowserInfo | null> {
       browserName = 'Opera';
     }
     
-    // Google Docs detection
+    // Google Docs 감지
     const isGoogleDocs = windowTitle.includes('Google Docs') || 
                         windowTitle.includes('Google Sheets') ||
                         windowTitle.includes('Google Slides');
@@ -311,7 +311,7 @@ async function detectBrowserInfo(): Promise<BrowserInfo | null> {
       url: windowTitle // Simplified - actual URL detection would require more complex logic
     };
   } catch (error) {
-    debugLog('Browser detection error:', error);
+    debugLog('브라우저 감지 Error:', error);
     return null;
   }
 }
@@ -339,7 +339,7 @@ async function getDiskUsage(): Promise<{
       return { total, used, free, percentage };
     }
   } catch (error) {
-    debugLog('Disk usage detection error:', error);
+    debugLog('디스크 사용량 감지 Error:', error);
   }
   
   return { total: 0, used: 0, free: 0, percentage: 0 };
@@ -394,57 +394,57 @@ function getDebugInfo(): {
  * Setup system info IPC handlers
  */
 function setupSystemInfoIpcHandlers(): void {
-  // Get basic system information
+  // 기본 시스템 정보 가져오기
   ipcMain.handle('getSystemInfo', async () => {
     return getSystemInfo();
   });
   
-  // Get memory information
+  // 메모리 정보 가져오기
   ipcMain.handle('getMemoryInfo', async () => {
     return getMemoryInfo();
   });
   
-  // Get CPU information
+  // CPU 정보 가져오기
   ipcMain.handle('getCpuInfo', async () => {
     return await getCPUInfo();
   });
   
-  // Get process list
+  // 프로세스 목록 가져오기
   ipcMain.handle('getProcessList', async () => {
     return getProcessList();
   });
   
-  // Check system permissions
+  // 시스템 권한 확인
   ipcMain.handle('checkSystemPermissions', async () => {
     return await checkSystemPermissions();
   });
   
-  // Request system permissions
+  // 시스템 권한 요청
   ipcMain.handle('requestSystemPermissions', async () => {
     return await requestSystemPermissions();
   });
   
-  // Detect browser information
+  // 브라우저 정보 감지
   ipcMain.handle('detectBrowserInfo', async () => {
     return await detectBrowserInfo();
   });
   
-  // Get disk usage
+  // 디스크 사용량 가져오기
   ipcMain.handle('getDiskUsage', async () => {
     return await getDiskUsage();
   });
   
-  // Get network information
+  // 네트워크 정보 가져오기
   ipcMain.handle('getNetworkInfo', async () => {
     return getNetworkInfo();
   });
   
-  // Get debug information
+  // 디버그 정보 가져오기
   ipcMain.handle('getDebugInfo', async () => {
     return getDebugInfo();
   });
   
-  // Open system preferences for permissions
+  // 권한을 위한 시스템 환경설정 열기
   ipcMain.handle('openSystemPreferences', async (event, panel?: string) => {
     if (process.platform === 'darwin') {
       const command = panel ? 
@@ -455,14 +455,14 @@ function setupSystemInfoIpcHandlers(): void {
         execSync(command);
         return true;
       } catch (error) {
-        debugLog('Failed to open system preferences:', error);
+        debugLog('시스템 환경Setup 열기 Failed:', error);
         return false;
       }
     }
     return false;
   });
   
-  // Show permission dialog
+  // 권한 대화상자 표시
   ipcMain.handle('show-permission-dialog', async (event, message: string) => {
     if (permissionErrorShown) return;
     
@@ -508,12 +508,12 @@ export function initSystemInfo(window: BrowserWindow): void {
   }
   
   try {
-    // Setup IPC handlers
+    // IPC 핸들러 설정
     setupSystemInfoIpcHandlers();
     
-    // Initial permission check
+    // 초기 권한 확인
     checkSystemPermissions().then(permissions => {
-      debugLog('Initial permission status:', permissions);
+      debugLog('초기 권한 상태:', permissions);
     });
     
     systemInfoInitialized = true;
@@ -528,7 +528,7 @@ export function initSystemInfo(window: BrowserWindow): void {
  */
 export function cleanupSystemInfo(): void {
   try {
-    // Reset state variables
+    // 상태 변수 리셋
     systemInfoInitialized = false;
     permissionErrorShown = false;
     isInFallbackMode = false;

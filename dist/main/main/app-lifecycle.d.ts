@@ -15,11 +15,11 @@ interface AppState {
  */
 export declare function initializeApp(): Promise<void>;
 /**
- * 전역 예외 핸들러 설정
+ * 전역 예외 핸들러 Setup
  */
 export declare function setupGlobalExceptionHandlers(): void;
 /**
- * 애플리케이션 정리
+ * 애플리케이션 Cleanup
  */
 export declare function cleanupApp(): Promise<void>;
 /**

@@ -18,36 +18,36 @@ export declare class DatabaseManager {
     private dbPath;
     constructor();
     /**
-     * 데이터베이스 초기화
-     */
+   * 데이터베이스 초기화
+   */
     initialize(): Promise<void>;
     /**
-     * 테이블 생성
-     */
+   * 테이블 생성
+   */
     private createTables;
     /**
-     * 타이핑 세션 저장
-     */
+   * 타이핑 세션 저장
+   */
     saveTypingSession(data: {
         duration?: number;
         startTime?: Date;
         endTime?: Date;
     }): Promise<void>;
     /**
-     * 키스트로크 데이터 저장
-     */
+   * 키스트로크 데이터 저장
+   */
     saveKeystroke(data: KeystrokeData): Promise<void>;
     /**
-     * 시스템 메트릭 저장
-     */
+   * 시스템 메트릭 저장
+   */
     saveSystemMetric(data: SystemMetric): Promise<void>;
     /**
-     * 최근 타이핑 세션 조회
-     */
+   * 최근 타이핑 세션 조회
+   */
     getRecentTypingSessions(limit?: number): Promise<any[]>;
     /**
-     * 통계 데이터 조회
-     */
+   * 통계 데이터 조회
+   */
     getStatistics(days?: number): Promise<{
         totalSessions: number;
         averageWpm: number;
@@ -55,12 +55,12 @@ export declare class DatabaseManager {
         totalKeystrokes: number;
     }>;
     /**
-     * 데이터베이스 정리
-     */
+   * 데이터베이스 Cleanup
+   */
     cleanup(): Promise<void>;
     /**
-     * 연결 종료
-     */
+   * 연결 종료
+   */
     disconnect(): Promise<void>;
     /**
      * 키스트로크 데이터 저장 (배치)
@@ -77,19 +77,19 @@ export declare class DatabaseManager {
         windowTitle?: string;
     }>): Promise<void>;
     /**
-     * 헬스 체크
-     */
+   * 헬스 체크
+   */
     healthCheck(): Promise<boolean>;
     /**
-     * 데이터 내보내기
-     */
+   * 데이터 내보내기
+   */
     exportData(options?: {
         format?: 'json' | 'csv';
         tables?: string[];
     }): Promise<any>;
     /**
-     * 데이터 가져오기
-     */
+   * 데이터 가져오기
+   */
     importData(filePath: string): Promise<void>;
     /**
      * 연결 종료 (close 메서드 별칭)

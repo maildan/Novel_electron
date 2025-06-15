@@ -23,14 +23,14 @@ interface EncryptionConfig {
   ivLength: number;
 }
 
-// 암호화 설정
+// 암호화 Setup
 const ENCRYPTION_CONFIG: EncryptionConfig = {
   algorithm: 'aes-256-gcm',
   keyLength: 32, // 256비트
   ivLength: 16   // 128비트
 };
 
-// 저장소 설정
+// 저장소 Setup
 const STORAGE_DIR = path.join(app.getPath('userData'), 'secure-storage');
 const KEY_FILE = 'secure-key';
 const BACKUP_DIR = path.join(STORAGE_DIR, 'backups');
@@ -70,7 +70,7 @@ export async function initializeSecureStorage(): Promise<boolean> {
     return true;
 
   } catch (error) {
-    console.error('안전한 저장소 초기화 오류:', error);
+    console.error('안전한 저장소 초기화 Error:', error);
     return false;
   }
 }
@@ -110,7 +110,7 @@ async function loadOrCreateEncryptionKey(): Promise<void> {
       console.log('새 암호화 키를 생성했습니다.');
     }
   } catch (error) {
-    console.error('암호화 키 로드/생성 오류:', error);
+    console.error('암호화 키 로드/생성 Error:', error);
     throw error;
   }
 }
@@ -130,7 +130,7 @@ async function loadStorageMetadata(): Promise<void> {
       }
     }
   } catch (error) {
-    console.error('메타데이터 로드 오류:', error);
+    console.error('메타데이터 로드 Error:', error);
   }
 }
 
@@ -144,7 +144,7 @@ async function saveStorageMetadata(): Promise<void> {
     
     fs.writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
   } catch (error) {
-    console.error('메타데이터 저장 오류:', error);
+    console.error('메타데이터 저장 Error:', error);
   }
 }
 
@@ -184,7 +184,7 @@ function encryptData(data: any): Buffer {
     ]);
 
   } catch (error) {
-    console.error('데이터 암호화 오류:', error);
+    console.error('데이터 암호화 Error:', error);
     throw error;
   }
 }
@@ -234,7 +234,7 @@ function decryptData(encryptedData: Buffer, parseJson = true): any {
     return decrypted;
 
   } catch (error) {
-    console.error('데이터 복호화 오류:', error);
+    console.error('데이터 복호화 Error:', error);
     throw error;
   }
 }
@@ -279,11 +279,11 @@ export async function storeSecureData(key: string, data: any): Promise<boolean> 
 
     await saveStorageMetadata();
 
-    console.log(`데이터 저장 완료: ${key}`);
+    console.log('데이터 저장 Completed: ${key}');
     return true;
 
   } catch (error) {
-    console.error(`데이터 저장 오류 (${key}):`, error);
+    console.error('데이터 저장 Error (${key}):', error);
     return false;
   }
 }
@@ -312,11 +312,11 @@ export async function loadSecureData(key: string, asJson = true): Promise<any> {
     const encryptedData = fs.readFileSync(filePath);
     const decryptedData = decryptData(encryptedData, asJson);
 
-    console.log(`데이터 로드 완료: ${key}`);
+    console.log('데이터 로드 Completed: ${key}');
     return decryptedData;
 
   } catch (error) {
-    console.error(`데이터 로드 오류 (${key}):`, error);
+    console.error('데이터 로드 Error (${key}):', error);
     return null;
   }
 }
@@ -351,11 +351,11 @@ export async function deleteSecureData(key: string): Promise<boolean> {
     storageMetadata.delete(safeKey);
     await saveStorageMetadata();
 
-    console.log(`데이터 삭제 완료: ${key}`);
+    console.log('데이터 삭제 Completed: ${key}');
     return true;
 
   } catch (error) {
-    console.error(`데이터 삭제 오류 (${key}):`, error);
+    console.error('데이터 삭제 Error (${key}):', error);
     return false;
   }
 }
@@ -372,7 +372,7 @@ async function createBackup(safeKey: string): Promise<void> {
       fs.copyFileSync(sourceFile, backupFile);
     }
   } catch (error) {
-    console.error(`백업 생성 오류 (${safeKey}):`, error);
+    console.error('백업 생성 Error (${safeKey}):', error);
   }
 }
 
@@ -395,7 +395,7 @@ export async function listSecureDataKeys(): Promise<string[]> {
       .map(file => file.replace('.secure', ''));
 
   } catch (error) {
-    console.error('데이터 키 목록 조회 오류:', error);
+    console.error('데이터 키 목록 조회 Error:', error);
     return [];
   }
 }
@@ -432,7 +432,7 @@ export async function getStorageStats(): Promise<{
       backupCount = backupFiles.filter(file => file.endsWith('.bak')).length;
     }
   } catch (error) {
-    console.error('저장소 통계 조회 오류:', error);
+    console.error('저장소 통계 조회 Error:', error);
   }
 
   return {
@@ -444,7 +444,7 @@ export async function getStorageStats(): Promise<{
 }
 
 /**
- * 저장소 정리 (오래된 백업 파일 삭제)
+ * 저장소 Cleanup (오래된 백업 파일 삭제)
  */
 export async function cleanupStorage(maxAge = 30 * 24 * 60 * 60 * 1000): Promise<number> {
   let cleanedCount = 0;
@@ -469,19 +469,19 @@ export async function cleanupStorage(maxAge = 30 * 24 * 60 * 60 * 1000): Promise
       }
     }
 
-    console.log(`저장소 정리 완료: ${cleanedCount}개 파일 삭제`);
+    console.log('저장소 Cleanup Completed: ${cleanedCount}개 파일 삭제');
   } catch (error) {
-    console.error('저장소 정리 오류:', error);
+    console.error('저장소 Cleanup Error:', error);
   }
 
   return cleanedCount;
 }
 
-// 앱 종료 시 정리
+// 앱 종료 시 Cleanup
 app.on('before-quit', async () => {
   try {
     await cleanupStorage();
   } catch (error) {
-    console.error('종료 시 저장소 정리 오류:', error);
+    console.error('종료 시 저장소 Cleanup Error:', error);
   }
 });

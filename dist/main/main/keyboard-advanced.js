@@ -152,15 +152,15 @@ class AdvancedKeyboardManager {
         return AdvancedKeyboardManager.instance;
     }
     /**
-     * Initialize the advanced keyboard monitoring system
-     */
+   * Initialize the advanced keyboard monitoring system
+   */
     async initialize() {
         if (this.isInitialized) {
             (0, utils_1.debugLog)('[KeyboardAdvanced] Already initialized');
             return true;
         }
         try {
-            (0, utils_1.debugLog)('[KeyboardAdvanced] Initializing advanced keyboard system...');
+            (0, utils_1.debugLog)('[KeyboardAdvanced] Initialize advanced keyboard system 중...');
             // Check permissions first
             await this.checkPermissions();
             // Initialize uIOhook for global keyboard monitoring
@@ -179,7 +179,7 @@ class AdvancedKeyboardManager {
         }
     }
     /**
-     * Check system permissions for keyboard and screen recording
+   * Check system permissions for keyboard and screen recording
      */
     async checkPermissions() {
         try {
@@ -200,7 +200,7 @@ class AdvancedKeyboardManager {
     }
     /**
      * Initialize global keyboard listeners using uIOhook
-     */
+   */
     initializeGlobalListeners() {
         try {
             // Register keyboard event handlers
@@ -219,7 +219,7 @@ class AdvancedKeyboardManager {
         }
     }
     /**
-     * Handle individual key events
+   * Handle individual key events
      */
     async handleKeyEvent(event, type) {
         if (!this.isMonitoring || type !== 'keydown') {
@@ -248,7 +248,7 @@ class AdvancedKeyboardManager {
     }
     /**
      * Get current active window information
-     */
+   */
     async getCurrentWindowInfo() {
         if (!activeWin) {
             return { title: '', appName: '', url: '' };
@@ -267,7 +267,7 @@ class AdvancedKeyboardManager {
         }
     }
     /**
-     * Extract URL from browser window title or other sources
+   * Extract URL from browser window title or other sources
      */
     extractUrlFromWindow(windowInfo) {
         if (!windowInfo)
@@ -322,7 +322,7 @@ class AdvancedKeyboardManager {
     }
     /**
      * Add key event to processing queue
-     */
+   */
     addKeyEventToQueue(keyEvent) {
         // Prevent queue overflow
         if (this.keyEventQueue.length >= this.MAX_QUEUE_SIZE) {
@@ -338,7 +338,7 @@ class AdvancedKeyboardManager {
         }
     }
     /**
-     * Process queued key events
+   * Process queued key events
      */
     processKeyEventQueue() {
         if (this.keyEventQueue.length === 0) {
@@ -358,7 +358,7 @@ class AdvancedKeyboardManager {
     }
     /**
      * Process individual key event for analytics
-     */
+   */
     processIndividualKeyEvent(event) {
         // Update internal statistics
         this.keyPressCount++;
@@ -374,7 +374,7 @@ class AdvancedKeyboardManager {
         // Send to stats manager if available
         try {
             // This would integrate with the stats-manager.ts
-            (0, utils_1.debugLog)(`[KeyboardAdvanced] Processed key: ${event.key} in ${event.appName}`);
+            (0, utils_1.debugLog)('[KeyboardAdvanced] Processed key: ${event.key} in ${event.appName}');
         }
         catch (error) {
             console.error('[KeyboardAdvanced] Stats processing failed:', error);
@@ -387,7 +387,7 @@ class AdvancedKeyboardManager {
         return /^[ㄱ-ㅎㅏ-ㅣ가-힣]$/.test(key);
     }
     /**
-     * Process Hangul jamo composition
+   * Process Hangul jamo composition
      */
     processJamo(char) {
         // Non-Hangul characters
@@ -481,7 +481,7 @@ class AdvancedKeyboardManager {
     updateTypingStats(keyEvent) {
         // This would integrate with settings and monitoring configuration
         // For now, just log the event
-        (0, utils_1.debugLog)(`[KeyboardAdvanced] Typing in ${keyEvent.appName}: ${keyEvent.key}`);
+        (0, utils_1.debugLog)('[KeyboardAdvanced] Typing in ${keyEvent.appName}: ${keyEvent.key}');
     }
     /**
      * Start monitoring active applications
@@ -510,7 +510,7 @@ class AdvancedKeyboardManager {
      * Notify about application switch
      */
     notifyAppSwitch(windowInfo) {
-        (0, utils_1.debugLog)(`[KeyboardAdvanced] App switched to: ${windowInfo.appName} - ${windowInfo.title}`);
+        (0, utils_1.debugLog)('[KeyboardAdvanced] App switched to: ${windowInfo.appName} - ${windowInfo.title}');
         // Send to main window if available
         const mainWindow = electron_1.BrowserWindow.getAllWindows().find(win => !win.isDestroyed());
         if (mainWindow) {
@@ -524,7 +524,7 @@ class AdvancedKeyboardManager {
     }
     /**
      * Setup IPC handlers for renderer communication
-     */
+   */
     setupIpcHandlers() {
         electron_1.ipcMain.handle('keyboard-advanced:start-monitoring', () => {
             return this.startMonitoring();
@@ -547,8 +547,8 @@ class AdvancedKeyboardManager {
         });
     }
     /**
-     * Start keyboard monitoring
-     */
+   * Start keyboard monitoring
+   */
     startMonitoring() {
         if (!this.isInitialized) {
             console.error('[KeyboardAdvanced] Cannot start monitoring: not initialized');
@@ -559,8 +559,8 @@ class AdvancedKeyboardManager {
         return true;
     }
     /**
-     * Stop keyboard monitoring
-     */
+   * Stop keyboard monitoring
+   */
     stopMonitoring() {
         this.isMonitoring = false;
         (0, utils_1.debugLog)('[KeyboardAdvanced] Monitoring stopped');
@@ -568,7 +568,7 @@ class AdvancedKeyboardManager {
     }
     /**
      * Cleanup resources
-     */
+   */
     destroy() {
         try {
             this.stopMonitoring();

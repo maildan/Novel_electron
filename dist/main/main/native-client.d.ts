@@ -62,12 +62,12 @@ declare class NativeModuleClient {
      */
     private loadModule;
     /**
-     * 모듈 상태 확인
-     */
+   * 모듈 상태 확인
+   */
     getStatus(): ModuleStatus;
     /**
-     * 모듈 사용 가능 여부 확인
-     */
+   * 모듈 사용 가능 여부 확인
+   */
     isAvailable(): boolean;
     getMemoryUsage(): MemoryUsage | null;
     startMemoryMonitoring(): boolean;
@@ -83,8 +83,8 @@ declare class NativeModuleClient {
     getTimestampString(): string | null;
     getNativeModuleInfo(): string | null;
     /**
-     * 리소스 정리
-     */
+   * 리소스 Cleanup
+   */
     cleanup(): void;
 }
 export declare const nativeClient: NativeModuleClient;
@@ -93,7 +93,7 @@ export declare const nativeClient: NativeModuleClient;
  */
 export declare function registerNativeIpcHandlers(): void;
 /**
- * 네이티브 모듈 관련 IPC 핸들러 정리
+ * 네이티브 모듈 관련 IPC 핸들러 Cleanup
  */
 export declare function cleanupNativeIpcHandlers(): void;
 export {};

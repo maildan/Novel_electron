@@ -52,13 +52,13 @@ function startTracking() {
         trackingState.startTime = Date.now();
         trackingState.sessionStats.sessionCount++;
         trackingState.sessionStats.lastActive = Date.now();
-        (0, utils_1.debugLog)('타이핑 추적 시작됨');
+        (0, utils_1.debugLog)('타이핑 추적 Started');
         // 메인 윈도우에 상태 변경 알림
         sendTrackingStatusToRenderer();
         return true;
     }
     catch (error) {
-        (0, utils_1.errorLog)('추적 시작 오류:', error);
+        (0, utils_1.errorLog)('추적 시작 Error:', error);
         return false;
     }
 }
@@ -78,7 +78,7 @@ function stopTracking() {
             trackingState.sessionStats.totalTime += sessionTime;
         }
         trackingState.startTime = null;
-        (0, utils_1.debugLog)('타이핑 추적 중지됨');
+        (0, utils_1.debugLog)('타이핑 추적 Stopped');
         // 통계 저장
         saveCurrentStats();
         // 메인 윈도우에 상태 변경 알림
@@ -86,7 +86,7 @@ function stopTracking() {
         return true;
     }
     catch (error) {
-        (0, utils_1.errorLog)('추적 중지 오류:', error);
+        (0, utils_1.errorLog)('추적 중지 Error:', error);
         return false;
     }
 }
@@ -102,7 +102,7 @@ async function saveCurrentStats() {
         (0, utils_1.debugLog)('통계 저장됨:', trackingState.sessionStats);
     }
     catch (error) {
-        (0, utils_1.errorLog)('통계 저장 오류:', error);
+        (0, utils_1.errorLog)('통계 저장 Error:', error);
     }
 }
 /**
@@ -140,7 +140,7 @@ function processKeyPress(keyData) {
         }
     }
     catch (error) {
-        (0, utils_1.errorLog)('키 입력 처리 오류:', error);
+        (0, utils_1.errorLog)('키 입력 처리 Error:', error);
     }
 }
 /**
@@ -150,7 +150,7 @@ function startAutoMonitoring() {
     try {
         const settings = settings_manager_1.default.getSettings();
         if (settings.autoStartMonitoring && !trackingState.isTracking) {
-            (0, utils_1.debugLog)('설정에 따라 자동 모니터링 시작');
+            (0, utils_1.debugLog)('Setup에 따라 자동 모니터링 시작');
             startTracking();
             // 렌더러에 자동 시작 알림
             const mainWindow = electron_1.BrowserWindow.getAllWindows().find(win => !win.isDestroyed());
@@ -162,7 +162,7 @@ function startAutoMonitoring() {
         }
     }
     catch (error) {
-        (0, utils_1.errorLog)('자동 모니터링 시작 오류:', error);
+        (0, utils_1.errorLog)('자동 모니터링 시작 Error:', error);
     }
 }
 /**
@@ -180,7 +180,7 @@ function sendTrackingStatusToRenderer() {
         }
     }
     catch (error) {
-        (0, utils_1.errorLog)('상태 전송 중 오류:', error);
+        (0, utils_1.errorLog)('상태 전송 중 Error:', error);
     }
 }
 /**
@@ -233,13 +233,13 @@ function registerTrackingHandlers() {
             const success = startTracking();
             return {
                 success,
-                message: success ? '모니터링 시작됨' : '모니터링 시작 실패',
+                message: success ? '모니터링 Started' : '모니터링 시작 Failed',
                 isTracking: trackingState.isTracking,
                 stats: trackingState.sessionStats
             };
         }
         catch (error) {
-            (0, utils_1.errorLog)('모니터링 시작 오류:', error);
+            (0, utils_1.errorLog)('모니터링 시작 Error:', error);
             return { success: false, message: error.message };
         }
     });
@@ -258,13 +258,13 @@ function registerTrackingHandlers() {
             const success = stopTracking();
             return {
                 success,
-                message: success ? '모니터링 중지됨' : '모니터링 중지 실패',
+                message: success ? '모니터링 Stopped' : '모니터링 중지 Failed',
                 isTracking: trackingState.isTracking,
                 stats: trackingState.sessionStats
             };
         }
         catch (error) {
-            (0, utils_1.errorLog)('모니터링 중지 오류:', error);
+            (0, utils_1.errorLog)('모니터링 중지 Error:', error);
             return { success: false, message: error.message };
         }
     });
@@ -279,7 +279,7 @@ function registerTrackingHandlers() {
             };
         }
         catch (error) {
-            (0, utils_1.errorLog)('추적 상태 조회 오류:', error);
+            (0, utils_1.errorLog)('추적 상태 조회 Error:', error);
             return { success: false, message: error.message };
         }
     });
@@ -291,10 +291,10 @@ function registerTrackingHandlers() {
                 Object.assign(trackingState.sessionStats, statsData);
             }
             await saveCurrentStats();
-            return { success: true, message: '통계 저장 완료' };
+            return { success: true, message: '통계 저장 Completed' };
         }
         catch (error) {
-            (0, utils_1.errorLog)('통계 저장 오류:', error);
+            (0, utils_1.errorLog)('통계 저장 Error:', error);
             return { success: false, message: error.message };
         }
     });
@@ -305,12 +305,12 @@ function registerTrackingHandlers() {
             sendTrackingStatusToRenderer();
             return {
                 success: true,
-                message: '추적 상태 초기화 완료',
+                message: '추적 상태 초기화 Completed',
                 stats: trackingState.sessionStats
             };
         }
         catch (error) {
-            (0, utils_1.errorLog)('추적 상태 리셋 오류:', error);
+            (0, utils_1.errorLog)('추적 상태 리셋 Error:', error);
             return { success: false, message: error.message };
         }
     });
@@ -321,12 +321,12 @@ function registerTrackingHandlers() {
             return { success: true };
         }
         catch (error) {
-            (0, utils_1.errorLog)('키 입력 처리 오류:', error);
+            (0, utils_1.errorLog)('키 입력 처리 Error:', error);
             return { success: false, message: error.message };
         }
     });
     isRegistered = true;
-    (0, utils_1.debugLog)('추적 관련 IPC 핸들러 등록 완료');
+    (0, utils_1.debugLog)('추적 관련 IPC 핸들러 등록 Completed');
 }
 /**
  * 자동 모니터링 초기화 (앱 시작 시 호출)
@@ -343,11 +343,11 @@ function initializeAutoMonitoring() {
         }
     }
     catch (error) {
-        (0, utils_1.errorLog)('자동 모니터링 초기화 오류:', error);
+        (0, utils_1.errorLog)('자동 모니터링 초기화 Error:', error);
     }
 }
 /**
- * 핸들러 정리
+ * 핸들러 Cleanup
  */
 function cleanupTrackingHandlers() {
     if (trackingState.isTracking) {
@@ -355,7 +355,7 @@ function cleanupTrackingHandlers() {
     }
     resetTrackingState();
     isRegistered = false;
-    (0, utils_1.debugLog)('추적 핸들러 정리 완료');
+    (0, utils_1.debugLog)('추적 핸들러 Cleanup Completed');
 }
 // 기본 내보내기
 exports.default = {

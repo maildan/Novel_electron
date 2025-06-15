@@ -5,14 +5,14 @@
 
 import { debugLog, errorLog } from '../utils/debug';
 
-// 프로토콜 설정
+// 프로토콜 Setup
 export async function setupProtocols(): Promise<void> {
-  debugLog('프로토콜 설정 (스텁)');
+  debugLog('프로토콜 Setup (스텁)');
 }
 
-// 세이프 스토리지 설정
+// 세이프 스토리지 Setup
 export async function setupSafeStorage(): Promise<void> {
-  debugLog('세이프 스토리지 설정 (스텁)');
+  debugLog('세이프 스토리지 Setup (스텁)');
 }
 
 // 키보드 모니터링 초기화
@@ -20,9 +20,9 @@ export async function initKeyboardMonitoring(): Promise<void> {
   debugLog('키보드 모니터링 초기화 (스텁)');
 }
 
-// 전력 모니터링 설정
+// 전력 모니터링 Setup
 export function setupPowerMonitoring(): void {
-  debugLog('전력 모니터링 설정 (스텁)');
+  debugLog('전력 모니터링 Setup (스텁)');
 }
 
 // 시스템 정보 모듈 초기화 (기존 함수와 다른 이름)
@@ -35,14 +35,14 @@ export function initTypingStatsModule(): void {
   debugLog('타이핑 통계 모듈 초기화 (스텁)');
 }
 
-// 클립보드 워처 설정
+// 클립보드 워처 Setup
 export function setupClipboardWatcher(): void {
-  debugLog('클립보드 워처 설정 (스텁)');
+  debugLog('클립보드 워처 Setup (스텁)');
 }
 
-// 크래시 리포터 설정
+// 크래시 리포터 Setup
 export function setupCrashReporter(): void {
-  debugLog('크래시 리포터 설정 (스텁)');
+  debugLog('크래시 리포터 Setup (스텁)');
 }
 
 // 스크린샷 모듈 초기화
@@ -50,24 +50,24 @@ export function initScreenshotModule(app: any): void {
   debugLog('스크린샷 모듈 초기화 (스텁)');
 }
 
-// 글로벌 단축키 설정
+// 글로벌 단축키 Setup
 export function setupGlobalShortcuts(): void {
-  debugLog('글로벌 단축키 설정 (스텁)');
+  debugLog('글로벌 단축키 Setup (스텁)');
 }
 
-// 시스템 트레이 설정
+// 시스템 트레이 Setup
 export function setupTray(): void {
-  debugLog('시스템 트레이 설정 (스텁)');
+  debugLog('시스템 트레이 Setup (스텁)');
 }
 
-// 메뉴 설정
+// 메뉴 Setup
 export function setupMenu(): void {
-  debugLog('메뉴 설정 (스텁)');
+  debugLog('메뉴 Setup (스텁)');
 }
 
-// 설정 로드
+// Setup 로드
 export function loadSettings(): any {
-  debugLog('설정 로드 (스텁)');
+  debugLog('Setup 로드 (스텁)');
   return {};
 }
 
@@ -83,9 +83,9 @@ export function createWindow(): any {
   return null;
 }
 
-// IPC 핸들러 설정
+// IPC 핸들러 Setup
 export function setupIpcHandlers(): void {
-  debugLog('IPC 핸들러 설정 (스텁)');
+  debugLog('IPC 핸들러 Setup (스텁)');
 }
 
 // 업데이트 초기화

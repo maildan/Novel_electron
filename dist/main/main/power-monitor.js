@@ -28,24 +28,24 @@ class PowerManager {
         };
     }
     /**
-     * 전력 모니터링 초기화
-     */
+   * 전력 모니터링 초기화
+   */
     initialize() {
         try {
             (0, utils_1.debugLog)('전력 모니터링 초기화 시작');
-            // 전력 상태 이벤트 리스너 설정
+            // 전력 상태 이벤트 리스너 Setup
             this.setupPowerEventListeners();
             // 초기 전력 정보 수집
             this.updatePowerInfo();
-            (0, utils_1.debugLog)('전력 모니터링 초기화 완료');
+            (0, utils_1.debugLog)('전력 모니터링 초기화 Completed');
         }
         catch (error) {
-            (0, utils_1.errorLog)('전력 모니터링 초기화 중 오류:', error);
+            (0, utils_1.errorLog)('전력 모니터링 초기화 중 Error:', error);
         }
     }
     /**
-     * 전력 이벤트 리스너 설정
-     */
+   * 전력 이벤트 리스너 Setup
+   */
     setupPowerEventListeners() {
         // 배터리 전원으로 전환
         electron_1.powerMonitor.on('on-battery', () => {
@@ -92,8 +92,8 @@ class PowerManager {
         });
     }
     /**
-     * 전력 상태 변경 처리
-     */
+   * 전력 상태 변경 처리
+   */
     handlePowerStateChange() {
         this.updatePowerInfo();
         if (this.settings.enableBatteryOptimization && this.powerInfo.isOnBatteryPower) {
@@ -106,31 +106,31 @@ class PowerManager {
         this.notifyListeners();
     }
     /**
-     * 시스템 절전 모드 진입 처리
-     */
+   * 시스템 절전 모드 진입 처리
+   */
     handleSystemSuspend() {
         // 필요한 경우 작업 중단 또는 저장
-        (0, utils_1.debugLog)('절전 모드 진입에 따른 작업 정리');
+        (0, utils_1.debugLog)('절전 모드 진입에 따른 작업 Cleanup');
     }
     /**
-     * 시스템 절전 모드 해제 처리
-     */
+   * 시스템 절전 모드 해제 처리
+   */
     handleSystemResume() {
         // 절전 모드에서 복귀 시 작업 재개
         (0, utils_1.debugLog)('절전 모드 복귀에 따른 작업 재개');
         this.updatePowerInfo();
     }
     /**
-     * 시스템 종료 처리
-     */
+   * 시스템 종료 처리
+   */
     handleSystemShutdown() {
-        // 종료 전 정리 작업
-        (0, utils_1.debugLog)('시스템 종료에 따른 정리 작업');
+        // 종료 전 Cleanup 작업
+        (0, utils_1.debugLog)('시스템 종료에 따른 Cleanup 작업');
         this.cleanup();
     }
     /**
-     * 전력 정보 업데이트
-     */
+   * 전력 정보 업데이트
+   */
     updatePowerInfo() {
         try {
             this.powerInfo = {
@@ -141,26 +141,26 @@ class PowerManager {
             (0, utils_1.debugLog)('전력 정보 업데이트:', this.powerInfo);
         }
         catch (error) {
-            (0, utils_1.errorLog)('전력 정보 업데이트 중 오류:', error);
+            (0, utils_1.errorLog)('전력 정보 업데이트 중 Error:', error);
         }
     }
     /**
-     * 배터리 최적화 모드 활성화
-     */
+   * 배터리 최적화 모드 활성화
+   */
     enableBatteryOptimization() {
         (0, utils_1.debugLog)('배터리 최적화 모드 활성화');
         // 여기서 앱의 성능을 낮추거나 불필요한 작업을 중단
         // 예: GPU 가속 비활성화, 애니메이션 감소, 백그라운드 작업 중단
     }
     /**
-     * 배터리 최적화 모드 비활성화
-     */
+   * 배터리 최적화 모드 비활성화
+   */
     disableBatteryOptimization() {
         (0, utils_1.debugLog)('배터리 최적화 모드 비활성화');
         // 일반 성능 모드로 복귀
     }
     /**
-     * 절전 모드 방지 설정
+     * 절전 모드 방지 Setup
      */
     setPreventSleep(prevent) {
         try {
@@ -176,18 +176,18 @@ class PowerManager {
             this.settings.preventSleep = prevent;
         }
         catch (error) {
-            (0, utils_1.errorLog)('절전 모드 설정 중 오류:', error);
+            (0, utils_1.errorLog)('절전 모드 Setup 중 Error:', error);
         }
     }
     /**
-     * 전력 상태 리스너 추가
-     */
+   * 전력 상태 리스너 추가
+   */
     addPowerListener(listener) {
         this.listeners.push(listener);
     }
     /**
-     * 전력 상태 리스너 제거
-     */
+   * 전력 상태 리스너 제거
+   */
     removePowerListener(listener) {
         const index = this.listeners.indexOf(listener);
         if (index > -1) {
@@ -195,52 +195,52 @@ class PowerManager {
         }
     }
     /**
-     * 리스너들에게 알림
-     */
+   * 리스너들에게 알림
+   */
     notifyListeners() {
         this.listeners.forEach(listener => {
             try {
                 listener(this.powerInfo);
             }
             catch (error) {
-                (0, utils_1.errorLog)('전력 상태 리스너 실행 중 오류:', error);
+                (0, utils_1.errorLog)('전력 상태 리스너 실행 중 Error:', error);
             }
         });
     }
     /**
-     * 현재 전력 정보 가져오기
-     */
+   * 현재 전력 정보 가져오기
+   */
     getPowerInfo() {
         this.updatePowerInfo();
         return { ...this.powerInfo };
     }
     /**
-     * 전력 설정 가져오기
-     */
+   * 전력 Setup 가져오기
+   */
     getSettings() {
         return { ...this.settings };
     }
     /**
-     * 전력 설정 업데이트
-     */
+   * 전력 Setup 업데이트
+   */
     updateSettings(newSettings) {
         this.settings = { ...this.settings, ...newSettings };
-        // 절전 모드 방지 설정 적용
+        // 절전 모드 방지 Setup 적용
         if (newSettings.preventSleep !== undefined) {
             this.setPreventSleep(newSettings.preventSleep);
         }
-        (0, utils_1.debugLog)('전력 설정 업데이트 완료');
+        (0, utils_1.debugLog)('전력 Setup 업데이트 Completed');
     }
     /**
-     * 정리 작업
-     */
+   * Cleanup 작업
+   */
     cleanup() {
         if (this.powerBlockerId) {
             electron_1.powerSaveBlocker.stop(this.powerBlockerId);
             this.powerBlockerId = null;
         }
         this.listeners = [];
-        (0, utils_1.debugLog)('전력 관리자 정리 완료');
+        (0, utils_1.debugLog)('전력 관리자 Cleanup Completed');
     }
 }
 // 전역 전력 관리자 인스턴스
@@ -255,7 +255,7 @@ function getPowerManager() {
     return powerManager;
 }
 /**
- * 전력 모니터링 설정
+ * 전력 모니터링 Setup
  */
 function setupPowerMonitoring() {
     const manager = getPowerManager();
@@ -269,7 +269,7 @@ function getCurrentPowerInfo() {
     return manager.getPowerInfo();
 }
 /**
- * 절전 모드 방지 설정
+ * 절전 모드 방지 Setup
  */
 function setPreventSleep(prevent) {
     const manager = getPowerManager();

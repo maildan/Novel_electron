@@ -12,8 +12,8 @@ export declare class WindowManager {
     hideMainWindow(): void;
     closeMainWindow(): void;
     /**
-     * 윈도우 정보 조회
-     */
+   * 윈도우 정보 조회
+   */
     getWindowInfo(): any;
     createWindow(options: any): Promise<BrowserWindow>;
     getWindowFromEvent(event: any): BrowserWindow | null;

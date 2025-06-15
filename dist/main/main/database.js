@@ -49,8 +49,8 @@ class DatabaseManager {
         this.dbPath = path.join(electron_1.app.getPath('userData'), 'loop.db');
     }
     /**
-     * 데이터베이스 초기화
-     */
+   * 데이터베이스 초기화
+   */
     async initialize() {
         if (this.isInitialized) {
             return;
@@ -67,21 +67,21 @@ class DatabaseManager {
             });
             // WAL 모드 활성화 (성능 향상)
             this.db.pragma('journal_mode = WAL');
-            // 캐시 크기 설정
+            // 캐시 크기 Setup
             this.db.pragma('cache_size = -16000'); // 16MB
             // 테이블 생성
             this.createTables();
             this.isInitialized = true;
-            console.log('[DB] 데이터베이스 초기화 완료:', this.dbPath);
+            console.log('[DB] 데이터베이스 초기화 Completed:', this.dbPath);
         }
         catch (error) {
-            console.error('[DB] 데이터베이스 초기화 실패:', error);
+            console.error('[DB] 데이터베이스 초기화 Failed:', error);
             throw error;
         }
     }
     /**
-     * 테이블 생성
-     */
+   * 테이블 생성
+   */
     createTables() {
         if (!this.db) {
             throw new Error('데이터베이스가 초기화되지 않았습니다');
@@ -124,11 +124,11 @@ class DatabaseManager {
       CREATE INDEX IF NOT EXISTS idx_sessions_startTime ON sessions(startTime);
       CREATE INDEX IF NOT EXISTS idx_system_metrics_timestamp ON system_metrics(timestamp);
     `);
-        console.log('[DB] 테이블 생성 완료');
+        console.log('[DB] 테이블 생성 Completed');
     }
     /**
-     * 타이핑 세션 저장
-     */
+   * 타이핑 세션 저장
+   */
     async saveTypingSession(data) {
         if (!this.db) {
             throw new Error('데이터베이스가 초기화되지 않았습니다');
@@ -141,13 +141,13 @@ class DatabaseManager {
             stmt.run(data.startTime?.toISOString() || new Date().toISOString(), data.endTime?.toISOString(), data.duration);
         }
         catch (error) {
-            console.error('[DB] 타이핑 세션 저장 실패:', error);
+            console.error('[DB] 타이핑 세션 저장 Failed:', error);
             throw error;
         }
     }
     /**
-     * 키스트로크 데이터 저장
-     */
+   * 키스트로크 데이터 저장
+   */
     async saveKeystroke(data) {
         if (!this.db) {
             throw new Error('데이터베이스가 초기화되지 않았습니다');
@@ -160,13 +160,13 @@ class DatabaseManager {
             stmt.run(data.timestamp.toISOString(), data.key, data.windowTitle, data.appName);
         }
         catch (error) {
-            console.error('[DB] 키스트로크 저장 실패:', error);
+            console.error('[DB] 키스트로크 저장 Failed:', error);
             throw error;
         }
     }
     /**
-     * 시스템 메트릭 저장
-     */
+   * 시스템 메트릭 저장
+   */
     async saveSystemMetric(data) {
         if (!this.db) {
             throw new Error('데이터베이스가 초기화되지 않았습니다');
@@ -179,13 +179,13 @@ class DatabaseManager {
             stmt.run(data.timestamp.toISOString(), data.cpuUsage, data.memoryUsage, data.gpuUsage);
         }
         catch (error) {
-            console.error('[DB] 시스템 메트릭 저장 실패:', error);
+            console.error('[DB] 시스템 메트릭 저장 Failed:', error);
             throw error;
         }
     }
     /**
-     * 최근 타이핑 세션 조회
-     */
+   * 최근 타이핑 세션 조회
+   */
     async getRecentTypingSessions(limit = 100) {
         if (!this.db) {
             throw new Error('데이터베이스가 초기화되지 않았습니다');
@@ -199,13 +199,13 @@ class DatabaseManager {
             return stmt.all(limit);
         }
         catch (error) {
-            console.error('[DB] 타이핑 세션 조회 실패:', error);
+            console.error('[DB] 타이핑 세션 조회 Failed:', error);
             return [];
         }
     }
     /**
-     * 통계 데이터 조회
-     */
+   * 통계 데이터 조회
+   */
     async getStatistics(days = 7) {
         if (!this.db) {
             throw new Error('데이터베이스가 초기화되지 않았습니다');
@@ -233,7 +233,7 @@ class DatabaseManager {
             };
         }
         catch (error) {
-            console.error('[DB] 통계 조회 실패:', error);
+            console.error('[DB] 통계 조회 Failed:', error);
             return {
                 totalSessions: 0,
                 averageWpm: 0,
@@ -243,8 +243,8 @@ class DatabaseManager {
         }
     }
     /**
-     * 데이터베이스 정리
-     */
+   * 데이터베이스 Cleanup
+   */
     async cleanup() {
         if (!this.db) {
             return;
@@ -274,15 +274,15 @@ class DatabaseManager {
         WHERE timestamp < ?
       `);
             cleanupKeystrokesStmt.run(sevenDaysAgo.toISOString());
-            console.log('[DB] 데이터베이스 정리 완료');
+            console.log('[DB] 데이터베이스 Cleanup Completed');
         }
         catch (error) {
-            console.error('[DB] 데이터베이스 정리 실패:', error);
+            console.error('[DB] 데이터베이스 Cleanup Failed:', error);
         }
     }
     /**
-     * 연결 종료
-     */
+   * 연결 종료
+   */
     async disconnect() {
         if (this.db) {
             this.db.close();
@@ -309,16 +309,16 @@ class DatabaseManager {
                 }
             });
             transaction(keystrokes);
-            console.log(`[DB] 키스트로크 데이터 ${keystrokes.length}개 저장 완료`);
+            console.log('[DB] 키스트로크 데이터 ${keystrokes.length}개 저장 Completed');
         }
         catch (error) {
-            console.error('[DB] 키스트로크 데이터 저장 실패:', error);
+            console.error('[DB] 키스트로크 데이터 저장 Failed:', error);
             throw error;
         }
     }
     /**
-     * 헬스 체크
-     */
+   * 헬스 체크
+   */
     async healthCheck() {
         try {
             if (!this.db) {
@@ -333,8 +333,8 @@ class DatabaseManager {
         }
     }
     /**
-     * 데이터 내보내기
-     */
+   * 데이터 내보내기
+   */
     async exportData(options = {}) {
         if (!this.db) {
             throw new Error('데이터베이스가 초기화되지 않았습니다');
@@ -364,13 +364,13 @@ class DatabaseManager {
             return exportData;
         }
         catch (error) {
-            console.error('[DB] 데이터 내보내기 실패:', error);
+            console.error('[DB] 데이터 내보내기 Failed:', error);
             throw error;
         }
     }
     /**
-     * 데이터 가져오기
-     */
+   * 데이터 가져오기
+   */
     async importData(filePath) {
         if (!this.db) {
             throw new Error('데이터베이스가 초기화되지 않았습니다');
@@ -391,10 +391,10 @@ class DatabaseManager {
                     transaction(records);
                 }
             }
-            console.log('[DB] 데이터 가져오기 완료');
+            console.log('[DB] 데이터 가져오기 Completed');
         }
         catch (error) {
-            console.error('[DB] 데이터 가져오기 실패:', error);
+            console.error('[DB] 데이터 가져오기 Failed:', error);
             throw error;
         }
     }
@@ -424,7 +424,7 @@ class DatabaseManager {
             };
         }
         catch (error) {
-            console.error('[DB] 타이핑 로그 저장 실패:', error);
+            console.error('[DB] 타이핑 로그 저장 Failed:', error);
             return {
                 success: false,
                 error: error instanceof Error ? error.message : String(error)
@@ -441,7 +441,7 @@ class DatabaseManager {
         try {
             const { days = 7, type = 'all', startDate, endDate } = params;
             const stats = {};
-            // 날짜 범위 설정
+            // 날짜 범위 Setup
             let dateFilter = '';
             let dateParams = [];
             if (startDate && endDate) {
@@ -529,7 +529,7 @@ class DatabaseManager {
             };
         }
         catch (error) {
-            console.error('[DB] 통계 조회 실패:', error);
+            console.error('[DB] 통계 조회 Failed:', error);
             return {
                 success: false,
                 error: error instanceof Error ? error.message : String(error)

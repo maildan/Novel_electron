@@ -2,7 +2,7 @@
 /**
  * 시스템 자동 시작 관리 모듈
  *
- * 애플리케이션이 시스템 시작 시 자동으로 실행되도록 설정합니다.
+ * 애플리케이션이 시스템 시작 시 자동으로 실행되도록 Setup합니다.
  * 다양한 운영체제에서 작동하는 자동 시작 기능을 제공합니다.
  */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
@@ -70,17 +70,17 @@ class AutoLaunchManager {
         this.executablePath = this.getExecutablePath();
     }
     /**
-     * 자동 시작 관리자 초기화
-     */
+   * 자동 시작 관리자 초기화
+   */
     async initialize() {
         try {
             // 플랫폼 지원 여부 확인
             if (!this.isPlatformSupported()) {
-                console.warn(`[AutoLaunch] Platform ${process.platform} is not supported`);
+                console.warn('[AutoLaunch] Platform ${process.platform} is not supported');
                 return false;
             }
             this.isInitialized = true;
-            console.log('[AutoLaunch] Manager initialized successfully');
+            console.log('[AutoLaunch] 매니저 초기화 Success');
             return true;
         }
         catch (error) {
@@ -89,8 +89,8 @@ class AutoLaunchManager {
         }
     }
     /**
-     * 자동 시작 활성화
-     */
+   * 자동 시작 활성화
+   */
     async enable(settings = {}) {
         if (!this.isInitialized) {
             await this.initialize();
@@ -111,8 +111,8 @@ class AutoLaunchManager {
         }
     }
     /**
-     * 자동 시작 비활성화
-     */
+   * 자동 시작 비활성화
+   */
     async disable() {
         if (!this.isInitialized) {
             await this.initialize();
@@ -133,8 +133,8 @@ class AutoLaunchManager {
         }
     }
     /**
-     * 자동 시작 상태 확인
-     */
+   * 자동 시작 상태 확인
+   */
     async getStatus() {
         const status = {
             isEnabled: false,
@@ -155,8 +155,8 @@ class AutoLaunchManager {
         return status;
     }
     /**
-     * 자동 시작 설정 토글
-     */
+   * 자동 시작 Setup 토글
+   */
     async toggle(settings) {
         const status = await this.getStatus();
         if (status.isEnabled) {
@@ -167,8 +167,8 @@ class AutoLaunchManager {
         }
     }
     /**
-     * 실행 파일 경로 가져오기
-     */
+   * 실행 파일 경로 가져오기
+   */
     getExecutablePath() {
         if (electron_1.app.isPackaged) {
             return process.execPath;
@@ -179,14 +179,14 @@ class AutoLaunchManager {
         }
     }
     /**
-     * 플랫폼 지원 여부 확인
-     */
+   * 플랫폼 지원 여부 확인
+   */
     isPlatformSupported() {
         return process.platform in PLATFORM_CONFIGS;
     }
     /**
-     * 플랫폼별 자동 시작 활성화
-     */
+   * 플랫폼별 자동 시작 활성화
+   */
     async enableForPlatform(startMinimized) {
         switch (process.platform) {
             case 'win32':
@@ -200,8 +200,8 @@ class AutoLaunchManager {
         }
     }
     /**
-     * 플랫폼별 자동 시작 비활성화
-     */
+   * 플랫폼별 자동 시작 비활성화
+   */
     async disableForPlatform() {
         switch (process.platform) {
             case 'win32':
@@ -215,8 +215,8 @@ class AutoLaunchManager {
         }
     }
     /**
-     * 플랫폼별 자동 시작 상태 확인
-     */
+   * 플랫폼별 자동 시작 상태 확인
+   */
     async checkStatusForPlatform() {
         switch (process.platform) {
             case 'win32':
@@ -255,7 +255,7 @@ class AutoLaunchManager {
             return true;
         }
         catch (error) {
-            // 키가 존재하지 않는 경우도 성공으로 처리
+            // 키가 존재하지 않는 경우도 Success으로 처리
             return true;
         }
     }
@@ -419,32 +419,32 @@ function getAutoLaunchManager() {
  */
 exports.autoLaunch = {
     /**
-     * 자동 시작 초기화
-     */
+   * 자동 시작 초기화
+   */
     async initialize() {
         return await getAutoLaunchManager().initialize();
     },
     /**
-     * 자동 시작 활성화
-     */
+   * 자동 시작 활성화
+   */
     async enable(settings) {
         return await getAutoLaunchManager().enable(settings);
     },
     /**
-     * 자동 시작 비활성화
-     */
+   * 자동 시작 비활성화
+   */
     async disable() {
         return await getAutoLaunchManager().disable();
     },
     /**
-     * 자동 시작 상태 확인
-     */
+   * 자동 시작 상태 확인
+   */
     async getStatus() {
         return await getAutoLaunchManager().getStatus();
     },
     /**
-     * 자동 시작 토글
-     */
+   * 자동 시작 토글
+   */
     async toggle(settings) {
         return await getAutoLaunchManager().toggle(settings);
     }

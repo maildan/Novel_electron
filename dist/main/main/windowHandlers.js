@@ -30,7 +30,7 @@ function applyWindowMode(mode) {
             console.error('메인 윈도우를 찾을 수 없습니다');
             return false;
         }
-        console.log(`윈도우 모드 적용: ${mode}`);
+        console.log('윈도우 모드 적용: ${mode}');
         switch (mode) {
             case 'windowed':
                 mainWindow.setFullScreen(false);
@@ -53,21 +53,21 @@ function applyWindowMode(mode) {
                 mainWindow.setAutoHideMenuBar(true);
                 break;
             default:
-                console.error(`지원되지 않는 윈도우 모드: ${mode}`);
+                console.error('지원되지 않는 윈도우 모드: ${mode}');
                 return false;
         }
-        // 설정 저장
+        // Setup 저장
         settings_manager_1.default.updateSetting('windowMode', mode);
-        console.log(`윈도우 모드 적용 완료: ${mode}`);
+        console.log('윈도우 모드 적용 Completed: ${mode}');
         return true;
     }
     catch (error) {
-        console.error('윈도우 모드 적용 오류:', error);
+        console.error('윈도우 모드 적용 Error:', error);
         return false;
     }
 }
 /**
- * 윈도우 위치 및 크기 설정
+ * 윈도우 위치 및 크기 Setup
  */
 function setWindowBounds(bounds) {
     try {
@@ -82,11 +82,11 @@ function setWindowBounds(bounds) {
         if (bounds.x !== undefined && bounds.y !== undefined) {
             mainWindow.setPosition(bounds.x, bounds.y);
         }
-        console.log('윈도우 크기/위치 설정 완료:', bounds);
+        console.log('윈도우 크기/위치 Setup Completed:', bounds);
         return true;
     }
     catch (error) {
-        console.error('윈도우 크기/위치 설정 오류:', error);
+        console.error('윈도우 크기/위치 Setup Error:', error);
         return false;
     }
 }
@@ -114,12 +114,12 @@ function getWindowStatus() {
         };
     }
     catch (error) {
-        console.error('윈도우 상태 조회 오류:', error);
+        console.error('윈도우 상태 조회 Error:', error);
         return { error: error.message };
     }
 }
 /**
- * 윈도우 투명도 설정
+ * 윈도우 투명도 Setup
  */
 function setWindowOpacity(opacity) {
     try {
@@ -131,18 +131,18 @@ function setWindowOpacity(opacity) {
         // 0.0 ~ 1.0 범위로 제한
         const clampedOpacity = Math.max(0.0, Math.min(1.0, opacity));
         mainWindow.setOpacity(clampedOpacity);
-        // 설정 저장
+        // Setup 저장
         settings_manager_1.default.updateSetting('windowOpacity', clampedOpacity);
-        console.log(`윈도우 투명도 설정: ${clampedOpacity}`);
+        console.log('윈도우 투명도 Setup: ${clampedOpacity}');
         return true;
     }
     catch (error) {
-        console.error('윈도우 투명도 설정 오류:', error);
+        console.error('윈도우 투명도 Setup Error:', error);
         return false;
     }
 }
 /**
- * 윈도우 항상 위에 설정
+ * 윈도우 항상 위에 Setup
  */
 function setAlwaysOnTop(alwaysOnTop) {
     try {
@@ -152,13 +152,13 @@ function setAlwaysOnTop(alwaysOnTop) {
             return false;
         }
         mainWindow.setAlwaysOnTop(alwaysOnTop);
-        // 설정 저장
+        // Setup 저장
         settings_manager_1.default.updateSetting('alwaysOnTop', alwaysOnTop);
-        console.log(`윈도우 항상 위에 설정: ${alwaysOnTop}`);
+        console.log('윈도우 항상 위에 Setup: ${alwaysOnTop}');
         return true;
     }
     catch (error) {
-        console.error('윈도우 항상 위에 설정 오류:', error);
+        console.error('윈도우 항상 위에 Setup Error:', error);
         return false;
     }
 }
@@ -176,7 +176,7 @@ function broadcastWindowStatus() {
         });
     }
     catch (error) {
-        console.error('윈도우 상태 브로드캐스트 오류:', error);
+        console.error('윈도우 상태 브로드캐스트 Error:', error);
     }
 }
 /**
@@ -191,20 +191,20 @@ function registerWindowHandlers() {
     // 윈도우 모드 변경 핸들러
     electron_1.ipcMain.handle('setWindowMode', async (event, mode) => {
         try {
-            console.log(`윈도우 모드 변경 요청: ${mode}`);
+            console.log('윈도우 모드 변경 요청: ${mode}');
             const success = applyWindowMode(mode);
             const status = getWindowStatus();
             // 상태 브로드캐스트
             broadcastWindowStatus();
             return {
                 success,
-                message: success ? `윈도우 모드가 ${mode}로 변경되었습니다` : '윈도우 모드 변경 실패',
+                message: success ? `윈도우 모드가 ${mode}로 변경되었습니다` : '윈도우 모드 변경 Failed',
                 mode,
                 status
             };
         }
         catch (error) {
-            console.error('윈도우 모드 변경 오류:', error);
+            console.error('윈도우 모드 변경 Error:', error);
             return { success: false, message: error.message };
         }
     });
@@ -218,11 +218,11 @@ function registerWindowHandlers() {
             };
         }
         catch (error) {
-            console.error('윈도우 상태 조회 오류:', error);
+            console.error('윈도우 상태 조회 Error:', error);
             return { success: false, message: error.message };
         }
     });
-    // 윈도우 크기/위치 설정 핸들러
+    // 윈도우 크기/위치 Setup 핸들러
     electron_1.ipcMain.handle('setWindowBounds', async (event, bounds) => {
         try {
             const success = setWindowBounds(bounds);
@@ -230,33 +230,33 @@ function registerWindowHandlers() {
             broadcastWindowStatus();
             return {
                 success,
-                message: success ? '윈도우 크기/위치 설정 완료' : '윈도우 크기/위치 설정 실패',
+                message: success ? '윈도우 크기/위치 Setup Completed' : '윈도우 크기/위치 Setup Failed',
                 status
             };
         }
         catch (error) {
-            console.error('윈도우 크기/위치 설정 오류:', error);
+            console.error('윈도우 크기/위치 Setup Error:', error);
             return { success: false, message: error.message };
         }
     });
-    // 윈도우 투명도 설정 핸들러
+    // 윈도우 투명도 Setup 핸들러
     electron_1.ipcMain.handle('setWindowOpacity', async (event, opacity) => {
         try {
             const success = setWindowOpacity(opacity);
             const status = getWindowStatus();
             return {
                 success,
-                message: success ? `윈도우 투명도가 ${opacity}로 설정되었습니다` : '윈도우 투명도 설정 실패',
+                message: success ? `윈도우 투명도가 ${opacity}로 Setup되었습니다` : '윈도우 투명도 Setup Failed',
                 opacity,
                 status
             };
         }
         catch (error) {
-            console.error('윈도우 투명도 설정 오류:', error);
+            console.error('윈도우 투명도 Setup Error:', error);
             return { success: false, message: error.message };
         }
     });
-    // 항상 위에 설정 핸들러
+    // 항상 위에 Setup 핸들러
     electron_1.ipcMain.handle('setAlwaysOnTop', async (event, alwaysOnTop) => {
         try {
             const success = setAlwaysOnTop(alwaysOnTop);
@@ -264,13 +264,13 @@ function registerWindowHandlers() {
             broadcastWindowStatus();
             return {
                 success,
-                message: success ? `항상 위에 설정: ${alwaysOnTop}` : '항상 위에 설정 실패',
+                message: success ? `항상 위에 Setup: ${alwaysOnTop}` : '항상 위에 Setup Failed',
                 alwaysOnTop,
                 status
             };
         }
         catch (error) {
-            console.error('항상 위에 설정 오류:', error);
+            console.error('항상 위에 Setup Error:', error);
             return { success: false, message: error.message };
         }
     });
@@ -285,7 +285,7 @@ function registerWindowHandlers() {
             return { success: false, message: '메인 윈도우를 찾을 수 없습니다' };
         }
         catch (error) {
-            console.error('윈도우 최소화 오류:', error);
+            console.error('윈도우 최소화 Error:', error);
             return { success: false, message: error.message };
         }
     });
@@ -307,7 +307,7 @@ function registerWindowHandlers() {
             return { success: false, message: '메인 윈도우를 찾을 수 없습니다' };
         }
         catch (error) {
-            console.error('윈도우 최대화 오류:', error);
+            console.error('윈도우 최대화 Error:', error);
             return { success: false, message: error.message };
         }
     });
@@ -322,7 +322,7 @@ function registerWindowHandlers() {
             return { success: false, message: '메인 윈도우를 찾을 수 없습니다' };
         }
         catch (error) {
-            console.error('윈도우 닫기 오류:', error);
+            console.error('윈도우 닫기 Error:', error);
             return { success: false, message: error.message };
         }
     });
@@ -338,12 +338,12 @@ function registerWindowHandlers() {
             return { success: false, message: '메인 윈도우를 찾을 수 없습니다' };
         }
         catch (error) {
-            console.error('윈도우 포커스 오류:', error);
+            console.error('윈도우 포커스 Error:', error);
             return { success: false, message: error.message };
         }
     });
     windowState.isRegistered = true;
-    console.log('윈도우 관련 IPC 핸들러 등록 완료');
+    console.log('윈도우 관련 IPC 핸들러 등록 Completed');
 }
 /**
  * 윈도우 핸들러 초기화
@@ -351,24 +351,24 @@ function registerWindowHandlers() {
 function initializeWindowHandlers() {
     try {
         windowState.windowManager = window_1.WindowManager.getInstance();
-        // 설정에서 초기 윈도우 모드 적용
+        // Setup에서 초기 윈도우 모드 적용
         const settings = settings_manager_1.default.getSettings();
         if (settings.windowMode) {
             applyWindowMode(settings.windowMode);
         }
-        console.log('윈도우 핸들러 초기화 완료');
+        console.log('윈도우 핸들러 초기화 Completed');
     }
     catch (error) {
-        console.error('윈도우 핸들러 초기화 오류:', error);
+        console.error('윈도우 핸들러 초기화 Error:', error);
     }
 }
 /**
- * 윈도우 핸들러 정리
+ * 윈도우 핸들러 Cleanup
  */
 function cleanupWindowHandlers() {
     windowState.isRegistered = false;
     windowState.windowManager = null;
-    console.log('윈도우 핸들러 정리 완료');
+    console.log('윈도우 핸들러 Cleanup Completed');
 }
 // 기본 내보내기
 exports.default = {

@@ -40,28 +40,28 @@ declare class GPUManager {
      */
     initialize(): Promise<void>;
     /**
-     * 설정 파일 로드
-     */
+   * Setup 파일 로드
+   */
     private loadSettings;
     /**
-     * 설정 파일 저장
-     */
+   * Setup 파일 저장
+   */
     private saveSettings;
     /**
      * GPU 정보 수집
      */
     private collectGPUInfo;
     /**
-     * 환경 변수 기반 설정 적용
-     */
+   * 환경 변수 기반 Setup 적용
+   */
     private applyEnvironmentSettings;
     /**
      * 네이티브 모듈을 통한 GPU 초기화
      */
     private initializeNativeGPU;
     /**
-     * 하드웨어 가속 토글
-     */
+   * 하드웨어 가속 토글
+   */
     toggleHardwareAcceleration(enable: boolean): Promise<boolean>;
     /**
      * GPU 가속화 실행
@@ -80,15 +80,15 @@ declare class GPUManager {
      */
     private processImageJS;
     /**
-     * 성능 메트릭 기록
-     */
+   * 성능 메트릭 기록
+   */
     private recordPerformanceMetrics;
     /**
-     * 배터리 최적화 모드 설정
-     */
+   * 배터리 최적화 모드 Setup
+   */
     setBatteryOptimization(enable: boolean): Promise<void>;
     /**
-     * GPU 설정 가져오기
+     * GPU Setup 가져오기
      */
     getSettings(): GPUSettings;
     /**
@@ -96,12 +96,12 @@ declare class GPUManager {
      */
     getGPUInfo(): GPUInfo | null;
     /**
-     * 성능 메트릭 가져오기
-     */
+   * 성능 메트릭 가져오기
+   */
     getPerformanceMetrics(): GPUPerformanceMetrics[];
     /**
-     * 하드웨어 가속 활성화 상태 확인
-     */
+   * 하드웨어 가속 활성화 상태 확인
+   */
     isHardwareAccelerationEnabled(): boolean;
     /**
      * GPU 벤치마크 실행
@@ -114,7 +114,7 @@ declare let gpuManager: GPUManager | null;
  */
 export declare function getGPUManager(): GPUManager;
 /**
- * GPU 가속 설정
+ * GPU 가속 Setup
  */
 export declare function setupGpuAcceleration(enable: boolean): Promise<void>;
 /**

@@ -13,10 +13,10 @@ function debugLog(message: string, data?: any): void {
 
 // 로거 함수들 (COPILOT_GUIDE.md 규칙에 따른 한국어 로깅)
 const logger = {
-  info: (message: string, data?: any) => debugLog(`ℹ️ ${message}`, data),
-  debug: (message: string, data?: any) => debugLog(`🔍 ${message}`, data),
-  warn: (message: string, data?: any) => debugLog(`⚠️ ${message}`, data),
-  error: (message: string, data?: any) => debugLog(`❌ ${message}`, data),
+  info: (message: string, data?: any) => debugLog('ℹ️ ${message}', data),
+  debug: (message: string, data?: any) => debugLog('🔍 ${message}', data),
+  warn: (message: string, data?: any) => debugLog('⚠️ ${message}', data),
+  error: (message: string, data?: any) => debugLog('❌ ${message}', data),
 };
 
 // 플랫폼별 파일 확장자
@@ -135,7 +135,7 @@ class NativeModuleLoader {
       this.nativeModule = require(modulePath)
       this.isLoaded = true
       this.loadError = null
-      logger.info('네이티브 모듈 로드 성공', {
+      logger.info('네이티브 모듈 로드 Success', {
         available: this.nativeModule.isNativeModuleAvailable?.() || 'unknown',
         version: this.nativeModule.getNativeModuleVersion?.() || 'unknown'
       })
@@ -143,7 +143,7 @@ class NativeModuleLoader {
       const errorMessage = error instanceof Error ? error.message : String(error)
       this.loadError = errorMessage
       this.isLoaded = false
-      logger.error('네이티브 모듈 로드 실패', { error: errorMessage })
+      logger.error('네이티브 모듈 로드 Failed', { error: errorMessage })
       logger.warn('자바스크립트 폴백 모드로 실행됩니다')
     }
     return this.createModuleWrapper()
@@ -283,14 +283,14 @@ class NativeModuleLoader {
         calculated_with: 'javascript'
       }
     } catch (error) {
-      debugLog('JS 폴백 타이핑 통계 계산 실패', error)
+      debugLog('JS 폴백 타이핑 통계 계산 Failed', error)
       return { error: 'Calculation failed' }
     }
   }
 
   private optimizeMemoryJS() {
     try {
-      // 기본 메모리 정리 작업
+      // 기본 메모리 Cleanup 작업
       if (global.gc) {
         global.gc()
       }
@@ -301,7 +301,7 @@ class NativeModuleLoader {
         method: 'javascript_gc'
       }
     } catch (error) {
-      debugLog('JS 폴백 메모리 최적화 실패', error)
+      debugLog('JS 폴백 메모리 최적화 Failed', error)
       return { error: 'Memory optimization failed' }
     }
   }
@@ -415,7 +415,7 @@ export async function cleanupMemory(): Promise<GpuAccelerationResult> {
     memorySavedMb: 0,
     performanceGain: 0,
     usedGpu: false,
-    errorMessage: '메모리 정리 사용 불가'
+    errorMessage: '메모리 Cleanup 사용 불가'
   }
 }
 

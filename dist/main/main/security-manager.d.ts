@@ -1,5 +1,5 @@
 /**
- * 보안 설정 관리 모듈
+ * 보안 Setup 관리 모듈
  *
  * Electron 앱의 보안 헤더, CSP(Content Security Policy), 요청 필터링 등을 관리합니다.
  * 개발 환경과 프로덕션 환경에서 다른 보안 정책을 적용합니다.
@@ -44,12 +44,12 @@ export declare class SecurityManager {
     private isInitialized;
     constructor(config?: Partial<SecurityConfig>);
     /**
-     * 보안 관리자 초기화
-     */
+   * 보안 관리자 초기화
+   */
     initialize(): Promise<boolean>;
     /**
-     * 특정 창에 대한 요청 보안 검사 설정
-     */
+   * 특정 창에 대한 요청 보안 검사 Setup
+   */
     setupRequestSecurity(window: BrowserWindow): boolean;
     /**
      * CSP 업데이트
@@ -64,24 +64,24 @@ export declare class SecurityManager {
      */
     resetIMEState(): void;
     /**
-     * 기본 설정 가져오기
-     */
+   * 기본 Setup 가져오기
+   */
     private getDefaultConfig;
     /**
-     * 설정 병합
-     */
+   * Setup 병합
+   */
     private mergeConfig;
     /**
      * CSP 문자열 생성
      */
     private generateCSPString;
     /**
-     * 보안 헤더 생성
-     */
+   * 보안 헤더 생성
+   */
     private getSecurityHeaders;
     /**
-     * 보안 헤더 적용
-     */
+   * 보안 헤더 적용
+   */
     private applySecurityHeaders;
     /**
      * 특정 세션에 CSP 등록
@@ -92,8 +92,8 @@ export declare class SecurityManager {
      */
     private applyCSPToAllSessions;
     /**
-     * 웹 콘텐츠 보안 설정
-     */
+   * 웹 콘텐츠 보안 Setup
+   */
     private setupWebContentsSecurity;
     /**
      * URL이 창 열기에 허용되는지 확인
@@ -104,12 +104,12 @@ export declare class SecurityManager {
      */
     private isUrlAllowedForNavigation;
     /**
-     * 키보드 이벤트 핸들러 설정
-     */
+   * 키보드 이벤트 핸들러 Setup
+   */
     private setupKeyboardEventHandlers;
     /**
-     * 기존 키보드 핸들러 제거
-     */
+   * 기존 키보드 핸들러 제거
+   */
     private removeExistingKeyboardHandlers;
 }
 /**
@@ -122,11 +122,11 @@ export declare function getSecurityManager(config?: Partial<SecurityConfig>): Se
 export declare const security: {
     /**
      * 보안 관리자 초기화
-     */
+   */
     initialize(config?: Partial<SecurityConfig>): Promise<boolean>;
     /**
-     * 특정 창에 요청 보안 설정
-     */
+   * 특정 창에 요청 보안 Setup
+   */
     setupRequestSecurity(window: BrowserWindow): boolean;
     /**
      * CSP 업데이트

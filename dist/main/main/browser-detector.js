@@ -161,8 +161,8 @@ class BrowserDetector {
         return BrowserDetector.instance;
     }
     /**
-     * 브라우저 감지 시스템 초기화
-     */
+   * 브라우저 감지 시스템 초기화
+   */
     async initialize() {
         try {
             (0, utils_1.debugLog)('브라우저 감지 시스템 초기화 시작');
@@ -176,11 +176,11 @@ class BrowserDetector {
             else {
                 await this.initializeLinux();
             }
-            (0, utils_1.debugLog)('브라우저 감지 시스템 초기화 완료');
+            (0, utils_1.debugLog)('브라우저 감지 시스템 초기화 Completed');
             return true;
         }
         catch (error) {
-            console.error('브라우저 감지 시스템 초기화 오류:', error);
+            console.error('브라우저 감지 시스템 초기화 Error:', error);
             return false;
         }
     }
@@ -191,10 +191,10 @@ class BrowserDetector {
         try {
             // active-win 모듈 동적 로드
             const activeWin = await Promise.resolve().then(() => __importStar(require('active-win')));
-            (0, utils_1.debugLog)('macOS 브라우저 감지 모듈 로드 완료');
+            (0, utils_1.debugLog)('macOS 브라우저 감지 모듈 로드 Completed');
         }
         catch (error) {
-            (0, utils_1.debugLog)('active-win 모듈 로드 실패, 폴백 모드 사용:', error);
+            (0, utils_1.debugLog)('active-win 모듈 로드 Failed, 폴백 모드 사용:', error);
         }
     }
     /**
@@ -212,8 +212,8 @@ class BrowserDetector {
         (0, utils_1.debugLog)('Linux 브라우저 감지 초기화');
     }
     /**
-     * 현재 활성 브라우저 이름 감지
-     */
+   * 현재 활성 브라우저 이름 감지
+   */
     async detectBrowserName() {
         try {
             // 1. 활성 윈도우 정보 가져오기
@@ -243,13 +243,13 @@ class BrowserDetector {
             return null;
         }
         catch (error) {
-            console.error('브라우저 이름 감지 오류:', error);
+            console.error('브라우저 이름 감지 Error:', error);
             return null;
         }
     }
     /**
-     * 활성 윈도우 정보 가져오기
-     */
+   * 활성 윈도우 정보 가져오기
+   */
     async getActiveWindow() {
         try {
             if (process.platform === 'darwin') {
@@ -263,13 +263,13 @@ class BrowserDetector {
             }
         }
         catch (error) {
-            (0, utils_1.debugLog)('활성 윈도우 정보 가져오기 실패:', error);
+            (0, utils_1.debugLog)('활성 윈도우 정보 가져오기 Failed:', error);
             return null;
         }
     }
     /**
-     * 프로세스 이름으로 브라우저 감지
-     */
+   * 프로세스 이름으로 브라우저 감지
+   */
     detectFromProcessName(windowInfo) {
         if (!windowInfo.owner?.name) {
             return null;
@@ -292,8 +292,8 @@ class BrowserDetector {
         return bundleMap[bundleId] || null;
     }
     /**
-     * 창 제목에서 브라우저 감지
-     */
+   * 창 제목에서 브라우저 감지
+   */
     detectFromTitle(title) {
         const titleParts = title.split(' - ');
         const lastPart = titleParts[titleParts.length - 1];
@@ -304,7 +304,7 @@ class BrowserDetector {
                     const matches = patterns.some(pattern => typeof pattern.pattern === 'string' &&
                         siteName.toLowerCase().includes(pattern.pattern.toLowerCase()));
                     if (matches) {
-                        (0, utils_1.debugLog)(`타이틀 기반 웹사이트 감지: ${key}`);
+                        (0, utils_1.debugLog)('타이틀 기반 웹사이트 감지: ${key}');
                         return key;
                     }
                 }
@@ -338,7 +338,7 @@ class BrowserDetector {
             return false;
         }
         catch (error) {
-            console.error('Google Docs 윈도우 감지 오류:', error);
+            console.error('Google Docs 윈도우 감지 Error:', error);
             return false;
         }
     }
@@ -365,7 +365,7 @@ class BrowserDetector {
             }
         }
         catch (error) {
-            (0, utils_1.debugLog)('URL 패턴 감지 오류:', error);
+            (0, utils_1.debugLog)('URL 패턴 감지 Error:', error);
         }
         return patterns;
     }
@@ -404,8 +404,8 @@ class BrowserDetector {
         return cached.category;
     }
     /**
-     * 브라우저 정보 업데이트
-     */
+   * 브라우저 정보 업데이트
+   */
     updateBrowserInfo(info) {
         this.lastKnownBrowserInfo = {
             ...this.lastKnownBrowserInfo,
@@ -414,14 +414,14 @@ class BrowserDetector {
         };
     }
     /**
-     * 마지막 브라우저 정보 조회
-     */
+   * 마지막 브라우저 정보 조회
+   */
     getLastKnownBrowserInfo() {
         return { ...this.lastKnownBrowserInfo };
     }
     /**
-     * 브라우저 감지 상태 조회
-     */
+   * 브라우저 감지 상태 조회
+   */
     getDetectorStatus() {
         return {
             cacheSize: this.urlCache.size,
@@ -431,22 +431,22 @@ class BrowserDetector {
         };
     }
     /**
-     * 캐시 정리
-     */
+   * 캐시 Cleanup
+   */
     clearCache() {
         this.urlCache.clear();
-        (0, utils_1.debugLog)('브라우저 감지 캐시 정리 완료');
+        (0, utils_1.debugLog)('브라우저 감지 캐시 Cleanup Completed');
     }
     /**
-     * 정리 작업
-     */
+   * Cleanup 작업
+   */
     cleanup() {
         this.clearCache();
-        (0, utils_1.debugLog)('브라우저 감지 시스템 정리 완료');
+        (0, utils_1.debugLog)('브라우저 감지 시스템 Cleanup Completed');
     }
     /**
-     * 활성 브라우저 정보 가져오기
-     */
+   * 활성 브라우저 정보 가져오기
+   */
     async getActiveBrowser() {
         try {
             const windowInfo = await this.getActiveWindow();
@@ -466,20 +466,20 @@ class BrowserDetector {
             };
         }
         catch (error) {
-            console.error('활성 브라우저 감지 오류:', error);
+            console.error('활성 브라우저 감지 Error:', error);
             return null;
         }
     }
     /**
-     * 설치된 브라우저 목록 가져오기
-     */
+   * 설치된 브라우저 목록 가져오기
+   */
     async getInstalledBrowsers() {
         try {
             // 설치된 브라우저 감지 로직
             return Object.values(BROWSER_PROCESS_NAMES);
         }
         catch (error) {
-            console.error('설치된 브라우저 목록 가져오기 오류:', error);
+            console.error('설치된 브라우저 목록 가져오기 Error:', error);
             return [];
         }
     }
@@ -500,16 +500,16 @@ class BrowserDetector {
             return googleDocsPatterns.some(pattern => pattern.test(browserInfo.url || ''));
         }
         catch (error) {
-            console.error('Google Docs 감지 오류:', error);
+            console.error('Google Docs 감지 Error:', error);
             return false;
         }
     }
     /**
-     * 설정 업데이트
-     */
+   * Setup 업데이트
+   */
     async updateSettings(settings) {
         try {
-            // 설정 업데이트 로직
+            // Setup 업데이트 로직
             return { success: true };
         }
         catch (error) {
@@ -518,15 +518,15 @@ class BrowserDetector {
         }
     }
     /**
-     * 모듈 재시작
-     */
+   * 모듈 재시작
+   */
     async restart() {
         // 재시작 로직
         await this.initialize();
     }
     /**
-     * 초기화 상태 확인
-     */
+   * 초기화 상태 확인
+   */
     isInitialized() {
         return true; // 간단한 구현
     }

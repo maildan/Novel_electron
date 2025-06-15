@@ -9,7 +9,7 @@ export function getErrorMessage(error: unknown): string {
   if (typeof error === 'string') {
     return error;
   }
-  return '알 수 없는 오류가 발생했습니다';
+  return '알 수 없는 Error가 발생했습니다';
 }
 
 export function createErrorResponse(error: unknown, statusCode: number = 500) {

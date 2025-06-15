@@ -9,7 +9,7 @@ import * as fs from 'fs';
 import { debugLog, errorLog } from '../shared/utils';
 import { nativeClient } from './native-client';
 
-// 메모리 관리 설정 인터페이스
+// 메모리 관리 Setup 인터페이스
 interface MemorySettings {
   checkInterval: number;
   threshold: number;
@@ -59,14 +59,14 @@ class AdvancedMemoryManager {
   private memoryHistory: MemoryInfo[] = [];
 
   constructor() {
-    // 사용자 데이터 경로 설정
+    // 사용자 데이터 경로 Setup
     const userDataPath = process.env.NODE_ENV === 'development'
       ? path.join(__dirname, '../../userData')
       : app.getPath('userData');
     
     this.configPath = path.join(userDataPath, 'memory-settings.json');
     
-    // 기본 설정
+    // 기본 Setup
     this.settings = {
       checkInterval: 30000, // 30초
       threshold: 80, // 80%
@@ -79,13 +79,13 @@ class AdvancedMemoryManager {
   }
 
   /**
-   * 메모리 관리자 초기화
-   */
+ * 메모리 관리자 초기화
+ */
   async initialize(): Promise<void> {
     try {
       debugLog('고급 메모리 관리자 초기화 시작');
       
-      // 설정 로드
+      // Setup 로드
       await this.loadSettings();
       
       // 네이티브 모듈 초기화
@@ -97,40 +97,40 @@ class AdvancedMemoryManager {
       // 주기적 메모리 체크 시작
       this.startMemoryMonitoring();
       
-      // 앱 이벤트 리스너 설정
+      // 앱 이벤트 리스너 Setup
       this.setupEventListeners();
       
       this.isInitialized = true;
-      debugLog('고급 메모리 관리자 초기화 완료');
+      debugLog('고급 메모리 관리자 초기화 Completed');
       
     } catch (error) {
-      errorLog('메모리 관리자 초기화 중 오류:', error);
+      errorLog('메모리 관리자 초기화 중 Error:', error);
       this.isInitialized = false;
     }
   }
 
   /**
-   * 설정 파일 로드
-   */
+ * Setup 파일 로드
+ */
   private async loadSettings(): Promise<void> {
     try {
       if (fs.existsSync(this.configPath)) {
         const data = fs.readFileSync(this.configPath, 'utf8');
         const loadedSettings = JSON.parse(data);
         this.settings = { ...this.settings, ...loadedSettings };
-        debugLog('메모리 관리 설정 로드 완료');
+        debugLog('메모리 관리 Setup 로드 Completed');
       } else {
         await this.saveSettings();
-        debugLog('기본 메모리 관리 설정 생성 완료');
+        debugLog('기본 메모리 관리 Setup 생성 Completed');
       }
     } catch (error) {
-      errorLog('메모리 관리 설정 로드 중 오류:', error);
+      errorLog('메모리 관리 Setup 로드 중 Error:', error);
     }
   }
 
   /**
-   * 설정 파일 저장
-   */
+ * Setup 파일 저장
+ */
   private async saveSettings(): Promise<void> {
     try {
       const dir = path.dirname(this.configPath);
@@ -140,16 +140,16 @@ class AdvancedMemoryManager {
       
       this.settings.lastUpdated = new Date().toISOString();
       fs.writeFileSync(this.configPath, JSON.stringify(this.settings, null, 2));
-      debugLog('메모리 관리 설정 저장 완료');
+      debugLog('메모리 관리 Setup 저장 Completed');
       
     } catch (error) {
-      errorLog('메모리 관리 설정 저장 중 오류:', error);
+      errorLog('메모리 관리 Setup Saving Error:', error);
     }
   }
 
   /**
-   * 네이티브 메모리 모듈 초기화
-   */
+ * 네이티브 메모리 모듈 초기화
+ */
   private async initializeNativeMemory(): Promise<void> {
     try {
       const isAvailable = await nativeClient.isAvailable();
@@ -160,7 +160,7 @@ class AdvancedMemoryManager {
         // 메모리 모니터링 시작
         const started = await nativeClient.startMemoryMonitoring();
         if (started) {
-          debugLog('네이티브 메모리 모니터링 시작됨');
+          debugLog('네이티브 메모리 모니터링 Started');
           
           // 초기 메모리 정보 수집
           const memoryUsage = await nativeClient.getMemoryUsage();
@@ -172,13 +172,13 @@ class AdvancedMemoryManager {
         debugLog('NAPI 네이티브 메모리 모듈 사용 불가, JavaScript 폴백 사용');
       }
     } catch (error) {
-      errorLog('네이티브 메모리 모듈 초기화 중 오류:', error);
+      errorLog('네이티브 메모리 모듈 초기화 중 Error:', error);
     }
   }
 
   /**
-   * 메모리 풀 초기화
-   */
+ * 메모리 풀 초기화
+ */
   private initializeMemoryPools(): void {
     try {
       // 힙 메모리 풀
@@ -208,15 +208,15 @@ class AdvancedMemoryManager {
         type: 'buffer'
       });
       
-      debugLog('메모리 풀 초기화 완료');
+      debugLog('메모리 풀 초기화 Completed');
     } catch (error) {
-      errorLog('메모리 풀 초기화 중 오류:', error);
+      errorLog('메모리 풀 초기화 중 Error:', error);
     }
   }
 
   /**
-   * 주기적 메모리 모니터링 시작
-   */
+ * 주기적 메모리 모니터링 시작
+ */
   private startMemoryMonitoring(): void {
     if (this.checkInterval) {
       clearInterval(this.checkInterval);
@@ -226,17 +226,17 @@ class AdvancedMemoryManager {
       await this.performMemoryCheck();
     }, this.settings.checkInterval);
     
-    debugLog(`메모리 모니터링 시작 (간격: ${this.settings.checkInterval}ms)`);
+    debugLog('메모리 모니터링 시작 (간격: ${this.settings.checkInterval}ms)');
   }
 
   /**
-   * 메모리 체크 수행
-   */
+ * 메모리 체크 수행
+ */
   private async performMemoryCheck(): Promise<void> {
     try {
       const memoryInfo = await this.getMemoryInfo();
       
-      // 메모리 히스토리에 추가
+      // 메모리 Add to history
       this.memoryHistory.push(memoryInfo);
       
       // 최근 100개 기록만 유지
@@ -246,7 +246,7 @@ class AdvancedMemoryManager {
       
       // 임계값 초과 시 최적화 실행
       if (memoryInfo.percentUsed > this.settings.threshold) {
-        debugLog(`메모리 사용률 임계값 초과: ${memoryInfo.percentUsed}%`);
+        debugLog('메모리 사용률 임계값 초과: ${memoryInfo.percentUsed}%');
         await this.optimizeMemory();
       }
       
@@ -254,13 +254,13 @@ class AdvancedMemoryManager {
       this.updateMemoryPools(memoryInfo);
       
     } catch (error) {
-      errorLog('메모리 체크 중 오류:', error);
+      errorLog('메모리 체크 중 Error:', error);
     }
   }
 
   /**
-   * 메모리 풀 업데이트
-   */
+ * 메모리 풀 업데이트
+ */
   private updateMemoryPools(memoryInfo: MemoryInfo): void {
     try {
       // 힙 메모리 풀 업데이트
@@ -280,20 +280,20 @@ class AdvancedMemoryManager {
       }
       
     } catch (error) {
-      errorLog('메모리 풀 업데이트 중 오류:', error);
+      errorLog('메모리 풀 업데이트 중 Error:', error);
     }
   }
 
   /**
-   * 앱 이벤트 리스너 설정
-   */
+ * 앱 이벤트 리스너 Setup
+ */
   private setupEventListeners(): void {
-    // 앱 종료 시 정리
+    // 앱 종료 시 Cleanup
     app.on('before-quit', () => {
       this.cleanup();
     });
     
-    // 창이 모두 닫힐 때 메모리 정리
+    // 창이 모두 닫힐 때 메모리 Cleanup
     app.on('window-all-closed', async () => {
       if (this.settings.optimizeOnIdle) {
         await this.optimizeMemory();
@@ -344,7 +344,7 @@ class AdvancedMemoryManager {
       return this.getMemoryInfoJS();
       
     } catch (error) {
-      errorLog('메모리 정보 가져오기 중 오류:', error);
+      errorLog('메모리 정보 가져오기 중 Error:', error);
       return this.getMemoryInfoJS();
     }
   }
@@ -380,8 +380,8 @@ class AdvancedMemoryManager {
   }
 
   /**
-   * 메모리 최적화 실행
-   */
+ * 메모리 최적화 실행
+ */
   async optimizeMemory(): Promise<MemoryOptimizationResult> {
     const startTime = Date.now();
     
@@ -424,10 +424,10 @@ class AdvancedMemoryManager {
             const afterBytes = parseInt(afterUsage.heapUsed);
             freedBytes = Math.max(0, beforeBytes - afterBytes);
             method = 'native';
-            debugLog('네이티브 메모리 최적화 완료, 해제된 메모리:', freedBytes);
+            debugLog('네이티브 메모리 최적화 Completed, 해제된 메모리:', freedBytes);
           }
         } catch (nativeError) {
-          debugLog('네이티브 메모리 최적화 실패, JavaScript 폴백 사용:', nativeError);
+          debugLog('네이티브 메모리 최적화 Failed, JavaScript 폴백 사용:', nativeError);
         }
       }
       
@@ -440,7 +440,7 @@ class AdvancedMemoryManager {
       const durationMs = Date.now() - startTime;
       this.lastOptimizationTime = Date.now();
       
-      debugLog(`메모리 최적화 완료: ${freedBytes} bytes 해제, ${durationMs}ms 소요`);
+      debugLog('메모리 최적화 Completed: ${freedBytes} bytes 해제, ${durationMs}ms 소요');
       
       return {
         freedBytes,
@@ -450,7 +450,7 @@ class AdvancedMemoryManager {
       };
       
     } catch (error) {
-      errorLog('메모리 최적화 중 오류:', error);
+      errorLog('메모리 최적화 중 Error:', error);
       return {
         freedBytes: 0,
         durationMs: Date.now() - startTime,
@@ -473,26 +473,26 @@ class AdvancedMemoryManager {
         global.gc();
       }
       
-      // 버퍼 정리
+      // 버퍼 Cleanup
       if (global.Buffer) {
-        // 버퍼 풀 정리 (Node.js 내부)
+        // 버퍼 풀 Cleanup (Node.js 내부)
       }
       
       const afterMemory = process.memoryUsage();
       const freedBytes = beforeMemory.heapUsed - afterMemory.heapUsed;
       
-      debugLog(`JavaScript 메모리 최적화: ${freedBytes} bytes 해제`);
+      debugLog('JavaScript 메모리 최적화: ${freedBytes} bytes 해제');
       return Math.max(0, freedBytes);
       
     } catch (error) {
-      errorLog('JavaScript 메모리 최적화 중 오류:', error);
+      errorLog('JavaScript 메모리 최적화 중 Error:', error);
       return 0;
     }
   }
 
   /**
-   * 메모리 설정 업데이트
-   */
+ * 메모리 Setup 업데이트
+ */
   async updateSettings(newSettings: Partial<MemorySettings>): Promise<void> {
     try {
       this.settings = { ...this.settings, ...newSettings };
@@ -503,50 +503,50 @@ class AdvancedMemoryManager {
         this.startMemoryMonitoring();
       }
       
-      debugLog('메모리 설정 업데이트 완료');
+      debugLog('메모리 Setup 업데이트 Completed');
     } catch (error) {
-      errorLog('메모리 설정 업데이트 중 오류:', error);
+      errorLog('메모리 Setup 업데이트 중 Error:', error);
     }
   }
 
   /**
-   * 메모리 풀 정보 가져오기
-   */
+ * 메모리 풀 정보 가져오기
+ */
   getMemoryPools(): MemoryPool[] {
     return Array.from(this.memoryPools.values());
   }
 
   /**
-   * 메모리 히스토리 가져오기
-   */
+ * 메모리 히스토리 가져오기
+ */
   getMemoryHistory(): MemoryInfo[] {
     return [...this.memoryHistory];
   }
 
   /**
-   * 설정 가져오기
-   */
+ * Setup 가져오기
+ */
   getSettings(): MemorySettings {
     return { ...this.settings };
   }
 
   /**
-   * 초기화 상태 확인
-   */
+ * 초기화 상태 확인
+ */
   isMemoryManagerInitialized(): boolean {
     return this.isInitialized;
   }
 
   /**
-   * 정리 작업
-   */
+ * Cleanup 작업
+ */
   cleanup(): void {
     if (this.checkInterval) {
       clearInterval(this.checkInterval);
       this.checkInterval = null;
     }
     
-    debugLog('메모리 관리자 정리 완료');
+    debugLog('메모리 관리자 Cleanup Completed');
   }
 }
 
@@ -564,7 +564,7 @@ export function getMemoryManager(): AdvancedMemoryManager {
 }
 
 /**
- * 메모리 관리자 설정
+ * 메모리 관리자 Setup
  */
 export async function setupMemoryManager(): Promise<void> {
   const manager = getMemoryManager();
@@ -588,7 +588,7 @@ export async function optimizeMemory(): Promise<MemoryOptimizationResult> {
 }
 
 /**
- * 메모리 설정 업데이트
+ * 메모리 Setup 업데이트
  */
 export async function updateMemorySettings(settings: Partial<MemorySettings>): Promise<void> {
   const manager = getMemoryManager();
@@ -626,12 +626,12 @@ export function registerMemoryIpcHandlers(): void {
 }
 
 /**
- * IPC 핸들러 정리 (memory-ipc.ts로 이동됨)
+ * IPC 핸들러 Cleanup (memory-ipc.ts로 이동됨)
  * 중복 방지를 위해 주석 처리
  */
 export function cleanupMemoryIpcHandlers(): void {
-  debugLog('메모리 관련 IPC 핸들러 정리는 memory-ipc.ts에서 관리됩니다');
-  // 실제 핸들러 정리는 memory-ipc.ts에서 수행됨
+  debugLog('메모리 관련 IPC 핸들러 Cleanup는 memory-ipc.ts에서 관리됩니다');
+  // 실제 핸들러 Cleanup는 memory-ipc.ts에서 수행됨
 }
 
 export default memoryManager;

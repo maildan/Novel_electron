@@ -167,7 +167,7 @@ class PlatformManager extends events_1.EventEmitter {
     }
     /**
      * Load system preferences
-     */
+   */
     loadSystemPreferences() {
         try {
             const language = electron_1.app.getLocale().split('-')[0] || 'en';
@@ -210,7 +210,7 @@ class PlatformManager extends events_1.EventEmitter {
         }
     }
     /**
-     * Setup theme change monitoring
+   * Setup theme change monitoring
      */
     setupThemeMonitoring() {
         this.themeChangeListener = () => {
@@ -230,7 +230,7 @@ class PlatformManager extends events_1.EventEmitter {
     }
     /**
      * Get comprehensive OS information
-     */
+   */
     getOSInfo() {
         try {
             const memory = {
@@ -279,7 +279,7 @@ class PlatformManager extends events_1.EventEmitter {
         }
     }
     /**
-     * Get platform-specific paths
+   * Get platform-specific paths
      */
     getPaths() {
         return { ...this.paths };
@@ -316,7 +316,7 @@ class PlatformManager extends events_1.EventEmitter {
     }
     /**
      * Resource path management
-     */
+   */
     getResourcePath(resourcePath = '') {
         try {
             // Development environment
@@ -333,8 +333,8 @@ class PlatformManager extends events_1.EventEmitter {
         }
     }
     /**
-     * Create platform-specific directories
-     */
+   * Create platform-specific directories
+   */
     async ensureDirectoriesExist() {
         const dirsToCreate = [
             this.paths.userData,
@@ -346,12 +346,12 @@ class PlatformManager extends events_1.EventEmitter {
                 await fs.promises.mkdir(dir, { recursive: true });
             }
             catch (error) {
-                (0, utils_1.debugLog)(`[PlatformManager] Failed to create directory ${dir}:`, error);
+                (0, utils_1.debugLog)('[PlatformManager] Failed to create directory ${dir}:', error);
             }
         }
     }
     /**
-     * Get platform-specific performance settings
+   * Get platform-specific performance settings
      */
     getPerformanceSettings() {
         const baseSettings = {
@@ -401,7 +401,7 @@ class PlatformManager extends events_1.EventEmitter {
     }
     /**
      * Check if dark mode is active
-     */
+   */
     isDarkMode() {
         return this.systemPrefs.theme === Theme.DARK;
     }
@@ -427,7 +427,7 @@ class PlatformManager extends events_1.EventEmitter {
         }
     }
     /**
-     * Get system uptime in a human-readable format
+   * Get system uptime in a human-readable format
      */
     getFormattedUptime() {
         const uptime = os.uptime();
@@ -455,7 +455,7 @@ class PlatformManager extends events_1.EventEmitter {
     }
     /**
      * Cleanup resources
-     */
+   */
     destroy() {
         if (this.themeChangeListener) {
             electron_1.nativeTheme.removeListener('updated', this.themeChangeListener);

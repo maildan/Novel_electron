@@ -83,13 +83,13 @@ export function initializeClipboardWatcher(options: ClipboardWatcherOptions = {}
     // 초기 클립보드 내용 읽기
     lastClipboardContent = readCurrentClipboardContent();
 
-    // IPC 핸들러 설정
+    // IPC 핸들러 Setup
     setupClipboardIpcHandlers();
 
     console.log('클립보드 감시 시스템이 초기화되었습니다.');
 
   } catch (error) {
-    console.error('클립보드 감시 초기화 오류:', error);
+    console.error('클립보드 감시 초기화 Error:', error);
   }
 }
 
@@ -128,7 +128,7 @@ function readCurrentClipboardContent(): ClipboardContent {
     }
 
   } catch (error) {
-    console.error('클립보드 내용 읽기 오류:', error);
+    console.error('클립보드 내용 읽기 Error:', error);
   }
 
   return content;
@@ -161,11 +161,11 @@ function isContentChanged(current: ClipboardContent, previous: ClipboardContent 
 }
 
 /**
- * 클립보드 감시 간격 설정
+ * 클립보드 감시 간격 Setup
  */
 export function setWatchInterval(intervalMs: number): boolean {
   if (intervalMs < MIN_WATCH_INTERVAL || intervalMs > MAX_WATCH_INTERVAL) {
-    console.warn(`감시 간격은 ${MIN_WATCH_INTERVAL}-${MAX_WATCH_INTERVAL}ms 범위여야 합니다.`);
+    console.warn('감시 간격은 ${MIN_WATCH_INTERVAL}-${MAX_WATCH_INTERVAL}ms 범위여야 합니다.');
     return false;
   }
 
@@ -179,7 +179,7 @@ export function setWatchInterval(intervalMs: number): boolean {
     startWatching(changeCallback);
   }
 
-  console.log(`클립보드 감시 간격 설정: ${intervalMs}ms`);
+  console.log('클립보드 감시 간격 Setup: ${intervalMs}ms');
   return true;
 }
 
@@ -218,14 +218,14 @@ export function startWatching(callback?: (content: ClipboardContent) => void): v
         }
 
       } catch (error) {
-        console.error('클립보드 감시 오류:', error);
+        console.error('클립보드 감시 Error:', error);
       }
     }, watchInterval);
 
-    console.log(`클립보드 감시 시작 (간격: ${watchInterval}ms)`);
+    console.log('클립보드 감시 시작 (간격: ${watchInterval}ms)');
 
   } catch (error) {
-    console.error('클립보드 감시 시작 오류:', error);
+    console.error('클립보드 감시 시작 Error:', error);
   }
 }
 
@@ -246,7 +246,7 @@ function handleClipboardChange(content: ClipboardContent): void {
       clipboardStats.internalCopies++;
     }
 
-    // 히스토리에 추가
+    // Add to history
     if (watcherOptions.enableHistory) {
       addToHistory(content);
     }
@@ -267,7 +267,7 @@ function handleClipboardChange(content: ClipboardContent): void {
     });
 
   } catch (error) {
-    console.error('클립보드 변경 처리 오류:', error);
+    console.error('클립보드 변경 처리 Error:', error);
   }
 }
 
@@ -292,12 +292,12 @@ function broadcastClipboardChange(content: ClipboardContent): void {
     }
 
   } catch (error) {
-    console.error('클립보드 이벤트 브로드캐스트 오류:', error);
+    console.error('클립보드 이벤트 브로드캐스트 Error:', error);
   }
 }
 
 /**
- * 히스토리에 추가
+ * Add to history
  */
 function addToHistory(content: ClipboardContent): void {
   try {
@@ -310,7 +310,7 @@ function addToHistory(content: ClipboardContent): void {
     }
 
   } catch (error) {
-    console.error('클립보드 히스토리 추가 오류:', error);
+    console.error('클립보드 히스토리 추가 Error:', error);
   }
 }
 
@@ -330,7 +330,7 @@ export function stopWatching(): void {
     console.log('클립보드 감시 중지');
 
   } catch (error) {
-    console.error('클립보드 감시 중지 오류:', error);
+    console.error('클립보드 감시 중지 Error:', error);
   }
 }
 
@@ -352,11 +352,11 @@ export function copyTextToClipboard(text: string): boolean {
     lastClipboardContent = content;
     handleClipboardChange(content);
 
-    console.log('텍스트 클립보드 복사 완료');
+    console.log('텍스트 클립보드 복사 Completed');
     return true;
 
   } catch (error) {
-    console.error('텍스트 클립보드 복사 오류:', error);
+    console.error('텍스트 클립보드 복사 Error:', error);
     internalCopyPending = false;
     return false;
   }
@@ -380,11 +380,11 @@ export function copyHtmlToClipboard(html: string, text?: string): boolean {
     lastClipboardContent = content;
     handleClipboardChange(content);
 
-    console.log('HTML 클립보드 복사 완료');
+    console.log('HTML 클립보드 복사 Completed');
     return true;
 
   } catch (error) {
-    console.error('HTML 클립보드 복사 오류:', error);
+    console.error('HTML 클립보드 복사 Error:', error);
     internalCopyPending = false;
     return false;
   }
@@ -425,11 +425,11 @@ export function copyImageToClipboard(imageData: string | Buffer | Electron.Nativ
     lastClipboardContent = content;
     handleClipboardChange(content);
 
-    console.log('이미지 클립보드 복사 완료');
+    console.log('이미지 클립보드 복사 Completed');
     return true;
 
   } catch (error) {
-    console.error('이미지 클립보드 복사 오류:', error);
+    console.error('이미지 클립보드 복사 Error:', error);
     internalCopyPending = false;
     return false;
   }
@@ -442,7 +442,7 @@ export function readTextFromClipboard(): string {
   try {
     return clipboard.readText();
   } catch (error) {
-    console.error('클립보드 텍스트 읽기 오류:', error);
+    console.error('클립보드 텍스트 읽기 Error:', error);
     return '';
   }
 }
@@ -454,7 +454,7 @@ export function readHtmlFromClipboard(): string {
   try {
     return clipboard.readHTML();
   } catch (error) {
-    console.error('클립보드 HTML 읽기 오류:', error);
+    console.error('클립보드 HTML 읽기 Error:', error);
     return '';
   }
 }
@@ -467,7 +467,7 @@ export function readImageFromClipboard(): Electron.NativeImage | null {
     const image = clipboard.readImage();
     return image.isEmpty() ? null : image;
   } catch (error) {
-    console.error('클립보드 이미지 읽기 오류:', error);
+    console.error('클립보드 이미지 읽기 Error:', error);
     return null;
   }
 }
@@ -540,13 +540,13 @@ export async function saveClipboardToFile(filePath: string, type: 'text' | 'html
     return false;
 
   } catch (error) {
-    console.error('클립보드 파일 저장 오류:', error);
+    console.error('클립보드 파일 저장 Error:', error);
     return false;
   }
 }
 
 /**
- * IPC 핸들러 설정
+ * IPC 핸들러 Setup
  */
 function setupClipboardIpcHandlers(): void {
   // 텍스트 복사
@@ -616,7 +616,7 @@ function setupClipboardIpcHandlers(): void {
     return saveClipboardToFile(filePath, type);
   });
 
-  // 감시 간격 설정
+  // 감시 간격 Setup
   ipcMain.handle('clipboard:setInterval', (event, intervalMs: number) => {
     return setWatchInterval(intervalMs);
   });

@@ -34,7 +34,7 @@ export declare function getStorageStats(): Promise<{
     backupCount: number;
 }>;
 /**
- * 저장소 정리 (오래된 백업 파일 삭제)
+ * 저장소 Cleanup (오래된 백업 파일 삭제)
  */
 export declare function cleanupStorage(maxAge?: number): Promise<number>;
 //# sourceMappingURL=safe-storage.d.ts.map

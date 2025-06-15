@@ -94,7 +94,7 @@ export class StatsManager {
     composingBuffer: ''
   };
 
-  // 앱 상태 참조 (나중에 의존성 주입으로 설정)
+  // 앱 상태 참조 (나중에 의존성 주입으로 Setup)
   private appState: any = {};
 
   private constructor() {}
@@ -107,8 +107,8 @@ export class StatsManager {
   }
 
   /**
-   * 통계 시스템 초기화
-   */
+ * 통계 시스템 초기화
+ */
   async initialize(): Promise<boolean> {
     try {
       debugLog('통계 처리 시스템 초기화 시작');
@@ -116,17 +116,17 @@ export class StatsManager {
       // 워커 초기화
       await this.initializeWorker();
       
-      debugLog('통계 처리 시스템 초기화 완료');
+      debugLog('통계 처리 시스템 초기화 Completed');
       return true;
     } catch (error) {
-      console.error('통계 처리 시스템 초기화 오류:', error);
+      console.error('통계 처리 시스템 초기화 Error:', error);
       return false;
     }
   }
 
   /**
-   * 워커 초기화
-   */
+ * 워커 초기화
+ */
   private async initializeWorker(): Promise<void> {
     try {
       if (this.statWorker) {
@@ -139,18 +139,18 @@ export class StatsManager {
       this.statWorker = new Worker(workerPath);
       this.worker = this.statWorker; // 호환성을 위한 별칭
       
-      // 워커 메시지 핸들러 설정
+      // 워커 메시지 핸들러 Setup
       this.statWorker.on('message', this.handleWorkerMessage.bind(this));
       
-      // 워커 오류 핸들러
+      // 워커 Error 핸들러
       this.statWorker.on('error', (error) => {
-        console.error('워커 오류:', error);
+        console.error('워커 Error:', error);
         this.handleWorkerError(error);
       });
 
       // 워커 종료 핸들러
       this.statWorker.on('exit', (code) => {
-        debugLog(`워커 종료됨, 코드: ${code}`);
+        debugLog('워커 종료됨, 코드: ${code}');
         this.statWorker = null;
         this.workerInitialized = false;
       });
@@ -166,21 +166,21 @@ export class StatsManager {
         }
       });
 
-      debugLog('통계 워커 초기화 시작됨');
+      debugLog('통계 워커 초기화 Started');
     } catch (error) {
-      console.error('워커 초기화 오류:', error);
+      console.error('워커 초기화 Error:', error);
       this.workerInitialized = false;
       this.statWorker = null;
       
       // 워커 없이도 기본 기능 동작하도록 폴백 모드 활성화
-      debugLog('워커 초기화 실패: 폴백 모드로 전환');
+      debugLog('워커 초기화 Failed: 폴백 모드로 전환');
       this.switchToFallbackMode();
     }
   }
 
   /**
-   * 워커 메시지 처리
-   */
+ * 워커 메시지 처리
+ */
   private handleWorkerMessage(message: WorkerMessage): void {
     switch (message.type) {
       case 'pattern-analyzed':
@@ -195,12 +195,12 @@ export class StatsManager {
         
       case 'initialized':
         this.workerInitialized = true;
-        debugLog('워커 초기화 완료:', message.timestamp);
+        debugLog('워커 초기화 Completed:', message.timestamp);
         this.processPendingTasks();
         break;
         
       case 'memory-optimized':
-        debugLog('워커 메모리 최적화 완료:', {
+        debugLog('워커 메모리 최적화 Completed:', {
           before: `${Math.round((message.before || 0) / (1024 * 1024))}MB`,
           after: `${Math.round((message.after || 0) / (1024 * 1024))}MB`,
           reduction: `${Math.round((message.reduction || 0) / (1024 * 1024))}MB`,
@@ -209,7 +209,7 @@ export class StatsManager {
         break;
         
       case 'memory-warning':
-        debugLog('워커 메모리 경고:', message.message, 
+        debugLog('워커 메모리 Warning:', message.message, 
                  `${Math.round((message.memoryInfo?.heapUsedMB || 0))}MB`);
         
         // 메모리 사용량이 임계치를 초과하면 처리 모드 변경
@@ -219,7 +219,7 @@ export class StatsManager {
         break;
         
       case 'error':
-        console.error('워커 오류:', message.error);
+        console.error('워커 Error:', message.error);
         if (message.memoryInfo) {
           this.updateWorkerMemoryInfo(message.memoryInfo);
         }
@@ -227,7 +227,7 @@ export class StatsManager {
         
       case 'worker-ready':
         this.workerInitialized = true;
-        debugLog('워커 준비 완료');
+        debugLog('워커 준비 Completed');
         break;
         
       default:
@@ -236,8 +236,8 @@ export class StatsManager {
   }
 
   /**
-   * 키 입력 처리
-   */
+ * 키 입력 처리
+ */
   async processKeyInput(data: TypingData): Promise<void> {
     try {
       // 한글 입력 처리
@@ -270,13 +270,13 @@ export class StatsManager {
       });
 
     } catch (error) {
-      console.error('키 입력 처리 오류:', error);
+      console.error('키 입력 처리 Error:', error);
     }
   }
 
   /**
-   * 한글 입력 처리
-   */
+ * 한글 입력 처리
+ */
   private isHangulInput(char: string): boolean {
     // 한글 유니코드 범위 확인
     const charCode = char.charCodeAt(0);
@@ -294,8 +294,8 @@ export class StatsManager {
   }
 
   /**
-   * 타이핑 패턴 업데이트
-   */
+ * 타이핑 패턴 업데이트
+ */
   private updateTypingPattern(pattern: TypingPattern): void {
     // 패턴 데이터를 앱 상태에 저장
     debugLog('타이핑 패턴 업데이트:', {
@@ -306,22 +306,22 @@ export class StatsManager {
   }
 
   /**
-   * 워커 메모리 정보 업데이트
-   */
+ * 워커 메모리 정보 업데이트
+ */
   private updateWorkerMemoryInfo(memoryInfo: WorkerMemoryInfo): void {
     this.workerMemoryUsage = memoryInfo;
     this.lastWorkerCheck = Date.now();
   }
 
   /**
-   * 대기 중인 작업 처리
-   */
+ * 대기 중인 작업 처리
+ */
   private processPendingTasks(): void {
     if (!this.statWorker || !this.workerInitialized) {
       return;
     }
 
-    debugLog(`대기 중인 작업 ${this.pendingTasks.length}개 처리 시작`);
+    debugLog('대기 중인 작업 ${this.pendingTasks.length}개 처리 시작');
     
     while (this.pendingTasks.length > 0) {
       const task = this.pendingTasks.shift();
@@ -330,8 +330,8 @@ export class StatsManager {
   }
 
   /**
-   * 저메모리 모드로 전환
-   */
+ * 저메모리 모드로 전환
+ */
   private switchToLowMemoryMode(): void {
     try {
       // 이미 저메모리 모드인 경우 또는 사용자가 처리 모드를 수동으로 지정한 경우 중단
@@ -352,7 +352,7 @@ export class StatsManager {
         // GPU 메모리 최적화
         if (global.gc) {
           global.gc();
-          debugLog('GPU 모드 전환 전 메모리 정리 수행');
+          debugLog('GPU 모드 전환 전 메모리 Cleanup 수행');
         }
       } else {
         this.processingMode = 'cpu-intensive';
@@ -367,37 +367,37 @@ export class StatsManager {
         });
       }
     } catch (error) {
-      console.error('저메모리 모드 전환 오류:', error);
+      console.error('저메모리 모드 전환 Error:', error);
     }
   }
 
   /**
-   * 폴백 모드로 전환
-   */
+ * 폴백 모드로 전환
+ */
   private switchToFallbackMode(): void {
     debugLog('워커 없는 폴백 모드로 전환');
     // 워커 없이 기본적인 통계 처리만 수행
   }
 
   /**
-   * 워커 오류 처리
+   * 워커 Error 처리
    */
   private handleWorkerError(error: Error): void {
-    console.error('워커 실행 오류:', error);
+    console.error('워커 실행 Error:', error);
     this.workerInitialized = false;
     
     // 워커 재시작 시도
     setTimeout(() => {
       debugLog('워커 재시작 시도');
       this.initializeWorker().catch(err => {
-        console.error('워커 재시작 실패:', err);
+        console.error('워커 재시작 Failed:', err);
       });
     }, 5000);
   }
 
   /**
-   * 통계 상태 조회
-   */
+ * 통계 상태 조회
+ */
   getStatsStatus() {
     return {
       workerInitialized: this.workerInitialized,
@@ -409,8 +409,8 @@ export class StatsManager {
   }
 
   /**
-   * 통계 데이터 가져오기
-   */
+ * 통계 데이터 가져오기
+ */
   async getStats(options?: any): Promise<any> {
     try {
       // 통계 데이터 수집 로직
@@ -423,14 +423,14 @@ export class StatsManager {
         }
       };
     } catch (error) {
-      console.error('통계 가져오기 오류:', error);
+      console.error('통계 가져오기 Error:', error);
       return { success: false, error: error instanceof Error ? error.message : String(error) };
     }
   }
 
   /**
-   * 타이핑 패턴 분석
-   */
+ * 타이핑 패턴 분석
+ */
   async analyzeTypingPattern(data: any): Promise<any> {
     try {
       // 타이핑 패턴 분석 로직
@@ -443,27 +443,27 @@ export class StatsManager {
         }
       };
     } catch (error) {
-      console.error('타이핑 패턴 분석 오류:', error);
+      console.error('타이핑 패턴 분석 Error:', error);
       return { success: false, error: error instanceof Error ? error.message : String(error) };
     }
   }
 
   /**
-   * 설정 업데이트
-   */
+ * Setup 업데이트
+ */
   async updateSettings(settings: any): Promise<any> {
     try {
-      // 설정 업데이트 로직
+      // Setup 업데이트 로직
       return { success: true };
     } catch (error) {
-      console.error('설정 업데이트 오류:', error);
+      console.error('Setup 업데이트 Error:', error);
       return { success: false, error: error instanceof Error ? error.message : String(error) };
     }
   }
 
   /**
-   * 메모리 최적화
-   */
+ * 메모리 최적화
+ */
   async optimizeMemory(): Promise<any> {
     try {
       // 메모리 최적화 로직
@@ -471,32 +471,32 @@ export class StatsManager {
       this.sessionBuffers.clear();
       return { success: true };
     } catch (error) {
-      console.error('메모리 최적화 오류:', error);
+      console.error('메모리 최적화 Error:', error);
       return { success: false, error: error instanceof Error ? error.message : String(error) };
     }
   }
 
   /**
-   * 모듈 재시작
-   */
+ * 모듈 재시작
+ */
   async restart(): Promise<void> {
     this.cleanup();
     await this.initialize();
   }
 
   /**
-   * 초기화 상태 확인
-   */
+ * 초기화 상태 확인
+ */
   isInitialized(): boolean {
     return this.statWorker !== null;
   }
 
   /**
-   * 정리 작업
-   */
+ * Cleanup 작업
+ */
   async cleanup(): Promise<void> {
     try {
-      debugLog('통계 처리 시스템 정리 시작');
+      debugLog('통계 처리 시스템 Cleanup 시작');
       
       if (this.statWorker) {
         await this.statWorker.terminate();
@@ -506,9 +506,9 @@ export class StatsManager {
       this.workerInitialized = false;
       this.pendingTasks = [];
       
-      debugLog('통계 처리 시스템 정리 완료');
+      debugLog('통계 처리 시스템 Cleanup Completed');
     } catch (error) {
-      console.error('통계 처리 시스템 정리 오류:', error);
+      console.error('통계 처리 시스템 Cleanup Error:', error);
     }
   }
 }

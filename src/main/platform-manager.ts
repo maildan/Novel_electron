@@ -212,7 +212,7 @@ export class PlatformManager extends EventEmitter {
   
   /**
    * Load system preferences
-   */
+ */
   private loadSystemPreferences(): SystemPreferences {
     try {
       const language = app.getLocale().split('-')[0] || 'en';
@@ -258,7 +258,7 @@ export class PlatformManager extends EventEmitter {
   }
   
   /**
-   * Setup theme change monitoring
+ * Setup theme change monitoring
    */
   private setupThemeMonitoring(): void {
     this.themeChangeListener = () => {
@@ -282,7 +282,7 @@ export class PlatformManager extends EventEmitter {
   
   /**
    * Get comprehensive OS information
-   */
+ */
   public getOSInfo(): OSInfo {
     try {
       const memory = {
@@ -334,7 +334,7 @@ export class PlatformManager extends EventEmitter {
   }
   
   /**
-   * Get platform-specific paths
+ * Get platform-specific paths
    */
   public getPaths(): PlatformPaths {
     return { ...this.paths };
@@ -379,7 +379,7 @@ export class PlatformManager extends EventEmitter {
   
   /**
    * Resource path management
-   */
+ */
   public getResourcePath(resourcePath: string = ''): string {
     try {
       // Development environment
@@ -398,8 +398,8 @@ export class PlatformManager extends EventEmitter {
   }
   
   /**
-   * Create platform-specific directories
-   */
+ * Create platform-specific directories
+ */
   public async ensureDirectoriesExist(): Promise<void> {
     const dirsToCreate = [
       this.paths.userData,
@@ -411,13 +411,13 @@ export class PlatformManager extends EventEmitter {
       try {
         await fs.promises.mkdir(dir, { recursive: true });
       } catch (error) {
-        debugLog(`[PlatformManager] Failed to create directory ${dir}:`, error);
+        debugLog('[PlatformManager] Failed to create directory ${dir}:', error);
       }
     }
   }
   
   /**
-   * Get platform-specific performance settings
+ * Get platform-specific performance settings
    */
   public getPerformanceSettings(): {
     hardwareAcceleration: boolean;
@@ -479,7 +479,7 @@ export class PlatformManager extends EventEmitter {
   
   /**
    * Check if dark mode is active
-   */
+ */
   public isDarkMode(): boolean {
     return this.systemPrefs.theme === Theme.DARK;
   }
@@ -506,7 +506,7 @@ export class PlatformManager extends EventEmitter {
   }
   
   /**
-   * Get system uptime in a human-readable format
+ * Get system uptime in a human-readable format
    */
   public getFormattedUptime(): string {
     const uptime = os.uptime();
@@ -536,7 +536,7 @@ export class PlatformManager extends EventEmitter {
   
   /**
    * Cleanup resources
-   */
+ */
   public destroy(): void {
     if (this.themeChangeListener) {
       nativeTheme.removeListener('updated', this.themeChangeListener);

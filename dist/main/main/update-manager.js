@@ -106,7 +106,7 @@ class UpdateManager extends events_1.EventEmitter {
         return UpdateManager.instance;
     }
     /**
-     * Check if auto-updates are supported on current platform
+   * Check if auto-updates are supported on current platform
      */
     checkPlatformSupport() {
         // Auto-update is disabled in development
@@ -117,7 +117,7 @@ class UpdateManager extends events_1.EventEmitter {
         }
         // Check platform support
         if (!(is.macos || is.windows)) {
-            (0, utils_1.debugLog)(`[UpdateManager] Auto-update not supported on platform: ${process.platform}`);
+            (0, utils_1.debugLog)('[UpdateManager] Auto-update not supported on platform: ${process.platform}');
             this.isSupported = false;
             return;
         }
@@ -125,7 +125,7 @@ class UpdateManager extends events_1.EventEmitter {
     }
     /**
      * Initialize the auto-updater
-     */
+   */
     async initialize(options = {}) {
         if (this.isInitialized) {
             (0, utils_1.debugLog)('[UpdateManager] Already initialized');
@@ -168,7 +168,7 @@ class UpdateManager extends events_1.EventEmitter {
         }
     }
     /**
-     * Setup logging configuration
+   * Setup logging configuration
      */
     setupLogging() {
         try {
@@ -286,7 +286,7 @@ class UpdateManager extends events_1.EventEmitter {
     }
     /**
      * Parse update info from auto-updater
-     */
+   */
     parseUpdateInfo(info) {
         return {
             version: info.version || 'unknown',
@@ -306,7 +306,7 @@ class UpdateManager extends events_1.EventEmitter {
         }
     }
     /**
-     * Show update available notification
+   * Show update available notification
      */
     async showUpdateAvailableNotification() {
         try {
@@ -408,7 +408,7 @@ class UpdateManager extends events_1.EventEmitter {
     }
     /**
      * Start automatic update checking
-     */
+   */
     startPeriodicChecks() {
         if (!this.isSupported || this.updateCheckTimer) {
             return;
@@ -416,11 +416,11 @@ class UpdateManager extends events_1.EventEmitter {
         this.updateCheckTimer = setInterval(() => {
             this.checkForUpdates();
         }, this.checkInterval);
-        (0, utils_1.debugLog)(`[UpdateManager] Started periodic checks every ${this.checkInterval / 1000 / 60} minutes`);
+        (0, utils_1.debugLog)('[UpdateManager] Started periodic checks every ${this.checkInterval / 1000 / 60} minutes');
     }
     /**
-     * Stop automatic update checking
-     */
+   * Stop automatic update checking
+   */
     stopPeriodicChecks() {
         if (this.updateCheckTimer) {
             clearInterval(this.updateCheckTimer);
@@ -429,7 +429,7 @@ class UpdateManager extends events_1.EventEmitter {
         }
     }
     /**
-     * Set auto-download preference
+   * Set auto-download preference
      */
     setAutoDownload(enabled) {
         this.options.autoDownload = enabled;
@@ -446,7 +446,7 @@ class UpdateManager extends events_1.EventEmitter {
             this.stopPeriodicChecks();
             this.startPeriodicChecks();
         }
-        (0, utils_1.debugLog)(`[UpdateManager] Check interval set to ${this.checkInterval / 1000 / 60} minutes`);
+        (0, utils_1.debugLog)('[UpdateManager] Check interval set to ${this.checkInterval / 1000 / 60} minutes');
     }
     /**
      * Get current update state
@@ -456,7 +456,7 @@ class UpdateManager extends events_1.EventEmitter {
     }
     /**
      * Check if updates are supported
-     */
+   */
     isUpdateSupported() {
         return this.isSupported;
     }

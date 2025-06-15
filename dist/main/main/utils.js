@@ -178,7 +178,7 @@ function safeRequire(modulePath, fallback) {
         return require(modulePath);
     }
     catch (error) {
-        console.warn(`Cannot load module (${modulePath}):`, error.message);
+        console.warn('Cannot load module (${modulePath}):', error.message);
         return fallback || null;
     }
 }
@@ -207,7 +207,7 @@ async function waitForServer(host = 'localhost', port = 3000, timeout = 30000, i
         if (await isServerRunning(host, port)) {
             return true;
         }
-        debugLog(`Waiting for server... (${Math.round((Date.now() - startTime) / 1000)}s)`);
+        debugLog('Waiting for server... (${Math.round((Date.now() - startTime) / 1000)}s)');
         await new Promise(resolve => setTimeout(resolve, interval));
     }
     return false;
@@ -257,7 +257,7 @@ async function retry(fn, maxAttempts = 3, baseDelay = 1000) {
                 throw lastError;
             }
             const delayMs = baseDelay * Math.pow(2, attempt - 1);
-            debugLog(`Retry attempt ${attempt} failed, retrying in ${delayMs}ms...`);
+            debugLog('Retry attempt ${attempt} failed, retrying in ${delayMs}ms...');
             await delay(delayMs);
         }
     }
@@ -300,7 +300,7 @@ function safeReadFile(filePath, fallback = '') {
         return fs.readFileSync(filePath, 'utf8');
     }
     catch (error) {
-        console.warn(`Error reading file ${filePath}:`, error.message);
+        console.warn('Error reading file ${filePath}:', error.message);
         return fallback;
     }
 }
@@ -318,7 +318,7 @@ function safeWriteFile(filePath, content) {
         return true;
     }
     catch (error) {
-        console.error(`Error writing file ${filePath}:`, error.message);
+        console.error('Error writing file ${filePath}:', error.message);
         return false;
     }
 }

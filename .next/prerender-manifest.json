@@ -1,37 +1,6 @@
 {
   "version": 4,
   "routes": {
-    "/api/health": {
-      "initialHeaders": {
-        "cache-control": "no-cache, no-store, must-revalidate",
-        "content-type": "application/json",
-        "expires": "0",
-        "pragma": "no-cache",
-        "x-next-cache-tags": "_N_T_/layout,_N_T_/api/layout,_N_T_/api/health/layout,_N_T_/api/health/route,_N_T_/api/health/"
-      },
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "Next-Action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/api/health",
-      "dataRoute": null,
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
     "/api/db-test": {
       "initialHeaders": {
         "content-type": "application/json",
@@ -79,6 +48,37 @@
       ],
       "initialRevalidateSeconds": false,
       "srcRoute": "/favicon.ico",
+      "dataRoute": null,
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/api/health": {
+      "initialHeaders": {
+        "cache-control": "no-cache, no-store, must-revalidate",
+        "content-type": "application/json",
+        "expires": "0",
+        "pragma": "no-cache",
+        "x-next-cache-tags": "_N_T_/layout,_N_T_/api/layout,_N_T_/api/health/layout,_N_T_/api/health/route,_N_T_/api/health/"
+      },
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/api/health",
       "dataRoute": null,
       "allowHeader": [
         "host",
@@ -173,8 +173,8 @@
   "dynamicRoutes": {},
   "notFoundRoutes": [],
   "preview": {
-    "previewModeId": "0682315b014da5609d6a9c3aff9d3535",
-    "previewModeSigningKey": "85298eacbdd38d04d27a08be358d34f57f8214895177107fdd686904f63e655e",
-    "previewModeEncryptionKey": "34a911a420ff86761749668c2eb5dac7986d40739499398ff26059b6c9285f9b"
+    "previewModeId": "4be374227ef6703ba6fe55213a624398",
+    "previewModeSigningKey": "60bc3f6e5996806d12b8d30bdf7c0d4c588c2f78ab39f3a2df1baa08b4dd06a9",
+    "previewModeEncryptionKey": "120d900ba64cf169949784cd3667f64dc57eaececbc3f44426c3f56fbf9f8bbe"
   }
 }

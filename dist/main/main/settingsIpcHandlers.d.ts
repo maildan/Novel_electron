@@ -1,7 +1,7 @@
 /**
- * Loop 6 설정 관련 IPC 핸들러
+ * Loop 6 Setup 관련 IPC 핸들러
  *
- * 설정 페이지에서 요청하는 다양한 설정 기능들의 실제 구현
+ * Setup 페이지에서 요청하는 다양한 Setup 기능들의 실제 구현
  */
 export declare class SettingsIpcHandlers {
     private static instance;
@@ -9,7 +9,7 @@ export declare class SettingsIpcHandlers {
     private constructor();
     static getInstance(): SettingsIpcHandlers;
     /**
-     * 설정 관련 IPC 핸들러 등록
+     * Setup 관련 IPC 핸들러 등록
      */
     register(): void;
     /**
@@ -17,8 +17,8 @@ export declare class SettingsIpcHandlers {
      */
     private checkGPUAvailability;
     /**
-     * 핸들러 정리
-     */
+   * 핸들러 Cleanup
+   */
     cleanup(): void;
 }
 declare const _default: SettingsIpcHandlers;

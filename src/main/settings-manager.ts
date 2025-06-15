@@ -1,8 +1,8 @@
 /**
- * Loop 6 설정 관리 시스템
+ * Loop 6 Setup 관리 시스템
  * 
- * 앱 설정의 로드, 저장, 유효성 검사 및 적용을 담당하는 종합적인 설정 관리자입니다.
- * electron-store를 기반으로 하며, Loop 3의 설정 시스템을 완전히 마이그레이션했습니다.
+ * 앱 Setup의 로드, 저장, 유효성 검사 및 적용을 담당하는 종합적인 Setup 관리자입니다.
+ * electron-store를 기반으로 하며, Loop 3의 Setup 시스템을 완전히 마이그레이션했습니다.
  */
 
 import { app, BrowserWindow, ipcMain } from 'electron';
@@ -62,23 +62,23 @@ export interface SettingsManager {
   isSettingsChanged(): boolean;
 }
 
-// 설정 변경 이벤트 리스너
+// Setup 변경 이벤트 리스너
 type SettingsListener = (event: SettingsChangeEvent) => void;
 const settingsListeners: SettingsListener[] = [];
 const settingsHistory: SettingsChangeEvent[] = [];
 let hasUnsavedChanges = false;
 
 /**
- * 설정 관리자 초기화
+ * Setup 관리자 초기화
  */
 export async function initializeSettingsManager(): Promise<void> {
   if (isInitialized) {
-    console.log('⚠️ 설정 관리자가 이미 초기화되어 있습니다');
+    console.log('⚠️ Setup 관리자가 이미 초기화되어 있습니다');
     return;
   }
 
   try {
-    console.log('🚀 설정 관리자 초기화 시작...');
+    console.log('🚀 Setup 관리자 초기화 시작...');
     console.log('📁 사용할 userData 경로:', PATHS.userData);
 
     // userData 폴더 생성 확보
@@ -88,7 +88,7 @@ export async function initializeSettingsManager(): Promise<void> {
     await ensureDirectoryExists(PATHS.database);
     await ensureDirectoryExists(PATHS.backup);
     
-    console.log('✅ userData 디렉토리 구조 생성 완료:', PATHS.userData);
+    console.log('✅ userData 디렉토리 구조 생성 Completed:', PATHS.userData);
 
     // electron-store 초기화
     store = new Store<AppSettings>({
@@ -98,100 +98,100 @@ export async function initializeSettingsManager(): Promise<void> {
       migrations: {
         '>=6.0.0': (store: any) => {
           // Loop 6 마이그레이션 로직
-          console.log('🔄 Loop 6 설정 마이그레이션 실행');
+          console.log('🔄 Loop 6 Setup 마이그레이션 실행');
         }
       }
     });
 
-    console.log('📦 electron-store 초기화 완료');
+    console.log('📦 electron-store 초기화 Completed');
 
-    // 설정 로드
+    // Setup 로드
     await loadSettings();
 
     // IPC 핸들러 등록
     registerIPCHandlers();
-    console.log('🔥 IPC 핸들러 등록 완료');
+    console.log('🔥 IPC 핸들러 등록 Completed');
 
     isInitialized = true;
-    console.log('✅ 설정 관리자 초기화 완료');
-    console.log('🔥 현재 설정:', Object.keys(currentSettings));
+    console.log('✅ Setup 관리자 초기화 Completed');
+    console.log('🔥 현재 Setup:', Object.keys(currentSettings));
 
   } catch (error) {
-    console.error('❌ 설정 관리자 초기화 실패:', error);
-    // 기본 설정으로 폴백
+    console.error('❌ Setup 관리자 초기화 Failed:', error);
+    // 기본 Setup으로 폴백
     currentSettings = { ...DEFAULT_SETTINGS };
     isInitialized = true;
   }
 }
 
 /**
- * 설정 로드
+ * Setup 로드
  */
 async function loadSettings(): Promise<AppSettings> {
   try {
-    debugLog('설정 로드 중...');
+    debugLog('Setup 로드 중...');
 
-    // electron-store에서 설정 가져오기
+    // electron-store에서 Setup 가져오기
     const storedSettings = (store as any).store || {};
     
-    // Loop 3 호환성을 위한 레거시 설정 확인
+    // Loop 3 호환성을 위한 레거시 Setup 확인
     const legacySettingsPath = path.join(PATHS.userData, 'settings.json');
     let legacySettings: Partial<AppSettings> = {};
     
     try {
       const legacyData = await fs.readFile(legacySettingsPath, 'utf-8');
       legacySettings = JSON.parse(legacyData);
-      debugLog('레거시 설정 발견, 마이그레이션 중...');
+      debugLog('레거시 Setup 발견, 마이그레이션 중...');
     } catch {
-      // 레거시 설정 파일이 없음 (정상)
+      // 레거시 Setup 파일이 없음 (정상)
     }
 
-    // 설정 병합 (우선순위: stored > legacy > default)
+    // Setup 병합 (우선순위: stored > legacy > default)
     currentSettings = {
       ...DEFAULT_SETTINGS,
       ...legacySettings,
       ...storedSettings
     };
 
-    // 설정 유효성 검사 및 수정
+    // Setup 유효성 검사 및 수정
     const validation = validateSettings(currentSettings);
     if (validation.correctedSettings) {
       currentSettings = { ...currentSettings, ...validation.correctedSettings };
       await saveSettings(currentSettings);
     }
 
-    // 카테고리 설정 보정
+    // 카테고리 Setup 보정
     ensureCategorySettings();
 
-    debugLog('설정 로드 완료:', currentSettings);
+    debugLog('Setup 로드 Completed:', currentSettings);
     return currentSettings;
 
   } catch (error) {
-    errorLog('설정 로드 실패:', error);
+    errorLog('Setup 로드 Failed:', error);
     currentSettings = { ...DEFAULT_SETTINGS };
     return currentSettings;
   }
 }
 
 /**
- * 설정 저장
+ * Setup 저장
  */
 async function saveSettings(settings: Partial<AppSettings>): Promise<boolean> {
   try {
-    console.log('💾 설정 저장 시작:', settings);
+    console.log('💾 Setup 저장 시작:', settings);
     
     if (!isInitialized) {
-      throw new Error('설정 관리자가 초기화되지 않음');
+      throw new Error('Setup 관리자가 초기화되지 않음');
     }
 
-    // 현재 설정과 병합
+    // 현재 Setup과 병합
     const newSettings = { ...currentSettings, ...settings };
-    console.log('🔄 병합된 설정:', newSettings);
+    console.log('🔄 병합된 Setup:', newSettings);
 
     // 유효성 검사
     const validation = validateSettings(newSettings);
     if (!validation.isValid) {
-      console.error('❌ 설정 유효성 검사 실패:', validation.errors);
+      console.error('❌ Setup 유효성 검사 Failed:', validation.errors);
       return false;
     }
 
@@ -209,19 +209,19 @@ async function saveSettings(settings: Partial<AppSettings>): Promise<boolean> {
       }
     }
 
-    console.log('📝 설정 변경사항:', changes);
+    console.log('📝 Setup 변경사항:', changes);
 
     // electron-store에 저장
     for (const [key, value] of Object.entries(newSettings)) {
       (store as any).set(key as keyof AppSettings, value);
     }
     
-    console.log('💿 electron-store 저장 완료');
+    console.log('💿 electron-store 저장 Completed');
     
     // JSON 파일로도 저장 (Loop 3 호환성)
     const settingsPath = path.join(PATHS.userData, 'settings.json');
     await fs.writeFile(settingsPath, JSON.stringify(newSettings, null, 2), 'utf-8');
-    console.log('📁 JSON 파일 저장 완료:', settingsPath);
+    console.log('📁 JSON 파일 저장 Completed:', settingsPath);
     
     currentSettings = newSettings;
 
@@ -231,21 +231,21 @@ async function saveSettings(settings: Partial<AppSettings>): Promise<boolean> {
       settingsListeners.forEach(listener => listener(change));
     });
 
-    // 설정 변경 시 필요한 액션 수행
+    // Setup 변경 시 필요한 액션 수행
     await applySettingsChanges(changes);
 
     hasUnsavedChanges = false;
-    console.log('✅ 설정 저장 완료');
+    console.log('✅ Setup 저장 Completed');
     return true;
 
   } catch (error) {
-    console.error('❌ 설정 저장 실패:', error);
+    console.error('❌ Setup 저장 Failed:', error);
     return false;
   }
 }
 
 /**
- * 카테고리 설정 보정
+ * 카테고리 Setup 보정
  */
 function ensureCategorySettings(): void {
   if (!currentSettings.enabledCategories || typeof currentSettings.enabledCategories !== 'object') {
@@ -259,7 +259,7 @@ function ensureCategorySettings(): void {
       media: true,
       other: true
     };
-    debugLog('카테고리 설정 초기화됨');
+    debugLog('카테고리 Setup Initialized');
   } else {
     // 필요한 모든 카테고리 키가 있는지 확인
     const requiredCategories = ['docs', 'office', 'coding', 'sns', 'browser', 'game', 'media', 'other'];
@@ -273,13 +273,13 @@ function ensureCategorySettings(): void {
     });
 
     if (updated) {
-      debugLog('카테고리 설정 업데이트됨');
+      debugLog('카테고리 Setup 업데이트됨');
     }
   }
 }
 
 /**
- * 설정 유효성 검사
+ * Setup 유효성 검사
  */
 export function validateSettings(settings: Partial<AppSettings>): SettingsValidationResult {
   const errors: string[] = [];
@@ -337,11 +337,11 @@ export function validateSettings(settings: Partial<AppSettings>): SettingsValida
       }
     }
 
-    // 카테고리 설정 검증
+    // 카테고리 Setup 검증
     if (settings.enabledCategories !== undefined) {
       if (typeof settings.enabledCategories !== 'object' || 
           settings.enabledCategories === null) {
-        errors.push('카테고리 설정이 올바르지 않음');
+        errors.push('카테고리 Setup이 올바르지 않음');
         correctedSettings.enabledCategories = DEFAULT_SETTINGS.enabledCategories;
       }
     }
@@ -356,14 +356,14 @@ export function validateSettings(settings: Partial<AppSettings>): SettingsValida
   } catch (error) {
     return {
       isValid: false,
-      errors: [`설정 유효성 검사 중 오류: ${error}`],
+      errors: [`Setup 유효성 검사 중 Error: ${error}`],
       warnings: []
     };
   }
 }
 
 /**
- * 설정 변경사항 적용
+ * Setup 변경사항 적용
  */
 async function applySettingsChanges(changes: SettingsChangeEvent[]): Promise<void> {
   try {
@@ -371,12 +371,12 @@ async function applySettingsChanges(changes: SettingsChangeEvent[]): Promise<voi
       await applySettingChange(change);
     }
   } catch (error) {
-    errorLog('설정 변경사항 적용 실패:', error);
+    errorLog('Setup 변경사항 적용 Failed:', error);
   }
 }
 
 /**
- * 개별 설정 변경사항 적용
+ * 개별 Setup 변경사항 적용
  */
 async function applySettingChange(change: SettingsChangeEvent): Promise<void> {
   const { key, newValue } = change;
@@ -411,7 +411,7 @@ async function applySettingChange(change: SettingsChangeEvent): Promise<void> {
       break;
 
     default:
-      debugLog(`설정 변경 적용: ${key} = ${newValue}`);
+      debugLog('Setup 변경 적용: ${key} = ${newValue}');
   }
 }
 
@@ -428,7 +428,7 @@ async function applyThemeChange(theme: string): Promise<void> {
     });
     debugLog('테마 변경 적용:', theme);
   } catch (error) {
-    errorLog('테마 변경 적용 실패:', error);
+    errorLog('테마 변경 적용 Failed:', error);
   }
 }
 
@@ -472,16 +472,16 @@ async function applyWindowModeChange(windowMode: string): Promise<void> {
 
     debugLog('창 모드 변경 적용:', windowMode);
   } catch (error) {
-    errorLog('창 모드 변경 적용 실패:', error);
+    errorLog('창 모드 변경 적용 Failed:', error);
   }
 }
 
 /**
- * GPU 설정 변경 적용
+ * GPU Setup 변경 적용
  */
 async function applyGPUSettingsChange(): Promise<void> {
   try {
-    // GPU 설정 변경은 재시작이 필요함을 사용자에게 알림
+    // GPU Setup 변경은 재시작이 필요함을 사용자에게 알림
     const windows = BrowserWindow.getAllWindows();
     windows.forEach(window => {
       if (!window.isDestroyed()) {
@@ -490,14 +490,14 @@ async function applyGPUSettingsChange(): Promise<void> {
         });
       }
     });
-    debugLog('GPU 설정 변경 알림 전송');
+    debugLog('GPU Setup 변경 알림 전송');
   } catch (error) {
-    errorLog('GPU 설정 변경 적용 실패:', error);
+    errorLog('GPU Setup 변경 적용 Failed:', error);
   }
 }
 
 /**
- * 트레이 설정 변경 적용
+ * 트레이 Setup 변경 적용
  */
 async function applyTraySettingsChange(): Promise<void> {
   try {
@@ -510,14 +510,14 @@ async function applyTraySettingsChange(): Promise<void> {
         });
       }
     });
-    debugLog('트레이 설정 변경 적용');
+    debugLog('트레이 Setup 변경 적용');
   } catch (error) {
-    errorLog('트레이 설정 변경 적용 실패:', error);
+    errorLog('트레이 Setup 변경 적용 Failed:', error);
   }
 }
 
 /**
- * 모니터링 설정 변경 적용
+ * 모니터링 Setup 변경 적용
  */
 async function applyMonitoringSettingsChange(enabled: boolean): Promise<void> {
   try {
@@ -527,14 +527,14 @@ async function applyMonitoringSettingsChange(enabled: boolean): Promise<void> {
         window.webContents.send('monitoring-settings-changed', { enabled });
       }
     });
-    debugLog('모니터링 설정 변경 적용:', enabled);
+    debugLog('모니터링 Setup 변경 적용:', enabled);
   } catch (error) {
-    errorLog('모니터링 설정 변경 적용 실패:', error);
+    errorLog('모니터링 Setup 변경 적용 Failed:', error);
   }
 }
 
 /**
- * 단축키 설정 변경 적용
+ * 단축키 Setup 변경 적용
  */
 async function applyShortcutSettingsChange(enabled: boolean): Promise<void> {
   try {
@@ -544,14 +544,14 @@ async function applyShortcutSettingsChange(enabled: boolean): Promise<void> {
         window.webContents.send('shortcut-settings-changed', { enabled });
       }
     });
-    debugLog('단축키 설정 변경 적용:', enabled);
+    debugLog('단축키 Setup 변경 적용:', enabled);
   } catch (error) {
-    errorLog('단축키 설정 변경 적용 실패:', error);
+    errorLog('단축키 Setup 변경 적용 Failed:', error);
   }
 }
 
 /**
- * 설정 내보내기
+ * Setup 내보내기
  */
 export async function exportSettings(filePath: string): Promise<boolean> {
   try {
@@ -567,43 +567,43 @@ export async function exportSettings(filePath: string): Promise<boolean> {
     };
 
     await fs.writeFile(filePath, JSON.stringify(exportData, null, 2), 'utf-8');
-    debugLog('설정 내보내기 완료:', filePath);
+    debugLog('Setup 내보내기 Completed:', filePath);
     return true;
   } catch (error) {
-    errorLog('설정 내보내기 실패:', error);
+    errorLog('Setup 내보내기 Failed:', error);
     return false;
   }
 }
 
 /**
- * 설정 가져오기
+ * Setup 가져오기
  */
 export async function importSettings(filePath: string): Promise<boolean> {
   try {
     const data = await fs.readFile(filePath, 'utf-8');
     const importData = JSON.parse(data);
 
-    // 가져온 설정 유효성 검사
+    // 가져온 Setup 유효성 검사
     const validation = validateSettings(importData.settings || importData);
     if (!validation.isValid) {
-      errorLog('가져온 설정이 유효하지 않음:', validation.errors);
+      errorLog('가져온 Setup이 Invalid:', validation.errors);
       return false;
     }
 
-    // 설정 적용
+    // Setup 적용
     const success = await saveSettings(importData.settings || importData);
     if (success) {
-      debugLog('설정 가져오기 완료:', filePath);
+      debugLog('Setup 가져오기 Completed:', filePath);
     }
     return success;
   } catch (error) {
-    errorLog('설정 가져오기 실패:', error);
+    errorLog('Setup 가져오기 Failed:', error);
     return false;
   }
 }
 
 /**
- * 설정 백업 생성
+ * Setup 백업 생성
  */
 export async function createSettingsBackup(): Promise<string> {
   try {
@@ -614,30 +614,30 @@ export async function createSettingsBackup(): Promise<string> {
     const backupPath = path.join(backupDir, `settings-backup-${timestamp}.json`);
 
     await exportSettings(backupPath);
-    debugLog('설정 백업 생성:', backupPath);
+    debugLog('Setup 백업 생성:', backupPath);
     return backupPath;
   } catch (error) {
-    errorLog('설정 백업 생성 실패:', error);
+    errorLog('Setup 백업 생성 Failed:', error);
     throw error;
   }
 }
 
 /**
- * 설정 초기화
+ * Setup 초기화
  */
 export async function resetSettings(): Promise<boolean> {
   try {
     // 백업 생성
     await createSettingsBackup();
 
-    // 기본 설정으로 복원
+    // 기본 Setup으로 복원
     currentSettings = { ...DEFAULT_SETTINGS };
     (store as any).clear();
     for (const [key, value] of Object.entries(currentSettings)) {
       (store as any).set(key as keyof AppSettings, value);
     }
 
-    // 모든 창에 설정 초기화 알림
+    // 모든 창에 Setup 초기화 알림
     const windows = BrowserWindow.getAllWindows();
     windows.forEach(window => {
       if (!window.isDestroyed()) {
@@ -646,10 +646,10 @@ export async function resetSettings(): Promise<boolean> {
     });
 
     hasUnsavedChanges = false;
-    debugLog('설정 초기화 완료');
+    debugLog('Setup 초기화 Completed');
     return true;
   } catch (error) {
-    errorLog('설정 초기화 실패:', error);
+    errorLog('Setup 초기화 Failed:', error);
     return false;
   }
 }
@@ -660,26 +660,26 @@ export async function resetSettings(): Promise<boolean> {
 function registerIPCHandlers(): void {
   // 중복 등록 방지
   if (handlersRegistered) {
-    debugLog('설정 IPC 핸들러가 이미 등록되어 있습니다');
+    debugLog('Setup IPC 핸들러가 이미 등록되어 있습니다');
     return;
   }
 
-  // 설정 가져오기
+  // Setup 가져오기
   ipcMain.handle('settingsGet', () => {
     return currentSettings;
   });
 
-  // 개별 설정 가져오기
+  // 개별 Setup 가져오기
   ipcMain.handle('settingsGetSetting', (_, key: keyof AppSettings) => {
     return currentSettings[key];
   });
 
-  // 설정 업데이트
+  // Setup 업데이트
   ipcMain.handle('settingsUpdate', async (_, key: keyof AppSettings, value: any) => {
     return await saveSettings({ [key]: value });
   });
 
-  // 다중 설정 업데이트
+  // 다중 Setup 업데이트
   ipcMain.handle('settingsUpdateMultiple', async (_, settings: Partial<AppSettings>) => {
     console.log('🔥 IPC 핸들러 호출됨 - settingsUpdateMultiple:', settings);
     try {
@@ -687,42 +687,42 @@ function registerIPCHandlers(): void {
       console.log('🔥 저장 결과:', result);
       return result;
     } catch (error) {
-      console.error('🔥 저장 중 오류:', error);
+      console.error('🔥 Saving Error:', error);
       throw error;
     }
   });
 
-  // 설정 초기화
+  // Setup 초기화
   ipcMain.handle('settingsReset', async () => {
     return await resetSettings();
   });
 
-  // 설정 내보내기
+  // Setup 내보내기
   ipcMain.handle('settingsExport', async (_, filePath: string) => {
     return await exportSettings(filePath);
   });
 
-  // 설정 가져오기
+  // Setup 가져오기
   ipcMain.handle('settingsImport', async (_, filePath: string) => {
     return await importSettings(filePath);
   });
 
-  // 설정 유효성 검사
+  // Setup 유효성 검사
   ipcMain.handle('settingsValidate', (_, settings: Partial<AppSettings>) => {
     return validateSettings(settings);
   });
 
-  // 설정 백업 생성
+  // Setup 백업 생성
   ipcMain.handle('settingsCreateBackup', async () => {
     return await createSettingsBackup();
   });
 
-  // 설정 변경 이력 가져오기
+  // Setup 변경 이력 가져오기
   ipcMain.handle('settingsGetHistory', () => {
     return settingsHistory;
   });
 
-  // 설정 변경 이력 지우기
+  // Setup 변경 이력 지우기
   ipcMain.handle('settingsClearHistory', () => {
     settingsHistory.splice(0);
     return true;
@@ -755,7 +755,7 @@ function registerIPCHandlers(): void {
       console.log('🔥 저장 결과:', result);
       return result;
     } catch (error) {
-      console.error('🔥 저장 중 오류:', error);
+      console.error('🔥 Saving Error:', error);
       throw error;
     }
   });
@@ -765,42 +765,42 @@ function registerIPCHandlers(): void {
   });
 
   ipcMain.handle('settings:save', async () => {
-    // 현재 설정을 파일에 저장
+    // 현재 Setup을 파일에 저장
     try {
       const success = await saveSettings(currentSettings);
-      console.debug('✅ settings-manager: 설정 저장 완료');
+      console.debug('✅ settings-manager: Setup 저장 Completed');
       return success;
     } catch (error) {
-      console.error('❌ settings-manager: 설정 저장 실패:', error);
+      console.error('❌ settings-manager: Setup 저장 Failed:', error);
       return false;
     }
   });
 
   ipcMain.handle('settings:load', async () => {
-    // 파일에서 설정 로드
+    // 파일에서 Setup 로드
     try {
       await loadSettings();
-      console.debug('✅ settings-manager: 설정 로드 완료');
+      console.debug('✅ settings-manager: Setup 로드 Completed');
       return currentSettings;
     } catch (error) {
-      console.error('❌ settings-manager: 설정 로드 실패:', error);
+      console.error('❌ settings-manager: Setup 로드 Failed:', error);
       return null;
     }
   });
 
-  handlersRegistered = true; // 등록 완료 표시
-  debugLog('설정 관리자 IPC 핸들러 등록 완료');
+  handlersRegistered = true; // 등록 Completed 표시
+  debugLog('Setup 관리자 IPC 핸들러 등록 Completed');
 }
 
 /**
- * 설정 변경 리스너 추가
+ * Setup 변경 리스너 추가
  */
 export function addSettingsListener(listener: SettingsListener): void {
   settingsListeners.push(listener);
 }
 
 /**
- * 설정 변경 리스너 제거
+ * Setup 변경 리스너 제거
  */
 export function removeSettingsListener(listener: SettingsListener): void {
   const index = settingsListeners.indexOf(listener);
@@ -810,37 +810,37 @@ export function removeSettingsListener(listener: SettingsListener): void {
 }
 
 /**
- * 현재 설정 가져오기
+ * 현재 Setup 가져오기
  */
 export function getSettings(): AppSettings {
   return { ...currentSettings };
 }
 
 /**
- * 개별 설정 가져오기
+ * 개별 Setup 가져오기
  */
 export function getSetting<K extends keyof AppSettings>(key: K): AppSettings[K] {
   return currentSettings[key];
 }
 
 /**
- * 설정 변경 여부 확인
+ * Setup 변경 여부 확인
  */
 export function hasUnsavedSettingsChanges(): boolean {
   return hasUnsavedChanges;
 }
 
 /**
- * 설정 관리자 정리
+ * Setup 관리자 Cleanup
  */
 export function cleanupSettingsManager(): void {
   settingsListeners.splice(0);
   hasUnsavedChanges = false;
-  debugLog('설정 관리자 정리 완료');
+  debugLog('Setup 관리자 Cleanup Completed');
 }
 
 /**
- * 설정 관리자 객체
+ * Setup 관리자 객체
  */
 const SettingsManager = {
   initialize: initializeSettingsManager,

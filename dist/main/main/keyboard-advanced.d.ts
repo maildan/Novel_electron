@@ -30,27 +30,27 @@ export declare class AdvancedKeyboardManager {
     private constructor();
     static getInstance(): AdvancedKeyboardManager;
     /**
-     * Initialize the advanced keyboard monitoring system
-     */
+   * Initialize the advanced keyboard monitoring system
+   */
     initialize(): Promise<boolean>;
     /**
-     * Check system permissions for keyboard and screen recording
+   * Check system permissions for keyboard and screen recording
      */
     private checkPermissions;
     /**
      * Initialize global keyboard listeners using uIOhook
-     */
+   */
     private initializeGlobalListeners;
     /**
-     * Handle individual key events
+   * Handle individual key events
      */
     private handleKeyEvent;
     /**
      * Get current active window information
-     */
+   */
     private getCurrentWindowInfo;
     /**
-     * Extract URL from browser window title or other sources
+   * Extract URL from browser window title or other sources
      */
     private extractUrlFromWindow;
     /**
@@ -59,22 +59,22 @@ export declare class AdvancedKeyboardManager {
     private mapKeyCode;
     /**
      * Add key event to processing queue
-     */
+   */
     private addKeyEventToQueue;
     /**
-     * Process queued key events
+   * Process queued key events
      */
     private processKeyEventQueue;
     /**
      * Process individual key event for analytics
-     */
+   */
     private processIndividualKeyEvent;
     /**
      * Check if input is Hangul (Korean)
      */
     private isHangulInput;
     /**
-     * Process Hangul jamo composition
+   * Process Hangul jamo composition
      */
     private processJamo;
     /**
@@ -99,19 +99,19 @@ export declare class AdvancedKeyboardManager {
     private notifyAppSwitch;
     /**
      * Setup IPC handlers for renderer communication
-     */
+   */
     private setupIpcHandlers;
     /**
-     * Start keyboard monitoring
-     */
+   * Start keyboard monitoring
+   */
     startMonitoring(): boolean;
     /**
-     * Stop keyboard monitoring
-     */
+   * Stop keyboard monitoring
+   */
     stopMonitoring(): boolean;
     /**
      * Cleanup resources
-     */
+   */
     destroy(): void;
 }
 export declare const advancedKeyboardManager: AdvancedKeyboardManager;

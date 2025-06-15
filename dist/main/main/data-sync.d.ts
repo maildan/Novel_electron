@@ -57,20 +57,20 @@ declare class DataSyncManager {
     private mongoClient;
     private supabaseClient;
     /**
-     * 모듈 초기화
-     */
+   * 모듈 초기화
+   */
     initialize(): Promise<boolean>;
     /**
-     * 실시간 데이터 전송 시작
-     */
+   * 실시간 데이터 전송 시작
+   */
     private startRealTimeSync;
     /**
-     * 타이핑 로그 데이터를 대기열에 추가
-     */
+   * 타이핑 로그 데이터를 대기열에 추가
+   */
     addToQueue(data: TypingLogData): void;
     /**
-     * 대기열 처리
-     */
+   * 대기열 처리
+   */
     private processQueue;
     /**
      * 주기적 전체 동기화 (1주일마다)
@@ -81,65 +81,65 @@ declare class DataSyncManager {
      */
     private fetchAllMongoData;
     /**
-     * 현재 동기화 상태 반환
-     */
+   * 현재 동기화 상태 반환
+   */
     getStatus(): Promise<SyncStatus>;
     /**
-     * 수동 동기화 실행
-     */
+   * 수동 동기화 실행
+   */
     syncNow(): Promise<{
         success: boolean;
         error?: string;
     }>;
     /**
-     * 동기화 설정 업데이트
-     */
+   * 동기화 Setup 업데이트
+   */
     updateConfig(config: any): Promise<{
         success: boolean;
         error?: string;
     }>;
     /**
-     * 실패한 항목 재시도
-     */
+   * Failed한 항목 재시도
+   */
     retryFailedItems(): Promise<{
         success: boolean;
         error?: string;
     }>;
     /**
-     * 모듈 재시작
-     */
+   * 모듈 재시작
+   */
     restart(): Promise<void>;
     /**
-     * 초기화 상태 확인
-     */
+   * 초기화 상태 확인
+   */
     isInitialized(): boolean;
     /**
-     * 동기화 상태 조회
-     */
+   * 동기화 상태 조회
+   */
     getSyncStatus(): SyncStatus;
     /**
-     * 수동 동기화 실행
-     */
+   * 수동 동기화 실행
+   */
     manualSync(): Promise<boolean>;
     /**
-     * 정리 작업
-     */
+   * Cleanup 작업
+   */
     cleanup(): void;
     /**
-     * 연결 상태 확인
-     */
+   * 연결 상태 확인
+   */
     private isConnected;
     /**
-     * 전체 동기화 실행
-     */
+   * 전체 동기화 실행
+   */
     private performFullSync;
     /**
      * 대기열 처리 (별칭)
      */
     private processPendingQueue;
     /**
-     * 동기화 중지
-     */
+   * 동기화 중지
+   */
     stop(): void;
 }
 declare const dataSyncManager: DataSyncManager;

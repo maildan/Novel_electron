@@ -32,7 +32,7 @@ interface ScreenshotSource {
   display_id?: string;
 }
 
-// Global state
+// 전역 상태
 let mainWindow: BrowserWindow | null = null;
 let screenshotInitialized = false;
 let screenshotHistory: ScreenshotMetadata[] = [];
@@ -110,7 +110,7 @@ async function captureScreenshot(
     // Get screen sources
     const sources = await desktopCapturer.getSources({
       types: ['screen', 'window'],
-      thumbnailSize: { width: 0, height: 0 } // Full resolution
+      thumbnailSize: { width: 0, height: 0 } // 전체 해상도
     });
     
     const source = sources.find(s => s.id === sourceId);
@@ -149,7 +149,7 @@ async function captureScreenshot(
     if (opts.autoSave) {
       const filePath = path.join(getScreenshotDirectory(), filename);
       fs.writeFileSync(filePath, buffer);
-      debugLog(`Screenshot saved: ${filePath}`);
+      debugLog('Screenshot saved: ${filePath}');
     }
     
     // Add to history
@@ -243,7 +243,7 @@ function loadScreenshot(filename: string): Buffer | null {
     }
     return null;
   } catch (error) {
-    console.error(`Failed to load screenshot ${filename}:`, error);
+    console.error('Failed to load screenshot ${filename}:', error);
     return null;
   }
 }
@@ -260,12 +260,12 @@ function deleteScreenshot(filename: string): boolean {
       // Remove from history
       screenshotHistory = screenshotHistory.filter(item => item.filename !== filename);
       
-      debugLog(`Screenshot deleted: ${filename}`);
+      debugLog('Screenshot deleted: ${filename}');
       return true;
     }
     return false;
   } catch (error) {
-    console.error(`Failed to delete screenshot ${filename}:`, error);
+    console.error('Failed to delete screenshot ${filename}:', error);
     return false;
   }
 }

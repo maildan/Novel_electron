@@ -744,9 +744,9 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                     step="7"
                     value={settings.dataRetentionDays}
                     onChange={(e) => {
-                      // 슬라이더 이동 중에는 시각적 업데이트만, 실제 저장은 onMouseUp에서
+                      // 실시간으로 설정 업데이트하고 저장
+                      updateSettingAndSave('dataRetentionDays', parseInt(e.target.value));
                     }}
-                    onMouseUp={(e) => updateSettingAndSave('dataRetentionDays', parseInt((e.target as HTMLInputElement).value))}
                     className="w-full"
                   />
                   <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">

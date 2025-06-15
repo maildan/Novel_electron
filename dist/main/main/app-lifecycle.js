@@ -26,23 +26,23 @@ const appState = {
     settings: {}
 };
 /**
- * GPU 설정 구성 및 적용
+ * GPU Setup 구성 및 적용
  */
 async function setupGpuConfiguration() {
     try {
-        (0, debug_1.debugLog)('GPU 설정 적용 시작');
-        // 설정 로드
+        (0, debug_1.debugLog)('GPU Setup 적용 시작');
+        // Setup 로드
         const userSettings = await settings_manager_1.default.getSettings();
-        // 하드웨어 가속 설정 적용
+        // 하드웨어 가속 Setup 적용
         const useHardwareAcceleration = userSettings?.useHardwareAcceleration ?? true;
         const processingMode = userSettings?.processingMode || 'auto';
         const highPerformance = processingMode === 'gpu-intensive';
-        (0, debug_1.debugLog)(`GPU 가속 설정 상태: ${useHardwareAcceleration ? '활성화됨' : '비활성화됨'}, 모드: ${processingMode}`);
-        // GPU 정보는 기본값으로 설정
+        (0, debug_1.debugLog)(`GPU 가속 Setup 상태: ${useHardwareAcceleration ? '활성화됨' : '비활성화됨'}, 모드: ${processingMode}`);
+        // GPU 정보는 기본값으로 Setup
         appState.gpuEnabled = useHardwareAcceleration;
-        // Electron 하드웨어 가속 설정
+        // Electron 하드웨어 가속 Setup
         if (useHardwareAcceleration && !electron_1.app.isReady()) {
-            // 앱이 준비되기 전에만 하드웨어 가속 설정 가능
+            // 앱이 준비되기 전에만 하드웨어 가속 Setup 가능
             (0, debug_1.debugLog)('Electron 하드웨어 가속 활성화');
         }
         else if (!useHardwareAcceleration && !electron_1.app.isReady()) {
@@ -51,31 +51,31 @@ async function setupGpuConfiguration() {
         }
     }
     catch (error) {
-        (0, debug_1.errorLog)('GPU 설정 중 오류 발생:', error);
+        (0, debug_1.errorLog)('GPU Setup 중 Error 발생:', error);
         appState.gpuEnabled = false;
     }
 }
 /**
- * 보안 설정 초기화
+ * 보안 Setup 초기화
  */
 async function initializeSecuritySettings() {
     try {
-        (0, debug_1.debugLog)('보안 설정 초기화 시작');
+        (0, debug_1.debugLog)('보안 Setup 초기화 시작');
         const isDev = process.env.NODE_ENV === 'development';
         if (isDev) {
             // 개발 모드에서는 보안 제한 완화
             (0, debug_1.debugLog)('개발 모드: 보안 제한 완화');
             process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
         }
-        // 프로토콜 설정
+        // 프로토콜 Setup
         await (0, stub_functions_1.setupProtocols)();
-        // 세이프 스토리지 설정
+        // 세이프 스토리지 Setup
         await (0, stub_functions_1.setupSafeStorage)();
         appState.securityInitialized = true;
-        (0, debug_1.debugLog)('보안 설정 초기화 완료');
+        (0, debug_1.debugLog)('보안 Setup 초기화 Completed');
     }
     catch (error) {
-        (0, debug_1.errorLog)('보안 설정 초기화 중 오류 발생:', error);
+        (0, debug_1.errorLog)('보안 Setup 초기화 중 Error 발생:', error);
     }
 }
 /**
@@ -87,14 +87,14 @@ async function initializeKeyboardMonitoring() {
         if (userSettings?.keyboard?.autoStart) {
             await (0, stub_functions_1.initKeyboardMonitoring)();
             appState.keyboardMonitoringActive = true;
-            (0, debug_1.debugLog)('키보드 모니터링 초기화 완료');
+            (0, debug_1.debugLog)('키보드 모니터링 초기화 Completed');
         }
         else {
             (0, debug_1.debugLog)('키보드 모니터링 비활성화됨');
         }
     }
     catch (error) {
-        (0, debug_1.errorLog)('키보드 모니터링 초기화 중 오류 발생:', error);
+        (0, debug_1.errorLog)('키보드 모니터링 초기화 중 Error 발생:', error);
     }
 }
 /**
@@ -105,16 +105,16 @@ async function initializeSystemMonitoring() {
         // 메모리 관리자 초기화
         (0, memory_manager_1.setupMemoryManager)();
         appState.memoryManagerActive = true;
-        // 전력 모니터링 설정
+        // 전력 모니터링 Setup
         (0, stub_functions_1.setupPowerMonitoring)();
         // 시스템 정보 모듈 초기화
         (0, stub_functions_1.initSystemInfoModule)();
         // 타이핑 통계 모듈 초기화
         (0, stub_functions_1.initTypingStatsModule)();
-        (0, debug_1.debugLog)('시스템 모니터링 초기화 완료');
+        (0, debug_1.debugLog)('시스템 모니터링 초기화 Completed');
     }
     catch (error) {
-        (0, debug_1.errorLog)('시스템 모니터링 초기화 중 오류 발생:', error);
+        (0, debug_1.errorLog)('시스템 모니터링 초기화 중 Error 발생:', error);
     }
 }
 /**
@@ -122,25 +122,25 @@ async function initializeSystemMonitoring() {
  */
 async function initializeAdditionalFeatures() {
     try {
-        // 클립보드 워처 설정
+        // 클립보드 워처 Setup
         (0, stub_functions_1.setupClipboardWatcher)();
-        // 크래시 리포터 설정
+        // 크래시 리포터 Setup
         (0, stub_functions_1.setupCrashReporter)();
         // 스크린샷 모듈 초기화
         (0, stub_functions_1.initScreenshotModule)(electron_1.app);
-        // 글로벌 단축키 설정
+        // 글로벌 단축키 Setup
         (0, stub_functions_1.setupGlobalShortcuts)();
-        // 시스템 트레이 설정
+        // 시스템 트레이 Setup
         const userSettings = await settings_manager_1.default.getSettings();
         if (userSettings?.minimizeToTray) {
             (0, stub_functions_1.setupTray)();
         }
-        // 메뉴 설정
+        // 메뉴 Setup
         (0, stub_functions_1.setupMenu)();
-        (0, debug_1.debugLog)('추가 기능 초기화 완료');
+        (0, debug_1.debugLog)('추가 기능 초기화 Completed');
     }
     catch (error) {
-        (0, debug_1.errorLog)('추가 기능 초기화 중 오류 발생:', error);
+        (0, debug_1.errorLog)('추가 기능 초기화 중 Error 발생:', error);
     }
 }
 /**
@@ -149,22 +149,22 @@ async function initializeAdditionalFeatures() {
 async function initializeApp() {
     try {
         (0, debug_1.debugLog)('Loop 6 애플리케이션 초기화 시작');
-        // 1. 설정 로드
+        // 1. Setup 로드
         await (0, stub_functions_1.loadSettings)();
         appState.settings = await settings_manager_1.default.getSettings();
         // 2. 단일 인스턴스 보장
         setupSingleInstance();
-        // 3. 보안 설정 초기화
+        // 3. 보안 Setup 초기화
         await initializeSecuritySettings();
-        // 4. GPU 설정 구성
+        // 4. GPU Setup 구성
         await setupGpuConfiguration();
-        // 5. 기본 앱 이벤트 설정
+        // 5. 기본 앱 이벤트 Setup
         setupAppEvents();
         // 6. 데이터베이스 초기화
         await (0, stub_functions_1.initDatabase)();
         // 7. 메인 윈도우 생성
         await (0, stub_functions_1.createWindow)();
-        // 8. IPC 핸들러 설정
+        // 8. IPC 핸들러 Setup
         (0, stub_functions_1.setupIpcHandlers)();
         // 9. 시스템 모니터링 초기화
         await initializeSystemMonitoring();
@@ -177,10 +177,10 @@ async function initializeApp() {
         // 13. 메모리 상태 초기 확인
         await (0, memory_manager_1.checkAndOptimizeMemoryIfNeeded)();
         appState.isReady = true;
-        (0, debug_1.debugLog)('Loop 6 애플리케이션 초기화 완료');
+        (0, debug_1.debugLog)('Loop 6 애플리케이션 초기화 Completed');
     }
     catch (error) {
-        (0, debug_1.errorLog)('애플리케이션 초기화 중 오류 발생:', error);
+        (0, debug_1.errorLog)('애플리케이션 초기화 중 Error 발생:', error);
         throw error;
     }
 }
@@ -206,7 +206,7 @@ function setupSingleInstance() {
     });
 }
 /**
- * 앱 기본 이벤트 설정
+ * 앱 기본 이벤트 Setup
  */
 function setupAppEvents() {
     // macOS에서는 모든 창이 닫혀도 앱을 유지
@@ -221,7 +221,7 @@ function setupAppEvents() {
             (0, stub_functions_1.createWindow)();
         }
     });
-    // 앱 종료 시 정리 작업
+    // 앱 종료 시 Cleanup 작업
     electron_1.app.on('will-quit', async () => {
         await cleanupApp();
     });
@@ -231,7 +231,7 @@ function setupAppEvents() {
     });
 }
 /**
- * 전역 예외 핸들러 설정
+ * 전역 예외 핸들러 Setup
  */
 function setupGlobalExceptionHandlers() {
     // 처리되지 않은 Promise 거부
@@ -242,7 +242,7 @@ function setupGlobalExceptionHandlers() {
     // 처리되지 않은 예외
     process.on('uncaughtException', (error) => {
         (0, debug_1.errorLog)('처리되지 않은 예외:', error);
-        // 중요한 오류의 경우 앱 종료
+        // 중요한 Error의 경우 앱 종료
         if (error.message.includes('EADDRINUSE') ||
             error.message.includes('permission denied')) {
             process.exit(1);
@@ -250,21 +250,21 @@ function setupGlobalExceptionHandlers() {
     });
 }
 /**
- * 애플리케이션 정리
+ * 애플리케이션 Cleanup
  */
 async function cleanupApp() {
     try {
-        (0, debug_1.debugLog)('애플리케이션 정리 시작');
+        (0, debug_1.debugLog)('애플리케이션 Cleanup 시작');
         // 트레이 아이콘 제거
         (0, stub_functions_1.destroyTray)();
         // 데이터베이스 연결 종료
         await (0, stub_functions_1.closeDatabase)();
-        // 네이티브 모듈 정리
-        // 필요한 경우 네이티브 모듈의 정리 함수 호출
-        (0, debug_1.debugLog)('애플리케이션 정리 완료');
+        // 네이티브 모듈 Cleanup
+        // 필요한 경우 네이티브 모듈의 Cleanup 함수 호출
+        (0, debug_1.debugLog)('애플리케이션 Cleanup Completed');
     }
     catch (error) {
-        (0, debug_1.errorLog)('애플리케이션 정리 중 오류 발생:', error);
+        (0, debug_1.errorLog)('애플리케이션 Cleanup 중 Error 발생:', error);
     }
 }
 /**

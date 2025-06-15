@@ -110,18 +110,18 @@ export declare class PlatformManager extends EventEmitter {
     private initializeCapabilities;
     /**
      * Load system preferences
-     */
+   */
     private loadSystemPreferences;
     /**
-     * Setup theme change monitoring
+   * Setup theme change monitoring
      */
     private setupThemeMonitoring;
     /**
      * Get comprehensive OS information
-     */
+   */
     getOSInfo(): OSInfo;
     /**
-     * Get platform-specific paths
+   * Get platform-specific paths
      */
     getPaths(): PlatformPaths;
     /**
@@ -142,14 +142,14 @@ export declare class PlatformManager extends EventEmitter {
     getArchitecture(): Architecture;
     /**
      * Resource path management
-     */
+   */
     getResourcePath(resourcePath?: string): string;
     /**
-     * Create platform-specific directories
-     */
+   * Create platform-specific directories
+   */
     ensureDirectoriesExist(): Promise<void>;
     /**
-     * Get platform-specific performance settings
+   * Get platform-specific performance settings
      */
     getPerformanceSettings(): {
         hardwareAcceleration: boolean;
@@ -167,14 +167,14 @@ export declare class PlatformManager extends EventEmitter {
     getCurrentTheme(): Theme;
     /**
      * Check if dark mode is active
-     */
+   */
     isDarkMode(): boolean;
     /**
      * Set theme preference (if supported)
      */
     setTheme(theme: Theme): void;
     /**
-     * Get system uptime in a human-readable format
+   * Get system uptime in a human-readable format
      */
     getFormattedUptime(): string;
     /**
@@ -183,7 +183,7 @@ export declare class PlatformManager extends EventEmitter {
     getFormattedMemoryUsage(): string;
     /**
      * Cleanup resources
-     */
+   */
     destroy(): void;
 }
 export declare const platformManager: PlatformManager;

@@ -6,7 +6,7 @@ interface SecurityConfig {
     strictMode: boolean;
 }
 /**
- * Convert file path to protocol URL
+ * 파일 경로를 프로토콜 URL로 변환
  */
 export declare function filePathToProtocolUrl(filePath: string): string;
 /**

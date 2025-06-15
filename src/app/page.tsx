@@ -11,6 +11,7 @@ import ActivityMonitor from './components/ui/activity-monitor';
 import initStyles from './utils/init-styles';
 import { AppHeader } from './components/layout';
 import ClientIcon from './components/ui/client-icon';
+import { MonitoringButton } from './components/ui/monitoring-button';
 import { Zap, Target, TrendingUp, Clock, Award, BarChart3 } from 'lucide-react';
 
 interface Log {
@@ -94,62 +95,15 @@ export default function HomePage() {
             {/* Hero Section */}
             <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-blue-900/20 dark:to-purple-900/20 rounded-2xl p-8 md:p-12">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 dark:from-blue-400/5 dark:to-purple-400/5"></div>
-              <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                    <Zap className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                      Loop
-                    </h1>
-                  </div>
+              <div className="relative z-10 flex justify-between items-center">
+                {/* 왼쪽 - 빈 공간 또는 다른 컨텐츠 */}
+                <div className="flex-1">
+                  {/* 필요시 다른 컨텐츠 추가 */}
                 </div>
                 
-                {/* Quick Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                  <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-xl p-4 border border-white/20 dark:border-gray-700/50">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-                        <Target className="h-5 w-5 text-green-600 dark:text-green-400" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">총 타이핑 횟수</p>
-                        <p className="text-xl font-bold text-gray-900 dark:text-white">{logs.length}</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-xl p-4 border border-white/20 dark:border-gray-700/50">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-                        <TrendingUp className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">평균 타수</p>
-                        <p className="text-xl font-bold text-gray-900 dark:text-white">
-                          {logs.length > 0 
-                            ? Math.round(logs.reduce((sum, log) => sum + (log.typingTime > 0 ? (log.keyCount / log.typingTime) * 60 : 0), 0) / logs.length)
-                            : 0
-                          }
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-xl p-4 border border-white/20 dark:border-gray-700/50">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
-                        <Clock className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">총 시간</p>
-                        <p className="text-xl font-bold text-gray-900 dark:text-white">
-                          {Math.round(logs.reduce((sum, log) => sum + log.typingTime, 0))}초
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                {/* 오른쪽 - 모니터링 버튼 */}
+                <div className="flex-shrink-0">
+                  <MonitoringButton />
                 </div>
               </div>
             </div>

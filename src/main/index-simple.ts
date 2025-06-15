@@ -22,7 +22,7 @@ class ElectronApp {
       this.setupDevelopmentMode();
     }
 
-    // GPU 설정
+    // GPU Setup
     this.setupGpuAcceleration();
     
     // 앱 준비 대기
@@ -54,9 +54,9 @@ class ElectronApp {
   }
 
   private setupDevelopmentMode(): void {
-    console.log('[App] 개발 모드 설정 - 보안 제한 비활성화');
+    console.log('[App] 개발 모드 Setup - 보안 제한 비활성화');
     
-    // 보안 경고 비활성화
+    // 보안 Warning 비활성화
     process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
     
     // CSP 및 보안 관련 명령줄 스위치
@@ -68,7 +68,7 @@ class ElectronApp {
   }
 
   private setupGpuAcceleration(): void {
-    // GPU 모드 설정 (기본값은 하드웨어 가속)
+    // GPU 모드 Setup (기본값은 하드웨어 가속)
     const gpuMode = process.env.GPU_MODE || 'hardware';
     
     if (gpuMode === 'software') {
@@ -91,7 +91,7 @@ class ElectronApp {
   }
 
   private setupSecurityHandlers(): void {
-    // 웹 컨텐츠 생성 시 보안 설정
+    // 웹 컨텐츠 생성 시 보안 Setup
     app.on('web-contents-created', (event, contents) => {
       // 새 창 생성 제한
       contents.setWindowOpenHandler(({ url }) => {
@@ -114,10 +114,10 @@ class ElectronApp {
   }
 
   private async onReady(): Promise<void> {
-    console.log('[App] Electron 앱 준비 완료');
+    console.log('[App] Electron 앱 준비 Completed');
     
     try {
-      // 1. IPC 핸들러 등록 (설정 관리자 포함)
+      // 1. IPC 핸들러 등록 (Setup 관리자 포함)
       console.log('[App] IPC 핸들러 등록 중...');
       await ipcHandlers.register();
       
@@ -129,7 +129,7 @@ class ElectronApp {
       console.log('[App] 메인 윈도우 생성 중...');
       await this.windowManager.createMainWindow();
       
-      console.log('[App] 애플리케이션 초기화 완료');
+      console.log('[App] 애플리케이션 초기화 Completed');
       
       // 개발 모드에서 개발자 도구 자동 열기
       if (AppConfig.isDevelopment) {
@@ -140,21 +140,21 @@ class ElectronApp {
       }
       
     } catch (error) {
-      console.error('[App] 애플리케이션 초기화 실패:', error);
+      console.error('[App] 애플리케이션 초기화 Failed:', error);
       app.quit();
     }
   }
 
   private cleanup(): void {
-    console.log('[App] 애플리케이션 정리 시작');
+    console.log('[App] 애플리케이션 Cleanup 시작');
     
     try {
-      // 키보드 매니저 정리
+      // 키보드 매니저 Cleanup
       this.keyboardManager.dispose();
       
-      console.log('[App] 애플리케이션 정리 완료');
+      console.log('[App] 애플리케이션 Cleanup Completed');
     } catch (error) {
-      console.error('[App] 정리 중 오류:', error);
+      console.error('[App] Cleanup 중 Error:', error);
     }
   }
 }

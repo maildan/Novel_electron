@@ -30,7 +30,7 @@ interface ClipboardStats {
  */
 export declare function initializeClipboardWatcher(options?: ClipboardWatcherOptions): void;
 /**
- * 클립보드 감시 간격 설정
+ * 클립보드 감시 간격 Setup
  */
 export declare function setWatchInterval(intervalMs: number): boolean;
 /**

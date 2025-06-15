@@ -160,7 +160,7 @@ async function getSystemInfo() {
         };
     }
     catch (error) {
-        console.error('시스템 정보 수집 오류:', error);
+        console.error('시스템 정보 수집 Error:', error);
         throw error;
     }
 }
@@ -186,10 +186,10 @@ function registerSystemInfoIpcHandlers() {
             };
         }
         catch (error) {
-            console.error('시스템 정보 가져오기 실패:', error);
+            console.error('시스템 정보 가져오기 Failed:', error);
             return {
                 success: false,
-                error: error instanceof Error ? error.message : '알 수 없는 오류'
+                error: error instanceof Error ? error.message : '알 수 없는 Error'
             };
         }
     });
@@ -211,10 +211,10 @@ function registerSystemInfoIpcHandlers() {
             };
         }
         catch (error) {
-            console.error('CPU 정보 가져오기 실패:', error);
+            console.error('CPU 정보 가져오기 Failed:', error);
             return {
                 success: false,
-                error: error instanceof Error ? error.message : '알 수 없는 오류'
+                error: error instanceof Error ? error.message : '알 수 없는 Error'
             };
         }
     });
@@ -228,10 +228,10 @@ function registerSystemInfoIpcHandlers() {
             };
         }
         catch (error) {
-            console.error('프로세스 정보 가져오기 실패:', error);
+            console.error('프로세스 정보 가져오기 Failed:', error);
             return {
                 success: false,
-                error: error instanceof Error ? error.message : '알 수 없는 오류'
+                error: error instanceof Error ? error.message : '알 수 없는 Error'
             };
         }
     });
@@ -246,13 +246,13 @@ function registerSystemInfoIpcHandlers() {
             };
         }
         catch (error) {
-            console.error('Loop 프로세스 정보 가져오기 실패:', error);
+            console.error('Loop 프로세스 정보 가져오기 Failed:', error);
             return {
                 success: false,
-                error: error instanceof Error ? error.message : '알 수 없는 오류'
+                error: error instanceof Error ? error.message : '알 수 없는 Error'
             };
         }
     });
-    console.log('[SystemInfo] 시스템 정보 IPC 핸들러 등록 완료');
+    console.log('[SystemInfo] 시스템 정보 IPC 핸들러 등록 Completed');
 }
 //# sourceMappingURL=systemInfoIpc.js.map

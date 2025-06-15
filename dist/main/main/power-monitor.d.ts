@@ -22,72 +22,72 @@ declare class PowerManager {
     private listeners;
     constructor();
     /**
-     * 전력 모니터링 초기화
-     */
+   * 전력 모니터링 초기화
+   */
     initialize(): void;
     /**
-     * 전력 이벤트 리스너 설정
-     */
+   * 전력 이벤트 리스너 Setup
+   */
     private setupPowerEventListeners;
     /**
-     * 전력 상태 변경 처리
-     */
+   * 전력 상태 변경 처리
+   */
     private handlePowerStateChange;
     /**
-     * 시스템 절전 모드 진입 처리
-     */
+   * 시스템 절전 모드 진입 처리
+   */
     private handleSystemSuspend;
     /**
-     * 시스템 절전 모드 해제 처리
-     */
+   * 시스템 절전 모드 해제 처리
+   */
     private handleSystemResume;
     /**
-     * 시스템 종료 처리
-     */
+   * 시스템 종료 처리
+   */
     private handleSystemShutdown;
     /**
-     * 전력 정보 업데이트
-     */
+   * 전력 정보 업데이트
+   */
     private updatePowerInfo;
     /**
-     * 배터리 최적화 모드 활성화
-     */
+   * 배터리 최적화 모드 활성화
+   */
     private enableBatteryOptimization;
     /**
-     * 배터리 최적화 모드 비활성화
-     */
+   * 배터리 최적화 모드 비활성화
+   */
     private disableBatteryOptimization;
     /**
-     * 절전 모드 방지 설정
+     * 절전 모드 방지 Setup
      */
     setPreventSleep(prevent: boolean): void;
     /**
-     * 전력 상태 리스너 추가
-     */
+   * 전력 상태 리스너 추가
+   */
     addPowerListener(listener: (info: PowerInfo) => void): void;
     /**
-     * 전력 상태 리스너 제거
-     */
+   * 전력 상태 리스너 제거
+   */
     removePowerListener(listener: (info: PowerInfo) => void): void;
     /**
-     * 리스너들에게 알림
-     */
+   * 리스너들에게 알림
+   */
     private notifyListeners;
     /**
-     * 현재 전력 정보 가져오기
-     */
+   * 현재 전력 정보 가져오기
+   */
     getPowerInfo(): PowerInfo;
     /**
-     * 전력 설정 가져오기
-     */
+   * 전력 Setup 가져오기
+   */
     getSettings(): PowerSettings;
     /**
-     * 전력 설정 업데이트
-     */
+   * 전력 Setup 업데이트
+   */
     updateSettings(newSettings: Partial<PowerSettings>): void;
     /**
-     * 정리 작업
-     */
+   * Cleanup 작업
+   */
     cleanup(): void;
 }
 declare let powerManager: PowerManager | null;
@@ -96,7 +96,7 @@ declare let powerManager: PowerManager | null;
  */
 export declare function getPowerManager(): PowerManager;
 /**
- * 전력 모니터링 설정
+ * 전력 모니터링 Setup
  */
 export declare function setupPowerMonitoring(): void;
 /**
@@ -104,7 +104,7 @@ export declare function setupPowerMonitoring(): void;
  */
 export declare function getCurrentPowerInfo(): PowerInfo;
 /**
- * 절전 모드 방지 설정
+ * 절전 모드 방지 Setup
  */
 export declare function setPreventSleep(prevent: boolean): void;
 /**

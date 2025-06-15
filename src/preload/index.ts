@@ -18,7 +18,7 @@ try {
   
   // 디버깅을 위해 실제 노출된 키들 확인
   const exposedKeys = Object.keys(electronAPI);
-  console.log('✅ Electron API가 성공적으로 노출되었습니다.');
+  console.log('✅ Electron API가 Success적으로 노출되었습니다.');
   console.log('🔌 사용 가능한 API:', exposedKeys);
   
   // memory API가 포함되었는지 확인
@@ -55,7 +55,7 @@ try {
   console.log('✅ injectStyles 함수가 노출되었습니다.');
   
 } catch (error) {
-  console.error('❌ Preload script: electronAPI 노출 실패:', error);
+  console.error('❌ Preload script: electronAPI 노출 Failed:', error);
 }
 
 // API 테스트 함수
@@ -68,15 +68,15 @@ const testAPIs = async () => {
     const memoryResult = await electronAPI.memory.getInfo();
     console.log('✅ Memory API 응답:', memoryResult);
     
-    // 설정 API 테스트
-    console.log('⚙️ 설정 API 테스트 중...');
+    // Setup API 테스트
+    console.log('⚙️ Setup API 테스트 중...');
     const settingsResult = await electronAPI.settings.getAll();
     console.log('✅ Settings API 응답:', settingsResult);
     
-    console.log('✅ 모든 API 테스트 완료');
+    console.log('✅ 모든 API 테스트 Completed');
     
   } catch (error) {
-    console.error('❌ API 테스트 실패:', error);
+    console.error('❌ API 테스트 Failed:', error);
   }
 };
 
@@ -108,4 +108,4 @@ if (process.env.NODE_ENV === 'development') {
 // 타입 내보내기
 export type { ElectronAPI } from './api';
 
-console.log('✅ Preload script 완료!');
+console.log('✅ Preload script Completed!');
