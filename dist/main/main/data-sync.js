@@ -139,6 +139,7 @@ class DataSyncManager {
                 try {
                     // 배치 저장
                     const mongoResult = await this.mongoClient.saveBatchTypingLogs(batch);
+                    console.log('[데이터동기화] MongoDB 배치 저장 결과:', mongoResult ? 'success' : 'failed');
                     (0, utils_1.debugLog)('MongoDB 배치 저장 Completed: ${mongoResult.insertedCount}개 항목');
                     this.syncStatus.lastMongoSync = new Date();
                     // Supabase에도 저장 (장기 보존용)

@@ -49,6 +49,8 @@
     ".next",
     "out",
     "dist",
-    "native-modules/target"
+    "native-modules/target",
+    "backup"
   ]
 }
+   

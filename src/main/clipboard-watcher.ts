@@ -9,6 +9,9 @@ import { clipboard, ipcMain, BrowserWindow, nativeImage } from 'electron';
 import * as fs from 'fs';
 import * as path from 'path';
 
+// Path 모듈 사용 확인
+console.log('[ClipboardWatcher] Path 모듈 로드됨:', typeof path);
+
 // 타입 정의
 interface ClipboardContent {
   text?: string;
@@ -40,6 +43,9 @@ const MIN_WATCH_INTERVAL = 100;
 const MAX_WATCH_INTERVAL = 5000;
 const MAX_HISTORY_SIZE = 100;
 const SUPPORTED_IMAGE_FORMATS = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.svg'];
+
+// 지원 이미지 포맷 확인
+console.log('[ClipboardWatcher] 지원 이미지 포맷:', SUPPORTED_IMAGE_FORMATS.join(', '));
 
 // 내부 상태
 let lastClipboardContent: ClipboardContent | null = null;
@@ -551,16 +557,19 @@ export async function saveClipboardToFile(filePath: string, type: 'text' | 'html
 function setupClipboardIpcHandlers(): void {
   // 텍스트 복사
   ipcMain.handle('clipboard:copyText', (event, text: string) => {
+    console.log(`[ClipboardWatcher] 텍스트 복사 요청, 발신자: ${event.sender.id}`);
     return copyTextToClipboard(text);
   });
 
   // HTML 복사
   ipcMain.handle('clipboard:copyHtml', (event, html: string, text?: string) => {
+    console.log(`[ClipboardWatcher] HTML 복사 요청, 발신자: ${event.sender.id}`);
     return copyHtmlToClipboard(html, text);
   });
 
   // 이미지 복사
   ipcMain.handle('clipboard:copyImage', (event, imageData) => {
+    console.log(`[ClipboardWatcher] 이미지 복사 요청, 발신자: ${event.sender.id}`);
     return copyImageToClipboard(imageData);
   });
 
@@ -582,6 +591,7 @@ function setupClipboardIpcHandlers(): void {
 
   // 감시 시작
   ipcMain.handle('clipboard:startWatching', (event, options: ClipboardWatcherOptions = {}) => {
+    console.log(`[ClipboardWatcher] 감시 시작 요청, 발신자: ${event.sender.id}`);
     if (options.interval) {
       setWatchInterval(options.interval);
     }
@@ -597,6 +607,7 @@ function setupClipboardIpcHandlers(): void {
 
   // 히스토리 조회
   ipcMain.handle('clipboard:getHistory', (event, limit: number = 20) => {
+    console.log(`[ClipboardWatcher] 히스토리 조회 요청: ${limit}개, 발신자: ${event.sender.id}`);
     return getClipboardHistory(limit);
   });
 
@@ -613,11 +624,13 @@ function setupClipboardIpcHandlers(): void {
 
   // 파일로 저장
   ipcMain.handle('clipboard:saveToFile', (event, filePath: string, type: 'text' | 'html' | 'image') => {
+    console.log(`[ClipboardWatcher] 파일 저장 요청: ${type}, 경로: ${path.basename(filePath)}, 발신자: ${event.sender.id}`);
     return saveClipboardToFile(filePath, type);
   });
 
   // 감시 간격 Setup
   ipcMain.handle('clipboard:setInterval', (event, intervalMs: number) => {
+    console.log(`[ClipboardWatcher] 감시 간격 설정: ${intervalMs}ms, 발신자: ${event.sender.id}`);
     return setWatchInterval(intervalMs);
   });
 }

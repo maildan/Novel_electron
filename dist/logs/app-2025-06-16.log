@@ -249,3 +249,47 @@
 [2025-06-16T00:56:12.840Z] DEBUG: Setup 변경 적용: ${key} = ${newValue}
 [2025-06-16T00:56:12.840Z] DEBUG: Setup 변경 적용: ${key} = ${newValue}
 [2025-06-16T00:56:12.840Z] DEBUG: Setup 변경 적용: ${key} = ${newValue}
+[2025-06-16T04:48:21.880Z] DEBUG: [UpdateManager] Auto-update disabled in development mode
+[2025-06-16T04:48:22.046Z] DEBUG: 키보드 관련 IPC 핸들러 등록 중...
+[2025-06-16T04:48:22.091Z] DEBUG: 키보드 리스너 Setup Success
+[2025-06-16T04:48:22.046Z] DEBUG: 키보드 관련 IPC 핸들러 등록 Completed
+[2025-06-16T04:48:22.091Z] DEBUG: 키보드 핸들러 초기화 Completed
+[2025-06-16T05:03:24.884Z] DEBUG: [UpdateManager] Auto-update disabled in development mode
+[2025-06-16T05:03:24.954Z] DEBUG: 키보드 관련 IPC 핸들러 등록 중...
+[2025-06-16T05:03:24.954Z] DEBUG: 키보드 관련 IPC 핸들러 등록 Completed
+[2025-06-16T05:03:24.997Z] DEBUG: 키보드 핸들러 초기화 Completed
+[2025-06-16T05:03:24.997Z] DEBUG: 키보드 리스너 Setup Success
+[2025-06-16T05:08:06.757Z] DEBUG: [UpdateManager] Auto-update disabled in development mode
+[2025-06-16T05:08:06.812Z] DEBUG: 키보드 관련 IPC 핸들러 등록 Completed
+[2025-06-16T05:08:06.812Z] DEBUG: 키보드 관련 IPC 핸들러 등록 중...
+[2025-06-16T05:08:06.865Z] DEBUG: 키보드 리스너 Setup Success
+[2025-06-16T05:08:06.865Z] DEBUG: 키보드 핸들러 초기화 Completed
+[2025-06-16T05:08:50.216Z] DEBUG: [UpdateManager] Auto-update disabled in development mode
+[2025-06-16T05:08:50.283Z] DEBUG: 키보드 관련 IPC 핸들러 등록 Completed
+[2025-06-16T05:08:50.283Z] DEBUG: 키보드 관련 IPC 핸들러 등록 중...
+[2025-06-16T05:08:50.350Z] DEBUG: 키보드 핸들러 초기화 Completed
+[2025-06-16T05:08:50.350Z] DEBUG: 키보드 리스너 Setup Success
+[2025-06-16T05:37:37.040Z] DEBUG: [UpdateManager] Auto-update disabled in development mode
+[2025-06-16T05:37:37.185Z] DEBUG: 키보드 관련 IPC 핸들러 등록 중...
+[2025-06-16T05:37:37.185Z] DEBUG: 키보드 관련 IPC 핸들러 등록 Completed
+[2025-06-16T05:37:37.236Z] DEBUG: 키보드 리스너 Setup Success
+[2025-06-16T05:37:37.236Z] DEBUG: 키보드 핸들러 초기화 Completed
+[2025-06-16T05:47:26.475Z] DEBUG: [UpdateManager] Auto-update disabled in development mode
+[2025-06-16T05:47:26.573Z] DEBUG: 키보드 관련 IPC 핸들러 등록 중...
+[2025-06-16T05:47:26.608Z] DEBUG: 키보드 리스너 Setup Success
+[2025-06-16T05:47:26.609Z] DEBUG: 키보드 핸들러 초기화 Completed
+[2025-06-16T05:47:26.573Z] DEBUG: 키보드 관련 IPC 핸들러 등록 Completed
+[2025-06-16T05:48:27.428Z] DEBUG: [UpdateManager] Auto-update disabled in development mode
+[2025-06-16T05:48:27.519Z] DEBUG: 키보드 관련 IPC 핸들러 등록 중...
+[2025-06-16T05:48:27.566Z] DEBUG: 키보드 핸들러 초기화 Completed
+[2025-06-16T05:48:27.519Z] DEBUG: 키보드 관련 IPC 핸들러 등록 Completed
+[2025-06-16T05:48:27.566Z] DEBUG: 키보드 리스너 Setup Success
+[2025-06-16T06:01:19.561Z] DEBUG: [UpdateManager] Auto-update disabled in development mode
+[2025-06-16T06:01:19.724Z] DEBUG: 키보드 관련 IPC 핸들러 등록 중...
+[2025-06-16T06:01:19.724Z] DEBUG: 키보드 관련 IPC 핸들러 등록 Completed
+[2025-06-16T06:01:19.724Z] DEBUG: 추적 관련 IPC 핸들러 등록 중...
+[2025-06-16T06:01:19.744Z] DEBUG: 디렉토리 생성됨: /Users/user/loop/loop_6/userData
+[2025-06-16T06:01:19.748Z] DEBUG: 디렉토리 생성됨: /Users/user/loop/loop_6/userData
+[2025-06-16T06:01:19.750Z] DEBUG: 디렉토리 생성됨: /Users/user/loop/loop_6/userData/config
+[2025-06-16T06:01:19.760Z] DEBUG: 디렉토리 생성됨: /Users/user/loop/loop_6/userData/config
+[2025-06-16T06:01:19.761Z] DEBUG: 디렉토리 생성됨: /Users/user/loop/loop_6/userData/logs

@@ -19,8 +19,8 @@ exports.CHANNELS = {
     IMPORT_DATA: 'db:importData',
     CLEAR_DATA: 'db:clearData',
     // 시스템 모니터링
-    START_MONITORING: 'system:startMonitoring',
-    STOP_MONITORING: 'system:stopMonitoring',
+    START_MONITORING: 'start-monitoring',
+    STOP_MONITORING: 'stop-monitoring',
     GET_CURRENT_METRICS: 'system:getCurrentMetrics',
     GET_METRICS_HISTORY: 'system:getMetricsHistory',
     GET_AVERAGE_METRICS: 'system:getAverageMetrics',

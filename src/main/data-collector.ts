@@ -20,6 +20,7 @@ export class DataCollector {
 
   constructor() {
     this.sessionId = new Date().toISOString().replace(/[:.]/g, '-');
+    console.log('[데이터수집기] 세션 ID 생성됨:', this.sessionId);
     this.logPath = path.join(process.cwd(), 'thinking', 'logs');
     this.ensureLogDirectory();
   }

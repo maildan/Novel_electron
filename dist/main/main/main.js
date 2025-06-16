@@ -33,339 +33,79 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.appState = void 0;
+exports.isTest = exports.isProd = exports.isDev = exports.appState = void 0;
+/**
+ * 메인 프로세스 진입점 - 모듈화된 버전
+ */
 const electron_1 = require("electron");
 const path = __importStar(require("path"));
-const dotenv_1 = require("dotenv");
-// 메모리 최적화: GPU 프로세스 완전 비활성화
-electron_1.app.disableHardwareAcceleration();
-// 메모리 최적화: 추가 프로세스 플래그 Setup
-electron_1.app.commandLine.appendSwitch('--disable-gpu');
-electron_1.app.commandLine.appendSwitch('--disable-gpu-process');
-electron_1.app.commandLine.appendSwitch('--disable-gpu-sandbox');
-electron_1.app.commandLine.appendSwitch('--disable-accelerated-video-decode');
-electron_1.app.commandLine.appendSwitch('--disable-accelerated-video-encode');
-electron_1.app.commandLine.appendSwitch('--disable-accelerated-mjpeg-decode');
-electron_1.app.commandLine.appendSwitch('--disable-accelerated-compositing');
-electron_1.app.commandLine.appendSwitch('--disable-software-rasterizer');
-electron_1.app.commandLine.appendSwitch('--disable-background-timer-throttling');
-electron_1.app.commandLine.appendSwitch('--disable-backgrounding-occluded-windows');
-electron_1.app.commandLine.appendSwitch('--disable-renderer-backgrounding');
-electron_1.app.commandLine.appendSwitch('--disable-features', 'TranslateUI,BlinkGenPropertyTrees');
-electron_1.app.commandLine.appendSwitch('--enable-features', 'VizDisplayCompositor');
-electron_1.app.commandLine.appendSwitch('--js-flags', '--max-old-space-size=256 --max-semi-space-size=8');
-electron_1.app.commandLine.appendSwitch('--memory-pressure-off');
-electron_1.app.commandLine.appendSwitch('--max_old_space_size', '256');
-// 명시적 경로로 환경변수를 일찍 로드
-const envPath = path.resolve(process.cwd(), '.env');
-console.log('Loading .env from: ${envPath}');
-(0, dotenv_1.config)({ path: envPath });
-const window_1 = require("./window");
-const keyboard_1 = require("./keyboard");
-const native_ipc_1 = require("./native-ipc");
-const static_server_1 = require("./static-server");
-// 사이드 이펙트와 초기화를 위해 나머지 main 디렉토리 모듈들을 가져오기
+// 설정 및 초기화 모듈들
+const app_config_1 = require("./app-config");
+const app_initialization_1 = require("./app-initialization");
+Object.defineProperty(exports, "appState", { enumerable: true, get: function () { return app_initialization_1.appState; } });
+const app_cleanup_1 = require("./app-cleanup");
+// 핵심 시스템 모듈들 (윈도우, IPC, 메모리 관리)
+require("./window"); // WindowManager - 메인 윈도우 관리
+require("./handlers-manager"); // IPC 핸들러 관리자 (모든 핸들러 초기화 포함)
+require("./settings-manager"); // Settings 관리자 - 명시적으로 초기화 보장
+require("./memory-manager"); // 메모리 관리
+require("./memory-ipc"); // 메모리 관련 IPC 핸들러들
+require("./system-monitor-ipc"); // 시스템 모니터링 IPC 핸들러들
+// 사이드 이펙트 모듈들 (기존 동작 유지)
 require("./app-lifecycle");
 require("./auto-launch-manager");
 require("./browser-detector");
 require("./clipboard-watcher");
-require("./constants");
 require("./crash-reporter");
 require("./data-collector");
-require("./data-sync");
-require("./dialog-manager");
-require("./gpuUtils");
-require("./handlers-manager");
-require("./keyboard-advanced");
-require("./menu-manager");
+require("./error-handler");
+require("./file-handler");
 require("./menu");
-require("./memory-manager");
 require("./native-client");
-require("./platform-manager");
-require("./power-monitor");
-require("./protocols");
-require("./safe-storage");
-require("./screenshot");
 require("./security-manager");
-require("./settings-manager");
-require("./shortcuts");
-require("./stats-manager");
-require("./stub-functions");
 require("./system-info");
-require("./tracking-handlers");
-require("./tray");
+require("./theme-manager");
+require("./toast");
 require("./update-manager");
 require("./utils");
-require("./web-contents-handlers");
-require("./windowHandlers");
-// 환경변수를 일찍 로드
-(0, dotenv_1.config)();
-// 개발 모드 감지 - 다른 모든 코드에서 사용할 수 있도록 일찍 정의
-const isDev = process.env.NODE_ENV === 'development';
-const disableCSP = isDev || process.env.DISABLE_CSP === 'true';
-const disableSecurity = isDev || process.env.DISABLE_SECURITY === 'true';
-// 필수 환경변수 설정
-process.env.ELECTRON_STATIC = isDev ? 'false' : 'true';
-process.env.STATIC_MODE = isDev ? 'development' : 'production';
-console.log('[electron] 환경변수 ELECTRON_STATIC: ${process.env.ELECTRON_STATIC}');
-console.log('[electron] 환경변수 STATIC_MODE: ${process.env.STATIC_MODE}');
-console.log('애플리케이션 시작 중 (개발 모드: ${isDev}, 보안 비활성화: ${disableSecurity}, CSP 비활성화: ${disableCSP})');
-// Electron 모듈을 가져오기 전에 환경변수 설정
-if (disableSecurity || disableCSP) {
-    process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
-    process.env.ELECTRON_OVERRIDE_CSP = '*';
-}
-// 하드웨어 가속 제어 - 앱 준비 전에 호출되어야 함
-// 개발 모드에서도 환경변수로 하드웨어 가속 제어 가능
-const disableHardwareAcceleration = process.env.GPU_MODE === 'software' ||
-    process.env.DISABLE_GPU === 'true' ||
-    process.env.HARDWARE_ACCELERATION === 'false' ||
-    (isDev && process.env.HARDWARE_ACCELERATION !== 'true');
-const enableWebGL = process.env.WEBGL_ENABLED !== 'false';
-const gpuPowerPreference = process.env.GPU_POWER_PREFERENCE || 'default';
-if (disableHardwareAcceleration) {
-    console.log('🔧 GPU 모드: 소프트웨어 렌더링 - 하드웨어 가속 비활성화됨');
-    electron_1.app.disableHardwareAcceleration();
-    // 추가 GPU 관련 스위치 비활성화
-    electron_1.app.commandLine.appendSwitch('disable-gpu');
-    electron_1.app.commandLine.appendSwitch('disable-gpu-compositing');
-    electron_1.app.commandLine.appendSwitch('disable-gpu-rasterization');
-    electron_1.app.commandLine.appendSwitch('disable-gpu-sandbox');
-}
-else if (process.env.HARDWARE_ACCELERATION === 'true') {
-    console.log('⚡ GPU 모드: 하드웨어 가속 활성화');
-    electron_1.app.commandLine.appendSwitch('enable-gpu-rasterization');
-    electron_1.app.commandLine.appendSwitch('enable-zero-copy');
-    if (process.env.GPU_VSYNC === 'true') {
-        electron_1.app.commandLine.appendSwitch('enable-gpu-vsync');
-    }
-    if (process.env.GPU_ANTIALIASING === 'true') {
-        electron_1.app.commandLine.appendSwitch('enable-gpu-antialiasing');
-    }
-}
-// 개발 모드 명령줄 스위치
-if (isDev) {
-    console.log('개발 모드: 보안 우회 및 CSP 제거 활성화...');
-    // 보안 관련 명령줄 스위치
-    electron_1.app.commandLine.appendSwitch('disable-web-security');
-    electron_1.app.commandLine.appendSwitch('allow-insecure-localhost');
-    electron_1.app.commandLine.appendSwitch('ignore-certificate-errors');
-    electron_1.app.commandLine.appendSwitch('disable-site-isolation-trials');
-    electron_1.app.commandLine.appendSwitch('allow-running-insecure-content');
-    console.log('모든 CSP 제한이 완전히 비활성화됨');
-}
-// GPU 관련 명령줄 스위치
-if (!disableHardwareAcceleration) {
-    electron_1.app.commandLine.appendSwitch('enable-hardware-acceleration');
-    electron_1.app.commandLine.appendSwitch('ignore-gpu-blacklist');
-}
-else {
-    electron_1.app.commandLine.appendSwitch('disable-gpu');
-    electron_1.app.commandLine.appendSwitch('disable-gpu-compositing');
-}
-// 디버그 GPU 프로세스 크래시 제한 비활성화
-electron_1.app.commandLine.appendSwitch('disable-gpu-process-crash-limit');
-if (isDev) {
-    electron_1.app.commandLine.appendSwitch('debug-gpu');
-}
-// 환경 로깅
-console.log(`[환경변수] NODE_ENV: ${process.env.NODE_ENV || 'Setup되지 않음'}`);
-console.log(`[환경변수] NEXT_PORT: ${process.env.NEXT_PORT || '3000'}`);
-console.log(`[환경변수] GPU_MODE: ${process.env.GPU_MODE || 'Setup되지 않음'}`);
-console.log(`[환경변수] MongoDB URI: ${process.env.MONGODB_URI ? 'Setup됨' : 'Setup되지 않음'}`);
-console.log(`[환경변수] Supabase URL: ${process.env.SUPABASE_URL ? 'Setup됨' : 'Setup되지 않음'}`);
-// 추가 필수 모듈 가져오기 (중복 방지)
-const settings_manager_1 = require("./settings-manager");
-const handlers_manager_1 = require("./handlers-manager");
-const data_collector_1 = require("./data-collector");
-const appState = {
-    isInitializing: true,
-    isReady: false,
-    mainWindow: null,
-    settings: {},
-    windowManager: null,
-    settingsManagerInitialized: false,
-    keyboardManager: null,
-    staticServer: null,
-    protocolsRegistered: false,
-    securityInitialized: false,
-    ipcHandlersRegistered: false,
-    keyboardInitialized: false
-};
-exports.appState = appState;
-// Initialize managers
-function initializeManagers() {
-    console.log('핵심 매니저 초기화 중...');
-    data_collector_1.dataCollector.log('system', '핵심 매니저 초기화 시작');
-    try {
-        // Initialize in dependency order - settings manager first as other managers may depend on it
-        appState.windowManager = window_1.WindowManager.getInstance();
-        appState.keyboardManager = keyboard_1.KeyboardManager.getInstance();
-        // Initialize static server for production builds
-        const isStaticMode = process.env.ELECTRON_STATIC === 'true' || process.env.STATIC_MODE === 'true' || !isDev;
-        console.log('환경변수 ELECTRON_STATIC: ${process.env.ELECTRON_STATIC}');
-        console.log('환경변수 STATIC_MODE: ${process.env.STATIC_MODE}');
-        console.log('isDev: ${isDev}');
-        console.log('isStaticMode: ${isStaticMode}');
-        if (isStaticMode) {
-            console.log('정적 서버 모드 활성화됨');
-            const staticPath = path.join(__dirname, '../../../out'); // Next.js static export 경로
-            console.log('정적 파일 경로: ${staticPath}');
-            appState.staticServer = new static_server_1.StaticServer(staticPath, 5500);
-        }
-        else {
-            console.log('정적 서버 모드 비활성화됨');
-        }
-        console.log('핵심 매니저 초기화 Success');
-        data_collector_1.dataCollector.log('system', '핵심 매니저 초기화 Completed');
-    }
-    catch (error) {
-        console.error('매니저 초기화 Error:', error);
-        throw error;
-    }
-}
-// Initialize all core systems
-async function initializeCoreSystem() {
-    console.log('핵심 시스템 초기화 중...');
-    data_collector_1.dataCollector.log('system', '핵심 시스템 초기화 시작');
-    try {
-        // Initialize settings manager first - other managers may depend on settings
-        await (0, settings_manager_1.initializeSettingsManager)();
-        appState.settingsManagerInitialized = true;
-        console.log('Setup 관리자 Initialized');
-        data_collector_1.dataCollector.log('system', 'Setup 관리자 초기화 Completed');
-        // Initialize static server for production builds
-        if (appState.staticServer) {
-            try {
-                const staticPort = await appState.staticServer.start();
-                process.env.STATIC_SERVER_URL = `http://localhost:${staticPort}`;
-                console.log('정적 서버 Started: http://localhost:${staticPort}');
-                data_collector_1.dataCollector.log('system', '정적 서버 시작 Completed');
-            }
-            catch (error) {
-                console.error('정적 서버 시작 Failed:', error);
-                // Don't fail the entire app if static server fails, fallback to dev mode
-            }
-        }
-        // Initialize window manager
-        if (appState.windowManager) {
-            // WindowManager doesn't need initialization, it's ready on getInstance
-            console.log('윈도우 관리자 준비됨');
-            data_collector_1.dataCollector.log('system', '윈도우 관리자 준비 Completed');
-        }
-        // Initialize keyboard manager
-        if (appState.keyboardManager) {
-            console.log('키보드 관리자 준비됨');
-            data_collector_1.dataCollector.log('system', '키보드 관리자 준비 Completed');
-        }
-        console.log('핵심 시스템 초기화 Completed');
-        data_collector_1.dataCollector.log('system', '핵심 시스템 초기화 Completed');
-    }
-    catch (error) {
-        console.error('Error initializing core system:', error);
-        throw error;
-    }
-}
-// Initialize UI components
-async function initializeUIComponents() {
-    console.log('Initializing UI components...');
-    try {
-        // Create main window
-        if (appState.windowManager) {
-            appState.mainWindow = await appState.windowManager.createMainWindow();
-        }
-        // Initialize advanced keyboard system after main window is created
-        if (appState.mainWindow && appState.keyboardManager) {
-            try {
-                await appState.keyboardManager.initialize(appState.mainWindow);
-                appState.keyboardInitialized = true;
-                console.log('Advanced keyboard system initialized');
-            }
-            catch (error) {
-                console.error('Failed to initialize keyboard system:', error);
-                // Don't fail the entire app if keyboard fails
-            }
-        }
-        console.log('UI components initialized successfully');
-    }
-    catch (error) {
-        console.error('Error initializing UI components:', error);
-        throw error;
-    }
-}
-// Setup IPC handlers
-async function setupIPCHandlers() {
-    if (!appState.ipcHandlersRegistered) {
-        console.log('Setting up IPC handlers...');
-        try {
-            // Setup all handlers using our handlers manager
-            await (0, handlers_manager_1.setupAllHandlers)();
-            // Register native module IPC handlers
-            console.log('Registering native module IPC handlers...');
-            (0, native_ipc_1.registerNativeIpcHandlers)();
-            appState.ipcHandlersRegistered = true;
-            console.log('All IPC handlers registered successfully');
-        }
-        catch (error) {
-            console.error('Error setting up IPC handlers:', error);
-            throw error;
-        }
-    }
-}
-// Setup development-specific security bypasses
-function setupDevelopmentSecurity() {
-    if (isDev || disableSecurity) {
-        console.log('Development environment: disabling security settings');
-        // Remove CSP headers
-        electron_1.session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-            const responseHeaders = { ...details.responseHeaders };
-            delete responseHeaders['content-security-policy'];
-            delete responseHeaders['content-security-policy-report-only'];
-            callback({ responseHeaders });
-        });
-        appState.securityInitialized = true;
-        console.log('Development security settings applied');
-    }
-}
-// Main application ready handler
-async function onAppReady() {
-    console.log('App ready event received');
-    try {
-        // Initialize managers
-        initializeManagers();
-        // Initialize core system
-        await initializeCoreSystem();
-        // Setup development security
-        setupDevelopmentSecurity();
-        // Setup IPC handlers
-        await setupIPCHandlers();
-        // Initialize UI components
-        await initializeUIComponents();
-        appState.isReady = true;
-        appState.isInitializing = false;
-        console.log('Application initialization complete');
-    }
-    catch (error) {
-        console.error('Error during app initialization:', error);
-        electron_1.app.quit();
-    }
-}
-// Event handlers
-electron_1.app.whenReady().then(onAppReady);
+require("./tray");
+require("./shortcuts");
+require("./protocols");
+require("./screenshot");
+// 앱 설정 초기화 (가장 먼저 실행)
+(0, app_config_1.initializeAppConfig)();
+console.log('Electron main process starting...');
+console.log(`Node.js version: ${process.version}`);
+console.log(`Electron version: ${process.versions.electron}`);
+console.log(`Chrome version: ${process.versions.chrome}`);
+console.log(`V8 version: ${process.versions.v8}`);
+console.log(`Platform: ${process.platform}`);
+console.log(`Architecture: ${process.arch}`);
+console.log(`Working directory: ${process.cwd()}`);
+console.log(`App path: ${electron_1.app.getAppPath()}`);
+console.log(`Environment: ${app_config_1.isDev ? 'development' : 'production'}`);
+// 앱 이벤트 핸들러
+electron_1.app.whenReady().then(app_initialization_1.onAppReady);
+// 모든 창이 닫혔을 때
 electron_1.app.on('window-all-closed', () => {
     console.log('All windows closed');
     if (process.platform !== 'darwin') {
         electron_1.app.quit();
     }
 });
+// 앱 활성화 (macOS)
+electron_1.app.on('activate', async () => {
+    console.log('App activated');
+    if (electron_1.BrowserWindow.getAllWindows().length === 0) {
+        await (0, app_initialization_1.onAppReady)();
+    }
+});
+// 앱 종료 전
 electron_1.app.on('before-quit', async (event) => {
-    console.log('Before quit event received');
-    // Prevent immediate quit to allow cleanup
+    console.log('App before-quit event received');
     event.preventDefault();
     try {
-        // Allow managers to perform cleanup
-        await cleanup();
-        // Now allow the app to quit
+        await (0, app_cleanup_1.cleanupApplication)(app_initialization_1.appState);
         electron_1.app.exit(0);
     }
     catch (error) {
@@ -373,73 +113,7 @@ electron_1.app.on('before-quit', async (event) => {
         electron_1.app.exit(1);
     }
 });
-electron_1.app.on('activate', async () => {
-    if (electron_1.BrowserWindow.getAllWindows().length === 0) {
-        if (appState.windowManager) {
-            await appState.windowManager.createWindow({
-                width: 1200,
-                height: 800,
-                webPreferences: {
-                    nodeIntegration: false,
-                    contextIsolation: true,
-                    preload: path.join(__dirname, '../preload/index.js')
-                }
-            });
-        }
-    }
-});
-// Cleanup function
-async function cleanup() {
-    console.log('Performing application cleanup...');
-    try {
-        // Cleanup in reverse order of initialization
-        // Cleanup static server first
-        if (appState.staticServer) {
-            try {
-                await appState.staticServer.stop();
-                console.log('Static server cleanup completed');
-            }
-            catch (error) {
-                console.error('Error during static server cleanup:', error);
-            }
-        }
-        // Cleanup keyboard system
-        if (appState.keyboardManager && appState.keyboardInitialized) {
-            try {
-                await appState.keyboardManager.cleanup();
-                console.log('Keyboard system cleanup completed');
-            }
-            catch (error) {
-                console.error('Error during keyboard cleanup:', error);
-            }
-        }
-        // Cleanup native module IPC handlers
-        try {
-            (0, native_ipc_1.cleanupNativeIpcHandlers)();
-            console.log('Native module IPC handlers cleanup completed');
-        }
-        catch (error) {
-            console.error('Error during native module cleanup:', error);
-        }
-        if (appState.windowManager) {
-            // WindowManager doesn't have cleanup method, just destroy windows
-            electron_1.BrowserWindow.getAllWindows().forEach(window => {
-                if (!window.isDestroyed()) {
-                    window.destroy();
-                }
-            });
-        }
-        // Clear manager references
-        appState.settingsManagerInitialized = false;
-        appState.keyboardManager = null;
-        appState.staticServer = null;
-        appState.keyboardInitialized = false;
-        console.log('Application cleanup complete');
-    }
-    catch (error) {
-        console.error('Error during cleanup:', error);
-    }
-}
+// 전역 에러 핸들러
 process.on('uncaughtException', (error) => {
     console.error('Uncaught Exception:', error);
     // Don't crash the app, just log the error
@@ -448,8 +122,8 @@ process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
     // Don't crash the app, just log the error
 });
-// Enable live reload for development
-if (isDev) {
+// 개발 모드에서 라이브 리로드 활성화
+if (app_config_1.isDev) {
     try {
         require('electron-reload')(__dirname, {
             electron: path.join(__dirname, '../../../node_modules/.bin/electron'),
@@ -460,4 +134,8 @@ if (isDev) {
         console.log('electron-reload not available:', error.message);
     }
 }
+var app_config_2 = require("./app-config");
+Object.defineProperty(exports, "isDev", { enumerable: true, get: function () { return app_config_2.isDev; } });
+Object.defineProperty(exports, "isProd", { enumerable: true, get: function () { return app_config_2.isProd; } });
+Object.defineProperty(exports, "isTest", { enumerable: true, get: function () { return app_config_2.isTest; } });
 //# sourceMappingURL=main.js.map

@@ -40,10 +40,13 @@ const memory_1 = require("./memory");
 const native_client_1 = require("./native-client");
 const native_ipc_1 = require("./native-ipc");
 const os = __importStar(require("os"));
+const ipc_1 = require("../types/ipc");
+const channels_1 = require("../preload/channels");
 /**
  * MemoryStats를 ReactMemoryData로 변환
  */
 function convertMemoryStatsToReactFormat(stats) {
+    console.log('[메모리 IPC] 메모리 통계를 React 포맷으로 변환:', stats);
     // 시스템 메모리 (실제 물리 메모리)
     const systemTotal = os.totalmem();
     const systemFree = os.freemem();
@@ -57,6 +60,14 @@ function convertMemoryStatsToReactFormat(stats) {
     const mainHeapTotal = mainProcess.heapTotal || 0;
     const mainHeapUsed = mainProcess.heapUsed || 0;
     const mainPercentage = mainRss > 0 ? (mainHeapUsed / mainRss) * 100 : 0;
+    // ReactMemoryInfo 타입 검증
+    const memoryInfo = {
+        total: mainHeapTotal,
+        used: mainHeapUsed,
+        free: mainHeapTotal - mainHeapUsed,
+        percentage: mainPercentage
+    };
+    console.log('[Memory] React 메모리 정보:', memoryInfo);
     // 렌더러 프로세스 메모리 집계
     let rendererRss = 0;
     let rendererHeapTotal = 0;
@@ -113,7 +124,7 @@ function convertMemoryStatsToReactFormat(stats) {
 function registerMemoryIpcHandlers() {
     console.log('[Memory IPC] 메모리 관련 IPC 핸들러 등록 시작');
     // 메모리 정보 조회 (React 컴포넌트용)
-    electron_1.ipcMain.handle('memory:getInfo', async () => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.MEMORY_GET_INFO, async () => {
         try {
             const memoryManager = memory_1.MemoryManager.getInstance();
             // MemoryManager에서 직접 ReactMemoryData 형태로 데이터 가져오기
@@ -123,58 +134,75 @@ function registerMemoryIpcHandlers() {
                 renderer: `${reactData.renderer.used}MB / ${reactData.renderer.total}MB (${reactData.renderer.percentage.toFixed(1)}%)`,
                 system: `${reactData.system.used}MB / ${reactData.system.total}MB (${reactData.system.percentage.toFixed(1)}%)`
             });
-            return { success: true, data: reactData };
+            return (0, ipc_1.createSuccessResponse)(reactData);
         }
         catch (error) {
             console.error('[Memory IPC] 메모리 정보 조회 Error:', error);
-            return {
-                success: false,
-                error: error instanceof Error ? error.message : String(error)
-            };
+            const ipcError = (0, ipc_1.createIpcError)('MEMORY_INFO_ERROR', error instanceof Error ? error.message : String(error), { operation: 'getMemoryInfo' }, error instanceof Error ? error.stack : undefined);
+            return (0, ipc_1.createErrorResponse)(ipcError);
         }
     });
+    // 메모리 정보 조회 (호환성을 위한 'memory:getInfo' 핸들러는 제거됨 - CHANNELS.MEMORY_GET_INFO만 사용)
     // 메모리 최적화 실행
-    electron_1.ipcMain.handle('memory:optimize', async () => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.MEMORY_OPTIMIZE, async () => {
         try {
             const memoryManager = memory_1.MemoryManager.getInstance();
+            // 최적화 전 메모리 사용량 측정
+            const beforeStats = await memoryManager.getMemoryUsage();
+            const beforeUsage = beforeStats.main.used + beforeStats.renderer.used;
+            const startTime = Date.now();
             await memoryManager.performCleanup(true);
-            console.log('[Memory IPC] 메모리 최적화 실행됨');
-            return { success: true, message: '메모리 최적화 Completed' };
+            const optimizationTime = Date.now() - startTime;
+            // 최적화 후 메모리 사용량 측정
+            const afterStats = await memoryManager.getMemoryUsage();
+            const afterUsage = afterStats.main.used + afterStats.renderer.used;
+            const freedMemory = beforeUsage - afterUsage;
+            const result = {
+                beforeUsage,
+                afterUsage,
+                freedMemory,
+                optimizationTime,
+                success: true
+            };
+            console.log('[Memory IPC] 메모리 최적화 완료:', result);
+            return (0, ipc_1.createSuccessResponse)(result);
         }
         catch (error) {
             console.error('[Memory IPC] 메모리 최적화 Error:', error);
-            return {
-                success: false,
-                error: error instanceof Error ? error.message : String(error)
-            };
+            const ipcError = (0, ipc_1.createIpcError)('MEMORY_OPTIMIZE_ERROR', error instanceof Error ? error.message : String(error), { operation: 'optimizeMemory' }, error instanceof Error ? error.stack : undefined);
+            return (0, ipc_1.createErrorResponse)(ipcError);
         }
     });
     // 메모리 Cleanup (가비지 컬렉션)
-    electron_1.ipcMain.handle('memory:cleanup', async () => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.MEMORY_CLEANUP, async () => {
         try {
             const memoryManager = memory_1.MemoryManager.getInstance();
+            // cleanup 전 메모리 사용량
+            const beforeStats = await memoryManager.getMemoryUsage();
+            const beforeUsage = beforeStats.main.used + beforeStats.renderer.used;
             await memoryManager.performCleanup(true);
             // 강제 가비지 컬렉션
             if (global.gc) {
                 global.gc();
                 console.log('[Memory IPC] 강제 가비지 컬렉션 실행됨');
             }
-            return { success: true, message: '메모리 Cleanup Completed' };
+            // cleanup 후 메모리 사용량 측정
+            const afterStats = await memoryManager.getMemoryUsage();
+            const afterUsage = afterStats.main.used + afterStats.renderer.used;
+            const freedMemory = beforeUsage - afterUsage;
+            return (0, ipc_1.createSuccessResponse)({ freedMemory });
         }
         catch (error) {
             console.error('[Memory IPC] 메모리 Cleanup Error:', error);
-            return {
-                success: false,
-                error: error instanceof Error ? error.message : String(error)
-            };
+            const ipcError = (0, ipc_1.createIpcError)('MEMORY_CLEANUP_ERROR', error instanceof Error ? error.message : String(error), { operation: 'memoryCleanup' }, error instanceof Error ? error.stack : undefined);
+            return (0, ipc_1.createErrorResponse)(ipcError);
         }
     });
     // 네이티브 모듈 상태 조회
-    electron_1.ipcMain.handle('systemNativeGetStatus', () => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_GET_STATUS, async () => {
         try {
             const status = native_client_1.nativeClient.getStatus();
             const available = native_client_1.nativeClient.isAvailable();
-            // 새로운 네이티브 모듈 상태도 가져오기
             const nativeModuleStatus = (0, native_ipc_1.getNativeModuleStatus)();
             console.log('[Memory IPC] 네이티브 모듈 상태 확인:', {
                 isLoaded: status.isLoaded,
@@ -184,85 +212,27 @@ function registerMemoryIpcHandlers() {
                 error: status.error ? status.error.message : null,
                 nativeModule: nativeModuleStatus
             });
-            // 네이티브 모듈이 실제로 로드되었다면 해당 정보 사용
-            const effectiveStatus = nativeModuleStatus.loaded ? nativeModuleStatus : status;
-            const effectiveAvailable = nativeModuleStatus.loaded ? nativeModuleStatus.available : available;
-            // 더 풍부한 시스템 정보 수집
-            const cpuInfo = os.cpus();
-            const loadAvg = os.loadavg();
-            const uptime = os.uptime();
-            const freeMemory = os.freemem();
-            const totalMemory = os.totalmem();
-            // React 컴포넌트가 기대하는 형식으로 데이터 구성
-            const nativeModuleInfo = {
-                uiohook: {
-                    available: effectiveAvailable,
-                    version: effectiveStatus.version || nativeModuleStatus.version || '1.0.0',
-                    initialized: effectiveAvailable,
-                    loadError: status.error ? status.error.message : nativeModuleStatus.error,
-                    fallbackMode: !effectiveAvailable,
-                    features: {
-                        keyboardHook: effectiveAvailable,
-                        mouseHook: effectiveAvailable,
-                        globalEvents: effectiveAvailable
-                    }
+            // NativeModuleStatus 형식으로 변환
+            const moduleStatus = {
+                available: nativeModuleStatus.loaded ? nativeModuleStatus.available : available,
+                fallbackMode: !available,
+                version: nativeModuleStatus.version || status.version || '1.0.0',
+                features: {
+                    memory: true,
+                    gpu: available,
+                    worker: available,
+                    filesystem: true,
+                    network: true
                 },
-                system: {
-                    platform: os.platform(),
-                    arch: os.arch(),
-                    node: process.version,
-                    electron: process.versions.electron || 'N/A',
-                    chrome: process.versions.chrome || 'N/A',
-                    hostname: os.hostname(),
-                    uptime: uptime,
-                    cpuCount: cpuInfo.length,
-                    cpuModel: cpuInfo[0]?.model || 'Unknown',
-                    loadAverage: {
-                        '1min': loadAvg[0],
-                        '5min': loadAvg[1],
-                        '15min': loadAvg[2]
-                    },
-                    memory: {
-                        total: totalMemory,
-                        free: freeMemory,
-                        used: totalMemory - freeMemory,
-                        percentage: ((totalMemory - freeMemory) / totalMemory) * 100
-                    }
-                },
-                permissions: {
-                    accessibility: available,
-                    input: available,
-                    screenRecording: null, // macOS에서만 관련됨
-                    microphone: null,
-                    camera: null
-                },
-                performance: {
-                    processUptime: process.uptime(),
-                    memoryUsage: process.memoryUsage(),
-                    resourceUsage: process.resourceUsage ? process.resourceUsage() : null,
-                    pid: process.pid,
-                    ppid: process.ppid || null
-                },
-                environment: {
-                    nodeEnv: process.env.NODE_ENV || 'development',
-                    isDev: process.env.NODE_ENV === 'development',
-                    userAgent: process.env.npm_config_user_agent || 'Unknown',
-                    workingDirectory: process.cwd()
-                }
+                timestamp: Date.now(),
+                loadError: status.error ? status.error.message : nativeModuleStatus.error || undefined
             };
-            return {
-                success: true,
-                data: nativeModuleInfo,
-                timestamp: Date.now()
-            };
+            return (0, ipc_1.createSuccessResponse)(moduleStatus);
         }
         catch (error) {
             console.error('[Memory IPC] 네이티브 모듈 상태 조회 Error:', error);
-            return {
-                success: false,
-                error: error instanceof Error ? error.message : String(error),
-                timestamp: Date.now()
-            };
+            const ipcError = (0, ipc_1.createIpcError)('NATIVE_STATUS_ERROR', error instanceof Error ? error.message : String(error), { operation: 'getNativeStatus' }, error instanceof Error ? error.stack : undefined);
+            return (0, ipc_1.createErrorResponse)(ipcError);
         }
     });
     console.log('[Memory IPC] 메모리 관련 IPC 핸들러 등록 Completed');
@@ -271,10 +241,17 @@ function registerMemoryIpcHandlers() {
  * 메모리 관련 IPC 핸들러 Cleanup
  */
 function cleanupMemoryIpcHandlers() {
-    electron_1.ipcMain.removeHandler('memory:getInfo');
-    electron_1.ipcMain.removeHandler('memory:optimize');
-    electron_1.ipcMain.removeHandler('memory:cleanup');
-    electron_1.ipcMain.removeHandler('system:native:getStatus');
+    electron_1.ipcMain.removeHandler(channels_1.CHANNELS.MEMORY_GET_INFO);
+    electron_1.ipcMain.removeHandler(channels_1.CHANNELS.MEMORY_OPTIMIZE);
+    electron_1.ipcMain.removeHandler(channels_1.CHANNELS.MEMORY_CLEANUP);
+    electron_1.ipcMain.removeHandler(channels_1.CHANNELS.NATIVE_GET_STATUS);
     console.log('[Memory IPC] 메모리 관련 IPC 핸들러 Cleanup Completed');
+}
+// 모듈 로드 시 자동으로 핸들러 등록
+try {
+    registerMemoryIpcHandlers();
+}
+catch (error) {
+    console.error('[Memory IPC] 핸들러 등록 중 오류:', error);
 }
 //# sourceMappingURL=memory-ipc.js.map

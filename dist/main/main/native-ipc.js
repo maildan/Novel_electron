@@ -39,30 +39,34 @@ exports.getNativeModuleStatus = getNativeModuleStatus;
 const electron_1 = require("electron");
 const path = __importStar(require("path"));
 const fs = __importStar(require("fs"));
+const ipc_1 = require("../types/ipc");
+const channels_1 = require("../preload/channels");
 // 네이티브 모듈 로드
 let nativeModule = null;
 let nativeModuleError = null;
 function loadNativeModule() {
     try {
-        // 플랫폼별 네이티브 모듈 경로 결정
-        const platform = process.platform;
-        const arch = process.arch;
-        const moduleFileName = `typing-stats-native.${platform}-${arch}.node`;
-        // 여러 가능한 경로들 시도
+        const isDev = process.env.NODE_ENV === 'development';
+        const currentDir = __dirname;
+        console.log('[Native IPC] 네이티브 모듈 로딩 시도...');
+        console.log('[Native IPC] 현재 디렉토리:', currentDir);
+        console.log('[Native IPC] 개발 모드:', isDev);
         const possiblePaths = [
-            path.join(__dirname, '../../native-modules', moduleFileName),
-            path.join(__dirname, '../..', 'native-modules', moduleFileName),
-            path.join(process.cwd(), 'native-modules', moduleFileName),
-            path.join(process.cwd(), 'dist', 'native-modules', moduleFileName),
+            path.join(currentDir, '../native-modules'),
+            path.join(currentDir, '../../../native-modules'),
+            path.join(currentDir, '../../native-modules'),
+            path.join(process.cwd(), 'native-modules'),
+            path.join(process.cwd(), 'src/native-modules')
         ];
-        console.log('[Native IPC] 네이티브 모듈 로드 시도:', {
-            platform,
-            arch,
-            fileName: moduleFileName,
-            possiblePaths
-        });
-        for (const modulePath of possiblePaths) {
+        const moduleFileName = process.platform === 'win32' ?
+            'native_modules.node' :
+            process.platform === 'darwin' ?
+                'libnative_modules.dylib' :
+                'libnative_modules.so';
+        for (const basePath of possiblePaths) {
+            const modulePath = path.join(basePath, moduleFileName);
             try {
+                console.log(`[Native IPC] 경로에서 로드 시도: ${modulePath}`);
                 if (fs.existsSync(modulePath)) {
                     console.log('[Native IPC] 네이티브 모듈 파일 발견:', modulePath);
                     nativeModule = require(modulePath);
@@ -71,7 +75,7 @@ function loadNativeModule() {
                         const initialized = nativeModule.initializeNativeModules();
                         console.log('[Native IPC] 네이티브 모듈 초기화:', initialized);
                     }
-                    console.log('[Native IPC] 네이티브 모듈 로드 Success:', {
+                    console.log('[Native IPC] 네이티브 모듈 로드 성공:', {
                         version: nativeModule?.getNativeModuleVersion?.() || 'unknown',
                         functions: Object.keys(nativeModule || {}).length
                     });
@@ -80,14 +84,14 @@ function loadNativeModule() {
                 }
             }
             catch (error) {
-                console.error('[Native IPC] 경로에서 로드 Failed ${modulePath}:', error);
+                console.error(`[Native IPC] 경로에서 로드 실패 ${modulePath}:`, error);
             }
         }
         throw new Error(`네이티브 모듈을 찾을 수 없습니다: ${moduleFileName}`);
     }
     catch (error) {
         nativeModuleError = error instanceof Error ? error.message : String(error);
-        console.error('[Native IPC] 네이티브 모듈 로드 Failed:', nativeModuleError);
+        console.error('[Native IPC] 네이티브 모듈 로드 실패:', nativeModuleError);
         nativeModule = null;
     }
 }
@@ -97,25 +101,25 @@ function safeNativeCall(functionName, ...args) {
         if (!nativeModule) {
             return {
                 success: false,
-                error: nativeModuleError || '네이티브 모듈이 로드되지 않았습니다'
+                error: `네이티브 모듈이 로드되지 않음: ${nativeModuleError}`
             };
         }
         const func = nativeModule[functionName];
         if (typeof func !== 'function') {
             return {
                 success: false,
-                error: `함수 '${functionName}'을 찾을 수 없습니다`
+                error: `함수 '${String(functionName)}'를 찾을 수 없음`
             };
         }
+        // this 컨텍스트 문제 해결을 위해 직접 호출
         const result = func(...args);
         return { success: true, data: result };
     }
     catch (error) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        console.error('[Native IPC] ${functionName} 호출 Error:', errorMessage);
+        console.error(`[Native IPC] ${String(functionName)} 호출 오류:`, error);
         return {
             success: false,
-            error: errorMessage
+            error: error instanceof Error ? error.message : String(error)
         };
     }
 }
@@ -124,8 +128,9 @@ function safeJsonParse(jsonStr) {
     try {
         return JSON.parse(jsonStr);
     }
-    catch {
-        return jsonStr; // JSON이 아니면 원본 문자열 반환
+    catch (error) {
+        console.error('[Native IPC] JSON 파싱 오류:', error);
+        return null;
     }
 }
 /**
@@ -136,203 +141,271 @@ function registerNativeIpcHandlers() {
     // 네이티브 모듈 로드
     loadNativeModule();
     // 메모리 관련 핸들러
-    electron_1.ipcMain.handle('nativeGetMemoryUsage', () => {
-        const result = safeNativeCall('getMemoryUsage');
-        return result;
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_GET_MEMORY_USAGE, async () => {
+        try {
+            const result = safeNativeCall('getMemoryUsage');
+            return (0, ipc_1.createSuccessResponse)(result.data);
+        }
+        catch (error) {
+            const ipcError = (0, ipc_1.createIpcError)('NATIVE_MEMORY_USAGE_ERROR', error instanceof Error ? error.message : String(error), { operation: 'getMemoryUsage' });
+            return (0, ipc_1.createErrorResponse)(ipcError);
+        }
     });
-    electron_1.ipcMain.handle('nativeStartMemoryMonitoring', () => {
-        return safeNativeCall('startMemoryMonitoring');
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_START_MEMORY_MONITORING, async () => {
+        try {
+            const result = safeNativeCall('startMemoryMonitoring');
+            return (0, ipc_1.createSuccessResponse)({
+                success: result.success,
+                monitoringId: String(result.data || 'default')
+            });
+        }
+        catch (error) {
+            const ipcError = (0, ipc_1.createIpcError)('NATIVE_MEMORY_MONITORING_ERROR', error instanceof Error ? error.message : String(error), { operation: 'startMemoryMonitoring' });
+            return (0, ipc_1.createErrorResponse)(ipcError);
+        }
     });
-    electron_1.ipcMain.handle('nativeGetMemoryStats', () => {
-        const result = safeNativeCall('getMemoryStats');
-        return result;
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_GET_MEMORY_STATS, async () => {
+        try {
+            const result = safeNativeCall('getMemoryStats');
+            return (0, ipc_1.createSuccessResponse)(result.data);
+        }
+        catch (error) {
+            const ipcError = (0, ipc_1.createIpcError)('NATIVE_MEMORY_STATS_ERROR', error instanceof Error ? error.message : String(error), { operation: 'getMemoryStats' });
+            return (0, ipc_1.createErrorResponse)(ipcError);
+        }
     });
-    electron_1.ipcMain.handle('nativeOptimizeMemory', () => {
-        return safeNativeCall('optimizeMemory');
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_OPTIMIZE_MEMORY, async () => {
+        try {
+            const result = safeNativeCall('optimizeMemory');
+            return (0, ipc_1.createSuccessResponse)(result.data);
+        }
+        catch (error) {
+            const ipcError = (0, ipc_1.createIpcError)('NATIVE_MEMORY_OPTIMIZE_ERROR', error instanceof Error ? error.message : String(error), { operation: 'optimizeMemory' });
+            return (0, ipc_1.createErrorResponse)(ipcError);
+        }
     });
-    electron_1.ipcMain.handle('nativeCleanupMemory', () => {
-        return safeNativeCall('cleanupMemory');
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_CLEANUP_MEMORY, async () => {
+        try {
+            const result = safeNativeCall('cleanupMemory');
+            return (0, ipc_1.createSuccessResponse)({ freedMemory: result?.freedMemory || 0 });
+        }
+        catch (error) {
+            const ipcError = (0, ipc_1.createIpcError)('NATIVE_MEMORY_CLEANUP_ERROR', error instanceof Error ? error.message : String(error), { operation: 'cleanupMemory' });
+            return (0, ipc_1.createErrorResponse)(ipcError);
+        }
     });
-    electron_1.ipcMain.handle('nativeOptimizeMemoryAdvanced', () => {
-        return safeNativeCall('optimizeMemoryAdvanced');
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_OPTIMIZE_MEMORY_ADVANCED, async () => {
+        try {
+            const result = safeNativeCall('optimizeMemoryAdvanced');
+            return (0, ipc_1.createSuccessResponse)(result.data);
+        }
+        catch (error) {
+            const ipcError = (0, ipc_1.createIpcError)('NATIVE_MEMORY_OPTIMIZE_ADVANCED_ERROR', error instanceof Error ? error.message : String(error), { operation: 'optimizeMemoryAdvanced' });
+            return (0, ipc_1.createErrorResponse)(ipcError);
+        }
     });
-    electron_1.ipcMain.handle('nativeResetMemoryMonitoring', () => {
-        return safeNativeCall('resetMemoryMonitoring');
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_RESET_MEMORY_MONITORING, async () => {
+        try {
+            const result = safeNativeCall('resetMemoryMonitoring');
+            return (0, ipc_1.createSuccessResponse)({ success: result.success });
+        }
+        catch (error) {
+            const ipcError = (0, ipc_1.createIpcError)('NATIVE_MEMORY_RESET_ERROR', error instanceof Error ? error.message : String(error), { operation: 'resetMemoryMonitoring' });
+            return (0, ipc_1.createErrorResponse)(ipcError);
+        }
     });
     // GPU 관련 핸들러
-    electron_1.ipcMain.handle('nativeGetGpuInfo', () => {
-        const result = safeNativeCall('getGpuInfo');
-        return result;
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_GET_GPU_INFO, async () => {
+        try {
+            const result = safeNativeCall('getGpuInfo');
+            return (0, ipc_1.createSuccessResponse)(result.data);
+        }
+        catch (error) {
+            const ipcError = (0, ipc_1.createIpcError)('NATIVE_GPU_INFO_ERROR', error instanceof Error ? error.message : String(error), { operation: 'getGpuInfo' });
+            return (0, ipc_1.createErrorResponse)(ipcError);
+        }
     });
-    electron_1.ipcMain.handle('nativeGetGpuMemoryStats', () => {
-        return safeNativeCall('getGpuMemoryStats');
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_GET_GPU_MEMORY_STATS, async () => {
+        try {
+            const result = safeNativeCall('getGpuMemoryStats');
+            return (0, ipc_1.createSuccessResponse)(result.data);
+        }
+        catch (error) {
+            const ipcError = (0, ipc_1.createIpcError)('NATIVE_GPU_MEMORY_STATS_ERROR', error instanceof Error ? error.message : String(error), { operation: 'getGpuMemoryStats' });
+            return (0, ipc_1.createErrorResponse)(ipcError);
+        }
     });
-    electron_1.ipcMain.handle('nativeRunGpuAcceleration', (_, data) => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_RUN_GPU_ACCELERATION, (_, data) => {
         return safeNativeCall('runGpuAcceleration', data);
     });
-    electron_1.ipcMain.handle('nativeRunGpuBenchmark', () => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_RUN_GPU_BENCHMARK, () => {
         return safeNativeCall('runGpuBenchmark');
     });
     // 시스템 관련 핸들러
-    electron_1.ipcMain.handle('nativeGetSystemInfo', () => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_GET_SYSTEM_INFO, () => {
         const result = safeNativeCall('getSystemInfo');
         if (result.success && typeof result.data === 'string') {
             result.data = safeJsonParse(result.data);
         }
         return result;
     });
-    electron_1.ipcMain.handle('nativeIsNativeModuleAvailable', () => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_IS_AVAILABLE, () => {
         return safeNativeCall('isNativeModuleAvailable');
     });
-    electron_1.ipcMain.handle('nativeGetNativeModuleInfo', () => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_GET_MODULE_INFO, () => {
         const result = safeNativeCall('getNativeModuleInfo');
         if (result.success && typeof result.data === 'string') {
             result.data = safeJsonParse(result.data);
         }
         return result;
     });
-    electron_1.ipcMain.handle('nativeGetNativeModuleVersion', () => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_GET_MODULE_VERSION, () => {
         return safeNativeCall('getNativeModuleVersion');
     });
-    electron_1.ipcMain.handle('nativeInitializeNativeModules', () => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_INITIALIZE, () => {
         return safeNativeCall('initializeNativeModules');
     });
-    electron_1.ipcMain.handle('nativeCleanupNativeModules', () => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_CLEANUP, () => {
         return safeNativeCall('cleanupNativeModules');
     });
-    electron_1.ipcMain.handle('nativeGetTimestamp', () => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_GET_TIMESTAMP, () => {
         return safeNativeCall('getTimestamp');
     });
     // 워커 관련 핸들러
-    electron_1.ipcMain.handle('native:addWorkerTask', (_, taskData) => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_ADD_WORKER_TASK, (_, taskData) => {
         return safeNativeCall('addWorkerTask', taskData);
     });
-    electron_1.ipcMain.handle('native:getWorkerTaskStatus', (_, taskId) => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_GET_WORKER_TASK_STATUS, (_, taskId) => {
         const result = safeNativeCall('getWorkerTaskStatus', taskId);
         if (result.success && typeof result.data === 'string') {
             result.data = safeJsonParse(result.data);
         }
         return result;
     });
-    electron_1.ipcMain.handle('native:getWorkerStats', () => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_GET_WORKER_STATS, () => {
         const result = safeNativeCall('getWorkerStats');
         if (result.success && typeof result.data === 'string') {
             result.data = safeJsonParse(result.data);
         }
         return result;
     });
-    electron_1.ipcMain.handle('native:getPendingTaskCount', () => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_GET_PENDING_TASK_COUNT, () => {
         return safeNativeCall('getPendingTaskCount');
     });
-    electron_1.ipcMain.handle('native:resetWorkerPool', () => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_RESET_WORKER_POOL, () => {
         return safeNativeCall('resetWorkerPool');
     });
-    electron_1.ipcMain.handle('native:executeCpuTask', (_, taskData) => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_EXECUTE_CPU_TASK, (_, taskData) => {
         return safeNativeCall('executeCpuTask', taskData);
     });
-    electron_1.ipcMain.handle('native:processDataParallel', (_, data) => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_PROCESS_DATA_PARALLEL, (_, data) => {
         return safeNativeCall('processDataParallel', data);
     });
     // 유틸리티 관련 핸들러
-    electron_1.ipcMain.handle('native:calculateFileHash', (_, filePath) => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_CALCULATE_FILE_HASH, (_, filePath) => {
         return safeNativeCall('calculateFileHash', filePath);
     });
-    electron_1.ipcMain.handle('native:calculateDirectorySize', (_, dirPath) => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_CALCULATE_DIRECTORY_SIZE, (_, dirPath) => {
         return safeNativeCall('calculateDirectorySize', dirPath);
     });
-    electron_1.ipcMain.handle('native:calculateStringSimilarity', (_, str1, str2) => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_CALCULATE_STRING_SIMILARITY, (_, str1, str2) => {
         return safeNativeCall('calculateStringSimilarity', str1, str2);
     });
-    electron_1.ipcMain.handle('native:validateJson', (_, jsonStr) => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_VALIDATE_JSON, (_, jsonStr) => {
         return safeNativeCall('validateJson', jsonStr);
     });
-    electron_1.ipcMain.handle('native:encodeBase64', (_, data) => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_ENCODE_BASE64, (_, data) => {
         return safeNativeCall('encodeBase64', data);
     });
-    electron_1.ipcMain.handle('native:decodeBase64', (_, encodedData) => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_DECODE_BASE64, (_, encodedData) => {
         return safeNativeCall('decodeBase64', encodedData);
     });
-    electron_1.ipcMain.handle('native:generateUuid', () => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_GENERATE_UUID, () => {
         return safeNativeCall('generateUuid');
     });
-    electron_1.ipcMain.handle('native:getTimestampString', () => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_GET_TIMESTAMP_STRING, () => {
         return safeNativeCall('getTimestampString');
     });
-    electron_1.ipcMain.handle('native:getEnvVar', (_, name) => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_GET_ENV_VAR, (_, name) => {
         return safeNativeCall('getEnvVar', name);
     });
-    electron_1.ipcMain.handle('native:getProcessId', () => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_GET_PROCESS_ID, () => {
         return safeNativeCall('getProcessId');
     });
-    electron_1.ipcMain.handle('native:startPerformanceMeasurement', (_, label) => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_START_PERFORMANCE_MEASUREMENT, (_, label) => {
         return safeNativeCall('startPerformanceMeasurement', label);
     });
-    electron_1.ipcMain.handle('native:endPerformanceMeasurement', (_, measurementId) => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_END_PERFORMANCE_MEASUREMENT, (_, measurementId) => {
         return safeNativeCall('endPerformanceMeasurement', measurementId);
     });
-    console.log('[Native IPC] 네이티브 모듈 IPC 핸들러 등록 Completed:', {
+    console.log('[Native IPC] 네이티브 모듈 IPC 핸들러 등록 완료:', {
         moduleLoaded: !!nativeModule,
         error: nativeModuleError,
         handlersCount: 27 // 등록된 핸들러 수
     });
 }
 /**
- * 네이티브 모듈 IPC 핸들러 Cleanup
+ * 네이티브 모듈 IPC 핸들러 정리
  */
 function cleanupNativeIpcHandlers() {
-    // 네이티브 모듈 Cleanup
+    // 네이티브 모듈 정리
     if (nativeModule && typeof nativeModule.cleanupNativeModules === 'function') {
         try {
             nativeModule.cleanupNativeModules();
-            console.log('[Native IPC] 네이티브 모듈 Cleanup Completed');
+            console.log('[Native IPC] 네이티브 모듈 정리 완료');
         }
         catch (error) {
-            console.error('[Native IPC] 네이티브 모듈 Cleanup Error:', error);
+            console.error('[Native IPC] 네이티브 모듈 정리 오류:', error);
         }
     }
     // IPC 핸들러 제거
     const handlers = [
-        'native:getMemoryUsage',
-        'native:startMemoryMonitoring',
-        'native:getMemoryStats',
-        'native:optimizeMemory',
-        'native:cleanupMemory',
-        'native:optimizeMemoryAdvanced',
-        'native:resetMemoryMonitoring',
-        'native:getGpuInfo',
-        'native:getGpuMemoryStats',
-        'native:runGpuAcceleration',
-        'native:runGpuBenchmark',
-        'native:getSystemInfo',
-        'native:initializeNativeModules',
-        'native:cleanupNativeModules',
-        'native:getTimestamp',
-        'native:addWorkerTask',
-        'native:getWorkerTaskStatus',
-        'native:getWorkerStats',
-        'native:getPendingTaskCount',
-        'native:resetWorkerPool',
-        'native:executeCpuTask',
-        'native:processDataParallel',
-        'native:calculateFileHash',
-        'native:calculateDirectorySize',
-        'native:calculateStringSimilarity',
-        'native:validateJson',
-        'native:encodeBase64',
-        'native:decodeBase64',
-        'native:generateUuid',
-        'native:getTimestampString',
-        'native:getEnvVar',
-        'native:getProcessId',
-        'native:startPerformanceMeasurement',
-        'native:endPerformanceMeasurement'
+        channels_1.CHANNELS.NATIVE_GET_MEMORY_USAGE,
+        channels_1.CHANNELS.NATIVE_START_MEMORY_MONITORING,
+        channels_1.CHANNELS.NATIVE_GET_MEMORY_STATS,
+        channels_1.CHANNELS.NATIVE_OPTIMIZE_MEMORY,
+        channels_1.CHANNELS.NATIVE_CLEANUP_MEMORY,
+        channels_1.CHANNELS.NATIVE_OPTIMIZE_MEMORY_ADVANCED,
+        channels_1.CHANNELS.NATIVE_RESET_MEMORY_MONITORING,
+        channels_1.CHANNELS.NATIVE_GET_GPU_INFO,
+        channels_1.CHANNELS.NATIVE_GET_GPU_MEMORY_STATS,
+        channels_1.CHANNELS.NATIVE_RUN_GPU_ACCELERATION,
+        channels_1.CHANNELS.NATIVE_RUN_GPU_BENCHMARK,
+        channels_1.CHANNELS.NATIVE_GET_SYSTEM_INFO,
+        channels_1.CHANNELS.NATIVE_IS_AVAILABLE,
+        channels_1.CHANNELS.NATIVE_GET_MODULE_INFO,
+        channels_1.CHANNELS.NATIVE_GET_MODULE_VERSION,
+        channels_1.CHANNELS.NATIVE_INITIALIZE,
+        channels_1.CHANNELS.NATIVE_CLEANUP,
+        channels_1.CHANNELS.NATIVE_GET_TIMESTAMP,
+        channels_1.CHANNELS.NATIVE_ADD_WORKER_TASK,
+        channels_1.CHANNELS.NATIVE_GET_WORKER_TASK_STATUS,
+        channels_1.CHANNELS.NATIVE_GET_WORKER_STATS,
+        channels_1.CHANNELS.NATIVE_GET_PENDING_TASK_COUNT,
+        channels_1.CHANNELS.NATIVE_RESET_WORKER_POOL,
+        channels_1.CHANNELS.NATIVE_EXECUTE_CPU_TASK,
+        channels_1.CHANNELS.NATIVE_PROCESS_DATA_PARALLEL,
+        channels_1.CHANNELS.NATIVE_CALCULATE_FILE_HASH,
+        channels_1.CHANNELS.NATIVE_CALCULATE_DIRECTORY_SIZE,
+        channels_1.CHANNELS.NATIVE_CALCULATE_STRING_SIMILARITY,
+        channels_1.CHANNELS.NATIVE_VALIDATE_JSON,
+        channels_1.CHANNELS.NATIVE_ENCODE_BASE64,
+        channels_1.CHANNELS.NATIVE_DECODE_BASE64,
+        channels_1.CHANNELS.NATIVE_GENERATE_UUID,
+        channels_1.CHANNELS.NATIVE_GET_TIMESTAMP_STRING,
+        channels_1.CHANNELS.NATIVE_GET_ENV_VAR,
+        channels_1.CHANNELS.NATIVE_GET_PROCESS_ID,
+        channels_1.CHANNELS.NATIVE_START_PERFORMANCE_MEASUREMENT,
+        channels_1.CHANNELS.NATIVE_END_PERFORMANCE_MEASUREMENT
     ];
     handlers.forEach(handler => {
         electron_1.ipcMain.removeHandler(handler);
     });
-    console.log('[Native IPC] 네이티브 모듈 IPC 핸들러 Cleanup Completed');
+    console.log('[Native IPC] 네이티브 모듈 IPC 핸들러 정리 완료');
 }
-// 네이티브 모듈 상태 정보 조회 (기존 memory-ipc.ts와 연동)
+/**
+ * 네이티브 모듈 상태 정보 조회 (기존 memory-ipc.ts와 연동)
+ */
 function getNativeModuleStatus() {
     return {
         loaded: !!nativeModule,

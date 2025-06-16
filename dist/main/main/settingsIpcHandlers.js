@@ -12,6 +12,23 @@ exports.SettingsIpcHandlers = void 0;
 const electron_1 = require("electron");
 const settings_manager_1 = __importDefault(require("./settings-manager"));
 const window_1 = require("./window");
+const gpuUtils_1 = require("./gpuUtils");
+// GPU 유틸리티 모듈 상태 확인
+console.log('[설정IPC핸들러] GPU 유틸리티 모듈 로드됨:', {
+    getGPUManager: typeof gpuUtils_1.getGPUManager,
+    getGPUInfo: typeof gpuUtils_1.getGPUInfo,
+    isHardwareAccelerationEnabled: typeof gpuUtils_1.isHardwareAccelerationEnabled
+});
+const ipc_1 = require("../types/ipc");
+const channels_1 = require("../preload/channels");
+// 타입 및 유틸리티 함수들 사용 확인
+console.log('[설정IPC핸들러] 타입 시스템 로드됨:', {
+    createSuccessResponse: typeof ipc_1.createSuccessResponse,
+    createErrorResponse: typeof ipc_1.createErrorResponse,
+    createIpcError: typeof ipc_1.createIpcError
+});
+// 채널 상수 확인
+console.log('[설정IPC핸들러] CHANNELS 상수 로드됨:', typeof channels_1.CHANNELS);
 class SettingsIpcHandlers {
     constructor() {
         this.isRegistered = false;
@@ -34,7 +51,14 @@ class SettingsIpcHandlers {
         // 처리 모드 Setup
         electron_1.ipcMain.handle('setProcessingMode', async (event, mode) => {
             try {
+                console.log(`[설정IPC] 처리 모드 설정 요청: ${mode}, 요청자: ${event.sender.id}`);
                 await settings_manager_1.default.updateSetting('processingMode', mode);
+                // GPU 정보 확인 및 로깅
+                const gpuInfo = await (0, gpuUtils_1.getGPUInfo)();
+                console.log('[설정IPC] 현재 GPU 정보:', gpuInfo);
+                // 하드웨어 가속 상태 확인
+                const hwAccelEnabled = (0, gpuUtils_1.isHardwareAccelerationEnabled)();
+                console.log('[설정IPC] 하드웨어 가속 상태:', hwAccelEnabled);
                 // 처리 모드에 따른 추가 Setup
                 switch (mode) {
                     case 'gpu-intensive':
@@ -49,38 +73,50 @@ class SettingsIpcHandlers {
                         await settings_manager_1.default.updateSetting('enableGPUAcceleration', gpuAvailable);
                         break;
                 }
-                return {
+                const response = {
                     success: true,
-                    message: `처리 모드가 ${mode}로 Setup되었습니다`,
-                    mode
+                    data: { mode },
+                    message: `처리 모드가 '${mode}'로 설정되었습니다.`,
+                    timestamp: Date.now()
                 };
+                return response;
             }
             catch (error) {
                 console.error('처리 모드 Setup Failed:', error);
-                return {
+                const errorResponse = {
                     success: false,
-                    message: `처리 모드 Setup Failed: ${error}`
+                    error: error instanceof Error ? error.message : String(error),
+                    message: `처리 모드 설정에 실패했습니다.`,
+                    timestamp: Date.now()
                 };
+                return errorResponse;
             }
         });
         // GPU 가속 Setup
         electron_1.ipcMain.handle('setGPUAcceleration', async (event, enabled) => {
             try {
+                console.log(`[설정IPC] GPU 가속 설정 요청: ${enabled}, 요청자: ${event.sender.id}`);
                 await settings_manager_1.default.updateSetting('enableGPUAcceleration', enabled);
                 // GPU 관련 Setup 적용 (재시작 필요)
                 console.log(`GPU 가속 ${enabled ? '활성화' : '비활성화'}`);
-                return {
+                const response = {
                     success: true,
+                    data: { enabled },
                     message: `GPU 가속이 ${enabled ? '활성화' : '비활성화'}되었습니다. 재시작 후 적용됩니다.`,
-                    requiresRestart: true
+                    requiresRestart: true,
+                    timestamp: Date.now()
                 };
+                return response;
             }
             catch (error) {
                 console.error('GPU 가속 Setup Failed:', error);
-                return {
+                const errorResponse = {
                     success: false,
-                    message: `GPU 가속 Setup Failed: ${error}`
+                    error: error instanceof Error ? error.message : String(error),
+                    message: `GPU 가속 설정에 실패했습니다.`,
+                    timestamp: Date.now()
                 };
+                return errorResponse;
             }
         });
         // 메모리 최적화 실행
@@ -120,6 +156,7 @@ class SettingsIpcHandlers {
         // 전체화면 모드 Setup
         electron_1.ipcMain.handle('setFullscreenMode', async (event, mode) => {
             try {
+                console.log(`[설정IPC] 전체화면 모드 설정 요청: ${mode}, 요청자: ${event.sender.id}`);
                 const windowManager = window_1.WindowManager.getInstance();
                 const mainWindow = windowManager.getMainWindow();
                 if (!mainWindow) {
@@ -160,6 +197,7 @@ class SettingsIpcHandlers {
         // 알림 Setup
         electron_1.ipcMain.handle('setNotifications', async (event, enabled) => {
             try {
+                console.log(`[설정IPC] 알림 설정 요청: ${enabled}, 요청자: ${event.sender.id}`);
                 await settings_manager_1.default.updateSetting('enableNotifications', enabled);
                 return {
                     success: true,
@@ -178,6 +216,7 @@ class SettingsIpcHandlers {
         // 애니메이션 Setup
         electron_1.ipcMain.handle('setAnimations', async (event, enabled) => {
             try {
+                console.log(`[설정IPC] 애니메이션 설정 요청: ${enabled}, 요청자: ${event.sender.id}`);
                 await settings_manager_1.default.updateSetting('enableAnimations', enabled);
                 return {
                     success: true,
@@ -196,6 +235,7 @@ class SettingsIpcHandlers {
         // 데이터 수집 Setup
         electron_1.ipcMain.handle('setDataCollection', async (event, enabled) => {
             try {
+                console.log(`[설정IPC] 데이터 수집 설정 요청: ${enabled}, 요청자: ${event.sender.id}`);
                 await settings_manager_1.default.updateSetting('enableDataCollection', enabled);
                 return {
                     success: true,
@@ -214,6 +254,7 @@ class SettingsIpcHandlers {
         // 자동 저장 Setup
         electron_1.ipcMain.handle('setAutoSave', async (event, enabled) => {
             try {
+                console.log(`[설정IPC] 자동 저장 설정 요청: ${enabled}, 요청자: ${event.sender.id}`);
                 await settings_manager_1.default.updateSetting('enableAutoSave', enabled);
                 return {
                     success: true,
@@ -232,6 +273,7 @@ class SettingsIpcHandlers {
         // 데이터 보관 기간 Setup
         electron_1.ipcMain.handle('setDataRetention', async (event, days) => {
             try {
+                console.log(`[설정IPC] 데이터 보관 기간 설정 요청: ${days}일, 요청자: ${event.sender.id}`);
                 await settings_manager_1.default.updateSetting('dataRetentionDays', days);
                 return {
                     success: true,
@@ -250,6 +292,7 @@ class SettingsIpcHandlers {
         // 메모리 임계값 Setup
         electron_1.ipcMain.handle('setMemoryThreshold', async (event, threshold) => {
             try {
+                console.log(`[설정IPC] 메모리 임계값 설정 요청: ${threshold}MB, 요청자: ${event.sender.id}`);
                 await settings_manager_1.default.updateSetting('maxMemoryThreshold', threshold);
                 return {
                     success: true,
@@ -268,6 +311,7 @@ class SettingsIpcHandlers {
         // 앱 재시작
         electron_1.ipcMain.handle('restartApp', async (event, reason) => {
             try {
+                console.log(`[설정IPC] 앱 재시작 요청: ${reason || 'Setup 변경'}, 요청자: ${event.sender.id}`);
                 console.log(`🔄 애플리케이션 재시작 요청: ${reason || 'Setup 변경'}`);
                 // 잠시 대기 후 재시작 (UI에 피드백 시간 제공)
                 setTimeout(() => {

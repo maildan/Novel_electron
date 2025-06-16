@@ -8,6 +8,7 @@
 import { ipcMain, BrowserWindow } from 'electron';
 import { debugLog, errorLog } from './utils';
 import SettingsManager from './settings-manager';
+import { CHANNELS } from '../preload/channels';
 
 // 추적 상태 관리
 interface TrackingState {
@@ -249,8 +250,8 @@ export function registerTrackingHandlers(): void {
 
   debugLog('추적 관련 IPC 핸들러 등록 중...');
 
-  // 모니터링 시작 핸들러
-  ipcMain.handle('start-monitoring', async () => {
+  // 타이핑 추적 모니터링 시작 핸들러
+  ipcMain.handle('tracking:start-monitoring', async () => {
     try {
       debugLog('모니터링 시작 요청 수신');
       
@@ -296,7 +297,7 @@ export function registerTrackingHandlers(): void {
   });
   
   // 모니터링 중지 핸들러
-  ipcMain.handle('stop-monitoring', async () => {
+  ipcMain.handle('tracking:stop-monitoring', async () => {
     try {
       debugLog('모니터링 중지 요청 수신');
       
@@ -333,7 +334,7 @@ export function registerTrackingHandlers(): void {
   });
 
   // 추적 상태 조회 핸들러
-  ipcMain.handle('get-tracking-status', async () => {
+  ipcMain.handle('tracking:get-status', async () => {
     try {
       return {
         success: true,
@@ -348,7 +349,7 @@ export function registerTrackingHandlers(): void {
   });
 
   // 통계 저장 핸들러
-  ipcMain.handle('save-typing-stats', async (event, statsData) => {
+  ipcMain.handle('tracking:save-stats', async (event, statsData) => {
     try {
       // 외부에서 전달받은 통계 데이터 처리
       if (statsData) {
@@ -365,7 +366,7 @@ export function registerTrackingHandlers(): void {
   });
 
   // 추적 상태 리셋 핸들러
-  ipcMain.handle('reset-tracking', async () => {
+  ipcMain.handle('tracking:reset', async () => {
     try {
       resetTrackingState();
       sendTrackingStatusToRenderer();
@@ -382,7 +383,7 @@ export function registerTrackingHandlers(): void {
   });
 
   // 키 입력 처리 핸들러
-  ipcMain.handle('process-key-press', async (event, keyData) => {
+  ipcMain.handle('tracking:process-key', async (event, keyData) => {
     try {
       processKeyPress(keyData);
       return { success: true };
@@ -421,6 +422,14 @@ export function cleanupTrackingHandlers(): void {
   if (trackingState.isTracking) {
     stopTracking();
   }
+  
+  // IPC 핸들러 제거
+  ipcMain.removeHandler('tracking:start-monitoring');
+  ipcMain.removeHandler('tracking:stop-monitoring');
+  ipcMain.removeHandler('tracking:get-status');
+  ipcMain.removeHandler('tracking:save-stats');
+  ipcMain.removeHandler('tracking:reset');
+  ipcMain.removeHandler('tracking:process-key');
   
   resetTrackingState();
   isRegistered = false;

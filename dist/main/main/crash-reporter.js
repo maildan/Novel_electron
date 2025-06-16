@@ -227,15 +227,18 @@ function setupExceptionHandlers() {
     });
     // 렌더러 프로세스 충돌
     electron_1.app.on('renderer-process-crashed', (event, webContents, killed) => {
+        console.log(`[CrashReporter] 렌더러 프로세스 충돌 감지, 이벤트 타입: ${typeof event}`);
         handleRendererCrash(webContents, killed);
     });
     // GPU 프로세스 충돌
     electron_1.app.on('gpu-process-crashed', (event, killed) => {
+        console.log(`[CrashReporter] GPU 프로세스 충돌 감지, 이벤트 타입: ${typeof event}`);
         handleGpuCrash(killed);
     });
     // 자식 프로세스 Error (Node.js 16+에서 지원)
     if ('child-process-gone' in electron_1.app) {
         electron_1.app.on('child-process-gone', (event, details) => {
+            console.log(`[CrashReporter] 자식 프로세스 종료 감지, 이벤트: ${event.defaultPrevented ? '방지됨' : '허용'}`);
             handleChildProcessCrash(details);
         });
     }
@@ -400,6 +403,7 @@ function attemptRecovery(errorInfo) {
  */
 async function showCrashRecoveryDialog(window, crashType, crashInfo) {
     try {
+        console.log(`[CrashReporter] 충돌 복구 다이얼로그 표시, 타입: ${crashType}, 정보:`, crashInfo);
         const { response } = await electron_1.dialog.showMessageBox(window, {
             type: 'error',
             title: '앱 충돌',
@@ -600,6 +604,7 @@ function setupCrashReporterIpcHandlers() {
     });
     // 업로드 Setup 변경
     electron_1.ipcMain.handle('crashReporter:setUpload', (event, shouldUpload) => {
+        console.log(`[CrashReporter] 업로드 설정 변경: ${shouldUpload}, 발신자: ${event.sender.id}`);
         electron_1.crashReporter.setUploadToServer(shouldUpload);
         return true;
     });
@@ -616,6 +621,7 @@ function setupCrashReporterIpcHandlers() {
     });
     // 수동 Error 보고
     electron_1.ipcMain.handle('crash-reporter:report-error', (event, errorData) => {
+        console.log(`[CrashReporter] 수동 에러 보고, 발신자: ${event.sender.id}, 메시지: ${errorData.message}`);
         const errorInfo = {
             type: 'manual-report',
             message: errorData.message,

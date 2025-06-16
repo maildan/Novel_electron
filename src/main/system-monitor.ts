@@ -1,8 +1,19 @@
-import { app, powerMonitor } from 'electron';
+import { app, powerMonitor, ipcMain } from 'electron';
 import { EventEmitter } from 'events';
 import { AppConfig } from './config';
 import { DatabaseManager } from './database';
 import { MemoryManager } from './memory';
+import { CHANNELS } from '../preload/channels';
+
+// 새로운 통합 타입 시스템 사용
+import type { 
+  IpcResponse 
+} from '../types/ipc';
+import { 
+  createSuccessResponse,
+  createErrorResponse,
+  createIpcError
+} from '../types/ipc';
 
 interface SystemMetrics {
   cpu: {
@@ -706,4 +717,6 @@ export class SystemMonitor extends EventEmitter {
       throw error;
     }
   }
+
+
 }

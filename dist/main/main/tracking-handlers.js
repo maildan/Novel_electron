@@ -218,8 +218,8 @@ function registerTrackingHandlers() {
         return;
     }
     (0, utils_1.debugLog)('추적 관련 IPC 핸들러 등록 중...');
-    // 모니터링 시작 핸들러
-    electron_1.ipcMain.handle('start-monitoring', async () => {
+    // 타이핑 추적 모니터링 시작 핸들러
+    electron_1.ipcMain.handle('tracking:start-monitoring', async () => {
         try {
             (0, utils_1.debugLog)('모니터링 시작 요청 수신');
             if (trackingState.isTracking) {
@@ -230,12 +230,26 @@ function registerTrackingHandlers() {
                     stats: trackingState.sessionStats
                 };
             }
+            // 키보드 리스너 먼저 설정
+            const { setupKeyboardListenerIfNeeded } = require('./keyboardHandlers');
+            const keyboardListenerResult = await setupKeyboardListenerIfNeeded();
+            if (!keyboardListenerResult) {
+                (0, utils_1.errorLog)('키보드 리스너 설정 Failed - 모니터링 시작 불가');
+                return {
+                    success: false,
+                    message: '키보드 리스너 설정 Failed - 모니터링 시작 불가',
+                    keyboardActive: false
+                };
+            }
+            (0, utils_1.debugLog)('키보드 리스너 설정 성공, 모니터링 시작 중...');
             const success = startTracking();
+            (0, utils_1.debugLog)(`모니터링 시작 ${success ? '성공' : '실패'} (키보드 리스너: ${keyboardListenerResult ? '활성화됨' : '비활성화됨'})`);
             return {
                 success,
                 message: success ? '모니터링 Started' : '모니터링 시작 Failed',
                 isTracking: trackingState.isTracking,
-                stats: trackingState.sessionStats
+                stats: trackingState.sessionStats,
+                keyboardActive: keyboardListenerResult
             };
         }
         catch (error) {
@@ -244,7 +258,7 @@ function registerTrackingHandlers() {
         }
     });
     // 모니터링 중지 핸들러
-    electron_1.ipcMain.handle('stop-monitoring', async () => {
+    electron_1.ipcMain.handle('tracking:stop-monitoring', async () => {
         try {
             (0, utils_1.debugLog)('모니터링 중지 요청 수신');
             if (!trackingState.isTracking) {
@@ -255,12 +269,18 @@ function registerTrackingHandlers() {
                     stats: trackingState.sessionStats
                 };
             }
+            // 키보드 리스너 해제
+            const { cleanupKeyboardListener } = require('./keyboardHandlers');
+            const keyboardCleanupResult = cleanupKeyboardListener();
+            (0, utils_1.debugLog)(`키보드 리스너 해제 ${keyboardCleanupResult ? '성공' : '실패'}`);
             const success = stopTracking();
+            (0, utils_1.debugLog)(`모니터링 중지 ${success ? '성공' : '실패'}`);
             return {
                 success,
                 message: success ? '모니터링 Stopped' : '모니터링 중지 Failed',
                 isTracking: trackingState.isTracking,
-                stats: trackingState.sessionStats
+                stats: trackingState.sessionStats,
+                keyboardCleaned: keyboardCleanupResult
             };
         }
         catch (error) {
@@ -269,7 +289,7 @@ function registerTrackingHandlers() {
         }
     });
     // 추적 상태 조회 핸들러
-    electron_1.ipcMain.handle('get-tracking-status', async () => {
+    electron_1.ipcMain.handle('tracking:get-status', async () => {
         try {
             return {
                 success: true,
@@ -284,7 +304,7 @@ function registerTrackingHandlers() {
         }
     });
     // 통계 저장 핸들러
-    electron_1.ipcMain.handle('save-typing-stats', async (event, statsData) => {
+    electron_1.ipcMain.handle('tracking:save-stats', async (event, statsData) => {
         try {
             // 외부에서 전달받은 통계 데이터 처리
             if (statsData) {
@@ -299,7 +319,7 @@ function registerTrackingHandlers() {
         }
     });
     // 추적 상태 리셋 핸들러
-    electron_1.ipcMain.handle('reset-tracking', async () => {
+    electron_1.ipcMain.handle('tracking:reset', async () => {
         try {
             resetTrackingState();
             sendTrackingStatusToRenderer();
@@ -315,7 +335,7 @@ function registerTrackingHandlers() {
         }
     });
     // 키 입력 처리 핸들러
-    electron_1.ipcMain.handle('process-key-press', async (event, keyData) => {
+    electron_1.ipcMain.handle('tracking:process-key', async (event, keyData) => {
         try {
             processKeyPress(keyData);
             return { success: true };
@@ -353,6 +373,13 @@ function cleanupTrackingHandlers() {
     if (trackingState.isTracking) {
         stopTracking();
     }
+    // IPC 핸들러 제거
+    electron_1.ipcMain.removeHandler('tracking:start-monitoring');
+    electron_1.ipcMain.removeHandler('tracking:stop-monitoring');
+    electron_1.ipcMain.removeHandler('tracking:get-status');
+    electron_1.ipcMain.removeHandler('tracking:save-stats');
+    electron_1.ipcMain.removeHandler('tracking:reset');
+    electron_1.ipcMain.removeHandler('tracking:process-key');
     resetTrackingState();
     isRegistered = false;
     (0, utils_1.debugLog)('추적 핸들러 Cleanup Completed');

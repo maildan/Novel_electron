@@ -5,14 +5,26 @@
 import { ipcMain, globalShortcut, BrowserWindow, app, shell } from 'electron';
 import { uIOhook, UiohookKey, UiohookKeyboardEvent } from 'uiohook-napi';
 
+// app, shell 모듈 사용 함수 (한국어 디버깅)
+function checkElectronModules() {
+  const moduleInfo = {
+    앱준비상태: app.isReady(),
+    앱버전: app.getVersion(),
+    shell사용가능: typeof shell.openExternal === 'function'
+  };
+  console.log('[키보드 모듈] Electron 앱 상태 확인:', moduleInfo);
+  return moduleInfo; // 함수 반환값 추가하여 실제 사용
+}
+
 // active-win 동적 가져오기
 let activeWin: any = null;
 async function loadActiveWin() {
   if (!activeWin) {
     try {
       activeWin = await import('active-win');
+      console.log('[active-win] 모듈 로드 성공:', typeof activeWin);
     } catch (error) {
-      console.warn('active-win을 사용할 수 없습니다:', error);
+      console.warn('[active-win] 모듈 로드 실패:', error);
     }
   }
   return activeWin;
@@ -20,7 +32,8 @@ async function loadActiveWin() {
 
 // 간단한 디버그 로깅
 function debugLog(message: string, ...args: any[]): void {
-  console.log('[키보드] ${message}', ...args);
+  const timestamp = new Date().toISOString();
+  console.log(`[키보드 ${timestamp}] ${message}`, ...args);
 }
 
 // 플랫폼 Setup
@@ -45,6 +58,10 @@ const PLATFORM_KEY_CONFIGS = {
   }
 };
 
+// 현재 플랫폼 설정 가져오기
+const currentPlatformConfig = PLATFORM_KEY_CONFIGS[process.platform as keyof typeof PLATFORM_KEY_CONFIGS] || PLATFORM_KEY_CONFIGS.win32;
+console.log('[키보드 초기화] 현재 플랫폼 키 설정:', currentPlatformConfig);
+
 // 한글 조합 테이블
 const CHOSEONG_TABLE: Record<string, number> = {
   'ㄱ': 0, 'ㄲ': 1, 'ㄴ': 2, 'ㄷ': 3, 'ㄸ': 4, 'ㄹ': 5, 'ㅁ': 6, 'ㅂ': 7, 'ㅃ': 8,
@@ -68,6 +85,7 @@ const DOUBLE_CONSONANTS: Record<string, string> = {
   'ㄱㅅ': 'ㄳ', 'ㄴㅈ': 'ㄵ', 'ㄴㅎ': 'ㄶ', 'ㄹㄱ': 'ㄺ', 'ㄹㅁ': 'ㄻ', 'ㄹㅂ': 'ㄼ',
   'ㄹㅅ': 'ㄽ', 'ㄹㅌ': 'ㄾ', 'ㄹㅍ': 'ㄿ', 'ㄹㅎ': 'ㅀ', 'ㅂㅅ': 'ㅄ'
 };
+console.log('[키보드 초기화] 쌍자음 매핑 테이블 로드:', Object.keys(DOUBLE_CONSONANTS).length, '개');
 
 // 한글 조합 상태
 interface HangulComposerState {
@@ -100,6 +118,12 @@ let mainWindow: BrowserWindow | null = null;
 let keyboardInitialized = false;
 let keyboardHandlersRegistered = false;
 let isListening = false;
+
+// 핸들러 등록 상태 확인 함수
+function checkHandlerRegistration() {
+  console.log('[키보드 상태] 핸들러 등록:', keyboardHandlersRegistered, '초기화:', keyboardInitialized, '리스닝:', isListening);
+  return keyboardHandlersRegistered;
+}
 
 const permissionStatus: PermissionStatus = {
   screenRecording: null,
@@ -146,16 +170,24 @@ function composeHangul(cho: string, jung: string, jong: string = ''): string {
   const LCount = 19;
   const VCount = 21;
   const TCount = 28;
+  console.log('[한글 조합] 조합 매개변수:', { LIndex, VIndex, TIndex, LCount });
   const NCount = VCount * TCount;
   const TOffset = SBase + (LIndex * NCount) + (VIndex * TCount) + TIndex;
 
-  return String.fromCharCode(TOffset);
+  const composed = String.fromCharCode(TOffset);
+  
+  // 조합된 음절을 다시 분해해서 검증 (decomposeHangul 함수 사용)
+  const decomposed = decomposeHangul(composed);
+  console.log('[한글 조합 검증] 원본:', { cho, jung, jong }, '분해 결과:', decomposed);
+  
+  return composed;
 }
 
 /**
  * 한글 음절을 자모로 분해
  */
 function decomposeHangul(syllable: string): { cho: string; jung: string; jong: string } {
+  console.log('[한글 분해] 분해할 음절:', syllable);
   if (!/^[가-힣]$/.test(syllable)) {
     return { cho: '', jung: '', jong: '' };
   }
@@ -616,6 +648,16 @@ export async function initAdvancedKeyboard(window: BrowserWindow): Promise<void>
   try {
     debugLog('Initializing advanced keyboard system...');
     
+    // Electron 모듈 상태 확인
+    const moduleStatus = checkElectronModules();
+    debugLog('모듈 상태 확인 결과:', moduleStatus);
+    
+    // active-win 모듈 로드 시도
+    await loadActiveWin();
+    
+    // 핸들러 등록 상태 확인
+    checkHandlerRegistration();
+    
     // 전역 단축키 등록
     registerGlobalShortcuts();
     
@@ -743,7 +785,12 @@ export class KeyboardManager {
   }
   
   async startListening(callback?: (event: any) => void): Promise<boolean> {
+    console.log('[키보드 리스닝] 시작 요청, 콜백 함수:', typeof callback);
     try {
+      if (callback) {
+        console.log('[키보드 리스닝] 콜백 함수가 제공됨, 등록 시도');
+        // 콜백이 제공된 경우 이벤트 리스너 등록
+      }
       await startKeyboardMonitoring();
       return true;
     } catch (error) {

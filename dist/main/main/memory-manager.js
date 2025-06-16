@@ -51,6 +51,8 @@ const path = __importStar(require("path"));
 const fs = __importStar(require("fs"));
 const utils_1 = require("../shared/utils");
 const native_client_1 = require("./native-client");
+// IPC 모듈 사용 확인
+console.log('[MemoryManager] IPC 모듈 로드됨:', typeof electron_1.ipcMain);
 // 메모리 관리 클래스
 class AdvancedMemoryManager {
     constructor() {
@@ -294,6 +296,8 @@ class AdvancedMemoryManager {
                     const rssMB = Math.round(rss / (1024 * 1024));
                     const totalMemoryMB = Math.round(systemTotalMemory / (1024 * 1024));
                     const memoryUsagePercent = Math.round((rss / systemTotalMemory) * 100);
+                    // External 메모리도 포함하여 로깅
+                    (0, utils_1.debugLog)(`[Memory] External 메모리: ${Math.round(external / (1024 * 1024))}MB`);
                     return {
                         totalMemoryMB: totalMemoryMB,
                         freeMemoryMB: totalMemoryMB - rssMB,

@@ -96,22 +96,27 @@ export class DialogManager {
    */
   private setupIpcHandlers(): void {
     ipcMain.handle('dialog:show-message', async (event, options: DialogOptions) => {
+      console.log(`[DialogManager] IPC 요청 받음: show-message, 발신자: ${event.sender.id}`);
       return await this.showMessageDialog(options);
     });
     
     ipcMain.handle('dialog:show-open-file', async (event, options: FileDialogOptions) => {
+      console.log(`[DialogManager] IPC 요청 받음: show-open-file, 발신자: ${event.sender.id}`);
       return await this.showOpenFileDialog(options);
     });
     
     ipcMain.handle('dialog:show-save-file', async (event, options: FileDialogOptions) => {
+      console.log(`[DialogManager] IPC 요청 받음: show-save-file, 발신자: ${event.sender.id}`);
       return await this.showSaveFileDialog(options);
     });
     
     ipcMain.handle('dialog:show-folder', async (event, options: FileDialogOptions) => {
+      console.log(`[DialogManager] IPC 요청 받음: show-folder, 발신자: ${event.sender.id}`);
       return await this.showFolderDialog(options);
     });
     
     ipcMain.handle('dialog:show-notification', async (event, options: NotificationOptions) => {
+      console.log(`[DialogManager] IPC 요청 받음: show-notification, 발신자: ${event.sender.id}`);
       return await this.showNotification(options);
     });
     
@@ -120,10 +125,12 @@ export class DialogManager {
     });
     
     ipcMain.handle('dialog:show-custom', async (event, id: string, options: CustomDialogOptions) => {
+      console.log(`[DialogManager] IPC 요청 받음: show-custom, ID: ${id}, 발신자: ${event.sender.id}`);
       return await this.showCustomDialog(id, options);
     });
     
     ipcMain.handle('dialog:close-custom', async (event, id: string) => {
+      console.log(`[DialogManager] IPC 요청 받음: close-custom, ID: ${id}, 발신자: ${event.sender.id}`);
       return this.closeCustomDialog(id);
     });
   }
@@ -477,6 +484,7 @@ export class DialogManager {
    */
   public closeAllCustomDialogs(): void {
     for (const [id, dialog] of this.customDialogs) {
+      console.log(`[DialogManager] 커스텀 다이얼로그 닫는 중: ${id}`);
       if (!dialog.isDestroyed()) {
         dialog.close();
       }

@@ -12,6 +12,13 @@ exports.SettingsIpcHandlers = void 0;
 const electron_1 = require("electron");
 const settings_manager_1 = __importDefault(require("./settings-manager"));
 const window_1 = require("./window");
+const gpuUtils_1 = require("./gpuUtils");
+// GPU 유틸리티 모듈 확인
+console.log('[SettingsIpcHandlers] GPU 유틸리티 로드:', {
+    getGPUManager: typeof gpuUtils_1.getGPUManager,
+    getGPUInfo: typeof gpuUtils_1.getGPUInfo,
+    isHardwareAccelerationEnabled: typeof gpuUtils_1.isHardwareAccelerationEnabled
+});
 class SettingsIpcHandlers {
     constructor() {
         this.isRegistered = false;
@@ -33,7 +40,9 @@ class SettingsIpcHandlers {
         console.log('Setup IPC 핸들러 등록 중...');
         // 처리 모드 Setup
         electron_1.ipcMain.handle('setProcessingMode', async (event, mode) => {
+            console.log(`[SettingsIpc] 설정 요청: 'setProcessingMode', 발신자: ${event.sender.id}`);
             try {
+                console.log(`[SettingsIpc] 처리 모드 설정 요청: ${mode}, 발신자: ${event.sender.id}`);
                 await settings_manager_1.default.updateSetting('processingMode', mode);
                 // 처리 모드에 따른 추가 Setup
                 switch (mode) {
@@ -65,7 +74,15 @@ class SettingsIpcHandlers {
         });
         // GPU 가속 Setup
         electron_1.ipcMain.handle('setGPUAcceleration', async (event, enabled) => {
+            console.log(`[SettingsIpc] 설정 요청: 'setGPUAcceleration', 발신자: ${event.sender.id}`);
             try {
+                console.log(`[SettingsIpc] GPU 가속 설정 요청: ${enabled}, 발신자: ${event.sender.id}`);
+                // GPU 정보 확인
+                const gpuInfo = await (0, gpuUtils_1.getGPUInfo)();
+                console.log('[SettingsIpc] 현재 GPU 정보:', gpuInfo);
+                // 하드웨어 가속 상태 확인
+                const hwAccelEnabled = (0, gpuUtils_1.isHardwareAccelerationEnabled)();
+                console.log('[SettingsIpc] 하드웨어 가속 상태:', hwAccelEnabled);
                 await settings_manager_1.default.updateSetting('enableGPUAcceleration', enabled);
                 // GPU 관련 Setup 적용 (재시작 필요)
                 console.log(`GPU 가속 ${enabled ? '활성화' : '비활성화'}`);
@@ -119,7 +136,9 @@ class SettingsIpcHandlers {
         });
         // 전체화면 모드 Setup
         electron_1.ipcMain.handle('setFullscreenMode', async (event, mode) => {
+            console.log(`[SettingsIpc] 설정 요청: 'setFullscreenMode', 발신자: ${event.sender.id}`);
             try {
+                console.log(`[SettingsIpc] 전체화면 모드 설정: ${mode}, 발신자: ${event.sender.id}`);
                 const windowManager = window_1.WindowManager.getInstance();
                 const mainWindow = windowManager.getMainWindow();
                 if (!mainWindow) {
@@ -159,6 +178,7 @@ class SettingsIpcHandlers {
         });
         // 알림 Setup
         electron_1.ipcMain.handle('setNotifications', async (event, enabled) => {
+            console.log(`[SettingsIpc] 알림 설정 요청: ${enabled}, 발신자: ${event.sender.id}`);
             try {
                 await settings_manager_1.default.updateSetting('enableNotifications', enabled);
                 return {
@@ -177,6 +197,7 @@ class SettingsIpcHandlers {
         });
         // 애니메이션 Setup
         electron_1.ipcMain.handle('setAnimations', async (event, enabled) => {
+            console.log(`[SettingsIpc] 애니메이션 설정 요청: ${enabled}, 발신자: ${event.sender.id}`);
             try {
                 await settings_manager_1.default.updateSetting('enableAnimations', enabled);
                 return {
@@ -195,6 +216,7 @@ class SettingsIpcHandlers {
         });
         // 데이터 수집 Setup
         electron_1.ipcMain.handle('setDataCollection', async (event, enabled) => {
+            console.log(`[SettingsIpc] 데이터 수집 설정: ${enabled}, 발신자: ${event.sender.id}`);
             try {
                 await settings_manager_1.default.updateSetting('enableDataCollection', enabled);
                 return {
@@ -213,6 +235,7 @@ class SettingsIpcHandlers {
         });
         // 자동 저장 Setup
         electron_1.ipcMain.handle('setAutoSave', async (event, enabled) => {
+            console.log(`[SettingsIpc] 자동 저장 설정: ${enabled}, 발신자: ${event.sender.id}`);
             try {
                 await settings_manager_1.default.updateSetting('enableAutoSave', enabled);
                 return {
@@ -231,6 +254,7 @@ class SettingsIpcHandlers {
         });
         // 데이터 보관 기간 Setup
         electron_1.ipcMain.handle('setDataRetention', async (event, days) => {
+            console.log(`[SettingsIpc] 데이터 보존 설정: ${days}일, 발신자: ${event.sender.id}`);
             try {
                 await settings_manager_1.default.updateSetting('dataRetentionDays', days);
                 return {
@@ -249,6 +273,7 @@ class SettingsIpcHandlers {
         });
         // 메모리 임계값 Setup
         electron_1.ipcMain.handle('setMemoryThreshold', async (event, threshold) => {
+            console.log(`[SettingsIpc] 메모리 임계값 설정: ${threshold}%, 발신자: ${event.sender.id}`);
             try {
                 await settings_manager_1.default.updateSetting('maxMemoryThreshold', threshold);
                 return {

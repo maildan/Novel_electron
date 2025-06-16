@@ -266,17 +266,20 @@ function setupExceptionHandlers(): void {
 
   // 렌더러 프로세스 충돌
   (app as any).on('renderer-process-crashed', (event: any, webContents: any, killed: boolean) => {
+    console.log(`[CrashReporter] 렌더러 프로세스 충돌 감지, 이벤트 타입: ${typeof event}`);
     handleRendererCrash(webContents, killed);
   });
 
   // GPU 프로세스 충돌
   (app as any).on('gpu-process-crashed', (event: any, killed: boolean) => {
+    console.log(`[CrashReporter] GPU 프로세스 충돌 감지, 이벤트 타입: ${typeof event}`);
     handleGpuCrash(killed);
   });
 
   // 자식 프로세스 Error (Node.js 16+에서 지원)
   if ('child-process-gone' in app) {
     app.on('child-process-gone' as any, (event, details) => {
+      console.log(`[CrashReporter] 자식 프로세스 종료 감지, 이벤트: ${event.defaultPrevented ? '방지됨' : '허용'}`);
       handleChildProcessCrash(details);
     });
   }
@@ -467,6 +470,7 @@ function attemptRecovery(errorInfo: ErrorInfo): void {
  */
 async function showCrashRecoveryDialog(window: BrowserWindow, crashType: string, crashInfo: CrashInfo): Promise<void> {
   try {
+    console.log(`[CrashReporter] 충돌 복구 다이얼로그 표시, 타입: ${crashType}, 정보:`, crashInfo);
     const { response } = await dialog.showMessageBox(window, {
       type: 'error',
       title: '앱 충돌',
@@ -690,6 +694,7 @@ function setupCrashReporterIpcHandlers(): void {
 
   // 업로드 Setup 변경
   ipcMain.handle('crashReporter:setUpload', (event, shouldUpload: boolean) => {
+    console.log(`[CrashReporter] 업로드 설정 변경: ${shouldUpload}, 발신자: ${event.sender.id}`);
     crashReporter.setUploadToServer(shouldUpload);
     return true;
   });
@@ -709,6 +714,7 @@ function setupCrashReporterIpcHandlers(): void {
 
   // 수동 Error 보고
   ipcMain.handle('crash-reporter:report-error', (event, errorData) => {
+    console.log(`[CrashReporter] 수동 에러 보고, 발신자: ${event.sender.id}, 메시지: ${errorData.message}`);
     const errorInfo: ErrorInfo = {
       type: 'manual-report',
       message: errorData.message,

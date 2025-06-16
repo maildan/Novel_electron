@@ -11,6 +11,9 @@ export declare const electronAPI: {
     resetTypingStats: () => Promise<any>;
     getHangulCompositionState: () => Promise<any>;
     openPermissionsSettings: () => Promise<any>;
+    startMonitoring: () => Promise<any>;
+    stopMonitoring: () => Promise<any>;
+    getTrackingStatus: () => Promise<any>;
     database: {
         saveTypingSession: (data: any) => Promise<any>;
         getRecentSessions: (limit?: number) => Promise<any>;

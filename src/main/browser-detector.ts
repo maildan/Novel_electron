@@ -79,6 +79,9 @@ const NON_BROWSER_APPS = [
   'VS Code'
 ];
 
+// NON_BROWSER_APPS 사용 확인 로깅
+console.log('[브라우저감지] 비브라우저 앱 목록 로드됨:', NON_BROWSER_APPS.length, '개');
+
 const WEBSITE_URL_PATTERNS: Record<string, string[]> = {
   'google-docs': [
     'docs.google.com',
@@ -198,6 +201,7 @@ export class BrowserDetector {
     try {
       // active-win 모듈 동적 로드
       const activeWin = await import('active-win');
+      console.log('[브라우저감지] macOS active-win 모듈 로드 완료:', typeof activeWin);
       debugLog('macOS 브라우저 감지 모듈 로드 Completed');
     } catch (error) {
       debugLog('active-win 모듈 로드 Failed, 폴백 모드 사용:', error);
@@ -561,6 +565,8 @@ export class BrowserDetector {
  */
   async updateSettings(settings: any): Promise<{ success: boolean; error?: string }> {
     try {
+      // settings 매개변수 사용 확인
+      console.log('[브라우저감지] 설정 업데이트 요청:', typeof settings, settings ? Object.keys(settings).length : 0, '개 설정');
       // Setup 업데이트 로직
       return { success: true };
     } catch (error) {

@@ -257,6 +257,10 @@ exports.electronAPI = {
     resetTypingStats: () => electron_1.ipcRenderer.invoke('resetTypingStats'),
     getHangulCompositionState: () => electron_1.ipcRenderer.invoke('getHangulCompositionState'),
     openPermissionsSettings: () => electron_1.ipcRenderer.invoke('openPermissionsSettings'),
+    // 모니터링 관련 API (최상위 레벨에서도 접근 가능)
+    startMonitoring: () => electron_1.ipcRenderer.invoke(channels_1.CHANNELS.START_MONITORING),
+    stopMonitoring: () => electron_1.ipcRenderer.invoke(channels_1.CHANNELS.STOP_MONITORING),
+    getTrackingStatus: () => electron_1.ipcRenderer.invoke('get-tracking-status'),
     // 모든 API 카테고리
     database: databaseAPI,
     ipcRenderer: ipcRendererAPI,

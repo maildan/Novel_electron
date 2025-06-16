@@ -76,6 +76,7 @@ class ElectronApp {
     setupSecurityHandlers() {
         // 웹 컨텐츠 생성 시 보안 Setup
         electron_1.app.on('web-contents-created', (event, contents) => {
+            console.log('[보안] 웹 컨텐츠 생성 이벤트:', typeof event);
             // 새 창 생성 제한
             contents.setWindowOpenHandler(({ url }) => {
                 console.log('[Security] 새 창 생성 요청 차단:', url);

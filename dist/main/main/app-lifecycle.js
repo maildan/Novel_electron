@@ -13,9 +13,14 @@ exports.cleanupApp = cleanupApp;
 exports.getAppState = getAppState;
 exports.isAppReady = isAppReady;
 const electron_1 = require("electron");
+const window_1 = require("./window");
+const handlers_manager_1 = require("./handlers-manager");
 const memory_manager_1 = require("./memory-manager");
 const debug_1 = require("../utils/debug");
+const keyboard_1 = require("./keyboard");
 const settings_manager_1 = __importDefault(require("./settings-manager"));
+const screenshot_1 = require("./screenshot");
+const system_info_1 = require("./system-info");
 const stub_functions_1 = require("./stub-functions");
 const appState = {
     isReady: false,
@@ -38,6 +43,7 @@ async function setupGpuConfiguration() {
         const processingMode = userSettings?.processingMode || 'auto';
         const highPerformance = processingMode === 'gpu-intensive';
         (0, debug_1.debugLog)(`GPU 가속 Setup 상태: ${useHardwareAcceleration ? '활성화됨' : '비활성화됨'}, 모드: ${processingMode}`);
+        (0, debug_1.debugLog)(`고성능 모드: ${highPerformance ? '활성화됨' : '비활성화됨'}`);
         // GPU 정보는 기본값으로 Setup
         appState.gpuEnabled = useHardwareAcceleration;
         // Electron 하드웨어 가속 Setup
@@ -149,6 +155,27 @@ async function initializeAdditionalFeatures() {
 async function initializeApp() {
     try {
         (0, debug_1.debugLog)('Loop 6 애플리케이션 초기화 시작');
+        // WindowManager 초기화
+        const windowManager = window_1.WindowManager.getInstance();
+        (0, debug_1.debugLog)('WindowManager 초기화됨:', typeof windowManager);
+        // 모든 핸들러 설정
+        const handlersResult = await (0, handlers_manager_1.setupAllHandlers)();
+        (0, debug_1.debugLog)('핸들러 설정 결과:', handlersResult);
+        // KeyboardManager 초기화
+        const keyboardManager = keyboard_1.KeyboardManager.getInstance();
+        await keyboardManager.initialize();
+        (0, debug_1.debugLog)('KeyboardManager 초기화 완료');
+        // 먼저 메인 윈도우 생성
+        await (0, stub_functions_1.createWindow)();
+        const mainWindow = (0, stub_functions_1.getMainWindow)();
+        // 스크린샷 모듈 초기화 (메인 윈도우 필요)
+        if (mainWindow) {
+            await (0, screenshot_1.initScreenshot)(mainWindow);
+            (0, debug_1.debugLog)('스크린샷 모듈 초기화 완료');
+            // 시스템 정보 모듈 초기화 (메인 윈도우 필요)
+            await (0, system_info_1.initSystemInfo)(mainWindow);
+            (0, debug_1.debugLog)('시스템 정보 모듈 초기화 완료');
+        }
         // 1. Setup 로드
         await (0, stub_functions_1.loadSettings)();
         appState.settings = await settings_manager_1.default.getSettings();
@@ -162,19 +189,17 @@ async function initializeApp() {
         setupAppEvents();
         // 6. 데이터베이스 초기화
         await (0, stub_functions_1.initDatabase)();
-        // 7. 메인 윈도우 생성
-        await (0, stub_functions_1.createWindow)();
-        // 8. IPC 핸들러 Setup
+        // 7. IPC 핸들러 Setup
         (0, stub_functions_1.setupIpcHandlers)();
-        // 9. 시스템 모니터링 초기화
+        // 8. 시스템 모니터링 초기화
         await initializeSystemMonitoring();
-        // 10. 키보드 모니터링 초기화
+        // 9. 키보드 모니터링 초기화
         await initializeKeyboardMonitoring();
-        // 11. 자동 업데이트 초기화
+        // 10. 자동 업데이트 초기화
         (0, stub_functions_1.initUpdates)();
-        // 12. 추가 기능 초기화
+        // 11. 추가 기능 초기화
         await initializeAdditionalFeatures();
-        // 13. 메모리 상태 초기 확인
+        // 12. 메모리 상태 초기 확인
         await (0, memory_manager_1.checkAndOptimizeMemoryIfNeeded)();
         appState.isReady = true;
         (0, debug_1.debugLog)('Loop 6 애플리케이션 초기화 Completed');

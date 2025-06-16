@@ -1,6 +1,9 @@
 import { app, webContents, ipcMain } from 'electron';
 import { AppConfig } from './config';
 
+// IPC 모듈 사용 확인
+console.log('[Memory] IPC 모듈 확인:', typeof ipcMain);
+
 // React 컴포넌트에서 기대하는 메모리 데이터 구조
 export interface ReactMemoryInfo {
   total: number;
@@ -46,6 +49,7 @@ export class MemoryManager {
   private ultraLowMemoryMode = true; // 초절약 모드 활성화
 
   private constructor() {
+    console.log('[Memory] 초절약 모드:', this.ultraLowMemoryMode ? '활성화' : '비활성화');
     this.initialize();
   }
 
@@ -78,6 +82,8 @@ export class MemoryManager {
     // 메모리 압박 상황 감지
     app.on('render-process-gone', (event, webContents, details) => {
       console.warn('[Memory] 렌더러 프로세스 종료:', details);
+      console.warn('[Memory] 이벤트 정보:', event.defaultPrevented ? '기본값 방지됨' : '기본값 허용');
+      console.warn('[Memory] WebContents ID:', webContents?.id || 'unknown');
       if (details.reason === 'oom') {
         this.handleOutOfMemory();
       }
@@ -241,6 +247,7 @@ export class MemoryManager {
 
       const afterStats = this.getCurrentMemoryUsage();
       const freedMemory = beforeStats.main.used - afterStats.main.used;
+      console.log('[메모리 정리] 해제된 메모리 양:', freedMemory, 'bytes');
 
       console.log('[Memory] 적극적 메모리 Cleanup Completed: ${freedMemory.toFixed(2)}MB 해제');
       this.lastCleanup = now;
@@ -337,6 +344,7 @@ export class MemoryManager {
       }
 
       // 모든 캐시 강제 Cleanup
+      await this.clearCaches();
       const session = require('electron').session.defaultSession;
       await session.clearStorageData();
 
@@ -526,6 +534,9 @@ export class MemoryManager {
  * 렌더러 프로세스 적극적 Cleanup
  */
   private async aggressiveRendererCleanup(): Promise<void> {
+    // 먼저 기존 렌더러 프로세스 Cleanup 실행
+    await this.cleanupRendererProcesses();
+    
     const allContents = webContents.getAllWebContents();
 
     for (const contents of allContents) {

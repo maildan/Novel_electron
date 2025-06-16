@@ -24,6 +24,7 @@ const keyboardHandlers_1 = require("./keyboardHandlers");
 Object.defineProperty(exports, "registerKeyboardHandlers", { enumerable: true, get: function () { return keyboardHandlers_1.registerKeyboardHandlers; } });
 const windowHandlers_1 = require("./windowHandlers");
 Object.defineProperty(exports, "registerWindowHandlers", { enumerable: true, get: function () { return windowHandlers_1.registerWindowHandlers; } });
+const settings_manager_1 = __importDefault(require("./settings-manager"));
 const ipc_handlers_1 = require("./ipc-handlers");
 const memory_ipc_1 = require("./memory-ipc");
 const native_client_1 = require("./native-client");
@@ -52,6 +53,9 @@ function registerSettingsHandlers() {
         // 설정 관리자 초기화 및 IPC 핸들러 등록
         const { initializeSettingsManager } = require('./settings-manager');
         initializeSettingsManager();
+        // SettingsManager 인스턴스 확인
+        const settingsManager = settings_manager_1.default;
+        debugLog('SettingsManager 로드됨:', typeof settingsManager);
         debugLog('Setup 관련 핸들러 등록 Completed');
         handlersState.registeredHandlers.add('settings');
     }
@@ -78,9 +82,14 @@ function registerSystemInfoHandlers() {
  */
 function registerMemoryHandlers() {
     try {
-        // 메모리 핸들러를 실제로 등록
-        (0, memory_ipc_1.registerMemoryIpcHandlers)();
-        debugLog('메모리 관련 핸들러 등록 Completed');
+        // 메모리 핸들러가 main.ts에서 자동 등록되었는지 확인하고, 필요시 추가 등록
+        if (!handlersState.registeredHandlers.has('memory')) {
+            (0, memory_ipc_1.registerMemoryIpcHandlers)();
+            debugLog('메모리 관련 핸들러 등록 Completed');
+        }
+        else {
+            debugLog('메모리 관련 핸들러 이미 등록됨');
+        }
         handlersState.registeredHandlers.add('memory');
     }
     catch (error) {

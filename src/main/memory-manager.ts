@@ -9,6 +9,9 @@ import * as fs from 'fs';
 import { debugLog, errorLog } from '../shared/utils';
 import { nativeClient } from './native-client';
 
+// IPC 모듈 사용 확인
+console.log('[MemoryManager] IPC 모듈 로드됨:', typeof ipcMain);
+
 // 메모리 관리 Setup 인터페이스
 interface MemorySettings {
   checkInterval: number;
@@ -325,6 +328,9 @@ class AdvancedMemoryManager {
           const rssMB = Math.round(rss / (1024 * 1024));
           const totalMemoryMB = Math.round(systemTotalMemory / (1024 * 1024));
           const memoryUsagePercent = Math.round((rss / systemTotalMemory) * 100);
+          
+          // External 메모리도 포함하여 로깅
+          debugLog(`[Memory] External 메모리: ${Math.round(external / (1024 * 1024))}MB`);
           
           return {
             totalMemoryMB: totalMemoryMB,

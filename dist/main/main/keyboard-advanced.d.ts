@@ -46,8 +46,8 @@ export declare class AdvancedKeyboardManager {
      */
     private handleKeyEvent;
     /**
-     * Get current active window information
-   */
+    * Get current active window information
+    */
     private getCurrentWindowInfo;
     /**
    * Extract URL from browser window title or other sources

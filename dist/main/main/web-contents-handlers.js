@@ -214,6 +214,7 @@ class PermissionManager {
    * 권한 요청 처리
    */
     static handlePermissionRequest(webContents, permission, callback, details) {
+        console.log('[웹콘텐츠 권한 관리] 요청된 권한:', permission, '웹콘텐츠 ID:', webContents.id, '세부사항:', details);
         // 개발 환경에서는 대부분의 권한 허용
         if (process.env.NODE_ENV === 'development') {
             console.log('[개발 모드] 권한 허용: ${permission}');
@@ -293,6 +294,7 @@ function setupWebContentsHandlers(contents) {
     });
     // 컨텍스트 메뉴 Setup
     contents.on('context-menu', (event, params) => {
+        console.log('[컨텍스트 메뉴] 이벤트 발생:', event.type, '파라미터:', params.x, params.y);
         const menuBuilder = new ContextMenuBuilder();
         menuBuilder
             .addLinkItems(params.linkURL)
@@ -308,21 +310,23 @@ function setupWebContentsHandlers(contents) {
     });
     // 콘솔 메시지 로깅
     contents.on('console-message', (event, level, message, line, sourceId) => {
+        console.log('[콘솔 메시지 수신] 레벨:', level, '메시지:', message, '라인:', line, '소스ID:', sourceId, '이벤트 객체:', typeof event);
         const levels = ['verbose', 'info', 'warning', 'error'];
         const levelName = levels[level] || 'info';
         // 개발 환경에서만 상세 로그 출력
         if (process.env.NODE_ENV === 'development') {
-            console.log('[WebContents ${levelName.toUpperCase()}] ${message} (${sourceId}:${line})');
+            console.log(`[WebContents ${levelName.toUpperCase()}] ${message} (${sourceId}:${line})`);
         }
         else if (level >= 2) { // warning, error만 프로덕션에서 출력
-            console.log('[WebContents ${levelName.toUpperCase()}] ${message}');
+            console.log(`[WebContents ${levelName.toUpperCase()}] ${message}`);
         }
     });
     // 페이지 로드 Failed 처리
     contents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL, isMainFrame) => {
+        console.log('[페이지 로드 실패] 이벤트:', typeof event, '에러코드:', errorCode, '에러설명:', errorDescription, 'URL:', validatedURL, '메인프레임:', isMainFrame);
         if (!isMainFrame)
             return; // 메인 프레임만 처리
-        console.error('페이지 로드 Failed: ${errorDescription} (${errorCode}) - ${validatedURL}');
+        console.error(`페이지 로드 Failed: ${errorDescription} (${errorCode}) - ${validatedURL}`);
         // 네트워크 Error일 경우
         if (errorCode === -3 || errorCode === -106 || errorCode === -21) {
             const offlinePage = `
@@ -355,8 +359,9 @@ function setupWebContentsHandlers(contents) {
     });
     // 렌더러 프로세스 충돌 처리
     contents.on('render-process-gone', async (event, details) => {
+        console.log('[렌더러 프로세스 종료] 이벤트:', typeof event, '세부사항:', details);
         const { reason, exitCode } = details;
-        console.error('렌더러 프로세스 종료: ${reason} (exit code: ${exitCode})');
+        console.error(`렌더러 프로세스 종료: ${reason} (exit code: ${exitCode})`);
         // 충돌 통계 수집 (개발용)
         if (process.env.NODE_ENV === 'development') {
             console.log('Process gone details:', details);
@@ -423,7 +428,8 @@ function initializeWebContentsHandlers() {
     }
     // 새로운 웹 콘텐츠 생성 감지
     electron_1.app.on('web-contents-created', (event, contents) => {
-        console.log('새 웹 콘텐츠 생성: ${contents.getType()}');
+        console.log('[웹콘텐츠 생성] 이벤트:', typeof event, '타입:', contents.getType(), 'ID:', contents.id);
+        console.log(`새 웹 콘텐츠 생성: ${contents.getType()}`);
         setupWebContentsHandlers(contents);
         // iframe, webview 보안 설정
         contents.on('will-attach-webview', (event, webPreferences, params) => {
@@ -451,6 +457,7 @@ function initializeWebContentsHandlers() {
         // 자식 프로세스 스폰 방지
         contents.on('will-prevent-unload', (event) => {
             // beforeunload 이벤트 처리
+            console.log('[페이지 언로드 방지] 이벤트:', typeof event, '페이지 URL:', contents.getURL());
             console.log('페이지 unload 방지 시도');
         });
     });

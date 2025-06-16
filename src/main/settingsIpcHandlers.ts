@@ -9,6 +9,35 @@ import SettingsManager from './settings-manager';
 import { WindowManager } from './window';
 import { getGPUManager, getGPUInfo, isHardwareAccelerationEnabled } from './gpuUtils';
 
+// GPU 유틸리티 모듈 상태 확인
+console.log('[설정IPC핸들러] GPU 유틸리티 모듈 로드됨:', {
+  getGPUManager: typeof getGPUManager,
+  getGPUInfo: typeof getGPUInfo,
+  isHardwareAccelerationEnabled: typeof isHardwareAccelerationEnabled
+});
+
+// 새로운 타입 시스템 적용
+import type { 
+  SettingsIpcTypes, 
+  IpcResponse 
+} from '../types/ipc';
+import { 
+  createSuccessResponse,
+  createErrorResponse,
+  createIpcError
+} from '../types/ipc';
+import { CHANNELS } from '../preload/channels';
+
+// 타입 및 유틸리티 함수들 사용 확인
+console.log('[설정IPC핸들러] 타입 시스템 로드됨:', {
+  createSuccessResponse: typeof createSuccessResponse,
+  createErrorResponse: typeof createErrorResponse,
+  createIpcError: typeof createIpcError
+});
+
+// 채널 상수 확인
+console.log('[설정IPC핸들러] CHANNELS 상수 로드됨:', typeof CHANNELS);
+
 export class SettingsIpcHandlers {
   private static instance: SettingsIpcHandlers;
   private isRegistered = false;
@@ -34,9 +63,18 @@ export class SettingsIpcHandlers {
     console.log('Setup IPC 핸들러 등록 중...');
 
     // 처리 모드 Setup
-    ipcMain.handle('setProcessingMode', async (event, mode: string) => {
+    ipcMain.handle('setProcessingMode', async (event, mode: string): Promise<SettingsIpcTypes.SettingsIpcResponse<{ mode: string }>> => {
       try {
+        console.log(`[설정IPC] 처리 모드 설정 요청: ${mode}, 요청자: ${event.sender.id}`);
         await SettingsManager.updateSetting('processingMode', mode);
+        
+        // GPU 정보 확인 및 로깅
+        const gpuInfo = await getGPUInfo();
+        console.log('[설정IPC] 현재 GPU 정보:', gpuInfo);
+        
+        // 하드웨어 가속 상태 확인
+        const hwAccelEnabled = isHardwareAccelerationEnabled();
+        console.log('[설정IPC] 하드웨어 가속 상태:', hwAccelEnabled);
         
         // 처리 모드에 따른 추가 Setup
         switch (mode) {
@@ -53,39 +91,57 @@ export class SettingsIpcHandlers {
             break;
         }
 
-        return {
+        const response: SettingsIpcTypes.SettingsIpcResponse<{ mode: string }> = {
           success: true,
-          message: `처리 모드가 ${mode}로 Setup되었습니다`,
-          mode
+          data: { mode },
+          message: `처리 모드가 '${mode}'로 설정되었습니다.`,
+          timestamp: Date.now()
         };
+        
+        return response;
       } catch (error) {
         console.error('처리 모드 Setup Failed:', error);
-        return {
+        
+        const errorResponse: SettingsIpcTypes.SettingsIpcResponse<{ mode: string }> = {
           success: false,
-          message: `처리 모드 Setup Failed: ${error}`
+          error: error instanceof Error ? error.message : String(error),
+          message: `처리 모드 설정에 실패했습니다.`,
+          timestamp: Date.now()
         };
+        
+        return errorResponse;
       }
     });
 
     // GPU 가속 Setup
-    ipcMain.handle('setGPUAcceleration', async (event, enabled: boolean) => {
+    ipcMain.handle('setGPUAcceleration', async (event, enabled: boolean): Promise<SettingsIpcTypes.SettingsIpcResponse<{ enabled: boolean; gpuInfo?: any }>> => {
       try {
+        console.log(`[설정IPC] GPU 가속 설정 요청: ${enabled}, 요청자: ${event.sender.id}`);
         await SettingsManager.updateSetting('enableGPUAcceleration', enabled);
         
         // GPU 관련 Setup 적용 (재시작 필요)
         console.log(`GPU 가속 ${enabled ? '활성화' : '비활성화'}`);
         
-        return {
+        const response: SettingsIpcTypes.SettingsIpcResponse<{ enabled: boolean; gpuInfo?: any }> = {
           success: true,
+          data: { enabled },
           message: `GPU 가속이 ${enabled ? '활성화' : '비활성화'}되었습니다. 재시작 후 적용됩니다.`,
-          requiresRestart: true
+          requiresRestart: true,
+          timestamp: Date.now()
         };
+        
+        return response;
       } catch (error) {
         console.error('GPU 가속 Setup Failed:', error);
-        return {
+        
+        const errorResponse: SettingsIpcTypes.SettingsIpcResponse<{ enabled: boolean; gpuInfo?: any }> = {
           success: false,
-          message: `GPU 가속 Setup Failed: ${error}`
+          error: error instanceof Error ? error.message : String(error),
+          message: `GPU 가속 설정에 실패했습니다.`,
+          timestamp: Date.now()
         };
+        
+        return errorResponse;
       }
     });
 
@@ -129,6 +185,7 @@ export class SettingsIpcHandlers {
     // 전체화면 모드 Setup
     ipcMain.handle('setFullscreenMode', async (event, mode: 'windowed' | 'fullscreen' | 'fullscreen-auto-hide') => {
       try {
+        console.log(`[설정IPC] 전체화면 모드 설정 요청: ${mode}, 요청자: ${event.sender.id}`);
         const windowManager = WindowManager.getInstance();
         const mainWindow = windowManager.getMainWindow();
         
@@ -173,6 +230,7 @@ export class SettingsIpcHandlers {
     // 알림 Setup
     ipcMain.handle('setNotifications', async (event, enabled: boolean) => {
       try {
+        console.log(`[설정IPC] 알림 설정 요청: ${enabled}, 요청자: ${event.sender.id}`);
         await SettingsManager.updateSetting('enableNotifications', enabled);
         
         return {
@@ -192,6 +250,7 @@ export class SettingsIpcHandlers {
     // 애니메이션 Setup
     ipcMain.handle('setAnimations', async (event, enabled: boolean) => {
       try {
+        console.log(`[설정IPC] 애니메이션 설정 요청: ${enabled}, 요청자: ${event.sender.id}`);
         await SettingsManager.updateSetting('enableAnimations', enabled);
         
         return {
@@ -211,6 +270,7 @@ export class SettingsIpcHandlers {
     // 데이터 수집 Setup
     ipcMain.handle('setDataCollection', async (event, enabled: boolean) => {
       try {
+        console.log(`[설정IPC] 데이터 수집 설정 요청: ${enabled}, 요청자: ${event.sender.id}`);
         await SettingsManager.updateSetting('enableDataCollection', enabled);
         
         return {
@@ -230,6 +290,7 @@ export class SettingsIpcHandlers {
     // 자동 저장 Setup
     ipcMain.handle('setAutoSave', async (event, enabled: boolean) => {
       try {
+        console.log(`[설정IPC] 자동 저장 설정 요청: ${enabled}, 요청자: ${event.sender.id}`);
         await SettingsManager.updateSetting('enableAutoSave', enabled);
         
         return {
@@ -249,6 +310,7 @@ export class SettingsIpcHandlers {
     // 데이터 보관 기간 Setup
     ipcMain.handle('setDataRetention', async (event, days: number) => {
       try {
+        console.log(`[설정IPC] 데이터 보관 기간 설정 요청: ${days}일, 요청자: ${event.sender.id}`);
         await SettingsManager.updateSetting('dataRetentionDays', days);
         
         return {
@@ -268,6 +330,7 @@ export class SettingsIpcHandlers {
     // 메모리 임계값 Setup
     ipcMain.handle('setMemoryThreshold', async (event, threshold: number) => {
       try {
+        console.log(`[설정IPC] 메모리 임계값 설정 요청: ${threshold}MB, 요청자: ${event.sender.id}`);
         await SettingsManager.updateSetting('maxMemoryThreshold', threshold);
         
         return {
@@ -287,6 +350,7 @@ export class SettingsIpcHandlers {
     // 앱 재시작
     ipcMain.handle('restartApp', async (event, reason?: string) => {
       try {
+        console.log(`[설정IPC] 앱 재시작 요청: ${reason || 'Setup 변경'}, 요청자: ${event.sender.id}`);
         console.log(`🔄 애플리케이션 재시작 요청: ${reason || 'Setup 변경'}`);
         
         // 잠시 대기 후 재시작 (UI에 피드백 시간 제공)

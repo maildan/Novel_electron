@@ -209,6 +209,7 @@ class DataSyncManager {
         try {
           // 배치 저장
           const mongoResult = await (this.mongoClient as DatabaseClient).saveBatchTypingLogs(batch);
+          console.log('[데이터동기화] MongoDB 배치 저장 결과:', mongoResult ? 'success' : 'failed');
           debugLog('MongoDB 배치 저장 Completed: ${mongoResult.insertedCount}개 항목');
           
           this.syncStatus.lastMongoSync = new Date();

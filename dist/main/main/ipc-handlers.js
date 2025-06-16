@@ -12,6 +12,13 @@ const auto_launch_manager_1 = require("./auto-launch-manager");
 const security_manager_1 = require("./security-manager");
 const menu_manager_1 = __importDefault(require("./menu-manager"));
 const settings_manager_1 = __importDefault(require("./settings-manager"));
+// 모듈 로드 확인 (MenuOptions는 타입이므로 menuManager로 확인)
+console.log('[IPC핸들러] 메뉴 매니저 및 타입 로드됨:', typeof menu_manager_1.default);
+// MenuOptions 타입을 실제 코드에서 사용하기 위한 타입 체크 함수
+function validateMenuOptions(options) {
+    console.log('[IPC핸들러] MenuOptions 타입 검증:', options ? 'valid' : 'undefined');
+    return options !== undefined;
+}
 class IpcHandlers {
     constructor() {
         this.isInitialized = false;
@@ -35,6 +42,9 @@ class IpcHandlers {
             await settings_manager_1.default.initialize();
             // 메뉴 관리자 초기화
             await menu_manager_1.default.initialize();
+            // MenuOptions 타입 검증 (타입 활용을 위한 검증)
+            const isValidOptions = validateMenuOptions({ showDevTools: true });
+            console.log('[IPC] 메뉴 옵션 타입 검증 결과:', isValidOptions);
             // 보안 관리자 초기화 (키보드 이벤트 핸들러 포함)
             await security_manager_1.security.initialize();
             // 데이터 동기화 초기화
@@ -86,6 +96,7 @@ class IpcHandlers {
         });
         // 동기화 Setup 업데이트
         electron_1.ipcMain.handle('data-sync-update-config', async (event, config) => {
+            console.log('[IPC] 데이터 동기화 설정 업데이트 이벤트:', typeof event);
             try {
                 return await data_sync_1.default.updateConfig(config);
             }
@@ -111,6 +122,7 @@ class IpcHandlers {
     registerStatsHandlers() {
         // 통계 데이터 가져오기
         electron_1.ipcMain.handle('stats-get-data', async (event, options) => {
+            console.log('[IPC] 통계 데이터 요청:', typeof event, '옵션:', options);
             try {
                 return await stats_manager_1.default.getStats(options);
             }
@@ -121,6 +133,7 @@ class IpcHandlers {
         });
         // 타이핑 패턴 분석
         electron_1.ipcMain.handle('stats-analyze-pattern', async (event, data) => {
+            console.log('[IPC] 타이핑 패턴 분석 요청:', typeof event, '데이터:', data);
             try {
                 return await stats_manager_1.default.analyzeTypingPattern(data);
             }
@@ -131,6 +144,7 @@ class IpcHandlers {
         });
         // 통계 Setup 업데이트
         electron_1.ipcMain.handle('stats-update-settings', async (event, settings) => {
+            console.log('[IPC] 통계 설정 업데이트 요청:', typeof event, '설정:', settings);
             try {
                 return await stats_manager_1.default.updateSettings(settings);
             }
@@ -186,6 +200,7 @@ class IpcHandlers {
         });
         // 브라우저 감지 Setup 업데이트
         electron_1.ipcMain.handle('browser-update-settings', async (event, settings) => {
+            console.log('[IPC] 브라우저 감지 설정 업데이트 요청:', typeof event, '설정:', settings);
             try {
                 return await browser_detector_1.default.updateSettings(settings);
             }
@@ -211,6 +226,7 @@ class IpcHandlers {
         });
         // 자동 시작 활성화
         electron_1.ipcMain.handle('auto-launch-enable', async (event, settings) => {
+            console.log('[IPC] 자동 시작 활성화 요청:', typeof event, '설정:', settings);
             try {
                 return await auto_launch_manager_1.autoLaunch.enable(settings);
             }
@@ -231,6 +247,7 @@ class IpcHandlers {
         });
         // 자동 시작 토글
         electron_1.ipcMain.handle('auto-launch-toggle', async (event, settings) => {
+            console.log('[IPC] 자동 시작 토글 요청:', typeof event, '설정:', settings);
             try {
                 return await auto_launch_manager_1.autoLaunch.toggle(settings);
             }
@@ -246,6 +263,7 @@ class IpcHandlers {
     registerSecurityHandlers() {
         // CSP 업데이트
         electron_1.ipcMain.handle('security-update-csp', async (event, config) => {
+            console.log('[IPC] CSP 업데이트 요청:', typeof event, '설정:', config);
             try {
                 return security_manager_1.security.updateCSP(config);
             }

@@ -325,6 +325,7 @@ export function registerKeyboardHandlers(): void {
 
   // 자모 개수 계산 핸들러
   ipcMain.handle('get-jamo-count', async (event, char: string) => {
+    console.log('[자모 개수 계산] IPC 이벤트:', typeof event, '문자:', char);
     try {
       const count = getJamoCount(char);
       return {
@@ -355,6 +356,7 @@ export function registerKeyboardHandlers(): void {
 
   // 키보드 Setup 업데이트 핸들러
   ipcMain.handle('update-keyboard-settings', async (event, settings) => {
+    console.log('[키보드 설정 업데이트] IPC 이벤트:', typeof event, '설정:', settings);
     try {
       const currentSettings = SettingsManager.getSettings();
       await SettingsManager.updateMultipleSettings({

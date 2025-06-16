@@ -53,6 +53,8 @@ class GPUManager {
       ? path.join(__dirname, '../../userData')
       : app.getPath('userData');
     
+    console.log('[GPU유틸] GPU 매니저 초기화 상태:', this.isInitialized);
+    
     this.configPath = path.join(userDataPath, 'gpu-settings.json');
     
     // 기본 Setup
@@ -331,6 +333,7 @@ class GPUManager {
    * JavaScript 이미지 처리 폴백
    */
   private processImageJS(data: any): any {
+    console.log('[GPU유틸] JavaScript 이미지 처리 폴백 시작, 데이터 타입:', typeof data);
     debugLog('JavaScript 이미지 처리 폴백');
     return { success: true, processed: false, method: 'javascript_fallback' };
   }

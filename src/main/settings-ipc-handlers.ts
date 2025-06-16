@@ -9,6 +9,13 @@ import SettingsManager from './settings-manager';
 import { WindowManager } from './window';
 import { getGPUManager, getGPUInfo, isHardwareAccelerationEnabled } from './gpuUtils';
 
+// GPU 유틸리티 모듈 확인
+console.log('[SettingsIpcHandlers] GPU 유틸리티 로드:', {
+  getGPUManager: typeof getGPUManager,
+  getGPUInfo: typeof getGPUInfo,
+  isHardwareAccelerationEnabled: typeof isHardwareAccelerationEnabled
+});
+
 export class SettingsIpcHandlers {
   private static instance: SettingsIpcHandlers;
   private isRegistered = false;
@@ -35,7 +42,9 @@ export class SettingsIpcHandlers {
 
     // 처리 모드 Setup
     ipcMain.handle('setProcessingMode', async (event, mode: string) => {
+      console.log(`[SettingsIpc] 설정 요청: 'setProcessingMode', 발신자: ${event.sender.id}`);
       try {
+        console.log(`[SettingsIpc] 처리 모드 설정 요청: ${mode}, 발신자: ${event.sender.id}`);
         await SettingsManager.updateSetting('processingMode', mode);
         
         // 처리 모드에 따른 추가 Setup
@@ -69,7 +78,17 @@ export class SettingsIpcHandlers {
 
     // GPU 가속 Setup
     ipcMain.handle('setGPUAcceleration', async (event, enabled: boolean) => {
+      console.log(`[SettingsIpc] 설정 요청: 'setGPUAcceleration', 발신자: ${event.sender.id}`);
       try {
+        console.log(`[SettingsIpc] GPU 가속 설정 요청: ${enabled}, 발신자: ${event.sender.id}`);
+        
+        // GPU 정보 확인
+        const gpuInfo = await getGPUInfo();
+        console.log('[SettingsIpc] 현재 GPU 정보:', gpuInfo);
+        
+        // 하드웨어 가속 상태 확인
+        const hwAccelEnabled = isHardwareAccelerationEnabled();
+        console.log('[SettingsIpc] 하드웨어 가속 상태:', hwAccelEnabled);
         await SettingsManager.updateSetting('enableGPUAcceleration', enabled);
         
         // GPU 관련 Setup 적용 (재시작 필요)
@@ -128,7 +147,9 @@ export class SettingsIpcHandlers {
 
     // 전체화면 모드 Setup
     ipcMain.handle('setFullscreenMode', async (event, mode: 'windowed' | 'fullscreen' | 'fullscreen-auto-hide') => {
+      console.log(`[SettingsIpc] 설정 요청: 'setFullscreenMode', 발신자: ${event.sender.id}`);
       try {
+        console.log(`[SettingsIpc] 전체화면 모드 설정: ${mode}, 발신자: ${event.sender.id}`);
         const windowManager = WindowManager.getInstance();
         const mainWindow = windowManager.getMainWindow();
         
@@ -172,6 +193,7 @@ export class SettingsIpcHandlers {
 
     // 알림 Setup
     ipcMain.handle('setNotifications', async (event, enabled: boolean) => {
+      console.log(`[SettingsIpc] 알림 설정 요청: ${enabled}, 발신자: ${event.sender.id}`);
       try {
         await SettingsManager.updateSetting('enableNotifications', enabled);
         
@@ -191,6 +213,7 @@ export class SettingsIpcHandlers {
 
     // 애니메이션 Setup
     ipcMain.handle('setAnimations', async (event, enabled: boolean) => {
+      console.log(`[SettingsIpc] 애니메이션 설정 요청: ${enabled}, 발신자: ${event.sender.id}`);
       try {
         await SettingsManager.updateSetting('enableAnimations', enabled);
         
@@ -210,6 +233,7 @@ export class SettingsIpcHandlers {
 
     // 데이터 수집 Setup
     ipcMain.handle('setDataCollection', async (event, enabled: boolean) => {
+      console.log(`[SettingsIpc] 데이터 수집 설정: ${enabled}, 발신자: ${event.sender.id}`);
       try {
         await SettingsManager.updateSetting('enableDataCollection', enabled);
         
@@ -229,6 +253,7 @@ export class SettingsIpcHandlers {
 
     // 자동 저장 Setup
     ipcMain.handle('setAutoSave', async (event, enabled: boolean) => {
+      console.log(`[SettingsIpc] 자동 저장 설정: ${enabled}, 발신자: ${event.sender.id}`);
       try {
         await SettingsManager.updateSetting('enableAutoSave', enabled);
         
@@ -248,6 +273,7 @@ export class SettingsIpcHandlers {
 
     // 데이터 보관 기간 Setup
     ipcMain.handle('setDataRetention', async (event, days: number) => {
+      console.log(`[SettingsIpc] 데이터 보존 설정: ${days}일, 발신자: ${event.sender.id}`);
       try {
         await SettingsManager.updateSetting('dataRetentionDays', days);
         
@@ -267,6 +293,7 @@ export class SettingsIpcHandlers {
 
     // 메모리 임계값 Setup
     ipcMain.handle('setMemoryThreshold', async (event, threshold: number) => {
+      console.log(`[SettingsIpc] 메모리 임계값 설정: ${threshold}%, 발신자: ${event.sender.id}`);
       try {
         await SettingsManager.updateSetting('maxMemoryThreshold', threshold);
         

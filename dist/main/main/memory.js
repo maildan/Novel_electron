@@ -3,6 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MemoryManager = void 0;
 const electron_1 = require("electron");
 const config_1 = require("./config");
+// IPC 모듈 사용 확인
+console.log('[Memory] IPC 모듈 확인:', typeof electron_1.ipcMain);
 class MemoryManager {
     constructor() {
         this.cleanupInterval = null;
@@ -15,6 +17,7 @@ class MemoryManager {
         this.maxHistorySize = 10; // 히스토리 크기 더욱 감소
         this.aggressiveMode = true; // 적극적 모드 활성화
         this.ultraLowMemoryMode = true; // 초절약 모드 활성화
+        console.log('[Memory] 초절약 모드:', this.ultraLowMemoryMode ? '활성화' : '비활성화');
         this.initialize();
     }
     static getInstance() {
@@ -41,6 +44,8 @@ class MemoryManager {
         // 메모리 압박 상황 감지
         electron_1.app.on('render-process-gone', (event, webContents, details) => {
             console.warn('[Memory] 렌더러 프로세스 종료:', details);
+            console.warn('[Memory] 이벤트 정보:', event.defaultPrevented ? '기본값 방지됨' : '기본값 허용');
+            console.warn('[Memory] WebContents ID:', webContents?.id || 'unknown');
             if (details.reason === 'oom') {
                 this.handleOutOfMemory();
             }
@@ -183,6 +188,7 @@ class MemoryManager {
             }
             const afterStats = this.getCurrentMemoryUsage();
             const freedMemory = beforeStats.main.used - afterStats.main.used;
+            console.log('[메모리 정리] 해제된 메모리 양:', freedMemory, 'bytes');
             console.log('[Memory] 적극적 메모리 Cleanup Completed: ${freedMemory.toFixed(2)}MB 해제');
             this.lastCleanup = now;
             // 메모리 히스토리 업데이트 (압축)
@@ -267,6 +273,7 @@ class MemoryManager {
                 }
             }
             // 모든 캐시 강제 Cleanup
+            await this.clearCaches();
             const session = require('electron').session.defaultSession;
             await session.clearStorageData();
         }
@@ -424,6 +431,8 @@ class MemoryManager {
    * 렌더러 프로세스 적극적 Cleanup
    */
     async aggressiveRendererCleanup() {
+        // 먼저 기존 렌더러 프로세스 Cleanup 실행
+        await this.cleanupRendererProcesses();
         const allContents = electron_1.webContents.getAllWebContents();
         for (const contents of allContents) {
             try {

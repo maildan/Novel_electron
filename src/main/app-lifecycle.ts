@@ -70,6 +70,7 @@ async function setupGpuConfiguration(): Promise<void> {
     const highPerformance = processingMode === 'gpu-intensive';
     
     debugLog(`GPU 가속 Setup 상태: ${useHardwareAcceleration ? '활성화됨' : '비활성화됨'}, 모드: ${processingMode}`);
+    debugLog(`고성능 모드: ${highPerformance ? '활성화됨' : '비활성화됨'}`);
     
     // GPU 정보는 기본값으로 Setup
     appState.gpuEnabled = useHardwareAcceleration;
@@ -200,6 +201,33 @@ export async function initializeApp(): Promise<void> {
   try {
     debugLog('Loop 6 애플리케이션 초기화 시작');
     
+    // WindowManager 초기화
+    const windowManager = WindowManager.getInstance();
+    debugLog('WindowManager 초기화됨:', typeof windowManager);
+    
+    // 모든 핸들러 설정
+    const handlersResult = await setupAllHandlers();
+    debugLog('핸들러 설정 결과:', handlersResult);
+    
+    // KeyboardManager 초기화
+    const keyboardManager = KeyboardManager.getInstance();
+    await keyboardManager.initialize();
+    debugLog('KeyboardManager 초기화 완료');
+    
+    // 먼저 메인 윈도우 생성
+    await createWindow();
+    const mainWindow = getMainWindow();
+    
+    // 스크린샷 모듈 초기화 (메인 윈도우 필요)
+    if (mainWindow) {
+      await initScreenshot(mainWindow);
+      debugLog('스크린샷 모듈 초기화 완료');
+      
+      // 시스템 정보 모듈 초기화 (메인 윈도우 필요)
+      await initSystemInfo(mainWindow);
+      debugLog('시스템 정보 모듈 초기화 완료');
+    }
+    
     // 1. Setup 로드
     await loadSettings();
     appState.settings = await SettingsManager.getSettings();
@@ -219,25 +247,22 @@ export async function initializeApp(): Promise<void> {
     // 6. 데이터베이스 초기화
     await initDatabase();
     
-    // 7. 메인 윈도우 생성
-    await createWindow();
-    
-    // 8. IPC 핸들러 Setup
+    // 7. IPC 핸들러 Setup
     setupIpcHandlers();
     
-    // 9. 시스템 모니터링 초기화
+    // 8. 시스템 모니터링 초기화
     await initializeSystemMonitoring();
     
-    // 10. 키보드 모니터링 초기화
+    // 9. 키보드 모니터링 초기화
     await initializeKeyboardMonitoring();
     
-    // 11. 자동 업데이트 초기화
+    // 10. 자동 업데이트 초기화
     initUpdates();
     
-    // 12. 추가 기능 초기화
+    // 11. 추가 기능 초기화
     await initializeAdditionalFeatures();
     
-    // 13. 메모리 상태 초기 확인
+    // 12. 메모리 상태 초기 확인
     await checkAndOptimizeMemoryIfNeeded();
     
     appState.isReady = true;

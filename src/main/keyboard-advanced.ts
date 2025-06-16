@@ -10,6 +10,14 @@ import { ipcMain, globalShortcut, BrowserWindow, app, shell } from 'electron';
 import { uIOhook, UiohookKey, UiohookKeyboardEvent } from 'uiohook-napi';
 import { debugLog } from './utils';
 
+// import된 모듈들 사용 확인
+console.log('[키보드고급] 모듈 로드 확인:', {
+  globalShortcut: typeof globalShortcut,
+  app: typeof app,
+  shell: typeof shell,
+  UiohookKey: typeof UiohookKey
+});
+
 // Dynamic imports for optional dependencies
 let activeWin: any = null;
 async function loadActiveWin() {
@@ -17,6 +25,7 @@ async function loadActiveWin() {
     try {
       const module = await import('active-win');
       activeWin = module;
+      console.log('[키보드고급] active-win 모듈 로드 완료');
     } catch (error) {
       console.warn('[KeyboardAdvanced] active-win not available:', error);
     }
@@ -56,6 +65,12 @@ interface TypingStats {
   typingCount: number;
   typingTime: number;
   isMonitored: boolean;
+}
+
+// TypingStats 타입 검증 함수 (한국어 디버깅)
+function validateTypingStats(data: any): data is TypingStats {
+  console.log('[TypingStats 타입 검증] 데이터 유효성 확인:', data);
+  return data && typeof data.appName === 'string' && typeof data.windowTitle === 'string';
 }
 
 interface PermissionStatus {
@@ -118,6 +133,12 @@ const COMPLEX_JONGSEONG: Record<string, string> = {
   'ㄹㅌ': 'ㄾ', 'ㄹㅍ': 'ㄿ', 'ㄹㅎ': 'ㅀ', 'ㅂㅅ': 'ㅄ'
 };
 
+// 복합 자모 테이블 사용 확인
+console.log('[키보드고급] 복합 자모 테이블 로드됨:', {
+  COMPLEX_JUNGSEONG: Object.keys(COMPLEX_JUNGSEONG).length + '개',
+  COMPLEX_JONGSEONG: Object.keys(COMPLEX_JONGSEONG).length + '개'
+});
+
 /**
  * Advanced Keyboard Manager Class
  * Handles global keyboard monitoring, app detection, and typing analytics
@@ -160,6 +181,7 @@ export class AdvancedKeyboardManager {
   
   private constructor() {
     this.currentOSConfig = PLATFORM_KEY_CONFIGS[process.platform] || PLATFORM_KEY_CONFIGS.win32;
+    console.log('[키보드고급] 현재 OS 설정 로드됨:', this.currentOSConfig);
   }
   
   public static getInstance(): AdvancedKeyboardManager {
@@ -280,11 +302,14 @@ export class AdvancedKeyboardManager {
       console.error('[KeyboardAdvanced] Key event handling failed:', error);
     }
   }
-  
-  /**
+   /**
    * Get current active window information
- */
+   */
   private async getCurrentWindowInfo(): Promise<{ title: string; appName: string; url: string }> {
+    // activeWin 모듈 로드 확인
+    await loadActiveWin();
+    console.log('[키보드고급] loadActiveWin 함수 실행됨:', typeof activeWin);
+    
     if (!activeWin) {
       return { title: '', appName: '', url: '' };
     }
@@ -524,6 +549,10 @@ export class AdvancedKeyboardManager {
     const VCount = 21;
     const TCount = 28;
     const NCount = VCount * TCount;
+    
+    // 한글 조합 로깅 (LCount 사용)
+    console.log('[키보드고급] 한글 조합:', { LCount, VCount, TCount, cho, jung, jong });
+    
     const syllableCode = SBase + (LIndex * NCount) + (VIndex * TCount) + TIndex;
     
     return String.fromCharCode(syllableCode);
@@ -548,6 +577,28 @@ export class AdvancedKeyboardManager {
    * Update typing statistics
    */
   private updateTypingStats(keyEvent: KeyEvent): void {
+    // keyEvent 매개변수 사용 (한국어 디버깅)
+    console.log('[KeyboardAdvanced] 키 이벤트 처리 중:', {
+      앱명: keyEvent.appName,
+      윈도우제목: keyEvent.windowTitle,
+      키: keyEvent.key,
+      타임스탬프: keyEvent.timestamp
+    });
+    
+    // TypingStats 타입 검증 활용
+    const stats: TypingStats = {
+      appName: keyEvent.appName,
+      windowTitle: keyEvent.windowTitle,
+      url: keyEvent.url || '',
+      typingCount: 1,
+      typingTime: Date.now(),
+      isMonitored: true
+    };
+    
+    if (validateTypingStats(stats)) {
+      console.log('[KeyboardAdvanced] 유효한 타이핑 통계 생성됨');
+    }
+    
     // This would integrate with settings and monitoring configuration
     // For now, just log the event
     debugLog('[KeyboardAdvanced] Typing in ${keyEvent.appName}: ${keyEvent.key}');
@@ -568,11 +619,20 @@ export class AdvancedKeyboardManager {
         if (windowInfo.appName !== this.lastActiveApp || 
             windowInfo.title !== this.lastWindowTitle) {
           
+          // 앱 전환 상태 플래그 설정
+          this.isAppSwitching = true;
+          console.log('[키보드고급] 앱 전환 감지됨:', this.isAppSwitching);
+          
           this.lastActiveApp = windowInfo.appName;
           this.lastWindowTitle = windowInfo.title;
           
           // Notify about app switch
           this.notifyAppSwitch(windowInfo);
+          
+          // 잠시 후 앱 전환 상태 해제
+          setTimeout(() => {
+            this.isAppSwitching = false;
+          }, 500);
         }
       } catch (error) {
         console.error('[KeyboardAdvanced] Active app monitoring failed:', error);

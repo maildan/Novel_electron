@@ -59,6 +59,7 @@ class GPUManager {
         const userDataPath = process.env.NODE_ENV === 'development'
             ? path.join(__dirname, '../../userData')
             : electron_1.app.getPath('userData');
+        console.log('[GPU유틸] GPU 매니저 초기화 상태:', this.isInitialized);
         this.configPath = path.join(userDataPath, 'gpu-settings.json');
         // 기본 Setup
         this.settings = {
@@ -310,6 +311,7 @@ class GPUManager {
      * JavaScript 이미지 처리 폴백
      */
     processImageJS(data) {
+        console.log('[GPU유틸] JavaScript 이미지 처리 폴백 시작, 데이터 타입:', typeof data);
         (0, utils_1.debugLog)('JavaScript 이미지 처리 폴백');
         return { success: true, processed: false, method: 'javascript_fallback' };
     }

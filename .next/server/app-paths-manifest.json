@@ -1,5 +1,18 @@
 {
-  "/api/getLogs/route": "app/api/getLogs/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/api/db-test/route": "app/api/db-test/route.js",
+  "/api/init-db/route": "app/api/init-db/route.js",
   "/api/health/route": "app/api/health/route.js",
+  "/api/logs/save/route": "app/api/logs/save/route.js",
+  "/api/getLogs/route": "app/api/getLogs/route.js",
+  "/api/logs/search/route": "app/api/logs/search/route.js",
+  "/api/native/gpu/settings/route": "app/api/native/gpu/settings/route.js",
+  "/api/native/memory/optimize/route": "app/api/native/memory/optimize/route.js",
+  "/api/native/gpu/acceleration/route": "app/api/native/gpu/acceleration/route.js",
+  "/api/native/gpu/route": "app/api/native/gpu/route.js",
+  "/api/native/status/route": "app/api/native/status/route.js",
+  "/api/saveLogs/route": "app/api/saveLogs/route.js",
+  "/api/native/memory/route": "app/api/native/memory/route.js",
   "/page": "app/page.js"
 }

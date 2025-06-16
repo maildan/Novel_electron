@@ -12,6 +12,8 @@
     "skipLibCheck": true,
     "useDefineForClassFields": false,
     "strict": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
@@ -52,6 +54,7 @@
   "exclude": [
     "src/app",
     "node_modules",
-    "dist"
+    "dist",
+    "backup"
   ]
 }
