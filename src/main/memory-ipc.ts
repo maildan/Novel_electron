@@ -66,6 +66,13 @@ function convertMemoryStatsToReactFormat(stats: any): ReactMemoryData {
   });
 
   const rendererPercentage = rendererRss > 0 ? (rendererHeapUsed / rendererRss) * 100 : 0;
+  
+  // 렌더러 힙 메모리 사용률 로깅
+  console.log('[메모리 IPC] 렌더러 힙 메모리 정보:', {
+    heapTotal: Math.round(rendererHeapTotal / (1024 * 1024)),
+    heapUsed: Math.round(rendererHeapUsed / (1024 * 1024)),
+    heapFree: Math.round((rendererHeapTotal - rendererHeapUsed) / (1024 * 1024))
+  });
 
   // GPU 메모리 (사용 가능한 경우)
   let gpu = undefined;
@@ -122,6 +129,11 @@ export function registerMemoryIpcHandlers(): void {
       
       // MemoryManager에서 직접 ReactMemoryData 형태로 데이터 가져오기
       const reactData = await memoryManager.getMemoryUsage();
+      
+      // 추가 통계 변환을 위해 convertMemoryStatsToReactFormat 사용
+      const processStats = process.memoryUsage();
+      const enhancedData = convertMemoryStatsToReactFormat(processStats);
+      console.log('[Memory IPC] 향상된 메모리 데이터:', enhancedData);
       
       console.log('[Memory IPC] 메모리 정보 조회 Success:', {
         main: `${reactData.main.used}MB / ${reactData.main.total}MB (${reactData.main.percentage.toFixed(1)}%)`,

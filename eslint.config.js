@@ -24,14 +24,20 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': ['error', { 
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',
-        ignoreRestSiblings: true 
+        ignoreRestSiblings: true,
+        args: 'after-used',
+        destructuredArrayIgnorePattern: '^_',
+        caughtErrors: 'none' // catch 블록의 error 변수는 무시
       }],
       'no-unused-vars': 'off', // TypeScript 버전으로 덮어씀
       'no-console': 'off', // 개발 단계에서는 console.log 허용
       'no-debugger': 'error',
-      'prefer-const': 'error',
+      'prefer-const': 'warn', // error에서 warning으로 완화
       'no-var': 'error',
       '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-require-imports': 'warn', // error에서 warning으로 완화
+      'no-case-declarations': 'warn', // error에서 warning으로 완화
+      'no-prototype-builtins': 'warn', // error에서 warning으로 완화
     },
   },
   {

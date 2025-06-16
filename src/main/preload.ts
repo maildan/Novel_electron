@@ -44,6 +44,19 @@ interface APIResponse<T = any> {
   error?: string
 }
 
+// 타입 검증 함수들
+function validateMemoryData(data: unknown): data is MemoryData {
+  return typeof data === 'object' && data !== null && 'main' in data && 'timestamp' in data;
+}
+
+function validateNativeModuleStatus(status: unknown): status is NativeModuleStatus {
+  return typeof status === 'object' && status !== null && 'available' in status;
+}
+
+function createAPIResponse<T>(success: boolean, data?: T, error?: string): APIResponse<T> {
+  return { success, data, error };
+}
+
 // IPC 채널 정의 - preload/index.ts에서 가져온 완전한 채널 목록
 const CHANNELS = {
   // 데이터베이스
@@ -271,14 +284,30 @@ const systemAPI = {
     disable: () => ipcRenderer.invoke(CHANNELS.GPU_DISABLE),
   },
   native: {
-    getStatus: () => ipcRenderer.invoke(CHANNELS.NATIVE_GET_STATUS),
+    getStatus: async () => {
+      const status = await ipcRenderer.invoke(CHANNELS.NATIVE_GET_STATUS);
+      // 네이티브 모듈 상태 검증
+      if (validateNativeModuleStatus(status)) {
+        console.log('네이티브 모듈 상태 확인됨:', status.available);
+        return createAPIResponse(true, status);
+      }
+      return createAPIResponse(false, undefined, '네이티브 모듈 상태를 확인할 수 없습니다');
+    },
   }
 };
 
 // 메모리 API - 확장된 버전
 const memoryAPI = {
   cleanup: (force?: boolean) => ipcRenderer.invoke(CHANNELS.MEMORY_CLEANUP, force),
-  getUsage: () => ipcRenderer.invoke(CHANNELS.MEMORY_GET_USAGE),
+  getUsage: async () => {
+    const usage = await ipcRenderer.invoke(CHANNELS.MEMORY_GET_USAGE);
+    // 타입 검증을 통한 안전한 사용
+    if (validateMemoryData(usage)) {
+      console.log('검증된 메모리 데이터:', usage.timestamp);
+      return createAPIResponse(true, usage);
+    }
+    return createAPIResponse(false, undefined, '메모리 데이터 형식이 올바르지 않습니다');
+  },
   getStats: () => ipcRenderer.invoke(CHANNELS.MEMORY_GET_STATS),
   getInfo: () => ipcRenderer.invoke(CHANNELS.MEMORY_GET_INFO),
   optimize: () => ipcRenderer.invoke(CHANNELS.MEMORY_OPTIMIZE),

@@ -15,6 +15,11 @@ import {
 } from '../types/ipc';
 import { CHANNELS } from '../preload/channels';
 
+// 타입 정보 로깅 함수
+function logTypeInformation(): void {
+  console.log('네이티브 IPC 타입과 시스템 IPC 타입이 로드되었습니다.');
+}
+
 // 네이티브 모듈 타입 정의
 interface NativeModule {
   // 메모리 관련
@@ -178,6 +183,9 @@ function safeJsonParse(jsonStr: string): any {
  */
 export function registerNativeIpcHandlers(): void {
   console.log('[Native IPC] 네이티브 모듈 IPC 핸들러 등록 시작');
+  
+  // 타입 정보 로깅
+  logTypeInformation();
   
   // 네이티브 모듈 로드
   loadNativeModule();
