@@ -1,7 +1,7 @@
 /**
  * 시스템 자동 시작 관리 모듈
  * 
- * 애플리케이션이 시스템 시작 시 자동으로 실행되도록 설정합니다.
+ * 애플리케이션이 시스템 시작 시 자동으로 실행되도록 Setup합니다.
  * 다양한 운영체제에서 작동하는 자동 시작 기능을 제공합니다.
  */
 
@@ -10,7 +10,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { execSync } from 'child_process';
 
-// 자동 시작 설정 인터페이스
+// 자동 시작 Setup 인터페이스
 export interface AutoLaunchSettings {
   enabled: boolean;
   startMinimized: boolean;
@@ -55,18 +55,18 @@ export class AutoLaunchManager {
   }
 
   /**
-   * 자동 시작 관리자 초기화
-   */
+ * 자동 시작 관리자 초기화
+ */
   async initialize(): Promise<boolean> {
     try {
       // 플랫폼 지원 여부 확인
       if (!this.isPlatformSupported()) {
-        console.warn(`[AutoLaunch] Platform ${process.platform} is not supported`);
+        console.warn('[AutoLaunch] Platform ${process.platform} is not supported');
         return false;
       }
 
       this.isInitialized = true;
-      console.log('[AutoLaunch] Manager initialized successfully');
+      console.log('[AutoLaunch] 매니저 초기화 Success');
       return true;
     } catch (error) {
       console.error('[AutoLaunch] Initialization failed:', error);
@@ -75,8 +75,8 @@ export class AutoLaunchManager {
   }
 
   /**
-   * 자동 시작 활성화
-   */
+ * 자동 시작 활성화
+ */
   async enable(settings: Partial<AutoLaunchSettings> = {}): Promise<boolean> {
     if (!this.isInitialized) {
       await this.initialize();
@@ -99,8 +99,8 @@ export class AutoLaunchManager {
   }
 
   /**
-   * 자동 시작 비활성화
-   */
+ * 자동 시작 비활성화
+ */
   async disable(): Promise<boolean> {
     if (!this.isInitialized) {
       await this.initialize();
@@ -123,8 +123,8 @@ export class AutoLaunchManager {
   }
 
   /**
-   * 자동 시작 상태 확인
-   */
+ * 자동 시작 상태 확인
+ */
   async getStatus(): Promise<AutoLaunchStatus> {
     const status: AutoLaunchStatus = {
       isEnabled: false,
@@ -148,8 +148,8 @@ export class AutoLaunchManager {
   }
 
   /**
-   * 자동 시작 설정 토글
-   */
+ * 자동 시작 Setup 토글
+ */
   async toggle(settings?: Partial<AutoLaunchSettings>): Promise<boolean> {
     const status = await this.getStatus();
     
@@ -161,8 +161,8 @@ export class AutoLaunchManager {
   }
 
   /**
-   * 실행 파일 경로 가져오기
-   */
+ * 실행 파일 경로 가져오기
+ */
   private getExecutablePath(): string {
     if (app.isPackaged) {
       return process.execPath;
@@ -173,15 +173,15 @@ export class AutoLaunchManager {
   }
 
   /**
-   * 플랫폼 지원 여부 확인
-   */
+ * 플랫폼 지원 여부 확인
+ */
   private isPlatformSupported(): boolean {
     return process.platform in PLATFORM_CONFIGS;
   }
 
   /**
-   * 플랫폼별 자동 시작 활성화
-   */
+ * 플랫폼별 자동 시작 활성화
+ */
   private async enableForPlatform(startMinimized: boolean): Promise<boolean> {
     switch (process.platform) {
       case 'win32':
@@ -196,8 +196,8 @@ export class AutoLaunchManager {
   }
 
   /**
-   * 플랫폼별 자동 시작 비활성화
-   */
+ * 플랫폼별 자동 시작 비활성화
+ */
   private async disableForPlatform(): Promise<boolean> {
     switch (process.platform) {
       case 'win32':
@@ -212,8 +212,8 @@ export class AutoLaunchManager {
   }
 
   /**
-   * 플랫폼별 자동 시작 상태 확인
-   */
+ * 플랫폼별 자동 시작 상태 확인
+ */
   private async checkStatusForPlatform(): Promise<boolean> {
     switch (process.platform) {
       case 'win32':
@@ -253,7 +253,7 @@ export class AutoLaunchManager {
       execSync(regCommand, { stdio: 'pipe' });
       return true;
     } catch (error) {
-      // 키가 존재하지 않는 경우도 성공으로 처리
+      // 키가 존재하지 않는 경우도 Success으로 처리
       return true;
     }
   }
@@ -452,36 +452,36 @@ export function getAutoLaunchManager(): AutoLaunchManager {
  */
 export const autoLaunch = {
   /**
-   * 자동 시작 초기화
-   */
+ * 자동 시작 초기화
+ */
   async initialize(): Promise<boolean> {
     return await getAutoLaunchManager().initialize();
   },
 
   /**
-   * 자동 시작 활성화
-   */
+ * 자동 시작 활성화
+ */
   async enable(settings?: Partial<AutoLaunchSettings>): Promise<boolean> {
     return await getAutoLaunchManager().enable(settings);
   },
 
   /**
-   * 자동 시작 비활성화
-   */
+ * 자동 시작 비활성화
+ */
   async disable(): Promise<boolean> {
     return await getAutoLaunchManager().disable();
   },
 
   /**
-   * 자동 시작 상태 확인
-   */
+ * 자동 시작 상태 확인
+ */
   async getStatus(): Promise<AutoLaunchStatus> {
     return await getAutoLaunchManager().getStatus();
   },
 
   /**
-   * 자동 시작 토글
-   */
+ * 자동 시작 토글
+ */
   async toggle(settings?: Partial<AutoLaunchSettings>): Promise<boolean> {
     return await getAutoLaunchManager().toggle(settings);
   }

@@ -47,20 +47,20 @@ export declare class SystemMonitor extends EventEmitter {
     private constructor();
     static getInstance(): SystemMonitor;
     /**
-     * 시스템 모니터 초기화
-     */
+   * 시스템 모니터 초기화
+   */
     private initialize;
     /**
-     * 모니터링 시작
-     */
+   * 모니터링 시작
+   */
     startMonitoring(): void;
     /**
-     * 모니터링 중지
-     */
+   * 모니터링 중지
+   */
     stopMonitoring(): void;
     /**
-     * 시스템 메트릭 수집
-     */
+   * 시스템 메트릭 수집
+   */
     private collectMetrics;
     /**
      * CPU 메트릭 수집
@@ -75,68 +75,68 @@ export declare class SystemMonitor extends EventEmitter {
      */
     private getCpuTemperature;
     /**
-     * 메모리 메트릭 수집
-     */
+   * 메모리 메트릭 수집
+   */
     private getMemoryMetrics;
     /**
      * GPU 메트릭 수집
      */
     private getGpuMetrics;
     /**
-     * 디스크 메트릭 수집
-     */
+   * 디스크 메트릭 수집
+   */
     private getDiskMetrics;
     /**
-     * 전원 메트릭 수집
-     */
+   * 전원 메트릭 수집
+   */
     private getPowerMetrics;
     /**
-     * 배터리 레벨 조회
-     */
+   * 배터리 레벨 조회
+   */
     private getBatteryLevel;
     /**
-     * 충전 상태 확인
-     */
+   * 충전 상태 확인
+   */
     private isCharging;
     /**
-     * 네트워크 통계 업데이트
-     */
+   * 네트워크 통계 업데이트
+   */
     private updateNetworkStats;
     /**
-     * 메트릭 처리 및 분석
-     */
+   * 메트릭 처리 및 분석
+   */
     private processMetrics;
     /**
-     * 성능 알림 확인
-     */
+   * 성능 알림 확인
+   */
     private checkAlerts;
     /**
-     * 전원 모니터링 설정
-     */
+   * 전원 모니터링 Setup
+   */
     private setupPowerMonitoring;
     /**
-     * 현재 메트릭 조회
-     */
+   * 현재 메트릭 조회
+   */
     getCurrentMetrics(): SystemMetrics | null;
     /**
-     * 메트릭 히스토리 조회
-     */
+   * 메트릭 히스토리 조회
+   */
     getMetricsHistory(minutes?: number): SystemMetrics[];
     /**
-     * 평균 메트릭 계산
-     */
+   * 평균 메트릭 계산
+   */
     getAverageMetrics(minutes?: number): Partial<SystemMetrics> | null;
     /**
-     * 시스템 상태 확인
-     */
+   * 시스템 상태 확인
+   */
     getSystemHealth(): {
         status: 'good' | 'warning' | 'critical';
         issues: string[];
         score: number;
     };
     /**
-     * 타이핑 메트릭 업데이트
-     */
+   * 타이핑 메트릭 업데이트
+   */
     updateTypingMetrics(data: any): void;
     /**
      * 시스템 정보 조회 (IPC 핸들러용)

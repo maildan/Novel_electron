@@ -71,7 +71,7 @@ function loadNativeModule() {
                         const initialized = nativeModule.initializeNativeModules();
                         console.log('[Native IPC] 네이티브 모듈 초기화:', initialized);
                     }
-                    console.log('[Native IPC] 네이티브 모듈 로드 성공:', {
+                    console.log('[Native IPC] 네이티브 모듈 로드 Success:', {
                         version: nativeModule?.getNativeModuleVersion?.() || 'unknown',
                         functions: Object.keys(nativeModule || {}).length
                     });
@@ -80,14 +80,14 @@ function loadNativeModule() {
                 }
             }
             catch (error) {
-                console.error(`[Native IPC] 경로에서 로드 실패 ${modulePath}:`, error);
+                console.error('[Native IPC] 경로에서 로드 Failed ${modulePath}:', error);
             }
         }
         throw new Error(`네이티브 모듈을 찾을 수 없습니다: ${moduleFileName}`);
     }
     catch (error) {
         nativeModuleError = error instanceof Error ? error.message : String(error);
-        console.error('[Native IPC] 네이티브 모듈 로드 실패:', nativeModuleError);
+        console.error('[Native IPC] 네이티브 모듈 로드 Failed:', nativeModuleError);
         nativeModule = null;
     }
 }
@@ -112,7 +112,7 @@ function safeNativeCall(functionName, ...args) {
     }
     catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
-        console.error(`[Native IPC] ${functionName} 호출 오류:`, errorMessage);
+        console.error('[Native IPC] ${functionName} 호출 Error:', errorMessage);
         return {
             success: false,
             error: errorMessage
@@ -270,24 +270,24 @@ function registerNativeIpcHandlers() {
     electron_1.ipcMain.handle('native:endPerformanceMeasurement', (_, measurementId) => {
         return safeNativeCall('endPerformanceMeasurement', measurementId);
     });
-    console.log('[Native IPC] 네이티브 모듈 IPC 핸들러 등록 완료:', {
+    console.log('[Native IPC] 네이티브 모듈 IPC 핸들러 등록 Completed:', {
         moduleLoaded: !!nativeModule,
         error: nativeModuleError,
         handlersCount: 27 // 등록된 핸들러 수
     });
 }
 /**
- * 네이티브 모듈 IPC 핸들러 정리
+ * 네이티브 모듈 IPC 핸들러 Cleanup
  */
 function cleanupNativeIpcHandlers() {
-    // 네이티브 모듈 정리
+    // 네이티브 모듈 Cleanup
     if (nativeModule && typeof nativeModule.cleanupNativeModules === 'function') {
         try {
             nativeModule.cleanupNativeModules();
-            console.log('[Native IPC] 네이티브 모듈 정리 완료');
+            console.log('[Native IPC] 네이티브 모듈 Cleanup Completed');
         }
         catch (error) {
-            console.error('[Native IPC] 네이티브 모듈 정리 오류:', error);
+            console.error('[Native IPC] 네이티브 모듈 Cleanup Error:', error);
         }
     }
     // IPC 핸들러 제거
@@ -330,7 +330,7 @@ function cleanupNativeIpcHandlers() {
     handlers.forEach(handler => {
         electron_1.ipcMain.removeHandler(handler);
     });
-    console.log('[Native IPC] 네이티브 모듈 IPC 핸들러 정리 완료');
+    console.log('[Native IPC] 네이티브 모듈 IPC 핸들러 Cleanup Completed');
 }
 // 네이티브 모듈 상태 정보 조회 (기존 memory-ipc.ts와 연동)
 function getNativeModuleStatus() {

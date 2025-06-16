@@ -66,14 +66,14 @@ class WindowManager {
                 x: Math.floor((width - windowWidth) / 2),
                 y: Math.floor((height - windowHeight) / 2),
                 title: config_1.AppConfig.APP_NAME,
-                icon: path.join(__dirname, '../../public/app_icon.webp'), // 앱 아이콘 설정
+                icon: path.join(__dirname, '../../public/app_icon.webp'), // 앱 아이콘 Setup
                 titleBarStyle: 'default', // 기본 OS 창 스타일 사용
                 frame: true, // 기본 창 프레임 사용
                 autoHideMenuBar: false, // 메뉴바 숨기지 않음
                 vibrancy: undefined, // vibrancy 비활성화
                 backgroundMaterial: undefined // 배경 머티리얼 비활성화
             });
-            // 윈도우 이벤트 리스너 설정
+            // 윈도우 이벤트 리스너 Setup
             this.setupWindowEventListeners();
             // 개발 모드에서 CSP 헤더 후킹 (Turbopack 호환성)
             if (config_1.AppConfig.isDevelopment) {
@@ -111,23 +111,23 @@ class WindowManager {
                 logger_1.logger.info('⏹️ 페이지 로드 중단');
             });
             this.mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL) => {
-                logger_1.logger.error(`❌ 페이지 로드 실패: ${errorCode} - ${errorDescription} (${validatedURL})`);
-                // 로드 실패 시 강제 표시
+                logger_1.logger.error(`❌ 페이지 로드 Failed: ${errorCode} - ${errorDescription} (${validatedURL})`);
+                // 로드 Failed 시 강제 표시
                 if (this.mainWindow && !this.mainWindow.isVisible()) {
                     this.mainWindow.show();
                     this.mainWindow.focus();
-                    logger_1.logger.info('🚨 로드 실패 시 윈도우 강제 표시');
+                    logger_1.logger.info('🚨 로드 Failed 시 윈도우 강제 표시');
                 }
             });
-            // 준비 완료 후 윈도우 표시
+            // 준비 Completed 후 윈도우 표시
             this.mainWindow.once('ready-to-show', () => {
                 if (this.mainWindow) {
                     this.mainWindow.show();
                     this.mainWindow.focus();
-                    logger_1.logger.info('✅ 메인 윈도우 표시 완료');
+                    logger_1.logger.info('✅ 메인 윈도우 표시 Completed');
                 }
             });
-            // 윈도우 로드 완료 후 강제 표시 및 개발자 도구 열기
+            // 윈도우 로드 Completed 후 강제 표시 및 개발자 도구 열기
             this.mainWindow.webContents.once('did-finish-load', () => {
                 if (this.mainWindow && !this.mainWindow.isVisible()) {
                     this.mainWindow.show();
@@ -153,20 +153,20 @@ class WindowManager {
                     });
                 }
             });
-            // DOM 로드 완료 이벤트 추가
+            // DOM 로드 Completed 이벤트 추가
             this.mainWindow.webContents.once('dom-ready', () => {
-                logger_1.logger.info('🌐 DOM 로드 완료');
+                logger_1.logger.info('🌐 DOM 로드 Completed');
                 if (this.mainWindow && !this.mainWindow.isVisible()) {
                     this.mainWindow.show();
                     this.mainWindow.focus();
                     logger_1.logger.info('🔄 DOM 로드 후 윈도우 표시');
                 }
             });
-            logger_1.logger.info('🖼️  메인 윈도우 생성 완료');
+            logger_1.logger.info('🖼️  메인 윈도우 생성 Completed');
             return this.mainWindow;
         }
         catch (error) {
-            logger_1.logger.error('❌ 메인 윈도우 생성 실패:', error);
+            logger_1.logger.error('❌ 메인 윈도우 생성 Failed:', error);
             throw error;
         }
     }
@@ -194,7 +194,7 @@ class WindowManager {
             if (this.mainWindow) {
                 const [width, height] = this.mainWindow.getSize();
                 logger_1.logger.debug(`📏 윈도우 크기 변경: ${width}x${height}`);
-                // TODO: 크기를 설정에 저장
+                // TODO: 크기를 Setup에 저장
             }
         });
         // 외부 링크는 기본 브라우저에서 열기
@@ -236,8 +236,8 @@ class WindowManager {
         }
     }
     /**
-     * 윈도우 정보 조회
-     */
+   * 윈도우 정보 조회
+   */
     getWindowInfo() {
         try {
             const allWindows = electron_1.BrowserWindow.getAllWindows();
@@ -290,7 +290,7 @@ class WindowManager {
             };
         }
         catch (error) {
-            console.error('[WindowManager] 윈도우 정보 조회 실패:', error);
+            console.error('[WindowManager] 윈도우 정보 조회 Failed:', error);
             throw error;
         }
     }

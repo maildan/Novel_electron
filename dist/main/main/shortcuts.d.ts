@@ -6,7 +6,7 @@
  */
 import { BrowserWindow } from 'electron';
 /**
- * 전역 단축키 등록
+ * Register global shortcuts
  */
 export declare function registerGlobalShortcut(accelerator: string, callback: () => void, description?: string, category?: string): boolean;
 /**
@@ -30,7 +30,7 @@ export declare function registerLocalShortcut(window: BrowserWindow, accelerator
  */
 export declare function initializeShortcuts(): void;
 /**
- * 기본 앱 단축키 설정
+ * 기본 앱 단축키 Setup
  */
 export declare function setupDefaultShortcuts(): void;
 /**

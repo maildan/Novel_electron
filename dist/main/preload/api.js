@@ -114,7 +114,7 @@ const memoryAPI = {
     forceGc: () => electron_1.ipcRenderer.invoke('memoryForceGc'),
     setThreshold: (threshold) => electron_1.ipcRenderer.invoke('memory:setThreshold', threshold),
 };
-// 설정 API
+// Setup API
 const settingsAPI = {
     // 기본 CRUD
     get: (key) => electron_1.ipcRenderer.invoke(channels_1.CHANNELS.SETTINGS_GET, key),
@@ -250,6 +250,13 @@ exports.electronAPI = {
             throw error;
         }
     },
+    // 키보드 모니터링 및 권한 관련 API
+    getKeyboardPermissions: () => electron_1.ipcRenderer.invoke('getKeyboardPermissions'),
+    toggleKeyboardMonitoring: () => electron_1.ipcRenderer.invoke('toggleKeyboardMonitoring'),
+    getTypingStats: () => electron_1.ipcRenderer.invoke('getTypingStats'),
+    resetTypingStats: () => electron_1.ipcRenderer.invoke('resetTypingStats'),
+    getHangulCompositionState: () => electron_1.ipcRenderer.invoke('getHangulCompositionState'),
+    openPermissionsSettings: () => electron_1.ipcRenderer.invoke('openPermissionsSettings'),
     // 모든 API 카테고리
     database: databaseAPI,
     ipcRenderer: ipcRendererAPI,
@@ -287,7 +294,7 @@ exports.electronAPI = {
             env: process.env.NODE_ENV
         }),
         log: (message, ...args) => {
-            console.log(`[Preload] ${message}`, ...args);
+            console.log('[Preload] ${message}', ...args);
         }
     }
 };

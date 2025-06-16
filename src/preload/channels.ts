@@ -18,8 +18,8 @@ export const CHANNELS = {
   CLEAR_DATA: 'db:clearData',
 
   // 시스템 모니터링
-  START_MONITORING: 'system:startMonitoring',
-  STOP_MONITORING: 'system:stopMonitoring',
+  START_MONITORING: 'start-monitoring',
+  STOP_MONITORING: 'stop-monitoring',
   GET_CURRENT_METRICS: 'system:getCurrentMetrics',
   GET_METRICS_HISTORY: 'system:getMetricsHistory',
   GET_AVERAGE_METRICS: 'system:getAverageMetrics',
@@ -109,13 +109,13 @@ export const CHANNELS = {
   CLOSE_WINDOW: 'closeWindow',
   TOGGLE_DEVTOOLS: 'window:toggleDevtools',
 
-  // 설정 관리 (기존 config)
+  // Setup 관리 (기존 config)
   GET_CONFIG: 'config:get',
   SET_CONFIG: 'config:set',
   GET_ALL_CONFIG: 'config:getAllConfig',
   RESET_CONFIG: 'config:reset',
 
-  // 설정 관리 (새로운 settings)
+  // Setup 관리 (새로운 settings)
   SETTINGS_GET: 'settings:get',
   SETTINGS_SET: 'settings:set',
   SETTINGS_GET_ALL: 'settings:getAll',

@@ -1,6 +1,6 @@
 /**
- * Advanced keyboard monitoring and input processing module
- * Handles global shortcuts, IME composition, Hangul processing, and typing analytics
+ * 고급 키보드 모니터링 및 입력 처리 모듈
+ * 전역 단축키, IME 조합, 한글 처리, 타이핑 분석을 담당합니다
  */
 import { BrowserWindow } from 'electron';
 interface HangulComposerState {

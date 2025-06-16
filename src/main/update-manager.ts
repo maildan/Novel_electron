@@ -110,7 +110,7 @@ export class UpdateManager extends EventEmitter {
   }
   
   /**
-   * Check if auto-updates are supported on current platform
+ * Check if auto-updates are supported on current platform
    */
   private checkPlatformSupport(): void {
     // Auto-update is disabled in development
@@ -122,7 +122,7 @@ export class UpdateManager extends EventEmitter {
     
     // Check platform support
     if (!(is.macos || is.windows)) {
-      debugLog(`[UpdateManager] Auto-update not supported on platform: ${process.platform}`);
+      debugLog('[UpdateManager] Auto-update not supported on platform: ${process.platform}');
       this.isSupported = false;
       return;
     }
@@ -132,7 +132,7 @@ export class UpdateManager extends EventEmitter {
   
   /**
    * Initialize the auto-updater
-   */
+ */
   public async initialize(options: Partial<UpdateOptions> = {}): Promise<boolean> {
     if (this.isInitialized) {
       debugLog('[UpdateManager] Already initialized');
@@ -185,7 +185,7 @@ export class UpdateManager extends EventEmitter {
   }
   
   /**
-   * Setup logging configuration
+ * Setup logging configuration
    */
   private setupLogging(): void {
     try {
@@ -322,7 +322,7 @@ export class UpdateManager extends EventEmitter {
   
   /**
    * Parse update info from auto-updater
-   */
+ */
   private parseUpdateInfo(info: any): UpdateInfo {
     return {
       version: info.version || 'unknown',
@@ -344,7 +344,7 @@ export class UpdateManager extends EventEmitter {
   }
   
   /**
-   * Show update available notification
+ * Show update available notification
    */
   private async showUpdateAvailableNotification(): Promise<void> {
     try {
@@ -453,7 +453,7 @@ export class UpdateManager extends EventEmitter {
   
   /**
    * Start automatic update checking
-   */
+ */
   public startPeriodicChecks(): void {
     if (!this.isSupported || this.updateCheckTimer) {
       return;
@@ -463,12 +463,12 @@ export class UpdateManager extends EventEmitter {
       this.checkForUpdates();
     }, this.checkInterval);
     
-    debugLog(`[UpdateManager] Started periodic checks every ${this.checkInterval / 1000 / 60} minutes`);
+    debugLog('[UpdateManager] Started periodic checks every ${this.checkInterval / 1000 / 60} minutes');
   }
   
   /**
-   * Stop automatic update checking
-   */
+ * Stop automatic update checking
+ */
   public stopPeriodicChecks(): void {
     if (this.updateCheckTimer) {
       clearInterval(this.updateCheckTimer);
@@ -478,7 +478,7 @@ export class UpdateManager extends EventEmitter {
   }
   
   /**
-   * Set auto-download preference
+ * Set auto-download preference
    */
   public setAutoDownload(enabled: boolean): void {
     this.options.autoDownload = enabled;
@@ -498,7 +498,7 @@ export class UpdateManager extends EventEmitter {
       this.startPeriodicChecks();
     }
     
-    debugLog(`[UpdateManager] Check interval set to ${this.checkInterval / 1000 / 60} minutes`);
+    debugLog('[UpdateManager] Check interval set to ${this.checkInterval / 1000 / 60} minutes');
   }
   
   /**
@@ -510,7 +510,7 @@ export class UpdateManager extends EventEmitter {
   
   /**
    * Check if updates are supported
-   */
+ */
   public isUpdateSupported(): boolean {
     return this.isSupported;
   }

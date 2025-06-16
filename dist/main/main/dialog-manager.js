@@ -1,8 +1,8 @@
 "use strict";
 /**
- * Dialog Manager for Loop 6
- * Modern dialog and notification system with TypeScript
- * Features: Custom dialogs, system dialogs, notifications, prompts
+ * Loop 6 대화상자 관리자
+ * TypeScript 기반의 현대적인 대화상자 및 알림 시스템
+ * 기능: 커스텀 대화상자, 시스템 대화상자, 알림, 프롬프트
  */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -48,7 +48,7 @@ exports.showRestartPrompt = showRestartPrompt;
 const electron_1 = require("electron");
 const path = __importStar(require("path"));
 const utils_1 = require("./utils");
-// Dialog Types and Interfaces
+// 대화상자 타입 및 인터페이스
 var DialogType;
 (function (DialogType) {
     DialogType["INFO"] = "info";
@@ -57,8 +57,8 @@ var DialogType;
     DialogType["QUESTION"] = "question";
 })(DialogType || (exports.DialogType = DialogType = {}));
 /**
- * Dialog Manager Class
- * Handles all types of dialogs and notifications
+ * 대화상자 관리자 클래스
+ * 모든 유형의 대화상자 및 알림을 처리합니다
  */
 class DialogManager {
     constructor() {
@@ -74,7 +74,7 @@ class DialogManager {
         return DialogManager.instance;
     }
     /**
-     * Setup IPC handlers for renderer communication
+     * 렌더러 통신을 위한 IPC 핸들러 설정
      */
     setupIpcHandlers() {
         electron_1.ipcMain.handle('dialog:show-message', async (event, options) => {
@@ -103,7 +103,7 @@ class DialogManager {
         });
     }
     /**
-     * Show system message dialog
+     * 시스템 메시지 대화상자 표시
      */
     async showMessageDialog(options) {
         try {
@@ -198,12 +198,12 @@ class DialogManager {
      */
     async showNotification(options) {
         try {
-            // Check if notifications are supported
+            // 알림 지원 여부 확인
             if (!electron_1.Notification.isSupported()) {
                 (0, utils_1.debugLog)('[DialogManager] Notifications not supported on this platform');
                 return false;
             }
-            // Add to queue for rate limiting
+            // 속도 제한을 위해 큐에 추가
             this.notificationQueue.push(options);
             if (!this.isProcessingNotifications) {
                 this.processNotificationQueue();
@@ -225,7 +225,7 @@ class DialogManager {
             if (!options)
                 continue;
             try {
-                // Notification 생성 시 지원되는 옵션만 사용
+                // 알림 생성 시 지원되는 옵션만 사용
                 const notificationOptions = {
                     title: options.title,
                     body: options.body
@@ -236,7 +236,7 @@ class DialogManager {
                     notificationOptions.silent = options.silent;
                 const notification = new electron_1.Notification(notificationOptions);
                 notification.show();
-                // Rate limiting: wait between notifications
+                // 속도 제한: 알림 간 대기 시간
                 if (this.notificationQueue.length > 0) {
                     await new Promise(resolve => setTimeout(resolve, 1000));
                 }
@@ -264,7 +264,7 @@ class DialogManager {
             const result = await this.showMessageDialog(options);
             if (result.response === 0) {
                 (0, utils_1.debugLog)('[DialogManager] User chose to restart now');
-                // Schedule restart after a brief delay
+                // 잠시 후 재시작 예약
                 setTimeout(() => {
                     electron_1.app.relaunch();
                     electron_1.app.exit(0);
@@ -327,7 +327,7 @@ class DialogManager {
      */
     async showCustomDialog(id, options) {
         try {
-            // Close existing dialog with same ID
+            // 같은 ID로 기존 대화상자 닫기
             this.closeCustomDialog(id);
             const parentWindow = electron_1.BrowserWindow.getFocusedWindow() ||
                 electron_1.BrowserWindow.getAllWindows()[0];
@@ -346,22 +346,22 @@ class DialogManager {
                     preload: path.join(__dirname, 'preload.js')
                 }
             });
-            // Load content
+            // 콘텐츠 로드
             if (options.htmlContent) {
                 await dialogWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(options.htmlContent)}`);
             }
             else {
                 await dialogWindow.loadFile(path.join(__dirname, '..', 'renderer', 'dialog.html'));
             }
-            // Pass data to dialog if provided
+            // 제공된 경우 대화상자에 데이터 전달
             if (options.data) {
                 dialogWindow.webContents.send('dialog-data', options.data);
             }
-            // Show dialog
+            // 대화상자 표시
             dialogWindow.show();
-            // Store reference
+            // 참조 저장
             this.customDialogs.set(id, dialogWindow);
-            // Cleanup on close
+            // 닫힐 때 정리
             dialogWindow.on('closed', () => {
                 this.customDialogs.delete(id);
             });
@@ -443,9 +443,9 @@ class DialogManager {
     }
 }
 exports.DialogManager = DialogManager;
-// Export singleton instance
+// 싱글톤 인스턴스 내보내기
 exports.dialogManager = DialogManager.getInstance();
-// Export convenience functions
+// 편의 함수 내보내기
 async function showMessage(options) {
     return await exports.dialogManager.showMessageDialog(options);
 }

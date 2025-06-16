@@ -39,7 +39,7 @@ const path = __importStar(require("path"));
 const dotenv_1 = require("dotenv");
 // 메모리 최적화: GPU 프로세스 완전 비활성화
 electron_1.app.disableHardwareAcceleration();
-// 메모리 최적화: 추가 프로세스 플래그 설정
+// 메모리 최적화: 추가 프로세스 플래그 Setup
 electron_1.app.commandLine.appendSwitch('--disable-gpu');
 electron_1.app.commandLine.appendSwitch('--disable-gpu-process');
 electron_1.app.commandLine.appendSwitch('--disable-gpu-sandbox');
@@ -56,15 +56,15 @@ electron_1.app.commandLine.appendSwitch('--enable-features', 'VizDisplayComposit
 electron_1.app.commandLine.appendSwitch('--js-flags', '--max-old-space-size=256 --max-semi-space-size=8');
 electron_1.app.commandLine.appendSwitch('--memory-pressure-off');
 electron_1.app.commandLine.appendSwitch('--max_old_space_size', '256');
-// Load environment variables early with explicit path
+// 명시적 경로로 환경변수를 일찍 로드
 const envPath = path.resolve(process.cwd(), '.env');
-console.log(`Loading .env from: ${envPath}`);
+console.log('Loading .env from: ${envPath}');
 (0, dotenv_1.config)({ path: envPath });
 const window_1 = require("./window");
 const keyboard_1 = require("./keyboard");
 const native_ipc_1 = require("./native-ipc");
 const static_server_1 = require("./static-server");
-// Import all remaining main directory modules for side effects and initialization
+// 사이드 이펙트와 초기화를 위해 나머지 main 디렉토리 모듈들을 가져오기
 require("./app-lifecycle");
 require("./auto-launch-manager");
 require("./browser-detector");
@@ -98,24 +98,24 @@ require("./update-manager");
 require("./utils");
 require("./web-contents-handlers");
 require("./windowHandlers");
-// Load environment variables early
+// 환경변수를 일찍 로드
 (0, dotenv_1.config)();
-// Development mode detection - define early for all other code to use
+// 개발 모드 감지 - 다른 모든 코드에서 사용할 수 있도록 일찍 정의
 const isDev = process.env.NODE_ENV === 'development';
 const disableCSP = isDev || process.env.DISABLE_CSP === 'true';
 const disableSecurity = isDev || process.env.DISABLE_SECURITY === 'true';
-// Set essential environment variables
+// 필수 환경변수 설정
 process.env.ELECTRON_STATIC = isDev ? 'false' : 'true';
 process.env.STATIC_MODE = isDev ? 'development' : 'production';
-console.log(`[electron] 환경변수 ELECTRON_STATIC: ${process.env.ELECTRON_STATIC}`);
-console.log(`[electron] 환경변수 STATIC_MODE: ${process.env.STATIC_MODE}`);
-console.log(`애플리케이션 시작 중 (개발 모드: ${isDev}, 보안 비활성화: ${disableSecurity}, CSP 비활성화: ${disableCSP})`);
-// Set environment variables before importing Electron modules
+console.log('[electron] 환경변수 ELECTRON_STATIC: ${process.env.ELECTRON_STATIC}');
+console.log('[electron] 환경변수 STATIC_MODE: ${process.env.STATIC_MODE}');
+console.log('애플리케이션 시작 중 (개발 모드: ${isDev}, 보안 비활성화: ${disableSecurity}, CSP 비활성화: ${disableCSP})');
+// Electron 모듈을 가져오기 전에 환경변수 설정
 if (disableSecurity || disableCSP) {
     process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
     process.env.ELECTRON_OVERRIDE_CSP = '*';
 }
-// Hardware acceleration control - must be called before app ready
+// 하드웨어 가속 제어 - 앱 준비 전에 호출되어야 함
 // 개발 모드에서도 환경변수로 하드웨어 가속 제어 가능
 const disableHardwareAcceleration = process.env.GPU_MODE === 'software' ||
     process.env.DISABLE_GPU === 'true' ||
@@ -143,10 +143,10 @@ else if (process.env.HARDWARE_ACCELERATION === 'true') {
         electron_1.app.commandLine.appendSwitch('enable-gpu-antialiasing');
     }
 }
-// Development mode command line switches
+// 개발 모드 명령줄 스위치
 if (isDev) {
     console.log('개발 모드: 보안 우회 및 CSP 제거 활성화...');
-    // Security related command line switches
+    // 보안 관련 명령줄 스위치
     electron_1.app.commandLine.appendSwitch('disable-web-security');
     electron_1.app.commandLine.appendSwitch('allow-insecure-localhost');
     electron_1.app.commandLine.appendSwitch('ignore-certificate-errors');
@@ -154,7 +154,7 @@ if (isDev) {
     electron_1.app.commandLine.appendSwitch('allow-running-insecure-content');
     console.log('모든 CSP 제한이 완전히 비활성화됨');
 }
-// GPU related command line switches
+// GPU 관련 명령줄 스위치
 if (!disableHardwareAcceleration) {
     electron_1.app.commandLine.appendSwitch('enable-hardware-acceleration');
     electron_1.app.commandLine.appendSwitch('ignore-gpu-blacklist');
@@ -163,18 +163,18 @@ else {
     electron_1.app.commandLine.appendSwitch('disable-gpu');
     electron_1.app.commandLine.appendSwitch('disable-gpu-compositing');
 }
-// Debug GPU process crash limit disable
+// 디버그 GPU 프로세스 크래시 제한 비활성화
 electron_1.app.commandLine.appendSwitch('disable-gpu-process-crash-limit');
 if (isDev) {
     electron_1.app.commandLine.appendSwitch('debug-gpu');
 }
-// Environment logging
-console.log(`[환경변수] NODE_ENV: ${process.env.NODE_ENV || '설정되지 않음'}`);
+// 환경 로깅
+console.log(`[환경변수] NODE_ENV: ${process.env.NODE_ENV || 'Setup되지 않음'}`);
 console.log(`[환경변수] NEXT_PORT: ${process.env.NEXT_PORT || '3000'}`);
-console.log(`[환경변수] GPU_MODE: ${process.env.GPU_MODE || '설정되지 않음'}`);
-console.log(`[환경변수] MongoDB URI: ${process.env.MONGODB_URI ? '설정됨' : '설정되지 않음'}`);
-console.log(`[환경변수] Supabase URL: ${process.env.SUPABASE_URL ? '설정됨' : '설정되지 않음'}`);
-// Import additional required modules (avoid duplicates)
+console.log(`[환경변수] GPU_MODE: ${process.env.GPU_MODE || 'Setup되지 않음'}`);
+console.log(`[환경변수] MongoDB URI: ${process.env.MONGODB_URI ? 'Setup됨' : 'Setup되지 않음'}`);
+console.log(`[환경변수] Supabase URL: ${process.env.SUPABASE_URL ? 'Setup됨' : 'Setup되지 않음'}`);
+// 추가 필수 모듈 가져오기 (중복 방지)
 const settings_manager_1 = require("./settings-manager");
 const handlers_manager_1 = require("./handlers-manager");
 const data_collector_1 = require("./data-collector");
@@ -203,24 +203,24 @@ function initializeManagers() {
         appState.keyboardManager = keyboard_1.KeyboardManager.getInstance();
         // Initialize static server for production builds
         const isStaticMode = process.env.ELECTRON_STATIC === 'true' || process.env.STATIC_MODE === 'true' || !isDev;
-        console.log(`환경변수 ELECTRON_STATIC: ${process.env.ELECTRON_STATIC}`);
-        console.log(`환경변수 STATIC_MODE: ${process.env.STATIC_MODE}`);
-        console.log(`isDev: ${isDev}`);
-        console.log(`isStaticMode: ${isStaticMode}`);
+        console.log('환경변수 ELECTRON_STATIC: ${process.env.ELECTRON_STATIC}');
+        console.log('환경변수 STATIC_MODE: ${process.env.STATIC_MODE}');
+        console.log('isDev: ${isDev}');
+        console.log('isStaticMode: ${isStaticMode}');
         if (isStaticMode) {
             console.log('정적 서버 모드 활성화됨');
             const staticPath = path.join(__dirname, '../../../out'); // Next.js static export 경로
-            console.log(`정적 파일 경로: ${staticPath}`);
+            console.log('정적 파일 경로: ${staticPath}');
             appState.staticServer = new static_server_1.StaticServer(staticPath, 5500);
         }
         else {
             console.log('정적 서버 모드 비활성화됨');
         }
-        console.log('핵심 매니저 초기화 성공');
-        data_collector_1.dataCollector.log('system', '핵심 매니저 초기화 완료');
+        console.log('핵심 매니저 초기화 Success');
+        data_collector_1.dataCollector.log('system', '핵심 매니저 초기화 Completed');
     }
     catch (error) {
-        console.error('매니저 초기화 오류:', error);
+        console.error('매니저 초기화 Error:', error);
         throw error;
     }
 }
@@ -232,18 +232,18 @@ async function initializeCoreSystem() {
         // Initialize settings manager first - other managers may depend on settings
         await (0, settings_manager_1.initializeSettingsManager)();
         appState.settingsManagerInitialized = true;
-        console.log('설정 관리자 초기화됨');
-        data_collector_1.dataCollector.log('system', '설정 관리자 초기화 완료');
+        console.log('Setup 관리자 Initialized');
+        data_collector_1.dataCollector.log('system', 'Setup 관리자 초기화 Completed');
         // Initialize static server for production builds
         if (appState.staticServer) {
             try {
                 const staticPort = await appState.staticServer.start();
                 process.env.STATIC_SERVER_URL = `http://localhost:${staticPort}`;
-                console.log(`정적 서버 시작됨: http://localhost:${staticPort}`);
-                data_collector_1.dataCollector.log('system', '정적 서버 시작 완료');
+                console.log('정적 서버 Started: http://localhost:${staticPort}');
+                data_collector_1.dataCollector.log('system', '정적 서버 시작 Completed');
             }
             catch (error) {
-                console.error('정적 서버 시작 실패:', error);
+                console.error('정적 서버 시작 Failed:', error);
                 // Don't fail the entire app if static server fails, fallback to dev mode
             }
         }
@@ -251,15 +251,15 @@ async function initializeCoreSystem() {
         if (appState.windowManager) {
             // WindowManager doesn't need initialization, it's ready on getInstance
             console.log('윈도우 관리자 준비됨');
-            data_collector_1.dataCollector.log('system', '윈도우 관리자 준비 완료');
+            data_collector_1.dataCollector.log('system', '윈도우 관리자 준비 Completed');
         }
         // Initialize keyboard manager
         if (appState.keyboardManager) {
             console.log('키보드 관리자 준비됨');
-            data_collector_1.dataCollector.log('system', '키보드 관리자 준비 완료');
+            data_collector_1.dataCollector.log('system', '키보드 관리자 준비 Completed');
         }
-        console.log('핵심 시스템 초기화 완료');
-        data_collector_1.dataCollector.log('system', '핵심 시스템 초기화 완료');
+        console.log('핵심 시스템 초기화 Completed');
+        data_collector_1.dataCollector.log('system', '핵심 시스템 초기화 Completed');
     }
     catch (error) {
         console.error('Error initializing core system:', error);

@@ -63,14 +63,14 @@ export function startTracking(): boolean {
     trackingState.sessionStats.sessionCount++;
     trackingState.sessionStats.lastActive = Date.now();
 
-    debugLog('타이핑 추적 시작됨');
+    debugLog('타이핑 추적 Started');
     
     // 메인 윈도우에 상태 변경 알림
     sendTrackingStatusToRenderer();
     
     return true;
   } catch (error: any) {
-    errorLog('추적 시작 오류:', error);
+    errorLog('추적 시작 Error:', error);
     return false;
   }
 }
@@ -95,7 +95,7 @@ export function stopTracking(): boolean {
     
     trackingState.startTime = null;
     
-    debugLog('타이핑 추적 중지됨');
+    debugLog('타이핑 추적 Stopped');
     
     // 통계 저장
     saveCurrentStats();
@@ -105,7 +105,7 @@ export function stopTracking(): boolean {
     
     return true;
   } catch (error: any) {
-    errorLog('추적 중지 오류:', error);
+    errorLog('추적 중지 Error:', error);
     return false;
   }
 }
@@ -122,7 +122,7 @@ async function saveCurrentStats(): Promise<void> {
     // TODO: 실제 파일 저장 로직 구현
     debugLog('통계 저장됨:', trackingState.sessionStats);
   } catch (error: any) {
-    errorLog('통계 저장 오류:', error);
+    errorLog('통계 저장 Error:', error);
   }
 }
 
@@ -163,7 +163,7 @@ export function processKeyPress(keyData: any): void {
       sendTrackingStatusToRenderer();
     }
   } catch (error: any) {
-    errorLog('키 입력 처리 오류:', error);
+    errorLog('키 입력 처리 Error:', error);
   }
 }
 
@@ -175,7 +175,7 @@ function startAutoMonitoring(): void {
     const settings = SettingsManager.getSettings();
     
     if (settings.autoStartMonitoring && !trackingState.isTracking) {
-      debugLog('설정에 따라 자동 모니터링 시작');
+      debugLog('Setup에 따라 자동 모니터링 시작');
       startTracking();
       
       // 렌더러에 자동 시작 알림
@@ -187,7 +187,7 @@ function startAutoMonitoring(): void {
       }
     }
   } catch (error: any) {
-    errorLog('자동 모니터링 시작 오류:', error);
+    errorLog('자동 모니터링 시작 Error:', error);
   }
 }
 
@@ -206,7 +206,7 @@ export function sendTrackingStatusToRenderer(): void {
       });
     }
   } catch (error: any) {
-    errorLog('상태 전송 중 오류:', error);
+    errorLog('상태 전송 중 Error:', error);
   }
 }
 
@@ -263,16 +263,34 @@ export function registerTrackingHandlers(): void {
         };
       }
       
+      // 키보드 리스너 먼저 설정
+      const { setupKeyboardListenerIfNeeded } = require('./keyboardHandlers');
+      const keyboardListenerResult = await setupKeyboardListenerIfNeeded();
+      
+      if (!keyboardListenerResult) {
+        errorLog('키보드 리스너 설정 Failed - 모니터링 시작 불가');
+        return { 
+          success: false, 
+          message: '키보드 리스너 설정 Failed - 모니터링 시작 불가',
+          keyboardActive: false
+        };
+      }
+      
+      debugLog('키보드 리스너 설정 성공, 모니터링 시작 중...');
+      
       const success = startTracking();
+      
+      debugLog(`모니터링 시작 ${success ? '성공' : '실패'} (키보드 리스너: ${keyboardListenerResult ? '활성화됨' : '비활성화됨'})`);
       
       return { 
         success,
-        message: success ? '모니터링 시작됨' : '모니터링 시작 실패',
+        message: success ? '모니터링 Started' : '모니터링 시작 Failed',
         isTracking: trackingState.isTracking,
-        stats: trackingState.sessionStats
+        stats: trackingState.sessionStats,
+        keyboardActive: keyboardListenerResult
       };
     } catch (error: any) {
-      errorLog('모니터링 시작 오류:', error);
+      errorLog('모니터링 시작 Error:', error);
       return { success: false, message: error.message };
     }
   });
@@ -291,16 +309,25 @@ export function registerTrackingHandlers(): void {
         };
       }
       
+      // 키보드 리스너 해제
+      const { cleanupKeyboardListener } = require('./keyboardHandlers');
+      const keyboardCleanupResult = cleanupKeyboardListener();
+      
+      debugLog(`키보드 리스너 해제 ${keyboardCleanupResult ? '성공' : '실패'}`);
+      
       const success = stopTracking();
+      
+      debugLog(`모니터링 중지 ${success ? '성공' : '실패'}`);
       
       return { 
         success,
-        message: success ? '모니터링 중지됨' : '모니터링 중지 실패',
+        message: success ? '모니터링 Stopped' : '모니터링 중지 Failed',
         isTracking: trackingState.isTracking,
-        stats: trackingState.sessionStats
+        stats: trackingState.sessionStats,
+        keyboardCleaned: keyboardCleanupResult
       };
     } catch (error: any) {
-      errorLog('모니터링 중지 오류:', error);
+      errorLog('모니터링 중지 Error:', error);
       return { success: false, message: error.message };
     }
   });
@@ -315,7 +342,7 @@ export function registerTrackingHandlers(): void {
         startTime: trackingState.startTime
       };
     } catch (error: any) {
-      errorLog('추적 상태 조회 오류:', error);
+      errorLog('추적 상태 조회 Error:', error);
       return { success: false, message: error.message };
     }
   });
@@ -330,9 +357,9 @@ export function registerTrackingHandlers(): void {
       
       await saveCurrentStats();
       
-      return { success: true, message: '통계 저장 완료' };
+      return { success: true, message: '통계 저장 Completed' };
     } catch (error: any) {
-      errorLog('통계 저장 오류:', error);
+      errorLog('통계 저장 Error:', error);
       return { success: false, message: error.message };
     }
   });
@@ -345,11 +372,11 @@ export function registerTrackingHandlers(): void {
       
       return { 
         success: true, 
-        message: '추적 상태 초기화 완료',
+        message: '추적 상태 초기화 Completed',
         stats: trackingState.sessionStats
       };
     } catch (error: any) {
-      errorLog('추적 상태 리셋 오류:', error);
+      errorLog('추적 상태 리셋 Error:', error);
       return { success: false, message: error.message };
     }
   });
@@ -360,13 +387,13 @@ export function registerTrackingHandlers(): void {
       processKeyPress(keyData);
       return { success: true };
     } catch (error: any) {
-      errorLog('키 입력 처리 오류:', error);
+      errorLog('키 입력 처리 Error:', error);
       return { success: false, message: error.message };
     }
   });
 
   isRegistered = true;
-  debugLog('추적 관련 IPC 핸들러 등록 완료');
+  debugLog('추적 관련 IPC 핸들러 등록 Completed');
 }
 
 /**
@@ -383,12 +410,12 @@ export function initializeAutoMonitoring(): void {
       setTimeout(startAutoMonitoring, 2000);
     }
   } catch (error: any) {
-    errorLog('자동 모니터링 초기화 오류:', error);
+    errorLog('자동 모니터링 초기화 Error:', error);
   }
 }
 
 /**
- * 핸들러 정리
+ * 핸들러 Cleanup
  */
 export function cleanupTrackingHandlers(): void {
   if (trackingState.isTracking) {
@@ -397,7 +424,7 @@ export function cleanupTrackingHandlers(): void {
   
   resetTrackingState();
   isRegistered = false;
-  debugLog('추적 핸들러 정리 완료');
+  debugLog('추적 핸들러 Cleanup Completed');
 }
 
 // 기본 내보내기

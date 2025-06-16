@@ -31,7 +31,7 @@ class AppConfig {
         // 정적 모드인지 확인
         const isStatic = process.env.ELECTRON_STATIC === 'true' || !electron_is_dev_1.default;
         if (isStatic) {
-            // 환경변수로 정적 서버 URL이 설정되어 있으면 사용
+            // 환경변수로 정적 서버 URL이 Setup되어 있으면 사용
             return process.env.STATIC_SERVER_URL || `http://localhost:${this.NEXT_PORT}`;
         }
         else {
@@ -71,7 +71,7 @@ AppConfig.WINDOW_CONFIG = {
     height: 800,
     minWidth: 800,
     minHeight: 600,
-    show: false, // 로딩 완료 후 표시
+    show: false, // 로딩 Completed 후 표시
     webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
@@ -79,7 +79,7 @@ AppConfig.WINDOW_CONFIG = {
         preload: (0, path_1.join)(__dirname, 'preload.js'), // Loop 6 preload 스크립트
         webSecurity: !electron_is_dev_1.default,
         allowRunningInsecureContent: electron_is_dev_1.default,
-        // 메모리 최적화 설정
+        // 메모리 최적화 Setup
         backgroundThrottling: true, // 백그라운드 스로틀링 활성화
         v8CacheOptions: 'none', // V8 캐시 비활성화
         enableWebSQL: false, // WebSQL 비활성화
@@ -150,6 +150,6 @@ AppConfig.server = {
 AppConfig.development = {
     openDevTools: true
 };
-// 설정 관리 메서드들
+// Setup 관리 메서드들
 AppConfig.configStore = new Map();
 //# sourceMappingURL=config.js.map

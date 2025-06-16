@@ -3,7 +3,7 @@
  * Loop 6 키보드 이벤트 처리 IPC 핸들러
  *
  * Loop 3의 keyboard-handlers.js를 TypeScript로 완전 마이그레이션
- * 키보드 이벤트 리스너 설정/관리, 한글 입력 처리, IME 지원 등을 담당합니다.
+ * Setup keyboard event listeners/관리, 한글 입력 처리, IME 지원 등을 담당합니다.
  */
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -71,8 +71,8 @@ function getJamoCount(char) {
         return hasJongseong ? 3 : 2;
     }
     catch (error) {
-        (0, utils_1.errorLog)('자모 개수 계산 오류:', error);
-        return 1; // 오류 시 기본값
+        (0, utils_1.errorLog)('자모 개수 계산 Error:', error);
+        return 1; // Error 시 기본값
     }
 }
 /**
@@ -104,7 +104,7 @@ function decomposeHangul(char) {
         return result;
     }
     catch (error) {
-        (0, utils_1.errorLog)('한글 분해 오류:', error);
+        (0, utils_1.errorLog)('한글 분해 Error:', error);
         return [char];
     }
 }
@@ -141,11 +141,11 @@ function handleKeyboardEvent(eventData) {
         }
     }
     catch (error) {
-        (0, utils_1.errorLog)('키보드 이벤트 처리 오류:', error);
+        (0, utils_1.errorLog)('키보드 이벤트 처리 Error:', error);
     }
 }
 /**
- * 키보드 리스너 설정
+ * 키보드 리스너 Setup
  */
 async function setupKeyboardListenerIfNeeded() {
     try {
@@ -156,38 +156,38 @@ async function setupKeyboardListenerIfNeeded() {
         if (!keyboardState.keyboardManager) {
             keyboardState.keyboardManager = new keyboard_1.KeyboardManager();
         }
-        // 키보드 이벤트 리스너 설정
+        // Setup keyboard event listeners
         const success = await keyboardState.keyboardManager.startListening(handleKeyboardEvent);
         if (success) {
             keyboardState.isListening = true;
-            (0, utils_1.debugLog)('키보드 리스너 설정 성공');
+            (0, utils_1.debugLog)('키보드 리스너 Setup Success');
             return true;
         }
         else {
-            (0, utils_1.debugLog)('키보드 리스너 설정 실패');
+            (0, utils_1.debugLog)('키보드 리스너 Setup Failed');
             return false;
         }
     }
     catch (error) {
-        (0, utils_1.errorLog)('키보드 리스너 설정 오류:', error);
+        (0, utils_1.errorLog)('키보드 리스너 Setup Error:', error);
         return false;
     }
 }
 /**
- * 키보드 리스너 정리
+ * 키보드 리스너 Cleanup
  */
 function cleanupKeyboardListener() {
     try {
         if (keyboardState.keyboardManager && keyboardState.isListening) {
             keyboardState.keyboardManager.stopListening();
             keyboardState.isListening = false;
-            (0, utils_1.debugLog)('키보드 리스너 정리 완료');
+            (0, utils_1.debugLog)('키보드 리스너 Cleanup Completed');
             return true;
         }
         return false;
     }
     catch (error) {
-        (0, utils_1.errorLog)('키보드 리스너 정리 중 오류:', error);
+        (0, utils_1.errorLog)('키보드 리스너 Cleanup 중 Error:', error);
         return false;
     }
 }
@@ -213,7 +213,7 @@ async function testHangulInput() {
         };
     }
     catch (error) {
-        (0, utils_1.errorLog)('한글 입력 테스트 오류:', error);
+        (0, utils_1.errorLog)('한글 입력 테스트 Error:', error);
         return {
             success: false,
             result: { error: error.message }
@@ -247,12 +247,12 @@ function registerKeyboardHandlers() {
             const success = await setupKeyboardListenerIfNeeded();
             return {
                 success,
-                message: success ? '키보드 리스너 시작됨' : '키보드 리스너 시작 실패',
+                message: success ? '키보드 리스너 Started' : '키보드 리스너 시작 Failed',
                 status: getKeyboardStatus()
             };
         }
         catch (error) {
-            (0, utils_1.errorLog)('키보드 리스너 시작 오류:', error);
+            (0, utils_1.errorLog)('키보드 리스너 시작 Error:', error);
             return { success: false, message: error.message };
         }
     });
@@ -262,12 +262,12 @@ function registerKeyboardHandlers() {
             const success = cleanupKeyboardListener();
             return {
                 success,
-                message: success ? '키보드 리스너 중지됨' : '키보드 리스너 중지 실패',
+                message: success ? '키보드 리스너 Stopped' : '키보드 리스너 중지 Failed',
                 status: getKeyboardStatus()
             };
         }
         catch (error) {
-            (0, utils_1.errorLog)('키보드 리스너 중지 오류:', error);
+            (0, utils_1.errorLog)('키보드 리스너 중지 Error:', error);
             return { success: false, message: error.message };
         }
     });
@@ -280,7 +280,7 @@ function registerKeyboardHandlers() {
             };
         }
         catch (error) {
-            (0, utils_1.errorLog)('키보드 상태 조회 오류:', error);
+            (0, utils_1.errorLog)('키보드 상태 조회 Error:', error);
             return { success: false, message: error.message };
         }
     });
@@ -290,7 +290,7 @@ function registerKeyboardHandlers() {
             return await testHangulInput();
         }
         catch (error) {
-            (0, utils_1.errorLog)('한글 입력 테스트 오류:', error);
+            (0, utils_1.errorLog)('한글 입력 테스트 Error:', error);
             return { success: false, message: error.message };
         }
     });
@@ -306,7 +306,7 @@ function registerKeyboardHandlers() {
             };
         }
         catch (error) {
-            (0, utils_1.errorLog)('자모 개수 계산 오류:', error);
+            (0, utils_1.errorLog)('자모 개수 계산 Error:', error);
             return { success: false, message: error.message };
         }
     });
@@ -320,11 +320,11 @@ function registerKeyboardHandlers() {
             };
         }
         catch (error) {
-            (0, utils_1.errorLog)('키 시퀀스 조회 오류:', error);
+            (0, utils_1.errorLog)('키 시퀀스 조회 Error:', error);
             return { success: false, message: error.message };
         }
     });
-    // 키보드 설정 업데이트 핸들러
+    // 키보드 Setup 업데이트 핸들러
     electron_1.ipcMain.handle('update-keyboard-settings', async (event, settings) => {
         try {
             const currentSettings = settings_manager_1.default.getSettings();
@@ -334,36 +334,36 @@ function registerKeyboardHandlers() {
             });
             return {
                 success: true,
-                message: '키보드 설정 업데이트 완료',
+                message: '키보드 Setup 업데이트 Completed',
                 settings: settings_manager_1.default.getSettings().keyboard
             };
         }
         catch (error) {
-            (0, utils_1.errorLog)('키보드 설정 업데이트 오류:', error);
+            (0, utils_1.errorLog)('키보드 Setup 업데이트 Error:', error);
             return { success: false, message: error.message };
         }
     });
     keyboardState.isRegistered = true;
-    (0, utils_1.debugLog)('키보드 관련 IPC 핸들러 등록 완료');
+    (0, utils_1.debugLog)('키보드 관련 IPC 핸들러 등록 Completed');
 }
 /**
  * 키보드 핸들러 초기화
  */
 async function initializeKeyboardHandlers() {
     try {
-        // 설정에서 자동 시작 여부 확인
+        // Setup에서 자동 시작 여부 확인
         const settings = settings_manager_1.default.getSettings();
         if (settings.keyboard?.autoStart !== false) {
             await setupKeyboardListenerIfNeeded();
         }
-        (0, utils_1.debugLog)('키보드 핸들러 초기화 완료');
+        (0, utils_1.debugLog)('키보드 핸들러 초기화 Completed');
     }
     catch (error) {
-        (0, utils_1.errorLog)('키보드 핸들러 초기화 오류:', error);
+        (0, utils_1.errorLog)('키보드 핸들러 초기화 Error:', error);
     }
 }
 /**
- * 키보드 핸들러 정리
+ * 키보드 핸들러 Cleanup
  */
 function cleanupKeyboardHandlers() {
     cleanupKeyboardListener();
@@ -372,7 +372,7 @@ function cleanupKeyboardHandlers() {
     }
     keyboardState.isRegistered = false;
     keyboardState.keySequence = [];
-    (0, utils_1.debugLog)('키보드 핸들러 정리 완료');
+    (0, utils_1.debugLog)('키보드 핸들러 Cleanup Completed');
 }
 // 기본 내보내기
 exports.default = {

@@ -1,6 +1,6 @@
 /**
- * Advanced system tray management module
- * Handles tray icon, context menu, notifications, and statistics display
+ * 고급 시스템 트레이 관리 모듈
+ * 트레이 아이콘, 컨텍스트 메뉴, 알림, 통계 표시를 담당합니다
  */
 import { BrowserWindow } from 'electron';
 interface TrayConfig {

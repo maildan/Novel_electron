@@ -142,7 +142,7 @@ export function safeRequire<T = any>(modulePath: string, fallback?: T): T | null
   try {
     return require(modulePath);
   } catch (error) {
-    console.warn(`Cannot load module (${modulePath}):`, (error as Error).message);
+    console.warn('Cannot load module (${modulePath}):', (error as Error).message);
     return fallback || null;
   }
 }
@@ -179,7 +179,7 @@ export async function waitForServer(
     if (await isServerRunning(host, port)) {
       return true;
     }
-    debugLog(`Waiting for server... (${Math.round((Date.now() - startTime) / 1000)}s)`);
+    debugLog('Waiting for server... (${Math.round((Date.now() - startTime) / 1000)}s)');
     await new Promise(resolve => setTimeout(resolve, interval));
   }
 
@@ -238,7 +238,7 @@ export async function retry<T>(
       }
       
       const delayMs = baseDelay * Math.pow(2, attempt - 1);
-      debugLog(`Retry attempt ${attempt} failed, retrying in ${delayMs}ms...`);
+      debugLog('Retry attempt ${attempt} failed, retrying in ${delayMs}ms...');
       await delay(delayMs);
     }
   }
@@ -286,7 +286,7 @@ export function safeReadFile(filePath: string, fallback: string = ''): string {
   try {
     return fs.readFileSync(filePath, 'utf8');
   } catch (error) {
-    console.warn(`Error reading file ${filePath}:`, (error as Error).message);
+    console.warn('Error reading file ${filePath}:', (error as Error).message);
     return fallback;
   }
 }
@@ -305,7 +305,7 @@ export function safeWriteFile(filePath: string, content: string): boolean {
     fs.writeFileSync(filePath, content, 'utf8');
     return true;
   } catch (error) {
-    console.error(`Error writing file ${filePath}:`, (error as Error).message);
+    console.error('Error writing file ${filePath}:', (error as Error).message);
     return false;
   }
 }

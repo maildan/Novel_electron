@@ -41,13 +41,13 @@ exports.initTray = initTray;
 exports.cleanupTray = cleanupTray;
 exports.getTrayStatus = getTrayStatus;
 /**
- * Advanced system tray management module
- * Handles tray icon, context menu, notifications, and statistics display
+ * 고급 시스템 트레이 관리 모듈
+ * 트레이 아이콘, 컨텍스트 메뉴, 알림, 통계 표시를 담당합니다
  */
 const electron_1 = require("electron");
 const path = __importStar(require("path"));
 const debug_1 = require("../utils/debug");
-// Global state
+// 전역 상태
 let tray = null;
 let mainWindow = null;
 let trayInitialized = false;
@@ -60,7 +60,7 @@ let trayStats = {
     activeApp: 'None',
     uptime: 0
 };
-// Default configuration
+// 기본 Setup
 const DEFAULT_TRAY_CONFIG = {
     iconPath: path.join(__dirname, '../../public/tray-icon.png'),
     tooltip: 'Loop Typing Monitor - Active',
@@ -74,7 +74,7 @@ const DEFAULT_TRAY_CONFIG = {
 function createTrayIcon(iconPath) {
     try {
         let iconImage = electron_1.nativeImage.createFromPath(iconPath);
-        // Fallback icons if primary icon fails
+        // 주 아이콘 Failed 시 대체 아이콘
         if (iconImage.isEmpty()) {
             const fallbackPaths = [
                 path.join(__dirname, '../../public/tray-icon@2x.png'),
@@ -92,12 +92,12 @@ function createTrayIcon(iconPath) {
                 }
             }
         }
-        // If still empty, create a simple colored icon
+        // 여전히 비어있으면 간단한 색상 아이콘 생성
         if (iconImage.isEmpty()) {
             iconImage = electron_1.nativeImage.createEmpty();
-            console.warn('No tray icon found, using empty icon');
+            console.warn('트레이 아이콘을 찾을 수 없어 빈 아이콘을 사용합니다');
         }
-        // Platform-specific sizing
+        // 플랫폼별 크기 조정
         const iconSize = process.platform === 'darwin' ? 22 : 16;
         if (!iconImage.isEmpty()) {
             iconImage = iconImage.resize({ width: iconSize, height: iconSize });
@@ -105,7 +105,7 @@ function createTrayIcon(iconPath) {
         return iconImage;
     }
     catch (error) {
-        console.error('Tray icon creation error:', error);
+        console.error('트레이 아이콘 생성 Error:', error);
         return electron_1.nativeImage.createEmpty();
     }
 }
@@ -137,7 +137,7 @@ function formatNumber(num) {
  */
 function createTrayMenu(config) {
     const menuTemplate = [];
-    // Statistics section (if enabled)
+    // 통계 섹션 (활성화된 경우)
     if (config.showStats) {
         menuTemplate.push({
             label: '📊 Statistics',
@@ -159,7 +159,7 @@ function createTrayMenu(config) {
             enabled: false
         }, { type: 'separator' });
     }
-    // Main actions
+    // 주요 액션
     menuTemplate.push({
         label: '🖥️  Show Main Window',
         click: () => {
@@ -171,7 +171,7 @@ function createTrayMenu(config) {
             toggleMiniView();
         }
     }, { type: 'separator' });
-    // Statistics tabs
+    // 통계 탭
     menuTemplate.push({
         label: '📈 Statistics View',
         submenu: [
@@ -207,7 +207,7 @@ function createTrayMenu(config) {
             }
         ]
     }, { type: 'separator' });
-    // Settings and controls
+    // 설정 및 제어
     menuTemplate.push({
         label: '⚙️  Settings',
         click: () => {
@@ -241,7 +241,7 @@ function updateTrayMenu() {
         const config = { ...DEFAULT_TRAY_CONFIG }; // In real app, load from settings
         const menu = createTrayMenu(config);
         tray.setContextMenu(menu);
-        (0, debug_1.debugLog)('Tray menu updated');
+        (0, debug_1.debugLog)('트레이 메뉴 업데이트됨');
     }
     catch (error) {
         console.error('Tray menu update error:', error);
@@ -311,7 +311,7 @@ function showAboutDialog() {
 function sendStatsTabChange(tab) {
     if (mainWindow && !mainWindow.isDestroyed()) {
         mainWindow.webContents.send('stats-tab-changed', tab);
-        (0, debug_1.debugLog)(`Statistics tab changed to: ${tab}`);
+        (0, debug_1.debugLog)('통계 탭 변경됨: ${tab}');
     }
 }
 /**
@@ -320,7 +320,7 @@ function sendStatsTabChange(tab) {
 function updateTrayStats(stats) {
     trayStats = { ...trayStats, ...stats };
     if (tray) {
-        // Update tooltip with current stats
+        // 현재 통계로 툴팁 업데이트
         const tooltip = `Loop Typing Monitor
 Typing: ${formatNumber(trayStats.typingCount)}
 WPM: ${trayStats.wpm}
@@ -344,7 +344,7 @@ function showTrayNotification(title, body, urgent = false) {
             });
         }
         catch (error) {
-            (0, debug_1.debugLog)('Tray notification error:', error);
+            (0, debug_1.debugLog)('트레이 알림 Error:', error);
         }
     }
 }
@@ -363,7 +363,7 @@ function setTrayStatus(active) {
                 'Loop Typing Monitor - Active' :
                 'Loop Typing Monitor - Inactive';
             tray.setToolTip(tooltip);
-            (0, debug_1.debugLog)(`Tray status set to: ${active ? 'active' : 'inactive'}`);
+            (0, debug_1.debugLog)(`트레이 상태 Setup됨: ${active ? '활성' : '비활성'}`);
         }
         catch (error) {
             console.error('Tray status update error:', error);
@@ -401,14 +401,14 @@ function initTray(window, config = {}) {
     }
     try {
         const trayConfig = { ...DEFAULT_TRAY_CONFIG, ...config };
-        // Create tray icon
+        // 트레이 아이콘 생성
         const iconImage = createTrayIcon(trayConfig.iconPath);
         tray = new electron_1.Tray(iconImage);
-        // Set initial tooltip
+        // 초기 툴팁 설정
         tray.setToolTip(trayConfig.tooltip);
-        // Create and set context menu
+        // 컨텍스트 메뉴 생성 및 설정
         updateTrayMenu();
-        // Handle tray click events
+        // 트레이 클릭 이벤트 처리
         tray.on('click', () => {
             try {
                 (0, debug_1.debugLog)('Tray icon clicked');
@@ -423,11 +423,11 @@ function initTray(window, config = {}) {
                 console.error('Tray click handler error:', error);
             }
         });
-        // Handle right-click (context menu is automatic)
+        // 우클릭 처리 (컨텍스트 메뉴는 자동)
         tray.on('right-click', () => {
             (0, debug_1.debugLog)('Tray right-clicked');
         });
-        // Handle double-click
+        // 더블클릭 처리
         tray.on('double-click', () => {
             (0, debug_1.debugLog)('Tray double-clicked');
             showMainWindow();
@@ -448,7 +448,7 @@ function cleanupTray() {
             tray.destroy();
             tray = null;
         }
-        // Reset state
+        // 상태 리셋
         trayInitialized = false;
         currentStatsTab = 'typing';
         trayStats = {

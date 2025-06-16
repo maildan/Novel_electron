@@ -27,8 +27,8 @@ export declare class BrowserDetector {
     private constructor();
     static getInstance(): BrowserDetector;
     /**
-     * 브라우저 감지 시스템 초기화
-     */
+   * 브라우저 감지 시스템 초기화
+   */
     initialize(): Promise<boolean>;
     /**
      * macOS 초기화
@@ -43,24 +43,24 @@ export declare class BrowserDetector {
      */
     private initializeLinux;
     /**
-     * 현재 활성 브라우저 이름 감지
-     */
+   * 현재 활성 브라우저 이름 감지
+   */
     detectBrowserName(): Promise<string | null>;
     /**
-     * 활성 윈도우 정보 가져오기
-     */
+   * 활성 윈도우 정보 가져오기
+   */
     private getActiveWindow;
     /**
-     * 프로세스 이름으로 브라우저 감지
-     */
+   * 프로세스 이름으로 브라우저 감지
+   */
     private detectFromProcessName;
     /**
      * Bundle ID로 브라우저 감지 (macOS)
      */
     private detectFromBundleId;
     /**
-     * 창 제목에서 브라우저 감지
-     */
+   * 창 제목에서 브라우저 감지
+   */
     private detectFromTitle;
     /**
      * Google Docs 윈도우 감지
@@ -79,16 +79,16 @@ export declare class BrowserDetector {
      */
     getCachedUrlCategory(url: string): string | null;
     /**
-     * 브라우저 정보 업데이트
-     */
+   * 브라우저 정보 업데이트
+   */
     updateBrowserInfo(info: Partial<BrowserInfo>): void;
     /**
-     * 마지막 브라우저 정보 조회
-     */
+   * 마지막 브라우저 정보 조회
+   */
     getLastKnownBrowserInfo(): BrowserInfo;
     /**
-     * 브라우저 감지 상태 조회
-     */
+   * 브라우저 감지 상태 조회
+   */
     getDetectorStatus(): {
         cacheSize: number;
         lastDetection: number;
@@ -96,39 +96,39 @@ export declare class BrowserDetector {
         supportedWebsites: string[];
     };
     /**
-     * 캐시 정리
-     */
+   * 캐시 Cleanup
+   */
     clearCache(): void;
     /**
-     * 정리 작업
-     */
+   * Cleanup 작업
+   */
     cleanup(): void;
     /**
-     * 활성 브라우저 정보 가져오기
-     */
+   * 활성 브라우저 정보 가져오기
+   */
     getActiveBrowser(): Promise<BrowserInfo | null>;
     /**
-     * 설치된 브라우저 목록 가져오기
-     */
+   * 설치된 브라우저 목록 가져오기
+   */
     getInstalledBrowsers(): Promise<string[]>;
     /**
      * Google Docs 감지
      */
     detectGoogleDocs(): Promise<boolean>;
     /**
-     * 설정 업데이트
-     */
+   * Setup 업데이트
+   */
     updateSettings(settings: any): Promise<{
         success: boolean;
         error?: string;
     }>;
     /**
-     * 모듈 재시작
-     */
+   * 모듈 재시작
+   */
     restart(): Promise<void>;
     /**
-     * 초기화 상태 확인
-     */
+   * 초기화 상태 확인
+   */
     isInitialized(): boolean;
 }
 export declare const browserDetector: BrowserDetector;

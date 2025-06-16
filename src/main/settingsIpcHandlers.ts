@@ -1,7 +1,7 @@
 /**
- * Loop 6 설정 관련 IPC 핸들러
+ * Loop 6 Setup 관련 IPC 핸들러
  * 
- * 설정 페이지에서 요청하는 다양한 설정 기능들의 실제 구현
+ * Setup 페이지에서 요청하는 다양한 Setup 기능들의 실제 구현
  */
 
 import { ipcMain, app } from 'electron';
@@ -23,22 +23,22 @@ export class SettingsIpcHandlers {
   }
 
   /**
-   * 설정 관련 IPC 핸들러 등록
+   * Setup 관련 IPC 핸들러 등록
    */
   register(): void {
     if (this.isRegistered) {
-      console.log('설정 IPC 핸들러가 이미 등록되어 있습니다');
+      console.log('Setup IPC 핸들러가 이미 등록되어 있습니다');
       return;
     }
 
-    console.log('설정 IPC 핸들러 등록 중...');
+    console.log('Setup IPC 핸들러 등록 중...');
 
-    // 처리 모드 설정
+    // 처리 모드 Setup
     ipcMain.handle('setProcessingMode', async (event, mode: string) => {
       try {
         await SettingsManager.updateSetting('processingMode', mode);
         
-        // 처리 모드에 따른 추가 설정
+        // 처리 모드에 따른 추가 Setup
         switch (mode) {
           case 'gpu-intensive':
             await SettingsManager.updateSetting('enableGPUAcceleration', true);
@@ -47,7 +47,7 @@ export class SettingsIpcHandlers {
             await SettingsManager.updateSetting('enableGPUAcceleration', false);
             break;
           case 'auto':
-            // GPU 사용 가능 여부에 따라 자동 설정
+            // GPU 사용 가능 여부에 따라 자동 Setup
             const gpuAvailable = await this.checkGPUAvailability();
             await SettingsManager.updateSetting('enableGPUAcceleration', gpuAvailable);
             break;
@@ -55,24 +55,24 @@ export class SettingsIpcHandlers {
 
         return {
           success: true,
-          message: `처리 모드가 ${mode}로 설정되었습니다`,
+          message: `처리 모드가 ${mode}로 Setup되었습니다`,
           mode
         };
       } catch (error) {
-        console.error('처리 모드 설정 실패:', error);
+        console.error('처리 모드 Setup Failed:', error);
         return {
           success: false,
-          message: `처리 모드 설정 실패: ${error}`
+          message: `처리 모드 Setup Failed: ${error}`
         };
       }
     });
 
-    // GPU 가속 설정
+    // GPU 가속 Setup
     ipcMain.handle('setGPUAcceleration', async (event, enabled: boolean) => {
       try {
         await SettingsManager.updateSetting('enableGPUAcceleration', enabled);
         
-        // GPU 관련 설정 적용 (재시작 필요)
+        // GPU 관련 Setup 적용 (재시작 필요)
         console.log(`GPU 가속 ${enabled ? '활성화' : '비활성화'}`);
         
         return {
@@ -81,10 +81,10 @@ export class SettingsIpcHandlers {
           requiresRestart: true
         };
       } catch (error) {
-        console.error('GPU 가속 설정 실패:', error);
+        console.error('GPU 가속 Setup Failed:', error);
         return {
           success: false,
-          message: `GPU 가속 설정 실패: ${error}`
+          message: `GPU 가속 Setup Failed: ${error}`
         };
       }
     });
@@ -97,7 +97,7 @@ export class SettingsIpcHandlers {
           global.gc();
         }
 
-        // 프로세스 메모리 정리
+        // 프로세스 메모리 Cleanup
         const memoryBefore = process.memoryUsage();
         
         // Node.js 메모리 최적화
@@ -112,21 +112,21 @@ export class SettingsIpcHandlers {
 
         return {
           success: true,
-          message: `메모리 최적화 완료${savedMemory > 0 ? ` (${savedMemory}MB 절약)` : ''}`,
+          message: `메모리 최적화 Completed${savedMemory > 0 ? ` (${savedMemory}MB 절약)` : ''}`,
           memoryBefore: Math.round(memoryBefore.heapUsed / 1024 / 1024),
           memoryAfter: Math.round(memoryAfter.heapUsed / 1024 / 1024),
           saved: savedMemory
         };
       } catch (error) {
-        console.error('메모리 최적화 실패:', error);
+        console.error('메모리 최적화 Failed:', error);
         return {
           success: false,
-          message: `메모리 최적화 실패: ${error}`
+          message: `메모리 최적화 Failed: ${error}`
         };
       }
     });
 
-    // 전체화면 모드 설정
+    // 전체화면 모드 Setup
     ipcMain.handle('setFullscreenMode', async (event, mode: 'windowed' | 'fullscreen' | 'fullscreen-auto-hide') => {
       try {
         const windowManager = WindowManager.getInstance();
@@ -162,15 +162,15 @@ export class SettingsIpcHandlers {
           mode
         };
       } catch (error) {
-        console.error('화면 모드 설정 실패:', error);
+        console.error('화면 모드 Setup Failed:', error);
         return {
           success: false,
-          message: `화면 모드 설정 실패: ${error}`
+          message: `화면 모드 Setup Failed: ${error}`
         };
       }
     });
 
-    // 알림 설정
+    // 알림 Setup
     ipcMain.handle('setNotifications', async (event, enabled: boolean) => {
       try {
         await SettingsManager.updateSetting('enableNotifications', enabled);
@@ -181,15 +181,15 @@ export class SettingsIpcHandlers {
           enabled
         };
       } catch (error) {
-        console.error('알림 설정 실패:', error);
+        console.error('알림 Setup Failed:', error);
         return {
           success: false,
-          message: `알림 설정 실패: ${error}`
+          message: `알림 Setup Failed: ${error}`
         };
       }
     });
 
-    // 애니메이션 설정
+    // 애니메이션 Setup
     ipcMain.handle('setAnimations', async (event, enabled: boolean) => {
       try {
         await SettingsManager.updateSetting('enableAnimations', enabled);
@@ -200,15 +200,15 @@ export class SettingsIpcHandlers {
           enabled
         };
       } catch (error) {
-        console.error('애니메이션 설정 실패:', error);
+        console.error('애니메이션 Setup Failed:', error);
         return {
           success: false,
-          message: `애니메이션 설정 실패: ${error}`
+          message: `애니메이션 Setup Failed: ${error}`
         };
       }
     });
 
-    // 데이터 수집 설정
+    // 데이터 수집 Setup
     ipcMain.handle('setDataCollection', async (event, enabled: boolean) => {
       try {
         await SettingsManager.updateSetting('enableDataCollection', enabled);
@@ -219,15 +219,15 @@ export class SettingsIpcHandlers {
           enabled
         };
       } catch (error) {
-        console.error('데이터 수집 설정 실패:', error);
+        console.error('데이터 수집 Setup Failed:', error);
         return {
           success: false,
-          message: `데이터 수집 설정 실패: ${error}`
+          message: `데이터 수집 Setup Failed: ${error}`
         };
       }
     });
 
-    // 자동 저장 설정
+    // 자동 저장 Setup
     ipcMain.handle('setAutoSave', async (event, enabled: boolean) => {
       try {
         await SettingsManager.updateSetting('enableAutoSave', enabled);
@@ -238,48 +238,48 @@ export class SettingsIpcHandlers {
           enabled
         };
       } catch (error) {
-        console.error('자동 저장 설정 실패:', error);
+        console.error('자동 저장 Setup Failed:', error);
         return {
           success: false,
-          message: `자동 저장 설정 실패: ${error}`
+          message: `자동 저장 Setup Failed: ${error}`
         };
       }
     });
 
-    // 데이터 보관 기간 설정
+    // 데이터 보관 기간 Setup
     ipcMain.handle('setDataRetention', async (event, days: number) => {
       try {
         await SettingsManager.updateSetting('dataRetentionDays', days);
         
         return {
           success: true,
-          message: `데이터 보관 기간이 ${days}일로 설정되었습니다`,
+          message: `데이터 보관 기간이 ${days}일로 Setup되었습니다`,
           days
         };
       } catch (error) {
-        console.error('데이터 보관 기간 설정 실패:', error);
+        console.error('데이터 보관 기간 Setup Failed:', error);
         return {
           success: false,
-          message: `데이터 보관 기간 설정 실패: ${error}`
+          message: `데이터 보관 기간 Setup Failed: ${error}`
         };
       }
     });
 
-    // 메모리 임계값 설정
+    // 메모리 임계값 Setup
     ipcMain.handle('setMemoryThreshold', async (event, threshold: number) => {
       try {
         await SettingsManager.updateSetting('maxMemoryThreshold', threshold);
         
         return {
           success: true,
-          message: `메모리 임계값이 ${threshold}MB로 설정되었습니다`,
+          message: `메모리 임계값이 ${threshold}MB로 Setup되었습니다`,
           threshold
         };
       } catch (error) {
-        console.error('메모리 임계값 설정 실패:', error);
+        console.error('메모리 임계값 Setup Failed:', error);
         return {
           success: false,
-          message: `메모리 임계값 설정 실패: ${error}`
+          message: `메모리 임계값 Setup Failed: ${error}`
         };
       }
     });
@@ -287,7 +287,7 @@ export class SettingsIpcHandlers {
     // 앱 재시작
     ipcMain.handle('restartApp', async (event, reason?: string) => {
       try {
-        console.log(`🔄 애플리케이션 재시작 요청: ${reason || '설정 변경'}`);
+        console.log(`🔄 애플리케이션 재시작 요청: ${reason || 'Setup 변경'}`);
         
         // 잠시 대기 후 재시작 (UI에 피드백 시간 제공)
         setTimeout(() => {
@@ -300,16 +300,16 @@ export class SettingsIpcHandlers {
           message: '애플리케이션이 재시작됩니다...'
         };
       } catch (error) {
-        console.error('❌ 앱 재시작 실패:', error);
+        console.error('❌ 앱 재시작 Failed:', error);
         return {
           success: false,
-          message: `재시작 실패: ${error}`
+          message: `재시작 Failed: ${error}`
         };
       }
     });
 
     this.isRegistered = true;
-    console.log('설정 IPC 핸들러 등록 완료');
+    console.log('Setup IPC 핸들러 등록 Completed');
   }
 
   /**
@@ -320,19 +320,19 @@ export class SettingsIpcHandlers {
       // GPU 정보 확인 로직 (간단한 구현)
       return app.commandLine.hasSwitch('disable-gpu') ? false : true;
     } catch (error) {
-      console.error('GPU 사용 가능 여부 확인 실패:', error);
+      console.error('GPU 사용 가능 여부 확인 Failed:', error);
       return false;
     }
   }
 
   /**
-   * 핸들러 정리
-   */
+ * 핸들러 Cleanup
+ */
   cleanup(): void {
     if (this.isRegistered) {
       // IPC 핸들러 제거는 Electron에서 자동으로 처리됨
       this.isRegistered = false;
-      console.log('설정 IPC 핸들러 정리 완료');
+      console.log('Setup IPC 핸들러 Cleanup Completed');
     }
   }
 }

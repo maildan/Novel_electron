@@ -32,7 +32,7 @@ function infoLog(...args) {
     console.info('[INFO]', ...args);
 }
 /**
- * 경고 로그 출력
+ * Warning 로그 출력
  */
 function warnLog(...args) {
     console.warn('[WARN]', ...args);
@@ -50,7 +50,7 @@ function startPerformanceTimer(label) {
     const start = performance.now();
     return () => {
         const elapsed = performance.now() - start;
-        debugLog(`Performance [${label}]: ${elapsed.toFixed(2)}ms`);
+        debugLog('Performance [${label}]: ${elapsed.toFixed(2)}ms');
         return elapsed;
     };
 }

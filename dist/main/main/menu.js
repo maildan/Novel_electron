@@ -76,17 +76,17 @@ function initializeMenu(options = {}) {
             recentFiles: [],
             ...options
         };
-        // 메뉴 생성 및 설정
+        // 메뉴 생성 및 Setup
         currentMenu = createApplicationMenu(menuOptions);
         electron_1.Menu.setApplicationMenu(currentMenu);
-        // IPC 핸들러 설정
+        // IPC 핸들러 Setup
         setupMenuIpcHandlers();
         // 최근 파일 목록 로드
         loadRecentFiles();
         console.log('메뉴 시스템이 초기화되었습니다.');
     }
     catch (error) {
-        console.error('메뉴 초기화 오류:', error);
+        console.error('메뉴 초기화 Error:', error);
     }
 }
 /**
@@ -135,7 +135,7 @@ function createAppMenu(options) {
     }
     if (options.showPreferences) {
         submenu.push({
-            label: '환경설정...',
+            label: '환경Setup...',
             accelerator: 'Command+,',
             click: () => handleMenuAction('open-settings')
         });
@@ -384,7 +384,7 @@ function convertToMenuItemOptions(item) {
 function handleMenuAction(action, data) {
     try {
         const focusedWindow = electron_1.BrowserWindow.getFocusedWindow();
-        // 액션 히스토리에 추가
+        // 액션 Add to history
         menuActionHistory.unshift({
             action,
             data,
@@ -417,10 +417,10 @@ function handleMenuAction(action, data) {
                 showGpuInfo();
                 break;
         }
-        console.log(`메뉴 액션 실행: ${action}`);
+        console.log('메뉴 액션 실행: ${action}');
     }
     catch (error) {
-        console.error(`메뉴 액션 처리 오류 (${action}):`, error);
+        console.error('메뉴 액션 처리 Error (${action}):', error);
     }
 }
 /**
@@ -449,7 +449,7 @@ async function handleFileOpen() {
         }
     }
     catch (error) {
-        console.error('파일 열기 오류:', error);
+        console.error('파일 열기 Error:', error);
     }
 }
 /**
@@ -471,7 +471,7 @@ function createNewWindow() {
         console.log('새 윈도우 생성됨');
     }
     catch (error) {
-        console.error('새 윈도우 생성 오류:', error);
+        console.error('새 윈도우 생성 Error:', error);
     }
 }
 /**
@@ -560,7 +560,7 @@ function addToRecentFiles(filePath) {
         saveRecentFiles();
     }
     catch (error) {
-        console.error('최근 파일 추가 오류:', error);
+        console.error('최근 파일 추가 Error:', error);
     }
 }
 /**
@@ -568,11 +568,11 @@ function addToRecentFiles(filePath) {
  */
 function loadRecentFiles() {
     try {
-        // 실제 구현에서는 설정 파일이나 데이터베이스에서 로드
+        // 실제 구현에서는 Setup 파일이나 데이터베이스에서 로드
         console.log('최근 파일 목록 로드됨');
     }
     catch (error) {
-        console.error('최근 파일 로드 오류:', error);
+        console.error('최근 파일 로드 Error:', error);
     }
 }
 /**
@@ -580,11 +580,11 @@ function loadRecentFiles() {
  */
 function saveRecentFiles() {
     try {
-        // 실제 구현에서는 설정 파일이나 데이터베이스에 저장
+        // 실제 구현에서는 Setup 파일이나 데이터베이스에 저장
         console.log('최근 파일 목록 저장됨');
     }
     catch (error) {
-        console.error('최근 파일 저장 오류:', error);
+        console.error('최근 파일 저장 Error:', error);
     }
 }
 /**
@@ -598,10 +598,10 @@ function updateMenu(newOptions) {
         const newMenu = createApplicationMenu(menuOptions);
         electron_1.Menu.setApplicationMenu(newMenu);
         currentMenu = newMenu;
-        console.log('메뉴 업데이트 완료');
+        console.log('메뉴 업데이트 Completed');
     }
     catch (error) {
-        console.error('메뉴 업데이트 오류:', error);
+        console.error('메뉴 업데이트 Error:', error);
     }
 }
 /**
@@ -628,11 +628,11 @@ function createContextMenu(options) {
         }
     }
     catch (error) {
-        console.error('컨텍스트 메뉴 생성 오류:', error);
+        console.error('컨텍스트 메뉴 생성 Error:', error);
     }
 }
 /**
- * IPC 핸들러 설정
+ * IPC 핸들러 Setup
  */
 function setupMenuIpcHandlers() {
     // 메뉴 업데이트 요청

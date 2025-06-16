@@ -50,13 +50,13 @@ const electron_1 = require("electron");
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const crypto = __importStar(require("crypto"));
-// 암호화 설정
+// 암호화 Setup
 const ENCRYPTION_CONFIG = {
     algorithm: 'aes-256-gcm',
     keyLength: 32, // 256비트
     ivLength: 16 // 128비트
 };
-// 저장소 설정
+// 저장소 Setup
 const STORAGE_DIR = path.join(electron_1.app.getPath('userData'), 'secure-storage');
 const KEY_FILE = 'secure-key';
 const BACKUP_DIR = path.join(STORAGE_DIR, 'backups');
@@ -89,7 +89,7 @@ async function initializeSecureStorage() {
         return true;
     }
     catch (error) {
-        console.error('안전한 저장소 초기화 오류:', error);
+        console.error('안전한 저장소 초기화 Error:', error);
         return false;
     }
 }
@@ -126,7 +126,7 @@ async function loadOrCreateEncryptionKey() {
         }
     }
     catch (error) {
-        console.error('암호화 키 로드/생성 오류:', error);
+        console.error('암호화 키 로드/생성 Error:', error);
         throw error;
     }
 }
@@ -144,7 +144,7 @@ async function loadStorageMetadata() {
         }
     }
     catch (error) {
-        console.error('메타데이터 로드 오류:', error);
+        console.error('메타데이터 로드 Error:', error);
     }
 }
 /**
@@ -157,7 +157,7 @@ async function saveStorageMetadata() {
         fs.writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
     }
     catch (error) {
-        console.error('메타데이터 저장 오류:', error);
+        console.error('메타데이터 저장 Error:', error);
     }
 }
 /**
@@ -186,7 +186,7 @@ function encryptData(data) {
         ]);
     }
     catch (error) {
-        console.error('데이터 암호화 오류:', error);
+        console.error('데이터 암호화 Error:', error);
         throw error;
     }
 }
@@ -221,7 +221,7 @@ function decryptData(encryptedData, parseJson = true) {
         return decrypted;
     }
     catch (error) {
-        console.error('데이터 복호화 오류:', error);
+        console.error('데이터 복호화 Error:', error);
         throw error;
     }
 }
@@ -257,11 +257,11 @@ async function storeSecureData(key, data) {
             description: `Secure data for key: ${key}`
         });
         await saveStorageMetadata();
-        console.log(`데이터 저장 완료: ${key}`);
+        console.log('데이터 저장 Completed: ${key}');
         return true;
     }
     catch (error) {
-        console.error(`데이터 저장 오류 (${key}):`, error);
+        console.error('데이터 저장 Error (${key}):', error);
         return false;
     }
 }
@@ -284,11 +284,11 @@ async function loadSecureData(key, asJson = true) {
         // 암호화된 데이터 읽기 및 복호화
         const encryptedData = fs.readFileSync(filePath);
         const decryptedData = decryptData(encryptedData, asJson);
-        console.log(`데이터 로드 완료: ${key}`);
+        console.log('데이터 로드 Completed: ${key}');
         return decryptedData;
     }
     catch (error) {
-        console.error(`데이터 로드 오류 (${key}):`, error);
+        console.error('데이터 로드 Error (${key}):', error);
         return null;
     }
 }
@@ -315,11 +315,11 @@ async function deleteSecureData(key) {
         // 메타데이터에서 제거
         storageMetadata.delete(safeKey);
         await saveStorageMetadata();
-        console.log(`데이터 삭제 완료: ${key}`);
+        console.log('데이터 삭제 Completed: ${key}');
         return true;
     }
     catch (error) {
-        console.error(`데이터 삭제 오류 (${key}):`, error);
+        console.error('데이터 삭제 Error (${key}):', error);
         return false;
     }
 }
@@ -335,7 +335,7 @@ async function createBackup(safeKey) {
         }
     }
     catch (error) {
-        console.error(`백업 생성 오류 (${safeKey}):`, error);
+        console.error('백업 생성 Error (${safeKey}):', error);
     }
 }
 /**
@@ -355,7 +355,7 @@ async function listSecureDataKeys() {
             .map(file => file.replace('.secure', ''));
     }
     catch (error) {
-        console.error('데이터 키 목록 조회 오류:', error);
+        console.error('데이터 키 목록 조회 Error:', error);
         return [];
     }
 }
@@ -385,7 +385,7 @@ async function getStorageStats() {
         }
     }
     catch (error) {
-        console.error('저장소 통계 조회 오류:', error);
+        console.error('저장소 통계 조회 Error:', error);
     }
     return {
         isInitialized,
@@ -395,7 +395,7 @@ async function getStorageStats() {
     };
 }
 /**
- * 저장소 정리 (오래된 백업 파일 삭제)
+ * 저장소 Cleanup (오래된 백업 파일 삭제)
  */
 async function cleanupStorage(maxAge = 30 * 24 * 60 * 60 * 1000) {
     let cleanedCount = 0;
@@ -415,20 +415,20 @@ async function cleanupStorage(maxAge = 30 * 24 * 60 * 60 * 1000) {
                 }
             }
         }
-        console.log(`저장소 정리 완료: ${cleanedCount}개 파일 삭제`);
+        console.log('저장소 Cleanup Completed: ${cleanedCount}개 파일 삭제');
     }
     catch (error) {
-        console.error('저장소 정리 오류:', error);
+        console.error('저장소 Cleanup Error:', error);
     }
     return cleanedCount;
 }
-// 앱 종료 시 정리
+// 앱 종료 시 Cleanup
 electron_1.app.on('before-quit', async () => {
     try {
         await cleanupStorage();
     }
     catch (error) {
-        console.error('종료 시 저장소 정리 오류:', error);
+        console.error('종료 시 저장소 Cleanup Error:', error);
     }
 });
 //# sourceMappingURL=safe-storage.js.map

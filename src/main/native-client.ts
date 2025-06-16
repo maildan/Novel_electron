@@ -143,10 +143,10 @@ class NativeModuleClient {
       let modulePath: string | null = null;
       for (const basePath of possibleBasePaths) {
         const indexPath = path.join(basePath, 'index.js');
-        debugLog(`🔍 네이티브 모듈 index.js 경로 확인: ${indexPath}`);
+        debugLog('🔍 네이티브 모듈 index.js 경로 확인: ${indexPath}');
         if (fs.existsSync(indexPath)) {
           modulePath = basePath;
-          debugLog(`✅ 네이티브 모듈 디렉토리 발견: ${basePath}`);
+          debugLog('✅ 네이티브 모듈 디렉토리 발견: ${basePath}');
           break;
         }
       }
@@ -168,7 +168,7 @@ class NativeModuleClient {
       }
       
       this.module = require(indexPath) as NativeModule;
-      debugLog('📦 네이티브 모듈 require() 완료');
+      debugLog('📦 네이티브 모듈 require() Completed');
       
       if (this.module) {
         if (typeof this.module.isNativeModuleAvailable === 'function') {
@@ -181,7 +181,7 @@ class NativeModuleClient {
             isAvailable = this.module.isNativeModuleAvailable();
             debugLog('🔍 네이티브 모듈 사용 가능 여부:', isAvailable);
           } catch (checkError) {
-            throw new Error(`isNativeModuleAvailable 호출 실패: ${checkError}`);
+            throw new Error(`isNativeModuleAvailable 호출 Failed: ${checkError}`);
           }
           
           if (isAvailable) {
@@ -196,7 +196,7 @@ class NativeModuleClient {
               loadTime: Date.now() - startTime
             };
             
-            debugLog(`✅ NAPI 네이티브 모듈 로드 성공 (v${version})`);
+            debugLog('✅ NAPI 네이티브 모듈 로드 Success (v${version})');
             
           } else {
             debugLog('❌ 네이티브 모듈이 사용 가능하지 않음');
@@ -218,20 +218,20 @@ class NativeModuleClient {
         loadTime: Date.now() - startTime
       };
       
-      errorLog('NAPI 네이티브 모듈 로드 실패:', error);
+      errorLog('NAPI 네이티브 모듈 로드 Failed:', error);
     }
   }
 
   /**
-   * 모듈 상태 확인
-   */
+ * 모듈 상태 확인
+ */
   public getStatus(): ModuleStatus {
     return { ...this.status };
   }
 
   /**
-   * 모듈 사용 가능 여부 확인
-   */
+ * 모듈 사용 가능 여부 확인
+ */
   public isAvailable(): boolean {
     // 모듈이 로드되지 않았거나 상태가 없으면 false 반환
     if (!this.module || !this.status.isLoaded) {
@@ -260,8 +260,8 @@ class NativeModuleClient {
       
       return nativeAvailable;
     } catch (error) {
-      errorLog('isAvailable 체크 중 오류:', error);
-      // 오류가 발생해도 모듈이 로드되었다면 기본적으로 사용 가능한 것으로 간주
+      errorLog('isAvailable 체크 중 Error:', error);
+      // Error가 발생해도 모듈이 로드되었다면 기본적으로 사용 가능한 것으로 간주
       this.status.isAvailable = this.status.isLoaded;
       return this.status.isLoaded;
     }
@@ -274,7 +274,7 @@ class NativeModuleClient {
     try {
       return this.module.getMemoryUsage();
     } catch (error) {
-      errorLog('getMemoryUsage 호출 오류:', error);
+      errorLog('getMemoryUsage 호출 Error:', error);
       return null;
     }
   }
@@ -285,7 +285,7 @@ class NativeModuleClient {
     try {
       return this.module.startMemoryMonitoring();
     } catch (error) {
-      errorLog('startMemoryMonitoring 호출 오류:', error);
+      errorLog('startMemoryMonitoring 호출 Error:', error);
       return false;
     }
   }
@@ -296,7 +296,7 @@ class NativeModuleClient {
     try {
       return this.module.getMemoryStats();
     } catch (error) {
-      errorLog('getMemoryStats 호출 오류:', error);
+      errorLog('getMemoryStats 호출 Error:', error);
       return null;
     }
   }
@@ -307,7 +307,7 @@ class NativeModuleClient {
     try {
       return this.module.resetMemoryMonitoring();
     } catch (error) {
-      errorLog('resetMemoryMonitoring 호출 오류:', error);
+      errorLog('resetMemoryMonitoring 호출 Error:', error);
       return false;
     }
   }
@@ -319,7 +319,7 @@ class NativeModuleClient {
     try {
       return this.module.getGpuInfo();
     } catch (error) {
-      errorLog('getGpuInfo 호출 오류:', error);
+      errorLog('getGpuInfo 호출 Error:', error);
       return null;
     }
   }
@@ -330,7 +330,7 @@ class NativeModuleClient {
     try {
       return this.module.startGpuMonitoring();
     } catch (error) {
-      errorLog('startGpuMonitoring 호출 오류:', error);
+      errorLog('startGpuMonitoring 호출 Error:', error);
       return false;
     }
   }
@@ -341,7 +341,7 @@ class NativeModuleClient {
     try {
       return this.module.getGpuStats();
     } catch (error) {
-      errorLog('getGpuStats 호출 오류:', error);
+      errorLog('getGpuStats 호출 Error:', error);
       return null;
     }
   }
@@ -352,7 +352,7 @@ class NativeModuleClient {
     try {
       return this.module.resetGpuMonitoring();
     } catch (error) {
-      errorLog('resetGpuMonitoring 호출 오류:', error);
+      errorLog('resetGpuMonitoring 호출 Error:', error);
       return false;
     }
   }
@@ -364,7 +364,7 @@ class NativeModuleClient {
     try {
       return this.module.getSystemInfo();
     } catch (error) {
-      errorLog('getSystemInfo 호출 오류:', error);
+      errorLog('getSystemInfo 호출 Error:', error);
       return null;
     }
   }
@@ -376,7 +376,7 @@ class NativeModuleClient {
     try {
       return this.module.generateUuid();
     } catch (error) {
-      errorLog('generateUuid 호출 오류:', error);
+      errorLog('generateUuid 호출 Error:', error);
       return null;
     }
   }
@@ -387,7 +387,7 @@ class NativeModuleClient {
     try {
       return this.module.getTimestamp();
     } catch (error) {
-      errorLog('getTimestamp 호출 오류:', error);
+      errorLog('getTimestamp 호출 Error:', error);
       return null;
     }
   }
@@ -398,7 +398,7 @@ class NativeModuleClient {
     try {
       return this.module.getTimestampString();
     } catch (error) {
-      errorLog('getTimestampString 호출 오류:', error);
+      errorLog('getTimestampString 호출 Error:', error);
       return null;
     }
   }
@@ -409,21 +409,21 @@ class NativeModuleClient {
     try {
       return this.module.getNativeModuleInfo();
     } catch (error) {
-      errorLog('getNativeModuleInfo 호출 오류:', error);
+      errorLog('getNativeModuleInfo 호출 Error:', error);
       return null;
     }
   }
 
   /**
-   * 리소스 정리
-   */
+ * 리소스 Cleanup
+ */
   public cleanup(): void {
     if (this.module && this.status.isAvailable) {
       try {
         this.module.cleanupNativeModules?.();
-        debugLog('네이티브 모듈 정리 완료');
+        debugLog('네이티브 모듈 Cleanup Completed');
       } catch (error) {
-        errorLog('네이티브 모듈 정리 중 오류:', error);
+        errorLog('네이티브 모듈 Cleanup 중 Error:', error);
       }
     }
   }
@@ -445,10 +445,10 @@ export function registerNativeIpcHandlers(): void {
         data: status.isAvailable
       };
     } catch (error) {
-      errorLog('네이티브 모듈 사용 가능 여부 조회 오류:', error);
+      errorLog('네이티브 모듈 사용 가능 여부 조회 Error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '알 수 없는 오류'
+        error: error instanceof Error ? error.message : '알 수 없는 Error'
       };
     }
   });
@@ -462,10 +462,10 @@ export function registerNativeIpcHandlers(): void {
         data: status.version || '알 수 없음'
       };
     } catch (error) {
-      errorLog('네이티브 모듈 버전 조회 오류:', error);
+      errorLog('네이티브 모듈 버전 조회 Error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '알 수 없는 오류'
+        error: error instanceof Error ? error.message : '알 수 없는 Error'
       };
     }
   });
@@ -479,10 +479,10 @@ export function registerNativeIpcHandlers(): void {
         data: info
       };
     } catch (error) {
-      errorLog('네이티브 모듈 상세 정보 조회 오류:', error);
+      errorLog('네이티브 모듈 상세 정보 조회 Error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '알 수 없는 오류'
+        error: error instanceof Error ? error.message : '알 수 없는 Error'
       };
     }
   });
@@ -502,10 +502,10 @@ export function registerNativeIpcHandlers(): void {
         }
       };
     } catch (error) {
-      errorLog('네이티브 상태 조회 오류:', error);
+      errorLog('네이티브 상태 조회 Error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '알 수 없는 오류'
+        error: error instanceof Error ? error.message : '알 수 없는 Error'
       };
     }
   });
@@ -518,19 +518,19 @@ export function registerNativeIpcHandlers(): void {
         data: info
       };
     } catch (error) {
-      errorLog('네이티브 정보 조회 오류:', error);
+      errorLog('네이티브 정보 조회 Error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '알 수 없는 오류'
+        error: error instanceof Error ? error.message : '알 수 없는 Error'
       };
     }
   });
 
-  debugLog('네이티브 모듈 관련 IPC 핸들러 등록 완료 (kebab-case 형태 포함)');
+  debugLog('네이티브 모듈 관련 IPC 핸들러 등록 Completed (kebab-case 형태 포함)');
 }
 
 /**
- * 네이티브 모듈 관련 IPC 핸들러 정리
+ * 네이티브 모듈 관련 IPC 핸들러 Cleanup
  */
 export function cleanupNativeIpcHandlers(): void {
   // kebab-case 형태 핸들러들
@@ -542,5 +542,5 @@ export function cleanupNativeIpcHandlers(): void {
   ipcMain.removeHandler('native:get-status');
   ipcMain.removeHandler('native:getInfo');
   
-  debugLog('네이티브 모듈 관련 IPC 핸들러 정리 완료');
+  debugLog('네이티브 모듈 관련 IPC 핸들러 Cleanup Completed');
 }

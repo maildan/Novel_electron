@@ -1,8 +1,8 @@
 /**
  * 앱 충돌 보고 및 로깅 모듈
  *
- * 앱의 예상치 못한 종료, 오류, 충돌을 감지하고 보고하는 시스템입니다.
- * 오류 로깅, 충돌 보고서 수집, 복구 메커니즘을 제공합니다.
+ * 앱의 예상치 못한 종료, Error, 충돌을 감지하고 보고하는 시스템입니다.
+ * Error 로깅, 충돌 보고서 수집, 복구 메커니즘을 제공합니다.
  */
 interface CrashReporterOptions {
     companyName?: string;
@@ -30,7 +30,7 @@ export declare function initializeCrashReporter(crashOptions?: CrashReporterOpti
  */
 export declare function getCrashReportInfo(): any;
 /**
- * 업로드 설정 변경
+ * 업로드 Setup 변경
  */
 export declare function setUploadCrashReports(shouldUpload: boolean): void;
 /**
@@ -41,7 +41,7 @@ export declare function getLogPaths(): {
     crashLog: string;
 };
 /**
- * 수동 오류 보고
+ * 수동 Error 보고
  */
 export declare function reportError(message: string, stack?: string, severity?: ErrorInfo['severity'], context?: any): void;
 export {};

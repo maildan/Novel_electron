@@ -41,92 +41,92 @@ export declare class MenuManager {
     private isInitialized;
     private constructor();
     /**
-     * 싱글톤 인스턴스 반환
-     */
+   * 싱글톤 인스턴스 반환
+   */
     static getInstance(): MenuManager;
     /**
-     * 메뉴 매니저 초기화
-     */
+   * 메뉴 매니저 초기화
+   */
     initialize(): Promise<void>;
     /**
-     * 플랫폼 체크 헬퍼
-     */
+   * 플랫폼 체크 헬퍼
+   */
     private get platformInfo();
     /**
-     * 메인 애플리케이션 메뉴 생성
-     */
+   * 메인 애플리케이션 메뉴 생성
+   */
     createApplicationMenu(options?: MenuOptions): Menu;
     /**
      * 앱 메뉴 생성 (macOS 전용)
      */
     private createAppMenu;
     /**
-     * 파일 메뉴 생성
-     */
+   * 파일 메뉴 생성
+   */
     private createFileMenu;
     /**
-     * 편집 메뉴 생성
-     */
+   * 편집 메뉴 생성
+   */
     private createEditMenu;
     /**
-     * 보기 메뉴 생성
-     */
+   * 보기 메뉴 생성
+   */
     private createViewMenu;
     /**
-     * 창 메뉴 생성
-     */
+   * 창 메뉴 생성
+   */
     private createWindowMenu;
     /**
-     * 도움말 메뉴 생성
-     */
+   * 도움말 메뉴 생성
+   */
     private createHelpMenu;
     /**
      * 컨텍스트 메뉴 생성 (우클릭 메뉴)
      */
     createContextMenu(options?: ContextMenuOptions): Menu;
     /**
-     * 트레이 메뉴 생성
-     */
+   * 트레이 메뉴 생성
+   */
     createTrayMenu(options?: MenuOptions): Menu;
     /**
-     * 애플리케이션 메뉴 설정
-     */
+   * 애플리케이션 메뉴 Setup
+   */
     setupApplicationMenu(options?: MenuOptions): void;
     /**
-     * 전역 컨텍스트 메뉴 이벤트 설정
-     */
+   * 전역 컨텍스트 메뉴 이벤트 Setup
+   */
     private setupContextMenuEvents;
     /**
-     * 컨텍스트 메뉴 처리
-     */
+   * 컨텍스트 메뉴 처리
+   */
     private handleContextMenu;
     /**
-     * 새 창 생성
-     */
+   * 새 창 생성
+   */
     private createNewWindow;
     /**
-     * 파일 열기 대화상자
-     */
+   * 파일 열기 대화상자
+   */
     private openFile;
     /**
-     * 모든 윈도우 표시
-     */
+   * 모든 윈도우 표시
+   */
     private showAllWindows;
     /**
-     * 메뉴 액션 전송
-     */
+   * 메뉴 액션 전송
+   */
     private sendMenuAction;
     /**
-     * 시스템 정보 표시
-     */
+   * 시스템 정보 표시
+   */
     private showSystemInfo;
     /**
      * About 대화상자 표시
      */
     private showAboutDialog;
     /**
-     * 정리 작업
-     */
+   * Cleanup 작업
+   */
     cleanup(): Promise<void>;
 }
 export declare const menuManager: MenuManager;

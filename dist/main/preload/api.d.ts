@@ -5,6 +5,12 @@
  */
 export declare const electronAPI: {
     invoke: (channel: string, ...args: any[]) => Promise<any>;
+    getKeyboardPermissions: () => Promise<any>;
+    toggleKeyboardMonitoring: () => Promise<any>;
+    getTypingStats: () => Promise<any>;
+    resetTypingStats: () => Promise<any>;
+    getHangulCompositionState: () => Promise<any>;
+    openPermissionsSettings: () => Promise<any>;
     database: {
         saveTypingSession: (data: any) => Promise<any>;
         getRecentSessions: (limit?: number) => Promise<any>;

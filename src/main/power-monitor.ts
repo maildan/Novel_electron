@@ -42,27 +42,27 @@ class PowerManager {
   }
 
   /**
-   * 전력 모니터링 초기화
-   */
+ * 전력 모니터링 초기화
+ */
   initialize(): void {
     try {
       debugLog('전력 모니터링 초기화 시작');
 
-      // 전력 상태 이벤트 리스너 설정
+      // 전력 상태 이벤트 리스너 Setup
       this.setupPowerEventListeners();
 
       // 초기 전력 정보 수집
       this.updatePowerInfo();
 
-      debugLog('전력 모니터링 초기화 완료');
+      debugLog('전력 모니터링 초기화 Completed');
     } catch (error) {
-      errorLog('전력 모니터링 초기화 중 오류:', error);
+      errorLog('전력 모니터링 초기화 중 Error:', error);
     }
   }
 
   /**
-   * 전력 이벤트 리스너 설정
-   */
+ * 전력 이벤트 리스너 Setup
+ */
   private setupPowerEventListeners(): void {
     // 배터리 전원으로 전환
     powerMonitor.on('on-battery', () => {
@@ -118,8 +118,8 @@ class PowerManager {
   }
 
   /**
-   * 전력 상태 변경 처리
-   */
+ * 전력 상태 변경 처리
+ */
   private handlePowerStateChange(): void {
     this.updatePowerInfo();
     
@@ -134,16 +134,16 @@ class PowerManager {
   }
 
   /**
-   * 시스템 절전 모드 진입 처리
-   */
+ * 시스템 절전 모드 진입 처리
+ */
   private handleSystemSuspend(): void {
     // 필요한 경우 작업 중단 또는 저장
-    debugLog('절전 모드 진입에 따른 작업 정리');
+    debugLog('절전 모드 진입에 따른 작업 Cleanup');
   }
 
   /**
-   * 시스템 절전 모드 해제 처리
-   */
+ * 시스템 절전 모드 해제 처리
+ */
   private handleSystemResume(): void {
     // 절전 모드에서 복귀 시 작업 재개
     debugLog('절전 모드 복귀에 따른 작업 재개');
@@ -151,17 +151,17 @@ class PowerManager {
   }
 
   /**
-   * 시스템 종료 처리
-   */
+ * 시스템 종료 처리
+ */
   private handleSystemShutdown(): void {
-    // 종료 전 정리 작업
-    debugLog('시스템 종료에 따른 정리 작업');
+    // 종료 전 Cleanup 작업
+    debugLog('시스템 종료에 따른 Cleanup 작업');
     this.cleanup();
   }
 
   /**
-   * 전력 정보 업데이트
-   */
+ * 전력 정보 업데이트
+ */
   private updatePowerInfo(): void {
     try {
       this.powerInfo = {
@@ -172,13 +172,13 @@ class PowerManager {
 
       debugLog('전력 정보 업데이트:', this.powerInfo);
     } catch (error) {
-      errorLog('전력 정보 업데이트 중 오류:', error);
+      errorLog('전력 정보 업데이트 중 Error:', error);
     }
   }
 
   /**
-   * 배터리 최적화 모드 활성화
-   */
+ * 배터리 최적화 모드 활성화
+ */
   private enableBatteryOptimization(): void {
     debugLog('배터리 최적화 모드 활성화');
     
@@ -187,8 +187,8 @@ class PowerManager {
   }
 
   /**
-   * 배터리 최적화 모드 비활성화
-   */
+ * 배터리 최적화 모드 비활성화
+ */
   private disableBatteryOptimization(): void {
     debugLog('배터리 최적화 모드 비활성화');
     
@@ -196,7 +196,7 @@ class PowerManager {
   }
 
   /**
-   * 절전 모드 방지 설정
+   * 절전 모드 방지 Setup
    */
   setPreventSleep(prevent: boolean): void {
     try {
@@ -211,20 +211,20 @@ class PowerManager {
 
       this.settings.preventSleep = prevent;
     } catch (error) {
-      errorLog('절전 모드 설정 중 오류:', error);
+      errorLog('절전 모드 Setup 중 Error:', error);
     }
   }
 
   /**
-   * 전력 상태 리스너 추가
-   */
+ * 전력 상태 리스너 추가
+ */
   addPowerListener(listener: (info: PowerInfo) => void): void {
     this.listeners.push(listener);
   }
 
   /**
-   * 전력 상태 리스너 제거
-   */
+ * 전력 상태 리스너 제거
+ */
   removePowerListener(listener: (info: PowerInfo) => void): void {
     const index = this.listeners.indexOf(listener);
     if (index > -1) {
@@ -233,50 +233,50 @@ class PowerManager {
   }
 
   /**
-   * 리스너들에게 알림
-   */
+ * 리스너들에게 알림
+ */
   private notifyListeners(): void {
     this.listeners.forEach(listener => {
       try {
         listener(this.powerInfo);
       } catch (error) {
-        errorLog('전력 상태 리스너 실행 중 오류:', error);
+        errorLog('전력 상태 리스너 실행 중 Error:', error);
       }
     });
   }
 
   /**
-   * 현재 전력 정보 가져오기
-   */
+ * 현재 전력 정보 가져오기
+ */
   getPowerInfo(): PowerInfo {
     this.updatePowerInfo();
     return { ...this.powerInfo };
   }
 
   /**
-   * 전력 설정 가져오기
-   */
+ * 전력 Setup 가져오기
+ */
   getSettings(): PowerSettings {
     return { ...this.settings };
   }
 
   /**
-   * 전력 설정 업데이트
-   */
+ * 전력 Setup 업데이트
+ */
   updateSettings(newSettings: Partial<PowerSettings>): void {
     this.settings = { ...this.settings, ...newSettings };
     
-    // 절전 모드 방지 설정 적용
+    // 절전 모드 방지 Setup 적용
     if (newSettings.preventSleep !== undefined) {
       this.setPreventSleep(newSettings.preventSleep);
     }
     
-    debugLog('전력 설정 업데이트 완료');
+    debugLog('전력 Setup 업데이트 Completed');
   }
 
   /**
-   * 정리 작업
-   */
+ * Cleanup 작업
+ */
   cleanup(): void {
     if (this.powerBlockerId) {
       powerSaveBlocker.stop(this.powerBlockerId);
@@ -284,7 +284,7 @@ class PowerManager {
     }
     
     this.listeners = [];
-    debugLog('전력 관리자 정리 완료');
+    debugLog('전력 관리자 Cleanup Completed');
   }
 }
 
@@ -302,7 +302,7 @@ export function getPowerManager(): PowerManager {
 }
 
 /**
- * 전력 모니터링 설정
+ * 전력 모니터링 Setup
  */
 export function setupPowerMonitoring(): void {
   const manager = getPowerManager();
@@ -318,7 +318,7 @@ export function getCurrentPowerInfo(): PowerInfo {
 }
 
 /**
- * 절전 모드 방지 설정
+ * 절전 모드 방지 Setup
  */
 export function setPreventSleep(prevent: boolean): void {
   const manager = getPowerManager();

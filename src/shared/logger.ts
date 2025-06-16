@@ -2,7 +2,7 @@ import { createLogger, format, transports } from 'winston';
 import * as path from 'path';
 import { app } from 'electron';
 
-// 로그 디렉토리 설정
+// 로그 디렉토리 Setup
 const logDir = app?.getPath('logs') || path.join(__dirname, '../../logs');
 
 // 로거 생성

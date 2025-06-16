@@ -59,15 +59,15 @@ export declare class UpdateManager extends EventEmitter {
     private constructor();
     static getInstance(): UpdateManager;
     /**
-     * Check if auto-updates are supported on current platform
+   * Check if auto-updates are supported on current platform
      */
     private checkPlatformSupport;
     /**
      * Initialize the auto-updater
-     */
+   */
     initialize(options?: Partial<UpdateOptions>): Promise<boolean>;
     /**
-     * Setup logging configuration
+   * Setup logging configuration
      */
     private setupLogging;
     /**
@@ -84,14 +84,14 @@ export declare class UpdateManager extends EventEmitter {
     private setupIpcHandlers;
     /**
      * Parse update info from auto-updater
-     */
+   */
     private parseUpdateInfo;
     /**
      * Notify renderer process about update events
      */
     private notifyRenderer;
     /**
-     * Show update available notification
+   * Show update available notification
      */
     private showUpdateAvailableNotification;
     /**
@@ -112,14 +112,14 @@ export declare class UpdateManager extends EventEmitter {
     installUpdate(): boolean;
     /**
      * Start automatic update checking
-     */
+   */
     startPeriodicChecks(): void;
     /**
-     * Stop automatic update checking
-     */
+   * Stop automatic update checking
+   */
     stopPeriodicChecks(): void;
     /**
-     * Set auto-download preference
+   * Set auto-download preference
      */
     setAutoDownload(enabled: boolean): void;
     /**
@@ -132,7 +132,7 @@ export declare class UpdateManager extends EventEmitter {
     getState(): UpdateState;
     /**
      * Check if updates are supported
-     */
+   */
     isUpdateSupported(): boolean;
     /**
      * Get update server URL

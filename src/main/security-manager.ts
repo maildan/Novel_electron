@@ -1,5 +1,5 @@
 /**
- * 보안 설정 관리 모듈
+ * 보안 Setup 관리 모듈
  * 
  * Electron 앱의 보안 헤더, CSP(Content Security Policy), 요청 필터링 등을 관리합니다.
  * 개발 환경과 프로덕션 환경에서 다른 보안 정책을 적용합니다.
@@ -7,7 +7,7 @@
 
 import { session, app, BrowserWindow, ipcMain, Session, WebContents } from 'electron';
 
-// 보안 설정 인터페이스
+// 보안 Setup 인터페이스
 export interface SecurityConfig {
   csp: {
     enabled: boolean;
@@ -68,15 +68,15 @@ export class SecurityManager {
   }
 
   /**
-   * 보안 관리자 초기화
-   */
+ * 보안 관리자 초기화
+ */
   async initialize(): Promise<boolean> {
     if (this.isInitialized) {
       return true;
     }
 
     try {
-      console.log(`[Security] Initializing security manager (dev: ${isDev}, disableSecurity: ${disableSecurity})`);
+      console.log('[Security] Initializing security manager (dev: ${isDev}, disableSecurity: ${disableSecurity})');
 
       if (disableSecurity) {
         console.log('[Security] Security disabled by environment variable');
@@ -89,10 +89,10 @@ export class SecurityManager {
         await this.applyCSPToAllSessions();
       }
 
-      // 키보드 이벤트 핸들러 설정
+      // 키보드 이벤트 핸들러 Setup
       this.setupKeyboardEventHandlers();
 
-      // 웹 콘텐츠 보안 설정
+      // 웹 콘텐츠 보안 Setup
       this.setupWebContentsSecurity();
 
       this.isInitialized = true;
@@ -105,8 +105,8 @@ export class SecurityManager {
   }
 
   /**
-   * 특정 창에 대한 요청 보안 검사 설정
-   */
+ * 특정 창에 대한 요청 보안 검사 Setup
+ */
   setupRequestSecurity(window: BrowserWindow): boolean {
     try {
       if (!window?.webContents) {
@@ -120,14 +120,14 @@ export class SecurityManager {
         if (this.isUrlAllowedForWindow(url)) {
           return { action: 'allow' };
         }
-        console.warn(`[Security] Blocked window open for URL: ${url}`);
+        console.warn('[Security] Blocked window open for URL: ${url}');
         return { action: 'deny' };
       });
 
       // 네비게이션 제어
       webContents.on('will-navigate', (event, url) => {
         if (!this.isUrlAllowedForNavigation(url)) {
-          console.warn(`[Security] Blocked navigation to URL: ${url}`);
+          console.warn('[Security] Blocked navigation to URL: ${url}');
           event.preventDefault();
         }
       });
@@ -175,8 +175,8 @@ export class SecurityManager {
   }
 
   /**
-   * 기본 설정 가져오기
-   */
+ * 기본 Setup 가져오기
+ */
   private getDefaultConfig(customConfig?: Partial<SecurityConfig>): SecurityConfig {
     const defaultConfig: SecurityConfig = {
       csp: {
@@ -207,8 +207,8 @@ export class SecurityManager {
   }
 
   /**
-   * 설정 병합
-   */
+ * Setup 병합
+ */
   private mergeConfig(defaultConfig: SecurityConfig, customConfig?: Partial<SecurityConfig>): SecurityConfig {
     if (!customConfig) {
       return defaultConfig;
@@ -257,8 +257,8 @@ export class SecurityManager {
   }
 
   /**
-   * 보안 헤더 생성
-   */
+ * 보안 헤더 생성
+ */
   private getSecurityHeaders(): Record<string, string> {
     const headers: Record<string, string> = {};
 
@@ -276,8 +276,8 @@ export class SecurityManager {
   }
 
   /**
-   * 보안 헤더 적용
-   */
+ * 보안 헤더 적용
+ */
   private applySecurityHeaders(details: any, callback?: (response: SecurityHeadersResponse) => void): void {
     if (details.responseHeaders) {
       const securityHeaders = this.getSecurityHeaders();
@@ -308,12 +308,12 @@ export class SecurityManager {
       // 기존 리스너 제거 (중복 방지)
       sess.webRequest.onHeadersReceived(null);
 
-      // 새 CSP 설정 적용
+      // 새 CSP Setup 적용
       sess.webRequest.onHeadersReceived({ urls: ['*://*/*'] }, (details, callback) => {
         this.applySecurityHeaders(details, callback);
       });
 
-      console.log(`[Security] CSP registered for session (strict: ${this.config.csp.strictMode})`);
+      console.log('[Security] CSP registered for session (strict: ${this.config.csp.strictMode})');
       return true;
     } catch (error) {
       console.error('[Security] Failed to register CSP for session:', error);
@@ -331,14 +331,14 @@ export class SecurityManager {
 
       // 모든 세션에 CSP 적용 (파티션된 세션 포함)
       const allSessions = (session as any).getAllSessions?.() || [];
-      console.log(`[Security] Applying CSP to all sessions (count: ${allSessions.length + 1})`);
+      console.log('[Security] Applying CSP to all sessions (count: ${allSessions.length + 1})');
 
       allSessions.forEach((sess: any, idx: number) => {
         try {
-          console.log(`[Security] Applying CSP to session #${idx + 1}`);
+          console.log('[Security] Applying CSP to session #${idx + 1}');
           this.registerCSPForSession(sess);
         } catch (error) {
-          console.error(`[Security] Failed to apply CSP to session #${idx + 1}:`, error);
+          console.error('[Security] Failed to apply CSP to session #${idx + 1}:', error);
         }
       });
 
@@ -347,7 +347,7 @@ export class SecurityManager {
     } catch (error) {
       console.error('[Security] Failed to apply CSP to all sessions:', error);
 
-      // 오류가 발생한 경우에도 기본 세션만이라도 시도
+      // Error가 발생한 경우에도 기본 세션만이라도 시도
       try {
         console.warn('[Security] Fallback: Applying CSP to default session only');
         this.registerCSPForSession(session.defaultSession);
@@ -360,8 +360,8 @@ export class SecurityManager {
   }
 
   /**
-   * 웹 콘텐츠 보안 설정
-   */
+ * 웹 콘텐츠 보안 Setup
+ */
   private setupWebContentsSecurity(): void {
     app.on('web-contents-created', (event, contents) => {
       // 팝업 차단
@@ -369,14 +369,14 @@ export class SecurityManager {
         if (this.isUrlAllowedForWindow(url)) {
           return { action: 'allow' };
         }
-        console.log(`[Security] Blocked external URL open: ${url}`);
+        console.log('[Security] Blocked external URL open: ${url}');
         return { action: 'deny' };
       });
 
       // 탐색 차단
       contents.on('will-navigate', (evt, navUrl) => {
         if (!this.isUrlAllowedForNavigation(navUrl)) {
-          console.log(`[Security] Blocked navigation: ${navUrl}`);
+          console.log('[Security] Blocked navigation: ${navUrl}');
           evt.preventDefault();
         }
       });
@@ -420,8 +420,8 @@ export class SecurityManager {
   }
 
   /**
-   * 키보드 이벤트 핸들러 설정
-   */
+ * 키보드 이벤트 핸들러 Setup
+ */
   private setupKeyboardEventHandlers(): void {
     try {
       // 기존 핸들러 제거 (중복 방지)
@@ -538,8 +538,8 @@ export class SecurityManager {
   }
 
   /**
-   * 기존 키보드 핸들러 제거
-   */
+ * 기존 키보드 핸들러 제거
+ */
   private removeExistingKeyboardHandlers(): void {
     try {
       const handlers = [
@@ -598,14 +598,14 @@ export function getSecurityManager(config?: Partial<SecurityConfig>): SecurityMa
 export const security = {
   /**
    * 보안 관리자 초기화
-   */
+ */
   async initialize(config?: Partial<SecurityConfig>): Promise<boolean> {
     return await getSecurityManager(config).initialize();
   },
 
   /**
-   * 특정 창에 요청 보안 설정
-   */
+ * 특정 창에 요청 보안 Setup
+ */
   setupRequestSecurity(window: BrowserWindow): boolean {
     return getSecurityManager().setupRequestSecurity(window);
   },

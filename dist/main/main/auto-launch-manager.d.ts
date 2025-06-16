@@ -1,7 +1,7 @@
 /**
  * 시스템 자동 시작 관리 모듈
  *
- * 애플리케이션이 시스템 시작 시 자동으로 실행되도록 설정합니다.
+ * 애플리케이션이 시스템 시작 시 자동으로 실행되도록 Setup합니다.
  * 다양한 운영체제에서 작동하는 자동 시작 기능을 제공합니다.
  */
 export interface AutoLaunchSettings {
@@ -24,44 +24,44 @@ export declare class AutoLaunchManager {
     private isInitialized;
     constructor();
     /**
-     * 자동 시작 관리자 초기화
-     */
+   * 자동 시작 관리자 초기화
+   */
     initialize(): Promise<boolean>;
     /**
-     * 자동 시작 활성화
-     */
+   * 자동 시작 활성화
+   */
     enable(settings?: Partial<AutoLaunchSettings>): Promise<boolean>;
     /**
-     * 자동 시작 비활성화
-     */
+   * 자동 시작 비활성화
+   */
     disable(): Promise<boolean>;
     /**
-     * 자동 시작 상태 확인
-     */
+   * 자동 시작 상태 확인
+   */
     getStatus(): Promise<AutoLaunchStatus>;
     /**
-     * 자동 시작 설정 토글
-     */
+   * 자동 시작 Setup 토글
+   */
     toggle(settings?: Partial<AutoLaunchSettings>): Promise<boolean>;
     /**
-     * 실행 파일 경로 가져오기
-     */
+   * 실행 파일 경로 가져오기
+   */
     private getExecutablePath;
     /**
-     * 플랫폼 지원 여부 확인
-     */
+   * 플랫폼 지원 여부 확인
+   */
     private isPlatformSupported;
     /**
-     * 플랫폼별 자동 시작 활성화
-     */
+   * 플랫폼별 자동 시작 활성화
+   */
     private enableForPlatform;
     /**
-     * 플랫폼별 자동 시작 비활성화
-     */
+   * 플랫폼별 자동 시작 비활성화
+   */
     private disableForPlatform;
     /**
-     * 플랫폼별 자동 시작 상태 확인
-     */
+   * 플랫폼별 자동 시작 상태 확인
+   */
     private checkStatusForPlatform;
     /**
      * Windows 자동 시작 활성화
@@ -109,24 +109,24 @@ export declare function getAutoLaunchManager(): AutoLaunchManager;
  */
 export declare const autoLaunch: {
     /**
-     * 자동 시작 초기화
-     */
+   * 자동 시작 초기화
+   */
     initialize(): Promise<boolean>;
     /**
-     * 자동 시작 활성화
-     */
+   * 자동 시작 활성화
+   */
     enable(settings?: Partial<AutoLaunchSettings>): Promise<boolean>;
     /**
-     * 자동 시작 비활성화
-     */
+   * 자동 시작 비활성화
+   */
     disable(): Promise<boolean>;
     /**
-     * 자동 시작 상태 확인
-     */
+   * 자동 시작 상태 확인
+   */
     getStatus(): Promise<AutoLaunchStatus>;
     /**
-     * 자동 시작 토글
-     */
+   * 자동 시작 토글
+   */
     toggle(settings?: Partial<AutoLaunchSettings>): Promise<boolean>;
 };
 export default autoLaunch;

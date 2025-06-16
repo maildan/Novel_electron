@@ -1,6 +1,6 @@
 /**
- * Advanced system information and monitoring module
- * Handles system stats, browser detection, debug info, and permissions
+ * 고급 시스템 정보 및 모니터링 모듈
+ * 시스템 통계, 브라우저 감지, 디버그 정보, 권한을 처리합니다
  */
 import { BrowserWindow } from 'electron';
 /**

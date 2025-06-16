@@ -17,7 +17,7 @@ export const isDev = process.env.NODE_ENV === 'development';
 let logDir: string | null = null;
 
 try {
-  // Electron이 로드된 경우에만 로그 디렉토리 설정
+  // Electron이 로드된 경우에만 로그 디렉토리 Setup
   if (typeof require !== 'undefined') {
     try {
       const { app } = require('electron');
@@ -25,11 +25,11 @@ try {
         logDir = path.join(app.getPath('userData'), 'logs');
       }
     } catch {
-      // Electron이 없는 환경에서는 로그 디렉토리를 설정하지 않음
+      // Electron이 없는 환경에서는 로그 디렉토리를 Setup하지 않음
     }
   }
 } catch {
-  // 오류 무시
+  // Error 무시
 }
 
 /**
@@ -38,7 +38,7 @@ try {
 export function debugLog(...args: any[]): void {
   if (isDev) {
     const timestamp = new Date().toISOString();
-    console.log(`[DEBUG ${timestamp}]`, ...args);
+    console.log('[DEBUG ${timestamp}]', ...args);
     
     // 파일 로깅 (메인 프로세스에서만)
     if (logDir) {
@@ -61,11 +61,11 @@ export function infoLog(...args: any[]): void {
 }
 
 /**
- * 경고 로그 출력
+ * Warning 로그 출력
  */
 export function warnLog(...args: any[]): void {
   const timestamp = new Date().toISOString();
-  console.warn(`[WARN ${timestamp}]`, ...args);
+  console.warn('[WARN ${timestamp}]', ...args);
   
   // 파일 로깅 (메인 프로세스에서만)
   if (logDir) {
@@ -78,7 +78,7 @@ export function warnLog(...args: any[]): void {
  */
 export function errorLog(...args: any[]): void {
   const timestamp = new Date().toISOString();
-  console.error(`[ERROR ${timestamp}]`, ...args);
+  console.error('[ERROR ${timestamp}]', ...args);
   
   // 파일 로깅 (메인 프로세스에서만)
   if (logDir) {
@@ -106,7 +106,7 @@ function writeLogToFile(level: LogLevel, args: any[]): void {
     const logFile = path.join(logDir, `${new Date().toISOString().split('T')[0]}.log`);
     fs.appendFileSync(logFile, logEntry, 'utf-8');
   } catch (error) {
-    // 로그 파일 작성 실패 시 콘솔에만 출력
+    // 로그 파일 작성 Failed 시 콘솔에만 출력
     console.error('Failed to write log to file:', error);
   }
 }

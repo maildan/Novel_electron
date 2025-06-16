@@ -75,6 +75,7 @@
     "winston": "^3.17.0"
   },
   "devDependencies": {
+    "@next/swc-darwin-arm64": "15.3.3",
     "@tailwindcss/postcss": "^4.1.8",
     "@types/better-sqlite3": "^7.6.13",
     "@types/electron": "^1.6.12",
@@ -88,7 +89,7 @@
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.8.2",
+    "typescript": "^5.8.3",
     "wait-on": "^8.0.2"
   },
   "engines": {

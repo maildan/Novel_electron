@@ -85,13 +85,13 @@ class DataSyncManager {
     isFullSyncRunning: false
   };
 
-  // 클라이언트는 나중에 의존성 주입으로 설정
+  // 클라이언트는 나중에 의존성 주입으로 Setup
   private mongoClient: DatabaseClient | null = null;
   private supabaseClient: SupabaseClient | null = null;
 
   /**
-   * 모듈 초기화
-   */
+ * 모듈 초기화
+ */
   async initialize(): Promise<boolean> {
     try {
       debugLog('데이터 동기화 모듈 초기화 중...');
@@ -101,11 +101,11 @@ class DataSyncManager {
         // const { default: mongoClient } = await import('../lib/mongodb');
         // const { default: supabaseClient } = await import('../lib/supabase');
         
-        // 임시로 null 설정 (추후 실제 클라이언트로 교체)
+        // 임시로 null Setup (추후 실제 클라이언트로 교체)
         this.mongoClient = null;
         this.supabaseClient = null;
       } catch (error) {
-        debugLog('데이터베이스 클라이언트 로드 실패, 폴백 모드로 전환:', error);
+        debugLog('데이터베이스 클라이언트 로드 Failed, 폴백 모드로 전환:', error);
         return false;
       }
 
@@ -117,13 +117,13 @@ class DataSyncManager {
       // MongoDB 연결 초기화
       await (this.mongoClient as DatabaseClient).connectToMongoDB();
       
-      // MongoDB 상태 모니터링 설정
+      // MongoDB 상태 모니터링 Setup
       (this.mongoClient as DatabaseClient).setupHealthCheck(30000); // 30초마다 연결 확인
       
       // Supabase 연결 테스트
       const supabaseConnected = await (this.supabaseClient as SupabaseClient).testConnection();
       if (!supabaseConnected) {
-        debugLog('Supabase 연결 실패, 재시도 예정');
+        debugLog('Supabase 연결 Failed, 재시도 예정');
       }
       
       // 실시간 데이터 전송 시작 (3초마다)
@@ -132,24 +132,24 @@ class DataSyncManager {
       // 주기적 전체 동기화 (1주일마다)
       this.scheduleFullSync();
       
-      debugLog('데이터 동기화 모듈 초기화 완료');
+      debugLog('데이터 동기화 모듈 초기화 Completed');
       return true;
     } catch (error) {
-      console.error('데이터 동기화 모듈 초기화 오류:', error);
+      console.error('데이터 동기화 모듈 초기화 Error:', error);
       return false;
     }
   }
 
   /**
-   * 실시간 데이터 전송 시작
-   */
+ * 실시간 데이터 전송 시작
+ */
   private startRealTimeSync(): void {
     debugLog('실시간 데이터 전송 시작 (3초 간격)');
     
     // 3초마다 대기열 처리
     this.syncInterval = setInterval(() => {
       this.processQueue().catch(error => {
-        console.error('대기열 처리 오류:', error);
+        console.error('대기열 처리 Error:', error);
       });
     }, 3000);
     
@@ -162,14 +162,14 @@ class DataSyncManager {
           this.addToQueue(document);
         }
       }).catch(error => {
-        console.error('MongoDB Change Stream 모니터링 오류:', error);
+        console.error('MongoDB Change Stream 모니터링 Error:', error);
       });
     }
   }
 
   /**
-   * 타이핑 로그 데이터를 대기열에 추가
-   */
+ * 타이핑 로그 데이터를 대기열에 추가
+ */
   addToQueue(data: TypingLogData): void {
     // 대기열에 이미 동일한 idempotencyKey를 가진 항목이 있는지 확인
     const existingIndex = this.dataQueue.findIndex(item => 
@@ -179,25 +179,25 @@ class DataSyncManager {
     if (existingIndex >= 0) {
       // 기존 항목 업데이트
       this.dataQueue[existingIndex] = { ...data, queuedAt: new Date() };
-      debugLog(`기존 대기열 항목 업데이트: ${data.idempotencyKey || data._id}`);
+      debugLog('기존 대기열 항목 업데이트: ${data.idempotencyKey || data._id}');
     } else {
       // 새 항목 추가
       this.dataQueue.push({ ...data, queuedAt: new Date() });
       this.syncStatus.pendingItemsCount = this.dataQueue.length;
-      debugLog(`대기열에 항목 추가됨, 현재 크기: ${this.dataQueue.length}`);
+      debugLog('대기열에 항목 추가됨, 현재 크기: ${this.dataQueue.length}');
     }
   }
 
   /**
-   * 대기열 처리
-   */
+ * 대기열 처리
+ */
   private async processQueue(): Promise<void> {
     if (this.isProcessingQueue || this.dataQueue.length === 0) {
       return;
     }
     
     this.isProcessingQueue = true;
-    debugLog(`대기열 처리 시작, ${this.dataQueue.length}개 항목`);
+    debugLog('대기열 처리 시작, ${this.dataQueue.length}개 항목');
     
     try {
       // 현재 대기열의 일부만 처리 (배치 크기 제한)
@@ -209,7 +209,7 @@ class DataSyncManager {
         try {
           // 배치 저장
           const mongoResult = await (this.mongoClient as DatabaseClient).saveBatchTypingLogs(batch);
-          debugLog(`MongoDB 배치 저장 완료: ${mongoResult.insertedCount}개 항목`);
+          debugLog('MongoDB 배치 저장 Completed: ${mongoResult.insertedCount}개 항목');
           
           this.syncStatus.lastMongoSync = new Date();
           
@@ -218,20 +218,20 @@ class DataSyncManager {
             const supabaseResult = await (this.supabaseClient as SupabaseClient).saveBatchTypingLogs(batch);
             
             if (supabaseResult.success) {
-              debugLog(`Supabase 배치 저장 완료: ${supabaseResult.insertedCount}개 항목`);
+              debugLog('Supabase 배치 저장 Completed: ${supabaseResult.insertedCount}개 항목');
               this.syncStatus.lastSupabaseSync = new Date();
               
-              // 성공적으로 처리된 항목 대기열에서 제거
+              // Success적으로 처리된 항목 대기열에서 제거
               this.dataQueue = this.dataQueue.slice(BATCH_SIZE);
               this.syncStatus.pendingItemsCount = this.dataQueue.length;
             } else {
               throw new Error(supabaseResult.error);
             }
           } catch (supabaseError) {
-            console.error('Supabase 저장 오류:', supabaseError);
+            console.error('Supabase 저장 Error:', supabaseError);
             // MongoDB에는 저장되었으므로 다음 주기적 동기화에서 처리됨
             
-            // 오류 정보 기록
+            // Error 정보 기록
             this.syncStatus.syncErrors.push({
               timestamp: new Date(),
               service: 'supabase',
@@ -240,9 +240,9 @@ class DataSyncManager {
             });
           }
         } catch (mongoError) {
-          console.error('MongoDB 저장 오류:', mongoError);
+          console.error('MongoDB 저장 Error:', mongoError);
           
-          // 오류 정보 기록
+          // Error 정보 기록
           this.syncStatus.syncErrors.push({
             timestamp: new Date(),
             service: 'mongodb',
@@ -250,7 +250,7 @@ class DataSyncManager {
             itemsCount: batch.length
           });
           
-          // 실패한 항목 추적 (나중에 재시도)
+          // Failed한 항목 추적 (나중에 재시도)
           this.syncStatus.failedItems.push(...batch.map(item => ({
             data: item,
             error: String(mongoError),
@@ -259,7 +259,7 @@ class DataSyncManager {
         }
       }
     } catch (error) {
-      console.error('대기열 처리 중 오류:', error);
+      console.error('대기열 Processing Error:', error);
     } finally {
       this.isProcessingQueue = false;
       this.lastSyncTime = new Date();
@@ -281,7 +281,7 @@ class DataSyncManager {
     this.fullSyncTimeout = setTimeout(() => {
       debugLog('초기 전체 동기화 시작');
       etlScheduler.runNow().catch((error: Error) => {
-        console.error('초기 전체 동기화 오류:', error);
+        console.error('초기 전체 동기화 Error:', error);
       });
     }, 5 * 60 * 1000); // 5분
   }
@@ -301,8 +301,8 @@ class DataSyncManager {
   }
 
   /**
-   * 현재 동기화 상태 반환
-   */
+ * 현재 동기화 상태 반환
+ */
   async getStatus(): Promise<SyncStatus> {
     return {
       lastMongoSync: this.syncStatus.lastMongoSync,
@@ -320,8 +320,8 @@ class DataSyncManager {
   }
 
   /**
-   * 수동 동기화 실행
-   */
+ * 수동 동기화 실행
+ */
   async syncNow(): Promise<{ success: boolean; error?: string }> {
     try {
       await this.performFullSync();
@@ -334,11 +334,11 @@ class DataSyncManager {
   }
 
   /**
-   * 동기화 설정 업데이트
-   */
+ * 동기화 Setup 업데이트
+ */
   async updateConfig(config: any): Promise<{ success: boolean; error?: string }> {
     try {
-      // 설정 업데이트 로직
+      // Setup 업데이트 로직
       this.config = { ...this.config, ...config };
       return { success: true };
     } catch (error) {
@@ -348,11 +348,11 @@ class DataSyncManager {
   }
 
   /**
-   * 실패한 항목 재시도
-   */
+ * Failed한 항목 재시도
+ */
   async retryFailedItems(): Promise<{ success: boolean; error?: string }> {
     try {
-      // 실패한 항목들을 다시 큐에 추가
+      // Failed한 항목들을 다시 큐에 추가
       const failedItems = this.failedQueue.splice(0);
       this.pendingQueue.push(...failedItems);
       
@@ -368,43 +368,43 @@ class DataSyncManager {
   }
 
   /**
-   * 모듈 재시작
-   */
+ * 모듈 재시작
+ */
   async restart(): Promise<void> {
     this.stop();
     await this.initialize();
   }
 
   /**
-   * 초기화 상태 확인
-   */
+ * 초기화 상태 확인
+ */
   isInitialized(): boolean {
     return this.mongoClient !== null && this.supabaseClient !== null;
   }
 
   /**
-   * 동기화 상태 조회
-   */
+ * 동기화 상태 조회
+ */
   getSyncStatus(): SyncStatus {
     return { ...this.syncStatus };
   }
 
   /**
-   * 수동 동기화 실행
-   */
+ * 수동 동기화 실행
+ */
   async manualSync(): Promise<boolean> {
     try {
       await this.processQueue();
       return true;
     } catch (error) {
-      console.error('수동 동기화 오류:', error);
+      console.error('수동 동기화 Error:', error);
       return false;
     }
   }
 
   /**
-   * 정리 작업
-   */
+ * Cleanup 작업
+ */
   cleanup(): void {
     if (this.syncInterval) {
       clearInterval(this.syncInterval);
@@ -416,19 +416,19 @@ class DataSyncManager {
       this.fullSyncTimeout = null;
     }
     
-    debugLog('데이터 동기화 모듈 정리 완료');
+    debugLog('데이터 동기화 모듈 Cleanup Completed');
   }
 
   /**
-   * 연결 상태 확인
-   */
+ * 연결 상태 확인
+ */
   private isConnected(): boolean {
     return this.mongoClient !== null && this.supabaseClient !== null;
   }
 
   /**
-   * 전체 동기화 실행
-   */
+ * 전체 동기화 실행
+ */
   private async performFullSync(): Promise<void> {
     this.syncInProgress = true;
     try {
@@ -447,8 +447,8 @@ class DataSyncManager {
   }
 
   /**
-   * 동기화 중지
-   */
+ * 동기화 중지
+ */
   stop(): void {
     if (this.syncInterval) {
       clearInterval(this.syncInterval);

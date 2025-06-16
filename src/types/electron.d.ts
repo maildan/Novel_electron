@@ -52,6 +52,20 @@ interface ElectronAPI {
   // IPC 호출을 위한 invoke 메서드
   invoke: (channel: string, ...args: any[]) => Promise<any>;
   
+  // 키보드 모니터링 API
+  getKeyboardPermissions: () => Promise<{ 
+    screenRecording?: boolean; 
+    accessibility?: boolean; 
+  }>;
+  openPermissionsSettings: () => void;
+  toggleKeyboardMonitoring: () => Promise<{ success: boolean; isActive: boolean; }>;
+  getKeyboardStatus: () => Promise<{
+    initialized: boolean;
+    listening: boolean;
+    queueSize: number;
+    totalTypingCount: number;
+  }>;
+  
   system: {
     getInfo: () => Promise<any>;
     getCurrentMetrics: () => Promise<any>;

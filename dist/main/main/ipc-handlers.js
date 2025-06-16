@@ -53,16 +53,16 @@ class IpcHandlers {
             this.registerSecurityHandlers();
             this.registerUtilityHandlers();
             this.isInitialized = true;
-            console.log('[IPC] IPC 핸들러 등록 완료');
+            console.log('[IPC] IPC 핸들러 등록 Completed');
         }
         catch (error) {
-            console.error('[IPC] IPC 핸들러 등록 실패:', error);
+            console.error('[IPC] IPC 핸들러 등록 Failed:', error);
             throw error;
         }
     }
     /**
-     * 데이터 동기화 핸들러 등록
-     */
+   * 데이터 동기화 핸들러 등록
+   */
     registerDataSyncHandlers() {
         // 데이터 동기화 상태 확인
         electron_1.ipcMain.handle('data-sync-status', async () => {
@@ -84,7 +84,7 @@ class IpcHandlers {
                 return { success: false, error: error instanceof Error ? error.message : String(error) };
             }
         });
-        // 동기화 설정 업데이트
+        // 동기화 Setup 업데이트
         electron_1.ipcMain.handle('data-sync-update-config', async (event, config) => {
             try {
                 return await data_sync_1.default.updateConfig(config);
@@ -106,8 +106,8 @@ class IpcHandlers {
         });
     }
     /**
-     * 통계 핸들러 등록
-     */
+   * 통계 핸들러 등록
+   */
     registerStatsHandlers() {
         // 통계 데이터 가져오기
         electron_1.ipcMain.handle('stats-get-data', async (event, options) => {
@@ -129,7 +129,7 @@ class IpcHandlers {
                 return { success: false, error: error instanceof Error ? error.message : String(error) };
             }
         });
-        // 통계 설정 업데이트
+        // 통계 Setup 업데이트
         electron_1.ipcMain.handle('stats-update-settings', async (event, settings) => {
             try {
                 return await stats_manager_1.default.updateSettings(settings);
@@ -151,8 +151,8 @@ class IpcHandlers {
         });
     }
     /**
-     * 브라우저 감지 핸들러 등록
-     */
+   * 브라우저 감지 핸들러 등록
+   */
     registerBrowserHandlers() {
         // 활성 브라우저 정보 가져오기
         electron_1.ipcMain.handle('browser-get-active', async () => {
@@ -184,7 +184,7 @@ class IpcHandlers {
                 return { success: false, error: error instanceof Error ? error.message : String(error) };
             }
         });
-        // 브라우저 감지 설정 업데이트
+        // 브라우저 감지 Setup 업데이트
         electron_1.ipcMain.handle('browser-update-settings', async (event, settings) => {
             try {
                 return await browser_detector_1.default.updateSettings(settings);
@@ -196,8 +196,8 @@ class IpcHandlers {
         });
     }
     /**
-     * 자동 시작 핸들러 등록
-     */
+   * 자동 시작 핸들러 등록
+   */
     registerAutoLaunchHandlers() {
         // 자동 시작 상태 확인
         electron_1.ipcMain.handle('auto-launch-status', async () => {
@@ -241,8 +241,8 @@ class IpcHandlers {
         });
     }
     /**
-     * 보안 핸들러 등록
-     */
+   * 보안 핸들러 등록
+   */
     registerSecurityHandlers() {
         // CSP 업데이트
         electron_1.ipcMain.handle('security-update-csp', async (event, config) => {
@@ -275,7 +275,7 @@ class IpcHandlers {
                 return { success: false, error: error instanceof Error ? error.message : String(error) };
             }
         });
-        // 창에 보안 설정 적용
+        // 창에 보안 Setup 적용
         electron_1.ipcMain.handle('security-setup-window', async (event) => {
             try {
                 const window = electron_1.BrowserWindow.fromWebContents(event.sender);
@@ -291,8 +291,8 @@ class IpcHandlers {
         });
     }
     /**
-     * 유틸리티 핸들러 등록
-     */
+   * 유틸리티 핸들러 등록
+   */
     registerUtilityHandlers() {
         // 앱 재시작
         electron_1.ipcMain.handle('app:restart', async () => {
@@ -352,8 +352,8 @@ class IpcHandlers {
                         dataSync: data_sync_1.default.isInitialized(),
                         stats: stats_manager_1.default.isInitialized(),
                         browser: browser_detector_1.default.isInitialized(),
-                        security: true, // 보안 관리자는 항상 초기화됨
-                        autoLaunch: true // 자동 시작 관리자는 항상 초기화됨
+                        security: true, // 보안 관리자는 항상 Initialized
+                        autoLaunch: true // 자동 시작 관리자는 항상 Initialized
                     },
                     timestamp: Date.now()
                 };
@@ -365,13 +365,13 @@ class IpcHandlers {
         });
     }
     /**
-     * 핸들러 제거
-     */
+   * 핸들러 제거
+   */
     cleanup() {
         if (!this.isInitialized) {
             return;
         }
-        console.log('[IPC] IPC 핸들러 정리 시작');
+        console.log('[IPC] IPC 핸들러 Cleanup 시작');
         // 모든 핸들러 목록
         const handlers = [
             // 앱 제어
@@ -399,14 +399,14 @@ class IpcHandlers {
             }
         });
         this.isInitialized = false;
-        console.log('[IPC] IPC 핸들러 정리 완료');
+        console.log('[IPC] IPC 핸들러 Cleanup Completed');
     }
     /**
-     * 리소스 정리
-     */
+   * 리소스 Cleanup
+   */
     dispose() {
-        // IPC 핸들러 정리 로직
-        console.log('[IPC] IPC 핸들러 정리 완료');
+        // IPC 핸들러 Cleanup 로직
+        console.log('[IPC] IPC 핸들러 Cleanup Completed');
     }
 }
 exports.IpcHandlers = IpcHandlers;

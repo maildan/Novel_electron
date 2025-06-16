@@ -1,6 +1,6 @@
 /**
- * Custom protocol handlers and security management module
- * Handles app-specific protocols, URL routing, and secure file access
+ * 커스텀 프로토콜 핸들러 및 보안 관리 모듈
+ * 앱 전용 프로토콜, URL 라우팅, 보안 파일 접근을 처리합니다
  */
 import { app, protocol, net, BrowserWindow } from 'electron';
 import * as path from 'path';
@@ -8,14 +8,14 @@ import * as fs from 'fs';
 import { URL } from 'url';
 import { debugLog } from '../utils/debug';
 
-// Custom protocol configuration
+// 커스텀 프로토콜 구성
 const APP_PROTOCOL = 'loop';
 const ALLOWED_FILE_EXTENSIONS = [
   '.html', '.css', '.js', '.ts', '.json', '.png', '.jpg', '.jpeg', '.gif', '.svg',
   '.woff', '.woff2', '.ttf', '.eot', '.ico', '.pdf', '.txt', '.md'
 ];
 
-// MIME type mappings
+// MIME 타입 매핑
 const MIME_TYPES: Record<string, string> = {
   '.html': 'text/html',
   '.css': 'text/css',
@@ -37,7 +37,7 @@ const MIME_TYPES: Record<string, string> = {
   '.md': 'text/markdown'
 };
 
-// Security configuration
+// 보안 구성
 interface SecurityConfig {
   allowedOrigins: string[];
   allowedProtocols: string[];
@@ -54,12 +54,12 @@ const DEFAULT_SECURITY_CONFIG: SecurityConfig = {
   strictMode: !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
 };
 
-// Global state
+// 전역 상태
 let protocolsInitialized = false;
 let securityConfig: SecurityConfig = { ...DEFAULT_SECURITY_CONFIG };
 
 /**
- * Convert file path to protocol URL
+ * 파일 경로를 프로토콜 URL로 변환
  */
 export function filePathToProtocolUrl(filePath: string): string {
   const relativePath = path.relative(app.getAppPath(), filePath);
@@ -100,40 +100,40 @@ function isAllowedFileExtension(filePath: string): boolean {
  */
 function validateFileAccess(filePath: string): boolean {
   try {
-    // Check if file exists
+    // 파일 존재 여부 확인
     if (!fs.existsSync(filePath)) {
       return false;
     }
 
-    // Check file extension
+    // 파일 확장자 확인
     if (!isAllowedFileExtension(filePath)) {
-      debugLog(`File extension not allowed: ${path.extname(filePath)}`);
+      debugLog('허용되지 않은 파일 확장자: ${path.extname(filePath)}');
       return false;
     }
 
-    // Check file size
+    // 파일 크기 확인
     const stats = fs.statSync(filePath);
     if (stats.size > securityConfig.maxFileSize) {
-      debugLog(`File too large: ${stats.size} bytes`);
+      debugLog('파일이 너무 큼: ${stats.size} bytes');
       return false;
     }
 
-    // Additional security checks in strict mode
+    // 엄격 모드에서의 추가 보안 검사
     if (securityConfig.strictMode) {
-      // Ensure file is within app directory or user data directory
+      // 파일이 앱 디렉토리 또는 사용자 데이터 디렉토리 내에 있는지 확인
       const appPath = app.getAppPath();
       const userDataPath = app.getPath('userData');
       const resolvedPath = path.resolve(filePath);
       
       if (!resolvedPath.startsWith(appPath) && !resolvedPath.startsWith(userDataPath)) {
-        debugLog(`File access denied - outside allowed directories: ${resolvedPath}`);
+        debugLog('파일 Access denied - 허용된 디렉토리 밖: ${resolvedPath}');
         return false;
       }
     }
 
     return true;
   } catch (error) {
-    debugLog(`File access validation error: ${error}`);
+    debugLog('파일 접근 유효성 검사 Error: ${error}');
     return false;
   }
 }
@@ -150,13 +150,13 @@ function createSecurityHeaders(): Record<string, string> {
     headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization';
   }
 
-  // Security headers
+  // 보안 헤더
   headers['X-Content-Type-Options'] = 'nosniff';
   headers['X-Frame-Options'] = 'DENY';
   headers['X-XSS-Protection'] = '1; mode=block';
   headers['Referrer-Policy'] = 'strict-origin-when-cross-origin';
 
-  // Content Security Policy for development
+  // 개발용 콘텐츠 보안 정책
   if (!app.isPackaged) {
     headers['Content-Security-Policy'] = "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; connect-src 'self' ws: wss:;";
   }
@@ -170,13 +170,13 @@ function createSecurityHeaders(): Record<string, string> {
 function handleProtocolRequest(request: Electron.ProtocolRequest): Electron.ProtocolResponse {
   try {
     const url = new URL(request.url);
-    debugLog(`Protocol request: ${request.url}`);
+    debugLog('프로토콜 요청: ${request.url}');
 
-    // Convert to file path
+    // 파일 경로로 변환
     const filePath = protocolUrlToFilePath(request.url);
-    debugLog(`Resolved file path: ${filePath}`);
+    debugLog('해결된 파일 경로: ${filePath}');
 
-    // Validate file access
+    // 파일 접근 유효성 검사
     if (!validateFileAccess(filePath)) {
       return {
         statusCode: 403,
@@ -185,7 +185,7 @@ function handleProtocolRequest(request: Electron.ProtocolRequest): Electron.Prot
       };
     }
 
-    // Read file
+    // 파일 읽기
     const fileBuffer = fs.readFileSync(filePath);
     const mimeType = getMimeType(filePath);
     
@@ -201,7 +201,7 @@ function handleProtocolRequest(request: Electron.ProtocolRequest): Electron.Prot
       data: fileBuffer
     };
   } catch (error) {
-    console.error(`Protocol request error: ${error}`);
+    console.error('Protocol request error: ${error}');
     
     return {
       statusCode: 404,
@@ -230,7 +230,7 @@ function registerProtocolScheme(): void {
       }
     ]);
 
-    debugLog(`Protocol scheme registered: ${APP_PROTOCOL}`);
+    debugLog('Protocol scheme registered: ${APP_PROTOCOL}');
   } catch (error) {
     console.error('Protocol scheme registration error:', error);
   }
@@ -247,9 +247,9 @@ function registerProtocolHandler(): void {
     });
 
     if (success) {
-      debugLog(`Protocol handler registered: ${APP_PROTOCOL}`);
+      debugLog('Protocol handler registered: ${APP_PROTOCOL}');
     } else {
-      console.error(`Failed to register protocol handler: ${APP_PROTOCOL}`);
+      console.error('Failed to register protocol handler: ${APP_PROTOCOL}');
     }
   } catch (error) {
     console.error('Protocol handler registration error:', error);
@@ -279,7 +279,7 @@ function setupDeepLinkHandler(): void {
   // Handle open-url event (macOS)
   app.on('open-url', (event, url) => {
     event.preventDefault();
-    debugLog(`Open URL event: ${url}`);
+    debugLog('Open URL event: ${url}');
     handleDeepLink(url);
   });
 }
@@ -289,7 +289,7 @@ function setupDeepLinkHandler(): void {
  */
 function handleDeepLink(url: string): void {
   try {
-    debugLog(`Handling deep link: ${url}`);
+    debugLog('Handling deep link: ${url}');
     
     const parsedUrl = new URL(url);
     
@@ -351,7 +351,7 @@ export function updateSecurityConfig(config: Partial<SecurityConfig>): void {
 export function addAllowedOrigin(origin: string): void {
   if (!securityConfig.allowedOrigins.includes(origin)) {
     securityConfig.allowedOrigins.push(origin);
-    debugLog(`Added allowed origin: ${origin}`);
+    debugLog('Added allowed origin: ${origin}');
   }
 }
 
@@ -362,7 +362,7 @@ export function removeAllowedOrigin(origin: string): void {
   const index = securityConfig.allowedOrigins.indexOf(origin);
   if (index > -1) {
     securityConfig.allowedOrigins.splice(index, 1);
-    debugLog(`Removed allowed origin: ${origin}`);
+    debugLog('Removed allowed origin: ${origin}');
   }
 }
 

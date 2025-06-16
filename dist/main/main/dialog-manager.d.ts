@@ -1,7 +1,7 @@
 /**
- * Dialog Manager for Loop 6
- * Modern dialog and notification system with TypeScript
- * Features: Custom dialogs, system dialogs, notifications, prompts
+ * Loop 6 대화상자 관리자
+ * TypeScript 기반의 현대적인 대화상자 및 알림 시스템
+ * 기능: 커스텀 대화상자, 시스템 대화상자, 알림, 프롬프트
  */
 import { BrowserWindow } from 'electron';
 export declare enum DialogType {
@@ -56,8 +56,8 @@ export interface CustomDialogOptions {
     data?: any;
 }
 /**
- * Dialog Manager Class
- * Handles all types of dialogs and notifications
+ * 대화상자 관리자 클래스
+ * 모든 유형의 대화상자 및 알림을 처리합니다
  */
 export declare class DialogManager {
     private static instance;
@@ -67,11 +67,11 @@ export declare class DialogManager {
     private constructor();
     static getInstance(): DialogManager;
     /**
-     * Setup IPC handlers for renderer communication
+     * 렌더러 통신을 위한 IPC 핸들러 설정
      */
     private setupIpcHandlers;
     /**
-     * Show system message dialog
+     * 시스템 메시지 대화상자 표시
      */
     showMessageDialog(options: DialogOptions): Promise<{
         response: number;

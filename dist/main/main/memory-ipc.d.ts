@@ -3,7 +3,7 @@
  */
 export declare function registerMemoryIpcHandlers(): void;
 /**
- * 메모리 관련 IPC 핸들러 정리
+ * 메모리 관련 IPC 핸들러 Cleanup
  */
 export declare function cleanupMemoryIpcHandlers(): void;
 //# sourceMappingURL=memory-ipc.d.ts.map

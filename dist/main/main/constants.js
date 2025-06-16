@@ -3,7 +3,7 @@
  * 애플리케이션 상수 및 초기 상태 정의
  *
  * Loop 6의 핵심 상수, 타입 정의, 그리고 초기 상태를 관리합니다.
- * 모든 모듈에서 공통으로 사용되는 설정값과 열거형을 포함합니다.
+ * 모든 모듈에서 공통으로 사용되는 Setup값과 열거형을 포함합니다.
  */
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -18,7 +18,7 @@ exports.isDev = process.env.NODE_ENV === 'development';
 exports.APP_VERSION = electron_1.app?.getVersion() || '6.0.0';
 exports.APP_NAME = 'Loop 6';
 exports.APP_DESCRIPTION = 'Advanced Typing Analysis Desktop Application';
-// 환경 설정
+// 환경 Setup
 exports.ENVIRONMENT = {
     isDev: exports.isDev,
     isProduction: process.env.NODE_ENV === 'production',
@@ -77,7 +77,7 @@ exports.GPU_CONFIG = {
     DETECTION_TIMEOUT: 5000,
     INITIALIZATION_TIMEOUT: 10000
 };
-// 창 설정
+// 창 Setup
 exports.WINDOW_CONFIG = {
     MIN_WIDTH: 800,
     MIN_HEIGHT: 600,
@@ -90,7 +90,7 @@ exports.WINDOW_CONFIG = {
     MINI_VIEW_MIN_WIDTH: 200,
     MINI_VIEW_MIN_HEIGHT: 150
 };
-// 키보드 설정
+// 키보드 Setup
 exports.KEYBOARD_CONFIG = {
     DEBOUNCE_TIME: 50,
     TYPING_TIMEOUT: 2000,
@@ -99,7 +99,7 @@ exports.KEYBOARD_CONFIG = {
     MIN_TYPING_SPEED: 1, // WPM
     ACCURACY_THRESHOLD: 80 // %
 };
-// 데이터베이스 설정
+// 데이터베이스 Setup
 exports.DATABASE_CONFIG = {
     MAX_CONNECTIONS: 10,
     CONNECTION_TIMEOUT: 5000,
@@ -109,7 +109,7 @@ exports.DATABASE_CONFIG = {
     MAX_LOG_ENTRIES: 10000,
     MAX_STATS_ENTRIES: 5000
 };
-// 로깅 설정
+// 로깅 Setup
 exports.LOGGING_CONFIG = {
     MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
     MAX_FILES: 5,
@@ -118,7 +118,7 @@ exports.LOGGING_CONFIG = {
     FILE_LOG_ENABLED: true,
     ERROR_REPORTING_ENABLED: true
 };
-// 기본 설정값
+// 기본 Setup값
 exports.DEFAULT_SETTINGS = {
     // 카테고리
     enabledCategories: {
@@ -131,11 +131,11 @@ exports.DEFAULT_SETTINGS = {
         media: true,
         other: true
     },
-    // 기본 설정
+    // 기본 Setup
     autoStartMonitoring: true,
     resumeAfterIdle: true,
     idleTimeout: 300,
-    // UI 설정
+    // UI Setup
     theme: 'system',
     windowMode: 'windowed',
     darkMode: false,
@@ -145,12 +145,12 @@ exports.DEFAULT_SETTINGS = {
     enableAnimations: true,
     fontSize: 14,
     fontFamily: 'system-ui',
-    // 성능 설정
+    // 성능 Setup
     useHardwareAcceleration: false,
     enableGPUAcceleration: true,
     gpuAccelerationLevel: 1,
     processingMode: 'auto',
-    // 메모리 설정
+    // 메모리 Setup
     reduceMemoryInBackground: true,
     enableMemoryOptimization: true,
     enableBackgroundCleanup: true,
@@ -158,7 +158,7 @@ exports.DEFAULT_SETTINGS = {
     maxMemoryThreshold: 100,
     memoryCleanupInterval: 300000,
     memoryThreshold: 80,
-    // 데이터 설정
+    // 데이터 Setup
     autoCleanupLogs: true,
     maxHistoryItems: 500,
     logRetentionDays: 30,
@@ -167,20 +167,20 @@ exports.DEFAULT_SETTINGS = {
     dataRetentionDays: 30,
     enableAutoSave: true,
     autoSaveInterval: 10000,
-    // 타이핑 설정
+    // 타이핑 Setup
     enableWPMDisplay: true,
     enableAccuracyDisplay: true,
     enableRealTimeStats: true,
     enableTypingSound: false,
     enableKeyboardShortcuts: true,
     statsFilePath: 'typing-stats.json',
-    // 분석 설정
+    // 분석 Setup
     enableTypingAnalysis: true,
     enableRealTimeAnalysis: true,
     statsCollectionInterval: 30,
     enableKeyboardDetection: true,
     enablePatternLearning: true,
-    // 키보드 설정
+    // 키보드 Setup
     keyboard: {
         autoStart: true,
         enableHangulSupport: true,
@@ -189,7 +189,7 @@ exports.DEFAULT_SETTINGS = {
         jamoSeparation: true,
         trackingInterval: 50
     },
-    // 윈도우 설정
+    // 윈도우 Setup
     windowSettings: {
         miniSize: { width: 400, height: 300 },
         opacity: 1.0,
@@ -197,7 +197,7 @@ exports.DEFAULT_SETTINGS = {
         autoHide: false,
         position: { x: 100, y: 100 }
     },
-    // 추가 윈도우 관련 설정
+    // 추가 윈도우 관련 Setup
     windowOpacity: 1.0,
     alwaysOnTop: false,
     // 시스템 모니터링
@@ -207,10 +207,10 @@ exports.DEFAULT_SETTINGS = {
     enableCPUMonitoring: true,
     enableMemoryMonitoring: true,
     enableDiskMonitoring: false,
-    // 알림 설정
+    // 알림 Setup
     enableNotifications: true,
     enableTrayNotifications: true,
-    // 개발자 설정
+    // 개발자 Setup
     enableDebugMode: exports.isDev,
     enableConsoleLogging: true,
     enableErrorReporting: true,
@@ -281,7 +281,7 @@ exports.INITIAL_APP_STATE = {
     gpuResources: null,
     // 미니뷰
     miniViewLastMode: 'icon',
-    // 설정
+    // Setup
     settings: exports.DEFAULT_SETTINGS
 };
 // 특수키 목록
@@ -403,7 +403,7 @@ exports.ERROR_CODES = {
     PERMISSION: 'PERMISSION_ERROR',
     CONFIGURATION: 'CONFIGURATION_ERROR'
 };
-// IPC 채널
+// IPC 채널 목록
 exports.IPC_CHANNELS = {
     // 앱 관리
     APP_READY: 'app:ready',
@@ -433,7 +433,7 @@ exports.IPC_CHANNELS = {
     // 시스템
     SYSTEM_INFO: 'system:info',
     SYSTEM_PERFORMANCE: 'system:performance',
-    // 설정
+    // Setup
     SETTINGS_GET: 'settings:get',
     SETTINGS_SET: 'settings:set',
     SETTINGS_RESET: 'settings:reset',

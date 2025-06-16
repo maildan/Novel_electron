@@ -99,12 +99,12 @@ exports.CHANNELS = {
     TOGGLE_MAXIMIZE: 'window:toggleMaximize',
     CLOSE_WINDOW: 'closeWindow',
     TOGGLE_DEVTOOLS: 'window:toggleDevtools',
-    // 설정 관리 (기존 config)
+    // Setup 관리 (기존 config)
     GET_CONFIG: 'config:get',
     SET_CONFIG: 'config:set',
     GET_ALL_CONFIG: 'config:getAllConfig',
     RESET_CONFIG: 'config:reset',
-    // 설정 관리 (새로운 settings)
+    // Setup 관리 (새로운 settings)
     SETTINGS_GET: 'settings:get',
     SETTINGS_SET: 'settings:set',
     SETTINGS_GET_ALL: 'settings:getAll',

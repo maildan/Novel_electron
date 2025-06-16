@@ -20,7 +20,7 @@ export class StaticServer {
         const address = this.server?.address();
         if (address && typeof address === 'object') {
           this.port = address.port;
-          logger.info(`🌐 정적 서버 시작됨: http://localhost:${this.port}`);
+          logger.info(`🌐 정적 서버 Started: http://localhost:${this.port}`);
           resolve(this.port);
         } else {
           reject(new Error('서버 주소를 가져올 수 없습니다'));
@@ -123,7 +123,7 @@ export class StaticServer {
 
   private send500(res: http.ServerResponse): void {
     res.writeHead(500, { 'Content-Type': 'text/html' });
-    res.end('<h1>500 - 서버 내부 오류</h1>');
+    res.end('<h1>500 - 서버 내부 Error</h1>');
   }
 
   private getMimeType(ext: string): string {
@@ -151,7 +151,7 @@ export class StaticServer {
     return new Promise((resolve) => {
       if (this.server) {
         this.server.close(() => {
-          logger.info('🛑 정적 서버 중지됨');
+          logger.info('🛑 정적 서버 Stopped');
           this.server = null;
           resolve();
         });

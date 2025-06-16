@@ -38,12 +38,12 @@ exports.initAdvancedKeyboard = initAdvancedKeyboard;
 exports.cleanupAdvancedKeyboard = cleanupAdvancedKeyboard;
 exports.getKeyboardStatus = getKeyboardStatus;
 /**
- * Advanced keyboard monitoring and input processing module
- * Handles global shortcuts, IME composition, Hangul processing, and typing analytics
+ * 고급 키보드 모니터링 및 입력 처리 모듈
+ * 전역 단축키, IME 조합, 한글 처리, 타이핑 분석을 담당합니다
  */
 const electron_1 = require("electron");
 const uiohook_napi_1 = require("uiohook-napi");
-// Dynamic import for activeWin
+// active-win 동적 가져오기
 let activeWin = null;
 async function loadActiveWin() {
     if (!activeWin) {
@@ -56,11 +56,11 @@ async function loadActiveWin() {
     }
     return activeWin;
 }
-// Simple debug logging
+// 간단한 디버그 로깅
 function debugLog(message, ...args) {
-    console.log(`[키보드] ${message}`, ...args);
+    console.log('[키보드] ${message}', ...args);
 }
-// Platform configuration
+// 플랫폼 Setup
 const PLATFORM_KEY_CONFIGS = {
     darwin: {
         commandKey: 'Meta',
@@ -81,7 +81,7 @@ const PLATFORM_KEY_CONFIGS = {
         shiftKey: 'Shift'
     }
 };
-// Hangul composition tables
+// 한글 조합 테이블
 const CHOSEONG_TABLE = {
     'ㄱ': 0, 'ㄲ': 1, 'ㄴ': 2, 'ㄷ': 3, 'ㄸ': 4, 'ㄹ': 5, 'ㅁ': 6, 'ㅂ': 7, 'ㅃ': 8,
     'ㅅ': 9, 'ㅆ': 10, 'ㅇ': 11, 'ㅈ': 12, 'ㅉ': 13, 'ㅊ': 14, 'ㅋ': 15, 'ㅌ': 16, 'ㅍ': 17, 'ㅎ': 18
@@ -96,12 +96,12 @@ const JONGSEONG_TABLE = {
     'ㄺ': 9, 'ㄻ': 10, 'ㄼ': 11, 'ㄽ': 12, 'ㄾ': 13, 'ㄿ': 14, 'ㅀ': 15, 'ㅁ': 16,
     'ㅂ': 17, 'ㅄ': 18, 'ㅅ': 19, 'ㅆ': 20, 'ㅇ': 21, 'ㅈ': 22, 'ㅊ': 23, 'ㅋ': 24, 'ㅌ': 25, 'ㅍ': 26, 'ㅎ': 27
 };
-// Double consonants mapping
+// 쌍자음 매핑
 const DOUBLE_CONSONANTS = {
     'ㄱㅅ': 'ㄳ', 'ㄴㅈ': 'ㄵ', 'ㄴㅎ': 'ㄶ', 'ㄹㄱ': 'ㄺ', 'ㄹㅁ': 'ㄻ', 'ㄹㅂ': 'ㄼ',
     'ㄹㅅ': 'ㄽ', 'ㄹㅌ': 'ㄾ', 'ㄹㅍ': 'ㄿ', 'ㄹㅎ': 'ㅀ', 'ㅂㅅ': 'ㅄ'
 };
-// Global state
+// 전역 상태
 let mainWindow = null;
 let keyboardInitialized = false;
 let keyboardHandlersRegistered = false;
@@ -126,11 +126,11 @@ const imeComposition = {
     lastWindowInfo: null,
     totalTypingCount: 0
 };
-// Key event queue for processing
+// 키 이벤트 처리 큐
 const keyEventQueue = [];
 let keyEventProcessor = null;
 /**
- * Compose Hangul syllable from jamo characters
+ * 자모에서 한글 음절 조합
  */
 function composeHangul(cho, jung, jong = '') {
     if (!CHOSEONG_TABLE.hasOwnProperty(cho) ||
@@ -150,7 +150,7 @@ function composeHangul(cho, jung, jong = '') {
     return String.fromCharCode(TOffset);
 }
 /**
- * Decompose Hangul syllable into jamo characters
+ * 한글 음절을 자모로 분해
  */
 function decomposeHangul(syllable) {
     if (!/^[가-힣]$/.test(syllable)) {
@@ -170,10 +170,10 @@ function decomposeHangul(syllable) {
     };
 }
 /**
- * Process individual jamo input for Hangul composition
+ * 한글 조합을 위한 개별 자모 입력 처리
  */
 function processJamo(char) {
-    // Non-Hangul characters
+    // 한글이 아닌 문자들
     if (!/^[ㄱ-ㅎㅏ-ㅣ]$/.test(char)) {
         const result = finishComposition();
         return {
@@ -182,7 +182,7 @@ function processJamo(char) {
         };
     }
     switch (composerState.compositionState) {
-        case 0: // Waiting for initial consonant
+        case 0: // 초성 대기
             if (char in CHOSEONG_TABLE) {
                 composerState.choBuffer = char;
                 composerState.compositionState = 1;
@@ -192,7 +192,7 @@ function processJamo(char) {
                 return { result: char, reset: true };
             }
             return { result: char, reset: true };
-        case 1: // Waiting for vowel
+        case 1: // 중성 대기
             if (char in JUNGSEONG_TABLE) {
                 composerState.jungBuffer = char;
                 composerState.compositionState = 2;
@@ -207,7 +207,7 @@ function processJamo(char) {
                 composerState.compositionState = char in CHOSEONG_TABLE ? 1 : 0;
                 return { result, reset: false };
             }
-        case 2: // Waiting for final consonant
+        case 2: // 종성 대기
             if (char in JONGSEONG_TABLE) {
                 composerState.jongBuffer = char;
                 return {
@@ -225,7 +225,7 @@ function processJamo(char) {
             }
             else if (char in JUNGSEONG_TABLE) {
                 const result = composeHangul(composerState.choBuffer, composerState.jungBuffer, composerState.jongBuffer);
-                // Reset for new composition starting with vowel
+                // 모음으로 시작하는 새로운 조합을 위해 초기화
                 composerState.choBuffer = '';
                 composerState.jungBuffer = char;
                 composerState.jongBuffer = '';
@@ -237,11 +237,11 @@ function processJamo(char) {
     return { result: char, reset: true };
 }
 /**
- * Finish current Hangul composition
+ * 한글 조합 완료
  */
 function finishComposition() {
     const result = composeHangul(composerState.choBuffer, composerState.jungBuffer, composerState.jongBuffer);
-    // Reset state
+    // 상태 초기화
     composerState.choBuffer = '';
     composerState.jungBuffer = '';
     composerState.jongBuffer = '';
@@ -249,7 +249,7 @@ function finishComposition() {
     return result;
 }
 /**
- * Check if key is a special (non-printable) key
+ * 키가 특수키(출력 불가능)인지 확인
  */
 function isSpecialKey(keyCode) {
     const specialKeys = [
@@ -266,7 +266,7 @@ function isSpecialKey(keyCode) {
     return specialKeys.includes(keyCode);
 }
 /**
- * Convert key code to string representation
+ * 키 코드를 문자열 표현으로 변환
  */
 function getKeyString(keyCode) {
     const keyMap = {
@@ -274,10 +274,10 @@ function getKeyString(keyCode) {
         [uiohook_napi_1.UiohookKey.Enter]: 'Enter',
         [uiohook_napi_1.UiohookKey.Tab]: 'Tab',
         [uiohook_napi_1.UiohookKey.Backspace]: 'Backspace',
-        // Number keys
+        // 숫자 키
         11: '0', 2: '1', 3: '2', 4: '3', 5: '4',
         6: '5', 7: '6', 8: '7', 9: '8', 10: '9',
-        // Alphabet keys
+        // 알파벳 키
         [uiohook_napi_1.UiohookKey.A]: 'a', [uiohook_napi_1.UiohookKey.B]: 'b', [uiohook_napi_1.UiohookKey.C]: 'c', [uiohook_napi_1.UiohookKey.D]: 'd',
         [uiohook_napi_1.UiohookKey.E]: 'e', [uiohook_napi_1.UiohookKey.F]: 'f', [uiohook_napi_1.UiohookKey.G]: 'g', [uiohook_napi_1.UiohookKey.H]: 'h',
         [uiohook_napi_1.UiohookKey.I]: 'i', [uiohook_napi_1.UiohookKey.J]: 'j', [uiohook_napi_1.UiohookKey.K]: 'k', [uiohook_napi_1.UiohookKey.L]: 'l',
@@ -311,31 +311,31 @@ function processKeyEventQueue() {
  */
 async function processKeyEvent(event) {
     try {
-        // Skip special keys for typing analysis
+        // 타이핑 분석에서 특수 키 제외
         if (isSpecialKey(event.keycode))
             return;
-        // Get active window information
+        // 활성 창 정보 가져오기
         let windowInfo = null;
         if (activeWin) {
             try {
                 windowInfo = await activeWin();
             }
             catch (error) {
-                console.warn('Failed to get active window:', error);
+                console.warn('활성 창 가져오기 Failed:', error);
             }
         }
         if (windowInfo) {
-            // Update typing statistics
+            // 타이핑 통계 업데이트
             updateTypingStats(windowInfo, event);
-            // Process Hangul composition
+            // 한글 조합 처리
             const keyString = getKeyString(event.keycode);
             if (/^[ㄱ-ㅎㅏ-ㅣ가-힣]$/.test(keyString)) {
                 const compositionResult = processJamo(keyString);
                 if (compositionResult.result) {
-                    debugLog(`Hangul composition: ${compositionResult.result}`);
+                    debugLog('Hangul composition: ${compositionResult.result}');
                 }
             }
-            // Send to renderer process
+            // 렌더러 프로세스로 전송
             if (mainWindow && !mainWindow.isDestroyed()) {
                 mainWindow.webContents.send('key-event', {
                     key: keyString,
@@ -359,9 +359,9 @@ async function processKeyEvent(event) {
  */
 function updateTypingStats(windowInfo, event) {
     try {
-        // Increment typing count
+        // 타이핑 카운트 증가
         imeComposition.totalTypingCount++;
-        // Send statistics update
+        // 통계 업데이트 전송
         if (mainWindow && !mainWindow.isDestroyed()) {
             mainWindow.webContents.send('typing-stats-update', {
                 appName: windowInfo.owner?.name || 'Unknown',
@@ -381,13 +381,13 @@ function updateTypingStats(windowInfo, event) {
  */
 function setupKeyboardEventListeners() {
     try {
-        // Key down events
+        // 키 다운 이벤트
         uiohook_napi_1.uIOhook.on('keydown', (event) => {
             keyEventQueue.push(event);
         });
-        // Key up events (for completion detection)
+        // 키 업 이벤트 (조합 Completed 감지용)
         uiohook_napi_1.uIOhook.on('keyup', (event) => {
-            // Handle composition completion
+            // 조합 Completed 처리
             if (event.keycode === uiohook_napi_1.UiohookKey.Space || event.keycode === uiohook_napi_1.UiohookKey.Enter) {
                 const result = finishComposition();
                 if (result && mainWindow && !mainWindow.isDestroyed()) {
@@ -409,7 +409,7 @@ function setupKeyboardEventListeners() {
  */
 function registerGlobalShortcuts() {
     try {
-        // Toggle window visibility
+        // 창 가시성 토글
         const registered = electron_1.globalShortcut.register('CommandOrControl+Shift+L', () => {
             if (mainWindow && !mainWindow.isDestroyed()) {
                 if (mainWindow.isVisible()) {
@@ -422,12 +422,12 @@ function registerGlobalShortcuts() {
             }
         });
         if (registered) {
-            debugLog('Global shortcut registered: CommandOrControl+Shift+L');
+            debugLog('Register global shortcuts: CommandOrControl+Shift+L');
         }
         else {
             console.warn('Failed to register global shortcut');
         }
-        // Statistics reset shortcut
+        // 통계 리셋 단축키
         electron_1.globalShortcut.register('CommandOrControl+Shift+R', () => {
             imeComposition.totalTypingCount = 0;
             imeComposition.lastComposedText = '';
@@ -448,7 +448,7 @@ function registerGlobalShortcuts() {
  * Setup keyboard IPC handlers
  */
 function setupKeyboardIpcHandlers() {
-    // Get typing statistics
+    // 타이핑 통계 가져오기
     electron_1.ipcMain.handle('getTypingStats', async () => {
         return {
             totalTypingCount: imeComposition.totalTypingCount,
@@ -457,13 +457,13 @@ function setupKeyboardIpcHandlers() {
             isListening
         };
     });
-    // Reset typing statistics
+    // 타이핑 통계 리셋
     electron_1.ipcMain.handle('resetTypingStats', async () => {
         imeComposition.totalTypingCount = 0;
         imeComposition.lastComposedText = '';
         imeComposition.compositionBuffer = '';
         imeComposition.lastCompletedText = '';
-        // Reset composer state
+        // 조합 상태 리셋
         composerState.choBuffer = '';
         composerState.jungBuffer = '';
         composerState.jongBuffer = '';
@@ -471,11 +471,36 @@ function setupKeyboardIpcHandlers() {
         composerState.result = '';
         return true;
     });
-    // Get keyboard permissions status
+    // 키보드 권한 상태 가져오기
     electron_1.ipcMain.handle('getKeyboardPermissions', async () => {
         return { ...permissionStatus };
     });
-    // Toggle keyboard monitoring
+    // 시스템 권한 Setup 열기
+    electron_1.ipcMain.handle('openPermissionsSettings', async () => {
+        try {
+            const { shell } = require('electron');
+            if (process.platform === 'darwin') {
+                // macOS - 보안 및 개인정보 환경설정 열기
+                await shell.openExternal('x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility');
+                return { success: true, message: '시스템 환경Setup이 열렸습니다' };
+            }
+            else if (process.platform === 'win32') {
+                // Windows - 개인정보 설정 열기
+                await shell.openExternal('ms-settings:privacy-general');
+                return { success: true, message: '개인정보 Setup이 열렸습니다' };
+            }
+            else {
+                // Linux - 시스템 설정 열기 (배포판별 상이함)
+                await shell.openExternal('gnome-control-center');
+                return { success: true, message: '시스템 Setup이 열렸습니다' };
+            }
+        }
+        catch (error) {
+            console.error('권한 Setup 열기 Failed:', error);
+            return { success: false, message: '시스템 Setup 열기에 Failed했습니다' };
+        }
+    });
+    // 키보드 모니터링 토글
     electron_1.ipcMain.handle('toggleKeyboardMonitoring', async () => {
         if (isListening) {
             await stopKeyboardMonitoring();
@@ -485,7 +510,7 @@ function setupKeyboardIpcHandlers() {
         }
         return isListening;
     });
-    // Get Hangul composition state
+    // 한글 조합 상태 가져오기
     electron_1.ipcMain.handle('getHangulCompositionState', async () => {
         return { ...composerState };
     });
@@ -500,9 +525,9 @@ async function startKeyboardMonitoring() {
             debugLog('Keyboard monitoring already active');
             return;
         }
-        // Setup event listeners
+        // 이벤트 리스너 Setup
         setupKeyboardEventListeners();
-        // Start uIOhook
+        // uIOhook 시작
         uiohook_napi_1.uIOhook.start();
         isListening = true;
         debugLog('Keyboard monitoring started');
@@ -533,18 +558,18 @@ async function stopKeyboardMonitoring() {
 async function initAdvancedKeyboard(window) {
     mainWindow = window;
     if (keyboardInitialized) {
-        debugLog('Advanced keyboard already initialized');
+        debugLog('고급 키보드 시스템이 이미 초기화되어 있습니다');
         return;
     }
     try {
         debugLog('Initializing advanced keyboard system...');
-        // Register global shortcuts
+        // 전역 단축키 등록
         registerGlobalShortcuts();
-        // Setup IPC handlers
+        // IPC 핸들러 설정
         setupKeyboardIpcHandlers();
-        // Start key event processor
+        // 키 이벤트 프로세서 시작
         keyEventProcessor = setInterval(processKeyEventQueue, 16); // ~60fps
-        // Start keyboard monitoring
+        // 키보드 모니터링 시작
         await startKeyboardMonitoring();
         keyboardInitialized = true;
         debugLog('Advanced keyboard system initialization completed');
@@ -560,20 +585,20 @@ async function initAdvancedKeyboard(window) {
 async function cleanupAdvancedKeyboard() {
     try {
         debugLog('Cleaning up advanced keyboard system...');
-        // Stop keyboard monitoring
+        // 키보드 모니터링 중지
         await stopKeyboardMonitoring();
-        // Unregister global shortcuts
+        // 전역 단축키 해제
         electron_1.globalShortcut.unregisterAll();
-        // Clear key event processor
+        // 키 이벤트 프로세서 제거
         if (keyEventProcessor) {
             clearInterval(keyEventProcessor);
             keyEventProcessor = null;
         }
-        // Clear event queue
+        // 이벤트 큐 Cleanup
         keyEventQueue.length = 0;
-        // Finish any pending composition
+        // 대기 중인 조합 Completed
         finishComposition();
-        // Reset state variables
+        // 상태 변수 초기화
         keyboardInitialized = false;
         keyboardHandlersRegistered = false;
         isListening = false;

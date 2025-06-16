@@ -14,7 +14,7 @@ export declare function debugLog(...args: any[]): void;
  */
 export declare function infoLog(...args: any[]): void;
 /**
- * 경고 로그 출력
+ * Warning 로그 출력
  */
 export declare function warnLog(...args: any[]): void;
 /**

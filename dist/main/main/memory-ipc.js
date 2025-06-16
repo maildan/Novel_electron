@@ -118,7 +118,7 @@ function registerMemoryIpcHandlers() {
             const memoryManager = memory_1.MemoryManager.getInstance();
             // MemoryManager에서 직접 ReactMemoryData 형태로 데이터 가져오기
             const reactData = await memoryManager.getMemoryUsage();
-            console.log('[Memory IPC] 메모리 정보 조회 성공:', {
+            console.log('[Memory IPC] 메모리 정보 조회 Success:', {
                 main: `${reactData.main.used}MB / ${reactData.main.total}MB (${reactData.main.percentage.toFixed(1)}%)`,
                 renderer: `${reactData.renderer.used}MB / ${reactData.renderer.total}MB (${reactData.renderer.percentage.toFixed(1)}%)`,
                 system: `${reactData.system.used}MB / ${reactData.system.total}MB (${reactData.system.percentage.toFixed(1)}%)`
@@ -126,7 +126,7 @@ function registerMemoryIpcHandlers() {
             return { success: true, data: reactData };
         }
         catch (error) {
-            console.error('[Memory IPC] 메모리 정보 조회 오류:', error);
+            console.error('[Memory IPC] 메모리 정보 조회 Error:', error);
             return {
                 success: false,
                 error: error instanceof Error ? error.message : String(error)
@@ -139,17 +139,17 @@ function registerMemoryIpcHandlers() {
             const memoryManager = memory_1.MemoryManager.getInstance();
             await memoryManager.performCleanup(true);
             console.log('[Memory IPC] 메모리 최적화 실행됨');
-            return { success: true, message: '메모리 최적화 완료' };
+            return { success: true, message: '메모리 최적화 Completed' };
         }
         catch (error) {
-            console.error('[Memory IPC] 메모리 최적화 오류:', error);
+            console.error('[Memory IPC] 메모리 최적화 Error:', error);
             return {
                 success: false,
                 error: error instanceof Error ? error.message : String(error)
             };
         }
     });
-    // 메모리 정리 (가비지 컬렉션)
+    // 메모리 Cleanup (가비지 컬렉션)
     electron_1.ipcMain.handle('memory:cleanup', async () => {
         try {
             const memoryManager = memory_1.MemoryManager.getInstance();
@@ -159,10 +159,10 @@ function registerMemoryIpcHandlers() {
                 global.gc();
                 console.log('[Memory IPC] 강제 가비지 컬렉션 실행됨');
             }
-            return { success: true, message: '메모리 정리 완료' };
+            return { success: true, message: '메모리 Cleanup Completed' };
         }
         catch (error) {
-            console.error('[Memory IPC] 메모리 정리 오류:', error);
+            console.error('[Memory IPC] 메모리 Cleanup Error:', error);
             return {
                 success: false,
                 error: error instanceof Error ? error.message : String(error)
@@ -257,7 +257,7 @@ function registerMemoryIpcHandlers() {
             };
         }
         catch (error) {
-            console.error('[Memory IPC] 네이티브 모듈 상태 조회 오류:', error);
+            console.error('[Memory IPC] 네이티브 모듈 상태 조회 Error:', error);
             return {
                 success: false,
                 error: error instanceof Error ? error.message : String(error),
@@ -265,16 +265,16 @@ function registerMemoryIpcHandlers() {
             };
         }
     });
-    console.log('[Memory IPC] 메모리 관련 IPC 핸들러 등록 완료');
+    console.log('[Memory IPC] 메모리 관련 IPC 핸들러 등록 Completed');
 }
 /**
- * 메모리 관련 IPC 핸들러 정리
+ * 메모리 관련 IPC 핸들러 Cleanup
  */
 function cleanupMemoryIpcHandlers() {
     electron_1.ipcMain.removeHandler('memory:getInfo');
     electron_1.ipcMain.removeHandler('memory:optimize');
     electron_1.ipcMain.removeHandler('memory:cleanup');
     electron_1.ipcMain.removeHandler('system:native:getStatus');
-    console.log('[Memory IPC] 메모리 관련 IPC 핸들러 정리 완료');
+    console.log('[Memory IPC] 메모리 관련 IPC 핸들러 Cleanup Completed');
 }
 //# sourceMappingURL=memory-ipc.js.map

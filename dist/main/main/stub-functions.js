@@ -25,21 +25,21 @@ exports.getMainWindow = getMainWindow;
 exports.destroyTray = destroyTray;
 exports.closeDatabase = closeDatabase;
 const debug_1 = require("../utils/debug");
-// 프로토콜 설정
+// 프로토콜 Setup
 async function setupProtocols() {
-    (0, debug_1.debugLog)('프로토콜 설정 (스텁)');
+    (0, debug_1.debugLog)('프로토콜 Setup (스텁)');
 }
-// 세이프 스토리지 설정
+// 세이프 스토리지 Setup
 async function setupSafeStorage() {
-    (0, debug_1.debugLog)('세이프 스토리지 설정 (스텁)');
+    (0, debug_1.debugLog)('세이프 스토리지 Setup (스텁)');
 }
 // 키보드 모니터링 초기화
 async function initKeyboardMonitoring() {
     (0, debug_1.debugLog)('키보드 모니터링 초기화 (스텁)');
 }
-// 전력 모니터링 설정
+// 전력 모니터링 Setup
 function setupPowerMonitoring() {
-    (0, debug_1.debugLog)('전력 모니터링 설정 (스텁)');
+    (0, debug_1.debugLog)('전력 모니터링 Setup (스텁)');
 }
 // 시스템 정보 모듈 초기화 (기존 함수와 다른 이름)
 function initSystemInfoModule() {
@@ -49,33 +49,33 @@ function initSystemInfoModule() {
 function initTypingStatsModule() {
     (0, debug_1.debugLog)('타이핑 통계 모듈 초기화 (스텁)');
 }
-// 클립보드 워처 설정
+// 클립보드 워처 Setup
 function setupClipboardWatcher() {
-    (0, debug_1.debugLog)('클립보드 워처 설정 (스텁)');
+    (0, debug_1.debugLog)('클립보드 워처 Setup (스텁)');
 }
-// 크래시 리포터 설정
+// 크래시 리포터 Setup
 function setupCrashReporter() {
-    (0, debug_1.debugLog)('크래시 리포터 설정 (스텁)');
+    (0, debug_1.debugLog)('크래시 리포터 Setup (스텁)');
 }
 // 스크린샷 모듈 초기화
 function initScreenshotModule(app) {
     (0, debug_1.debugLog)('스크린샷 모듈 초기화 (스텁)');
 }
-// 글로벌 단축키 설정
+// 글로벌 단축키 Setup
 function setupGlobalShortcuts() {
-    (0, debug_1.debugLog)('글로벌 단축키 설정 (스텁)');
+    (0, debug_1.debugLog)('글로벌 단축키 Setup (스텁)');
 }
-// 시스템 트레이 설정
+// 시스템 트레이 Setup
 function setupTray() {
-    (0, debug_1.debugLog)('시스템 트레이 설정 (스텁)');
+    (0, debug_1.debugLog)('시스템 트레이 Setup (스텁)');
 }
-// 메뉴 설정
+// 메뉴 Setup
 function setupMenu() {
-    (0, debug_1.debugLog)('메뉴 설정 (스텁)');
+    (0, debug_1.debugLog)('메뉴 Setup (스텁)');
 }
-// 설정 로드
+// Setup 로드
 function loadSettings() {
-    (0, debug_1.debugLog)('설정 로드 (스텁)');
+    (0, debug_1.debugLog)('Setup 로드 (스텁)');
     return {};
 }
 // 데이터베이스 초기화
@@ -88,9 +88,9 @@ function createWindow() {
     (0, debug_1.debugLog)('윈도우 생성 (스텁)');
     return null;
 }
-// IPC 핸들러 설정
+// IPC 핸들러 Setup
 function setupIpcHandlers() {
-    (0, debug_1.debugLog)('IPC 핸들러 설정 (스텁)');
+    (0, debug_1.debugLog)('IPC 핸들러 Setup (스텁)');
 }
 // 업데이트 초기화
 function initUpdates() {

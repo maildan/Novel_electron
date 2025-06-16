@@ -37,7 +37,7 @@ exports.logger = void 0;
 const winston_1 = require("winston");
 const path = __importStar(require("path"));
 const electron_1 = require("electron");
-// 로그 디렉토리 설정
+// 로그 디렉토리 Setup
 const logDir = electron_1.app?.getPath('logs') || path.join(__dirname, '../../logs');
 // 로거 생성
 exports.logger = (0, winston_1.createLogger)({

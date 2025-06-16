@@ -75,8 +75,8 @@ export class MenuManager {
   private constructor() {}
 
   /**
-   * 싱글톤 인스턴스 반환
-   */
+ * 싱글톤 인스턴스 반환
+ */
   static getInstance(): MenuManager {
     if (!MenuManager.instance) {
       MenuManager.instance = new MenuManager();
@@ -85,8 +85,8 @@ export class MenuManager {
   }
 
   /**
-   * 메뉴 매니저 초기화
-   */
+ * 메뉴 매니저 초기화
+ */
   async initialize(): Promise<void> {
     if (this.isInitialized) {
       return;
@@ -95,20 +95,20 @@ export class MenuManager {
     console.log('[Menu] 메뉴 매니저 초기화 시작');
 
     try {
-      // 전역 컨텍스트 메뉴 이벤트 설정
+      // 전역 컨텍스트 메뉴 이벤트 Setup
       this.setupContextMenuEvents();
 
       this.isInitialized = true;
-      console.log('[Menu] 메뉴 매니저 초기화 완료');
+      console.log('[Menu] 메뉴 매니저 초기화 Completed');
     } catch (error) {
-      console.error('[Menu] 메뉴 매니저 초기화 실패:', error);
+      console.error('[Menu] 메뉴 매니저 초기화 Failed:', error);
       throw error;
     }
   }
 
   /**
-   * 플랫폼 체크 헬퍼
-   */
+ * 플랫폼 체크 헬퍼
+ */
   private get platformInfo() {
     return {
       isMac: process.platform === 'darwin',
@@ -119,12 +119,12 @@ export class MenuManager {
   }
 
   /**
-   * 메인 애플리케이션 메뉴 생성
-   */
+ * 메인 애플리케이션 메뉴 생성
+ */
   createApplicationMenu(options: MenuOptions = {}): Menu {
     const { isMac, isWindows, isDev } = this.platformInfo;
 
-    // 기본 옵션
+    // Default options
     const defaultOptions: Required<MenuOptions> = {
       showPreferences: true,
       showAbout: true,
@@ -180,7 +180,7 @@ export class MenuManager {
 
     if (options.showPreferences) {
       submenu.push({
-        label: '환경설정...',
+        label: '환경Setup...',
         accelerator: 'Command+,',
         click: () => this.sendMenuAction({ action: 'open-settings' })
       });
@@ -207,8 +207,8 @@ export class MenuManager {
   }
 
   /**
-   * 파일 메뉴 생성
-   */
+ * 파일 메뉴 생성
+ */
   private createFileMenu(
     options: Required<MenuOptions>,
     recentFiles: string[],
@@ -258,11 +258,11 @@ export class MenuManager {
       { type: 'separator' }
     );
 
-    // Windows 환경설정 메뉴
+    // Windows 환경Setup 메뉴
     if (isWindows && options.showPreferences) {
       submenu.push(
         {
-          label: '환경설정',
+          label: '환경Setup',
           accelerator: 'Ctrl+,',
           click: () => this.sendMenuAction({ action: 'open-settings' })
         },
@@ -285,8 +285,8 @@ export class MenuManager {
   }
 
   /**
-   * 편집 메뉴 생성
-   */
+ * 편집 메뉴 생성
+ */
   private createEditMenu(isMac: boolean): MenuItemConstructorOptions {
     const submenu: MenuItemConstructorOptions[] = [
       { role: 'undo' },
@@ -326,8 +326,8 @@ export class MenuManager {
   }
 
   /**
-   * 보기 메뉴 생성
-   */
+ * 보기 메뉴 생성
+ */
   private createViewMenu(showDevTools: boolean): MenuItemConstructorOptions {
     const submenu: MenuItemConstructorOptions[] = [
       { role: 'reload' },
@@ -360,8 +360,8 @@ export class MenuManager {
   }
 
   /**
-   * 창 메뉴 생성
-   */
+ * 창 메뉴 생성
+ */
   private createWindowMenu(isMac: boolean): MenuItemConstructorOptions {
     const submenu: MenuItemConstructorOptions[] = [
       { role: 'minimize' },
@@ -386,8 +386,8 @@ export class MenuManager {
   }
 
   /**
-   * 도움말 메뉴 생성
-   */
+ * 도움말 메뉴 생성
+ */
   private createHelpMenu(options: Required<MenuOptions>, isMac: boolean): MenuItemConstructorOptions {
     const submenu: MenuItemConstructorOptions[] = [
       {
@@ -471,8 +471,8 @@ export class MenuManager {
   }
 
   /**
-   * 트레이 메뉴 생성
-   */
+ * 트레이 메뉴 생성
+ */
   createTrayMenu(options: MenuOptions = {}): Menu {
     const appName = options.appName || app.getName();
     const template: MenuItemConstructorOptions[] = [
@@ -491,7 +491,7 @@ export class MenuManager {
       },
       { type: 'separator' },
       {
-        label: '설정',
+        label: 'Setup',
         click: () => {
           this.showAllWindows();
           this.sendMenuAction({ action: 'open-settings' });
@@ -513,16 +513,16 @@ export class MenuManager {
   }
 
   /**
-   * 애플리케이션 메뉴 설정
-   */
+ * 애플리케이션 메뉴 Setup
+ */
   setupApplicationMenu(options: MenuOptions = {}): void {
     const menu = this.createApplicationMenu(options);
     Menu.setApplicationMenu(menu);
   }
 
   /**
-   * 전역 컨텍스트 메뉴 이벤트 설정
-   */
+ * 전역 컨텍스트 메뉴 이벤트 Setup
+ */
   private setupContextMenuEvents(): void {
     app.on('web-contents-created', (event, contents) => {
       contents.on('context-menu', (event, params) => {
@@ -532,8 +532,8 @@ export class MenuManager {
   }
 
   /**
-   * 컨텍스트 메뉴 처리
-   */
+ * 컨텍스트 메뉴 처리
+ */
   private handleContextMenu(contents: WebContents, params: Electron.ContextMenuParams): void {
     const { x, y, isEditable, selectionText, editFlags, linkURL } = params;
     const menuItems: MenuItemConstructorOptions[] = [];
@@ -616,8 +616,8 @@ export class MenuManager {
   }
 
   /**
-   * 새 창 생성
-   */
+ * 새 창 생성
+ */
   private createNewWindow(): void {
     const win = new BrowserWindow({
       width: 1200,
@@ -634,8 +634,8 @@ export class MenuManager {
   }
 
   /**
-   * 파일 열기 대화상자
-   */
+ * 파일 열기 대화상자
+ */
   private async openFile(): Promise<void> {
     const mainWindow = BrowserWindow.getFocusedWindow();
     if (!mainWindow) return;
@@ -653,13 +653,13 @@ export class MenuManager {
         });
       }
     } catch (error) {
-      console.error('[Menu] 파일 열기 오류:', error);
+      console.error('[Menu] 파일 열기 Error:', error);
     }
   }
 
   /**
-   * 모든 윈도우 표시
-   */
+ * 모든 윈도우 표시
+ */
   private showAllWindows(): void {
     for (const win of BrowserWindow.getAllWindows()) {
       if (!win.isDestroyed()) {
@@ -669,8 +669,8 @@ export class MenuManager {
   }
 
   /**
-   * 메뉴 액션 전송
-   */
+ * 메뉴 액션 전송
+ */
   private sendMenuAction(payload: MenuActionPayload): void {
     for (const win of BrowserWindow.getAllWindows()) {
       if (!win.isDestroyed()) {
@@ -680,8 +680,8 @@ export class MenuManager {
   }
 
   /**
-   * 시스템 정보 표시
-   */
+ * 시스템 정보 표시
+ */
   private showSystemInfo(): void {
     const systemInfo: SystemInfo = {
       platform: os.platform(),
@@ -721,12 +721,12 @@ export class MenuManager {
   }
 
   /**
-   * 정리 작업
-   */
+ * Cleanup 작업
+ */
   async cleanup(): Promise<void> {
-    console.log('[Menu] 메뉴 매니저 정리 시작');
+    console.log('[Menu] 메뉴 매니저 Cleanup 시작');
     this.isInitialized = false;
-    console.log('[Menu] 메뉴 매니저 정리 완료');
+    console.log('[Menu] 메뉴 매니저 Cleanup Completed');
   }
 }
 

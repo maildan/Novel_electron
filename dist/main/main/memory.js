@@ -9,7 +9,7 @@ class MemoryManager {
         this.monitoringInterval = null;
         this.memoryThreshold = 25; // 25MB로 더욱 대폭 감소
         this.forceGcThreshold = 40; // 40MB로 더욱 대폭 감소
-        this.cleanupIntervalMs = 15000; // 15초마다 정리 (더욱 빈번)
+        this.cleanupIntervalMs = 15000; // 15초마다 Cleanup (더욱 빈번)
         this.lastCleanup = Date.now();
         this.memoryHistory = [];
         this.maxHistorySize = 10; // 히스토리 크기 더욱 감소
@@ -24,17 +24,17 @@ class MemoryManager {
         return MemoryManager.instance;
     }
     /**
-     * 메모리 관리자 초기화
-     */
+   * 메모리 관리자 초기화
+   */
     initialize() {
         console.log('[Memory] 메모리 관리자 초기화');
-        // 주기적 메모리 정리
+        // 주기적 메모리 Cleanup
         this.startCleanupTimer();
         // 메모리 모니터링
         if (config_1.AppConfig.isDev) {
             this.startMonitoring();
         }
-        // 앱 종료 시 정리
+        // 앱 종료 시 Cleanup
         electron_1.app.on('before-quit', () => {
             this.dispose();
         });
@@ -60,7 +60,7 @@ class MemoryManager {
         const total = totalSystemMB; // 시스템 전체 메모리를 total로 사용
         const free = Math.max(0, total - used);
         const percentage = total > 0 ? Math.round((used / total) * 100 * 100) / 100 : 0;
-        console.log(`[Memory] RSS 기반 메모리 계산: RSS=${rssMB}MB, SystemTotal=${totalSystemMB}MB, Used=${used}MB, Total=${total}MB, Percentage=${percentage}%`);
+        console.log('[Memory] RSS 기반 메모리 계산: RSS=${rssMB}MB, SystemTotal=${totalSystemMB}MB, Used=${used}MB, Total=${total}MB, Percentage=${percentage}%');
         return {
             total,
             used,
@@ -69,8 +69,8 @@ class MemoryManager {
         };
     }
     /**
-     * 현재 메모리 사용량 조회
-     */
+   * 현재 메모리 사용량 조회
+   */
     getCurrentMemoryUsage() {
         const mainProcess = process.memoryUsage();
         const rendererProcesses = this.getRendererMemoryUsage();
@@ -93,8 +93,8 @@ class MemoryManager {
         return stats;
     }
     /**
-     * 렌더러 프로세스 메모리 사용량 조회
-     */
+   * 렌더러 프로세스 메모리 사용량 조회
+   */
     getRendererMemoryUsage() {
         const rendererStats = [];
         electron_1.webContents.getAllWebContents().forEach((contents) => {
@@ -122,8 +122,8 @@ class MemoryManager {
         return rendererStats;
     }
     /**
-     * 시스템 메모리 정보 조회
-     */
+   * 시스템 메모리 정보 조회
+   */
     getSystemMemoryInfo() {
         const os = require('os');
         const totalMemory = os.totalmem();
@@ -149,16 +149,16 @@ class MemoryManager {
         }
     }
     /**
-     * 메모리 정리 수행
+     * 메모리 Cleanup 수행
      */
     async performCleanup(force = false) {
         const now = Date.now();
-        // 적극적 모드에서는 더 자주 정리
+        // 적극적 모드에서는 더 자주 Cleanup
         const minInterval = this.aggressiveMode ? this.cleanupIntervalMs / 4 : this.cleanupIntervalMs / 2;
         if (!force && now - this.lastCleanup < minInterval) {
             return;
         }
-        console.log('[Memory] 적극적 메모리 정리 시작');
+        console.log('[Memory] 적극적 메모리 Cleanup 시작');
         const beforeStats = this.getCurrentMemoryUsage();
         try {
             // 1. 강제 가비지 컬렉션 (여러 번 실행)
@@ -168,11 +168,11 @@ class MemoryManager {
                     await new Promise(resolve => setTimeout(resolve, 100));
                 }
             }
-            // 2. 렌더러 프로세스 적극적 정리
+            // 2. 렌더러 프로세스 적극적 Cleanup
             await this.aggressiveRendererCleanup();
-            // 3. 모든 캐시 강제 정리
+            // 3. 모든 캐시 강제 Cleanup
             await this.aggressiveCacheCleanup();
-            // 4. 세션 데이터 정리
+            // 4. 세션 데이터 Cleanup
             await this.clearSessionData();
             // 5. V8 힙 압축
             if (global.gc && this.aggressiveMode) {
@@ -183,24 +183,24 @@ class MemoryManager {
             }
             const afterStats = this.getCurrentMemoryUsage();
             const freedMemory = beforeStats.main.used - afterStats.main.used;
-            console.log(`[Memory] 적극적 메모리 정리 완료: ${freedMemory.toFixed(2)}MB 해제`);
+            console.log('[Memory] 적극적 메모리 Cleanup Completed: ${freedMemory.toFixed(2)}MB 해제');
             this.lastCleanup = now;
             // 메모리 히스토리 업데이트 (압축)
             this.updateMemoryHistory(afterStats);
         }
         catch (error) {
-            console.error('[Memory] 적극적 메모리 정리 실패:', error);
+            console.error('[Memory] 적극적 메모리 Cleanup Failed:', error);
         }
     }
     /**
-     * 렌더러 프로세스 메모리 정리
-     */
+   * 렌더러 프로세스 메모리 Cleanup
+   */
     async cleanupRendererProcesses() {
         const allContents = electron_1.webContents.getAllWebContents();
         for (const contents of allContents) {
             try {
                 if (!contents.isDestroyed()) {
-                    // DOM 스토리지 정리
+                    // DOM 스토리지 Cleanup
                     await contents.session.clearStorageData({
                         storages: ['localstorage', 'websql', 'indexdb'],
                     });
@@ -218,45 +218,45 @@ class MemoryManager {
                 }
             }
             catch (error) {
-                // 개별 프로세스 정리 실패는 무시
+                // 개별 프로세스 Cleanup Failed는 무시
             }
         }
     }
     /**
-     * 캐시 정리
+     * 캐시 Cleanup
      */
     async clearCaches() {
         try {
             const session = require('electron').session.defaultSession;
-            // HTTP 캐시 정리
+            // HTTP 캐시 Cleanup
             await session.clearCache();
-            // 이미지 캐시 정리 (부분적)
+            // 이미지 캐시 Cleanup (부분적)
             await session.clearStorageData({
                 storages: ['appcache', 'serviceworkers'],
             });
         }
         catch (error) {
-            console.error('[Memory] 캐시 정리 실패:', error);
+            console.error('[Memory] 캐시 Cleanup Failed:', error);
         }
     }
     /**
-     * 메모리 부족 상황 처리
-     */
+   * 메모리 부족 상황 처리
+   */
     async handleOutOfMemory() {
-        console.warn('[Memory] OOM 상황 감지 - 긴급 메모리 정리');
+        console.warn('[Memory] OOM 상황 감지 - 긴급 메모리 Cleanup');
         try {
-            // 긴급 정리
+            // 긴급 Cleanup
             await this.performCleanup(true);
             // 추가 조치
             await this.emergencyCleanup();
         }
         catch (error) {
-            console.error('[Memory] 긴급 메모리 정리 실패:', error);
+            console.error('[Memory] 긴급 메모리 Cleanup Failed:', error);
         }
     }
     /**
-     * 긴급 메모리 정리
-     */
+   * 긴급 메모리 Cleanup
+   */
     async emergencyCleanup() {
         try {
             // 불필요한 렌더러 프로세스 종료
@@ -266,17 +266,17 @@ class MemoryManager {
                     contents.close();
                 }
             }
-            // 모든 캐시 강제 정리
+            // 모든 캐시 강제 Cleanup
             const session = require('electron').session.defaultSession;
             await session.clearStorageData();
         }
         catch (error) {
-            console.error('[Memory] 긴급 정리 실패:', error);
+            console.error('[Memory] 긴급 Cleanup Failed:', error);
         }
     }
     /**
-     * 메모리 히스토리 업데이트
-     */
+   * 메모리 히스토리 업데이트
+   */
     updateMemoryHistory(stats) {
         this.memoryHistory.push(stats);
         // 히스토리 크기 제한
@@ -285,42 +285,42 @@ class MemoryManager {
         }
     }
     /**
-     * 메모리 모니터링 시작
-     */
+   * 메모리 모니터링 시작
+   */
     startMonitoring() {
         this.monitoringInterval = setInterval(() => {
             const stats = this.getCurrentMemoryUsage();
             // 임계값 확인 (더 낮은 임계값)
             if (stats.main.used > this.memoryThreshold) {
-                console.warn(`[Memory] 메모리 사용량 임계값 초과: ${stats.main.used}MB`);
+                console.warn('[Memory] 메모리 사용량 임계값 초과: ${stats.main.used}MB');
                 this.performCleanup();
             }
             // 강제 GC 임계값 확인 (더 낮은 임계값)
             if (stats.main.used > this.forceGcThreshold) {
-                console.warn(`[Memory] 강제 GC 실행: ${stats.main.used}MB`);
+                console.warn('[Memory] 강제 GC 실행: ${stats.main.used}MB');
                 if (global.gc) {
                     global.gc();
                 }
             }
-            // 메모리 사용량이 30MB를 넘으면 적극적 정리
+            // 메모리 사용량이 30MB를 넘으면 적극적 Cleanup
             if (stats.main.used > 30) {
-                console.log('[Memory] 30MB 임계값 초과 - 적극적 정리 실행');
+                console.log('[Memory] 30MB 임계값 초과 - 적극적 Cleanup 실행');
                 this.performCleanup(true);
             }
             this.updateMemoryHistory(stats);
         }, 15000); // 15초마다 모니터링 (더 빈번)
     }
     /**
-     * 정기 정리 타이머 시작
-     */
+   * 정기 Cleanup 타이머 시작
+   */
     startCleanupTimer() {
         this.cleanupInterval = setInterval(() => {
             this.performCleanup();
         }, this.cleanupIntervalMs);
     }
     /**
-     * 메모리 통계 조회
-     */
+   * 메모리 통계 조회
+   */
     getMemoryStats() {
         const current = this.getCurrentMemoryUsage();
         const history = this.memoryHistory.slice(-20); // 최근 20개
@@ -331,8 +331,8 @@ class MemoryManager {
         return { current, history, averageUsage: Math.round(averageUsage) };
     }
     /**
-     * 리소스 정리
-     */
+   * 리소스 Cleanup
+   */
     dispose() {
         if (this.cleanupInterval) {
             clearInterval(this.cleanupInterval);
@@ -342,7 +342,7 @@ class MemoryManager {
             clearInterval(this.monitoringInterval);
             this.monitoringInterval = null;
         }
-        console.log('[Memory] 메모리 관리자 정리 완료');
+        console.log('[Memory] 메모리 관리자 Cleanup Completed');
     }
     /**
      * 메모리 사용량 조회 (IPC용)
@@ -386,7 +386,7 @@ class MemoryManager {
             return result;
         }
         catch (error) {
-            console.error('[MemoryManager] 메모리 사용량 조회 실패:', error);
+            console.error('[MemoryManager] 메모리 사용량 조회 Failed:', error);
             throw error;
         }
     }
@@ -397,7 +397,7 @@ class MemoryManager {
         try {
             console.log('[MemoryManager] 메모리 최적화 시작');
             const beforeMemory = await this.getMemoryUsage();
-            // 강제 메모리 정리 수행
+            // 강제 메모리 Cleanup 수행
             await this.performCleanup(true);
             // 잠시 대기 후 메모리 사용량 재측정
             await new Promise(resolve => setTimeout(resolve, 1000));
@@ -412,23 +412,23 @@ class MemoryManager {
                 },
                 timestamp: Date.now()
             };
-            console.log('[MemoryManager] 메모리 최적화 완료:', result);
+            console.log('[MemoryManager] 메모리 최적화 Completed:', result);
             return result;
         }
         catch (error) {
-            console.error('[MemoryManager] 메모리 최적화 실패:', error);
+            console.error('[MemoryManager] 메모리 최적화 Failed:', error);
             throw error;
         }
     }
     /**
-     * 렌더러 프로세스 적극적 정리
-     */
+   * 렌더러 프로세스 적극적 Cleanup
+   */
     async aggressiveRendererCleanup() {
         const allContents = electron_1.webContents.getAllWebContents();
         for (const contents of allContents) {
             try {
                 if (!contents.isDestroyed()) {
-                    // 1. 모든 스토리지 데이터 강제 정리
+                    // 1. 모든 스토리지 데이터 강제 Cleanup
                     await contents.session.clearStorageData({
                         storages: ['localstorage', 'websql', 'indexdb', 'cookies', 'filesystem'],
                     });
@@ -442,7 +442,7 @@ class MemoryManager {
               }
             }
             
-            // DOM 정리
+            // DOM Cleanup
             if (document.querySelectorAll) {
               const elements = document.querySelectorAll('*');
               for(let i = 0; i < elements.length; i++) {
@@ -453,66 +453,66 @@ class MemoryManager {
               }
             }
             
-            // 이벤트 리스너 정리
+            // 이벤트 리스너 Cleanup
             if (window.removeEventListener) {
               ['scroll', 'resize', 'mousemove', 'click'].forEach(event => {
                 window.removeEventListener(event, () => {});
               });
             }
           `);
-                    // 3. 캐시 강제 정리
+                    // 3. 캐시 강제 Cleanup
                     await contents.session.clearCache();
                 }
             }
             catch (error) {
-                // 개별 프로세스 정리 실패는 무시하고 계속
-                console.warn('[Memory] 개별 렌더러 정리 실패:', error instanceof Error ? error.message : error);
+                // 개별 프로세스 Cleanup Failed는 무시하고 계속
+                console.warn('[Memory] 개별 렌더러 Cleanup Failed:', error instanceof Error ? error.message : error);
             }
         }
     }
     /**
-     * 모든 캐시 적극적 정리
-     */
+   * 모든 캐시 적극적 Cleanup
+   */
     async aggressiveCacheCleanup() {
         try {
             const session = require('electron').session.defaultSession;
-            // 1. 모든 캐시 타입 강제 정리
+            // 1. 모든 캐시 타입 강제 Cleanup
             await session.clearCache();
-            // 2. 모든 스토리지 데이터 정리
+            // 2. 모든 스토리지 데이터 Cleanup
             await session.clearStorageData({
                 storages: [
                     'appcache', 'cookies', 'filesystem', 'indexdb',
                     'localstorage', 'shadercache', 'websql', 'serviceworkers'
                 ],
             });
-            // 3. 코드 캐시 정리
+            // 3. 코드 캐시 Cleanup
             await session.clearCodeCaches({});
-            // 4. 호스트 리졸버 캐시 정리
+            // 4. 호스트 리졸버 캐시 Cleanup
             await session.clearHostResolverCache();
-            console.log('[Memory] 적극적 캐시 정리 완료');
+            console.log('[Memory] 적극적 캐시 Cleanup Completed');
         }
         catch (error) {
-            console.error('[Memory] 적극적 캐시 정리 실패:', error);
+            console.error('[Memory] 적극적 캐시 Cleanup Failed:', error);
         }
     }
     /**
-     * 세션 데이터 정리
-     */
+   * 세션 데이터 Cleanup
+   */
     async clearSessionData() {
         try {
             const session = require('electron').session.defaultSession;
-            // 1. 모든 세션 관련 데이터 정리
+            // 1. 모든 세션 관련 데이터 Cleanup
             await session.clearStorageData();
-            // 2. 인증 캐시 정리
+            // 2. 인증 캐시 Cleanup
             await session.clearAuthCache();
-            // 3. 코드 캐시 정리
+            // 3. 코드 캐시 Cleanup
             if (session.clearCodeCaches) {
                 await session.clearCodeCaches({});
             }
-            console.log('[Memory] 세션 데이터 정리 완료');
+            console.log('[Memory] 세션 데이터 Cleanup Completed');
         }
         catch (error) {
-            console.error('[Memory] 세션 데이터 정리 실패:', error);
+            console.error('[Memory] 세션 데이터 Cleanup Failed:', error);
         }
     }
 }

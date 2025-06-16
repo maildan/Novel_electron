@@ -139,7 +139,7 @@ export const injectStyles = () => {
       }
     }
     
-    /* 모션 감소 설정 지원 */
+    /* 모션 감소 Setup 지원 */
     @media (prefers-reduced-motion: reduce) {
       * {
         animation-duration: 0.01ms !important;
@@ -156,7 +156,7 @@ export const injectStyles = () => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = href;
-    link.onerror = () => console.warn(`⚠️ 스타일시트 로드 실패: ${href}`);
+    link.onerror = () => console.warn('⚠️ 스타일시트 로드 Failed: ${href}');
     document.head.appendChild(link);
   };
   
@@ -164,9 +164,9 @@ export const injectStyles = () => {
   try {
     loadStylesheet('/assets/fonts/font.css');
     loadStylesheet('/assets/styles/electron-styles.css');
-    console.log('✅ 스타일 시트 주입 성공');
+    console.log('✅ 스타일 시트 주입 Success');
   } catch (error) {
-    console.warn('⚠️ 외부 스타일시트 로드 중 오류:', error);
+    console.warn('⚠️ 외부 스타일시트 로드 중 Error:', error);
   }
   
   return true;

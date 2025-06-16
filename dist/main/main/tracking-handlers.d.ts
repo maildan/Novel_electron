@@ -53,7 +53,7 @@ export declare function registerTrackingHandlers(): void;
  */
 export declare function initializeAutoMonitoring(): void;
 /**
- * 핸들러 정리
+ * 핸들러 Cleanup
  */
 export declare function cleanupTrackingHandlers(): void;
 declare const _default: {

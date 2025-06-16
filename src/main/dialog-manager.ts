@@ -1,14 +1,14 @@
 /**
- * Dialog Manager for Loop 6
- * Modern dialog and notification system with TypeScript
- * Features: Custom dialogs, system dialogs, notifications, prompts
+ * Loop 6 대화상자 관리자
+ * TypeScript 기반의 현대적인 대화상자 및 알림 시스템
+ * 기능: 커스텀 대화상자, 시스템 대화상자, 알림, 프롬프트
  */
 
 import { BrowserWindow, dialog, ipcMain, app, Notification } from 'electron';
 import * as path from 'path';
 import { debugLog } from './utils';
 
-// Dialog Types and Interfaces
+// 대화상자 타입 및 인터페이스
 export enum DialogType {
   INFO = 'info',
   WARNING = 'warning',
@@ -70,8 +70,8 @@ export interface CustomDialogOptions {
 }
 
 /**
- * Dialog Manager Class
- * Handles all types of dialogs and notifications
+ * 대화상자 관리자 클래스
+ * 모든 유형의 대화상자 및 알림을 처리합니다
  */
 export class DialogManager {
   private static instance: DialogManager;
@@ -92,7 +92,7 @@ export class DialogManager {
   }
   
   /**
-   * Setup IPC handlers for renderer communication
+   * 렌더러 통신을 위한 IPC 핸들러 설정
    */
   private setupIpcHandlers(): void {
     ipcMain.handle('dialog:show-message', async (event, options: DialogOptions) => {
@@ -129,7 +129,7 @@ export class DialogManager {
   }
   
   /**
-   * Show system message dialog
+   * 시스템 메시지 대화상자 표시
    */
   public async showMessageDialog(options: DialogOptions): Promise<{
     response: number;
@@ -244,13 +244,13 @@ export class DialogManager {
    */
   public async showNotification(options: NotificationOptions): Promise<boolean> {
     try {
-      // Check if notifications are supported
+      // 알림 지원 여부 확인
       if (!Notification.isSupported()) {
         debugLog('[DialogManager] Notifications not supported on this platform');
         return false;
       }
       
-      // Add to queue for rate limiting
+      // 속도 제한을 위해 큐에 추가
       this.notificationQueue.push(options);
       
       if (!this.isProcessingNotifications) {
@@ -275,7 +275,7 @@ export class DialogManager {
       if (!options) continue;
       
       try {
-        // Notification 생성 시 지원되는 옵션만 사용
+        // 알림 생성 시 지원되는 옵션만 사용
         const notificationOptions: any = {
           title: options.title,
           body: options.body
@@ -288,7 +288,7 @@ export class DialogManager {
         
         notification.show();
         
-        // Rate limiting: wait between notifications
+        // 속도 제한: 알림 간 대기 시간
         if (this.notificationQueue.length > 0) {
           await new Promise(resolve => setTimeout(resolve, 1000));
         }
@@ -323,7 +323,7 @@ export class DialogManager {
       
       if (result.response === 0) {
         debugLog('[DialogManager] User chose to restart now');
-        // Schedule restart after a brief delay
+        // 잠시 후 재시작 예약
         setTimeout(() => {
           app.relaunch();
           app.exit(0);
@@ -406,7 +406,7 @@ export class DialogManager {
     options: CustomDialogOptions
   ): Promise<BrowserWindow | null> {
     try {
-      // Close existing dialog with same ID
+      // 같은 ID로 기존 대화상자 닫기
       this.closeCustomDialog(id);
       
       const parentWindow = BrowserWindow.getFocusedWindow() || 
@@ -428,25 +428,25 @@ export class DialogManager {
         }
       });
       
-      // Load content
+      // 콘텐츠 로드
       if (options.htmlContent) {
         await dialogWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(options.htmlContent)}`);
       } else {
         await dialogWindow.loadFile(path.join(__dirname, '..', 'renderer', 'dialog.html'));
       }
       
-      // Pass data to dialog if provided
+      // 제공된 경우 대화상자에 데이터 전달
       if (options.data) {
         dialogWindow.webContents.send('dialog-data', options.data);
       }
       
-      // Show dialog
+      // 대화상자 표시
       dialogWindow.show();
       
-      // Store reference
+      // 참조 저장
       this.customDialogs.set(id, dialogWindow);
       
-      // Cleanup on close
+      // 닫힐 때 정리
       dialogWindow.on('closed', () => {
         this.customDialogs.delete(id);
       });
@@ -533,10 +533,10 @@ export class DialogManager {
   }
 }
 
-// Export singleton instance
+// 싱글톤 인스턴스 내보내기
 export const dialogManager = DialogManager.getInstance();
 
-// Export convenience functions
+// 편의 함수 내보내기
 export async function showMessage(options: DialogOptions) {
   return await dialogManager.showMessageDialog(options);
 }

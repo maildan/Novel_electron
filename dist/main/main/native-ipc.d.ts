@@ -3,7 +3,7 @@
  */
 export declare function registerNativeIpcHandlers(): void;
 /**
- * 네이티브 모듈 IPC 핸들러 정리
+ * 네이티브 모듈 IPC 핸들러 Cleanup
  */
 export declare function cleanupNativeIpcHandlers(): void;
 export declare function getNativeModuleStatus(): {

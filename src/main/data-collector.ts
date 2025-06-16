@@ -46,7 +46,7 @@ export class DataCollector {
     try {
       fs.appendFileSync(logFile, JSON.stringify(entry) + '\n');
     } catch (error) {
-      console.error('로그 저장 실패:', error);
+      console.error('로그 저장 Failed:', error);
     }
   }
 
@@ -67,7 +67,7 @@ export class DataCollector {
   }
 
   public logError(error: Error, context?: string): void {
-    this.log('error', '오류 발생', {
+    this.log('error', 'Error 발생', {
       message: error.message,
       stack: error.stack,
       context
@@ -112,9 +112,9 @@ export class DataCollector {
       const reportFile = path.join(this.logPath, `daily-report-${dateStr}.json`);
       fs.writeFileSync(reportFile, JSON.stringify(report, null, 2));
       
-      console.log(`일일 보고서 생성 완료: ${reportFile}`);
+      console.log('일일 보고서 생성 Completed: ${reportFile}');
     } catch (error) {
-      console.error('일일 보고서 생성 실패:', error);
+      console.error('일일 보고서 생성 Failed:', error);
     }
   }
 }
