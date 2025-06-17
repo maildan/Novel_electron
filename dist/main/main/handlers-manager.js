@@ -283,7 +283,7 @@ async function setupAllHandlers() {
             // TypeScript에서는 ipcMain._handlers에 직접 접근할 수 없으므로
             // listenerCount를 사용하여 간접적으로 확인
             const criticalHandlers = [
-                'start-monitoring', 'get-current-metrics', 'get-metrics-history',
+                'system:start-monitoring', 'get-current-metrics', 'get-metrics-history',
                 'tracking:start-monitoring', 'tracking:stop-monitoring', 'tracking:get-status',
                 'start-keyboard-listener', 'stop-keyboard-listener', 'get-keyboard-status',
                 'memory:getInfo', 'systemGetInfo'

@@ -26,20 +26,79 @@ export function registerSystemMonitorIpcHandlers(): void {
 
   const systemMonitor = SystemMonitor.getInstance();
 
-  // 모니터링 시작
-  ipcMain.handle(CHANNELS.START_MONITORING, async (): Promise<IpcResponse<{ started: boolean }>> => {
+  // 통합 모니터링 시작 (시스템 + 타이핑 추적 + 키보드)
+  ipcMain.handle(CHANNELS.SYSTEM_START_MONITORING, async (): Promise<IpcResponse<{ 
+    started: boolean; 
+    systemMonitoring: boolean;
+    typingTracking: boolean;
+    keyboardListener: boolean;
+    clipboardWatcher: boolean;
+    message: string;
+  }>> => {
     try {
-      // SystemMonitor의 모니터링이 이미 시작되어 있는지 확인
-      const isAlreadyRunning = systemMonitor.getCurrentMetrics() !== null;
+      console.log('[SystemMonitor IPC] 통합 모니터링 시작 요청');
       
-      if (!isAlreadyRunning) {
-        // 모니터링 시작 (SystemMonitor는 싱글톤이므로 getInstance만으로도 모니터링이 시작됨)
-        console.log('[SystemMonitor IPC] 시스템 모니터링 시작');
+      const results = {
+        started: false,
+        systemMonitoring: false,
+        typingTracking: false,
+        keyboardListener: false,
+        clipboardWatcher: false,
+        message: ''
+      };
+      
+      // 1. 시스템 모니터링 시작
+      try {
+        const isAlreadyRunning = systemMonitor.getCurrentMetrics() !== null;
+        if (!isAlreadyRunning) {
+          console.log('[SystemMonitor IPC] 시스템 모니터링 시작');
+        }
+        results.systemMonitoring = true;
+      } catch (error) {
+        console.error('[SystemMonitor IPC] 시스템 모니터링 시작 실패:', error);
       }
       
-      return createSuccessResponse({ started: true });
+      // 2. 타이핑 추적 시작
+      try {
+        const { startTracking } = await import('./tracking-handlers');
+        const trackingResult = startTracking();
+        results.typingTracking = trackingResult;
+        console.log('[SystemMonitor IPC] 타이핑 추적 시작:', trackingResult ? '성공' : '실패');
+      } catch (error) {
+        console.error('[SystemMonitor IPC] 타이핑 추적 시작 실패:', error);
+      }
+      
+      // 3. 키보드 리스너 시작
+      try {
+        const { setupKeyboardListenerIfNeeded } = await import('./keyboardHandlers');
+        const keyboardResult = await setupKeyboardListenerIfNeeded();
+        results.keyboardListener = keyboardResult;
+        console.log('[SystemMonitor IPC] 키보드 리스너 시작:', keyboardResult ? '성공' : '실패');
+      } catch (error) {
+        console.error('[SystemMonitor IPC] 키보드 리스너 시작 실패:', error);
+      }
+      
+      // 4. 클립보드 감시 시작
+      try {
+        const { startWatching } = await import('./clipboard-watcher');
+        startWatching();
+        results.clipboardWatcher = true;
+        console.log('[SystemMonitor IPC] 클립보드 감시 시작: 성공');
+      } catch (error) {
+        console.error('[SystemMonitor IPC] 클립보드 감시 시작 실패:', error);
+      }
+      
+      // 전체 결과 확인
+      results.started = results.systemMonitoring || results.typingTracking || results.keyboardListener;
+      results.message = results.started ? 
+        `모니터링 시작됨 (시스템: ${results.systemMonitoring}, 타이핑: ${results.typingTracking}, 키보드: ${results.keyboardListener}, 클립보드: ${results.clipboardWatcher})` :
+        '모든 모니터링 시작 실패';
+      
+      console.log('[SystemMonitor IPC] 통합 모니터링 결과:', results);
+      
+      return createSuccessResponse(results);
     } catch (error) {
-      console.error('[SystemMonitor IPC] 모니터링 시작 Error:', error);
+      console.error('[SystemMonitor IPC] 통합 모니터링 시작 Error:', error);
       const ipcError = createIpcError(
         'START_MONITORING_ERROR',
         error instanceof Error ? error.message : String(error),
@@ -353,7 +412,7 @@ export function registerSystemMonitorIpcHandlers(): void {
  * 시스템 모니터링 관련 IPC 핸들러 정리
  */
 export function cleanupSystemMonitorIpcHandlers(): void {
-  ipcMain.removeHandler(CHANNELS.START_MONITORING);
+  ipcMain.removeHandler(CHANNELS.SYSTEM_START_MONITORING);
   ipcMain.removeHandler(CHANNELS.GET_CURRENT_METRICS);
   ipcMain.removeHandler(CHANNELS.GET_METRICS_HISTORY);
   ipcMain.removeHandler(CHANNELS.GET_AVERAGE_METRICS);

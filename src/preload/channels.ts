@@ -18,8 +18,8 @@ export const CHANNELS = {
   CLEAR_DATA: 'db:clearData',
 
   // 시스템 모니터링
-  START_MONITORING: 'start-monitoring',
-  STOP_MONITORING: 'stop-monitoring',
+  SYSTEM_START_MONITORING: 'system:start-monitoring',
+  SYSTEM_STOP_MONITORING: 'system:stop-monitoring',
   GET_CURRENT_METRICS: 'system:getCurrentMetrics',
   GET_METRICS_HISTORY: 'system:getMetricsHistory',
   GET_AVERAGE_METRICS: 'system:getAverageMetrics',

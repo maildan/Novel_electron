@@ -84,8 +84,8 @@ const nativeAPI = {
 // 시스템 API
 const systemAPI = {
   getInfo: () => ipcRenderer.invoke('systemGetInfo'),
-  startMonitoring: () => ipcRenderer.invoke(CHANNELS.START_MONITORING),
-  stopMonitoring: () => ipcRenderer.invoke(CHANNELS.STOP_MONITORING),
+  startMonitoring: () => ipcRenderer.invoke(CHANNELS.SYSTEM_START_MONITORING),
+  stopMonitoring: () => ipcRenderer.invoke(CHANNELS.SYSTEM_STOP_MONITORING),
   getCurrentMetrics: () => ipcRenderer.invoke(CHANNELS.GET_CURRENT_METRICS),
   getMetricsHistory: (minutes?: number) => ipcRenderer.invoke(CHANNELS.GET_METRICS_HISTORY, minutes),
   getAverageMetrics: (minutes?: number) => ipcRenderer.invoke(CHANNELS.GET_AVERAGE_METRICS, minutes),
@@ -277,8 +277,8 @@ export const electronAPI = {
   openPermissionsSettings: () => ipcRenderer.invoke('openPermissionsSettings'),
   
   // 모니터링 관련 API (최상위 레벨에서도 접근 가능)
-  startMonitoring: () => ipcRenderer.invoke(CHANNELS.START_MONITORING),
-  stopMonitoring: () => ipcRenderer.invoke(CHANNELS.STOP_MONITORING),
+  startMonitoring: () => ipcRenderer.invoke(CHANNELS.SYSTEM_START_MONITORING),
+  stopMonitoring: () => ipcRenderer.invoke(CHANNELS.SYSTEM_STOP_MONITORING),
   getTrackingStatus: () => ipcRenderer.invoke('get-tracking-status'),
   
   // 모든 API 카테고리

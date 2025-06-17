@@ -1769,3 +1769,254 @@
 [2025-06-17T15:57:05.343Z] DEBUG: 대기 중인 작업 ${this.pendingTasks.length}개 처리 시작
 [2025-06-17T15:57:07.101Z] DEBUG: Setup에 따라 자동 모니터링 시작
 [2025-06-17T15:57:07.102Z] DEBUG: 타이핑 추적 Started
+[2025-06-17T16:10:46.663Z] DEBUG: [UpdateManager] Auto-update disabled in development mode
+[2025-06-17T16:10:46.781Z] DEBUG: 키보드 관련 IPC 핸들러 등록 Completed
+[2025-06-17T16:10:46.781Z] DEBUG: 추적 관련 IPC 핸들러 등록 중...
+[2025-06-17T16:10:46.781Z] DEBUG: 키보드 관련 IPC 핸들러 등록 중...
+[2025-06-17T16:10:46.815Z] DEBUG: Setup 로드 중...
+[2025-06-17T16:10:46.815Z] DEBUG: Setup 로드 중...
+[2025-06-17T16:14:52.349Z] DEBUG: [UpdateManager] Auto-update disabled in development mode
+[2025-06-17T16:14:52.515Z] DEBUG: 키보드 관련 IPC 핸들러 등록 중...
+[2025-06-17T16:14:52.515Z] DEBUG: 추적 관련 IPC 핸들러 등록 중...
+[2025-06-17T16:14:52.515Z] DEBUG: 키보드 관련 IPC 핸들러 등록 Completed
+[2025-06-17T16:14:52.547Z] DEBUG: Setup 로드 중...
+[2025-06-17T16:14:52.547Z] DEBUG: Setup 로드 중...
+[2025-06-17T16:20:18.291Z] DEBUG: [UpdateManager] Auto-update disabled in development mode
+[2025-06-17T16:20:18.422Z] DEBUG: 키보드 관련 IPC 핸들러 등록 중...
+[2025-06-17T16:20:18.422Z] DEBUG: 추적 관련 IPC 핸들러 등록 중...
+[2025-06-17T16:20:18.422Z] DEBUG: 추적 관련 IPC 핸들러 등록 Completed
+[2025-06-17T16:20:18.456Z] DEBUG: 키보드 핸들러 초기화 Completed
+[2025-06-17T16:20:18.456Z] DEBUG: 키보드 리스너 Setup Success
+[2025-06-17T16:20:18.422Z] DEBUG: 키보드 관련 IPC 핸들러 등록 Completed
+[2025-06-17T16:20:18.804Z] DEBUG: Setup 로드 중...
+[2025-06-17T16:20:18.804Z] DEBUG: Setup 로드 중...
+[2025-06-17T16:20:18.805Z] DEBUG: 레거시 Setup 발견, 마이그레이션 중...
+[2025-06-17T16:20:18.806Z] DEBUG: Setup 관리자 IPC 핸들러 등록 Completed
+[2025-06-17T16:20:18.806Z] DEBUG: Setup 로드 Completed: {
+  "enabledCategories": {
+    "docs": true,
+    "office": true,
+    "coding": true,
+    "sns": true,
+    "browser": true,
+    "game": false,
+    "media": true,
+    "other": true
+  },
+  "autoStartMonitoring": true,
+  "resumeAfterIdle": true,
+  "idleTimeout": 300,
+  "theme": "dark",
+  "windowMode": "windowed",
+  "darkMode": false,
+  "minimizeToTray": true,
+  "showTrayNotifications": true,
+  "enableMiniView": true,
+  "enableAnimations": true,
+  "fontSize": 14,
+  "fontFamily": "system-ui",
+  "useHardwareAcceleration": false,
+  "enableGPUAcceleration": true,
+  "gpuAccelerationLevel": 1,
+  "processingMode": "auto",
+  "reduceMemoryInBackground": true,
+  "enableMemoryOptimization": true,
+  "enableBackgroundCleanup": true,
+  "garbageCollectionInterval": 60000,
+  "maxMemoryThreshold": 100,
+  "memoryCleanupInterval": 300000,
+  "memoryThreshold": 80,
+  "autoCleanupLogs": true,
+  "maxHistoryItems": 500,
+  "logRetentionDays": 30,
+  "enableDataCollection": true,
+  "enableAnalytics": false,
+  "dataRetentionDays": 30,
+  "enableAutoSave": true,
+  "autoSaveInterval": 10000,
+  "enableWPMDisplay": true,
+  "enableAccuracyDisplay": true,
+  "enableRealTimeStats": true,
+  "enableTypingSound": false,
+  "enableKeyboardShortcuts": true,
+  "statsFilePath": "",
+  "enableTypingAnalysis": true,
+  "enableRealTimeAnalysis": false,
+  "statsCollectionInterval": 5000,
+  "enableKeyboardDetection": true,
+  "enablePatternLearning": false,
+  "keyboard": {
+    "autoStart": true,
+    "enableHangulSupport": true,
+    "enableJamoTracking": false,
+    "hangulMode": "auto",
+    "jamoSeparation": false,
+    "trackingInterval": 100
+  },
+  "windowSettings": {
+    "miniSize": {
+      "width": 300,
+      "height": 200
+    },
+    "opacity": 0.9,
+    "alwaysOnTop": false,
+    "autoHide": false,
+    "position": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  "windowOpacity": 1,
+  "alwaysOnTop": false,
+  "enableSystemMonitoring": false,
+  "enablePerformanceLogging": false,
+  "monitoringInterval": 5000,
+  "enableCPUMonitoring": false,
+  "enableMemoryMonitoring": false,
+  "enableDiskMonitoring": false,
+  "enableNotifications": true,
+  "enableTrayNotifications": true,
+  "enableDebugMode": false,
+  "enableConsoleLogging": false,
+  "enableErrorReporting": true,
+  "logLevel": "info",
+  "app": {
+    "version": "36.4.0"
+  },
+  "__internal__": {
+    "migrations": {
+      "version": "36.4.0"
+    }
+  }
+}
+[2025-06-17T16:20:18.807Z] DEBUG: 통계 처리 시스템 초기화 시작
+[2025-06-17T16:20:18.807Z] DEBUG: 데이터 동기화 모듈 초기화 중...
+[2025-06-17T16:20:18.807Z] DEBUG: 데이터베이스 클라이언트가 없어 폴백 모드로 실행
+[2025-06-17T16:20:18.808Z] DEBUG: 통계 처리 시스템 초기화 Completed
+[2025-06-17T16:20:18.808Z] DEBUG: 통계 워커 초기화 Started
+[2025-06-17T16:20:18.808Z] DEBUG: 브라우저 감지 시스템 초기화 시작
+[2025-06-17T16:20:18.808Z] DEBUG: macOS 브라우저 감지 모듈 로드 Completed
+[2025-06-17T16:20:18.808Z] DEBUG: 브라우저 감지 시스템 초기화 Completed
+[2025-06-17T16:20:18.809Z] DEBUG: 레거시 Setup 발견, 마이그레이션 중...
+[2025-06-17T16:20:18.809Z] DEBUG: Setup IPC 핸들러가 이미 등록되어 있습니다
+[2025-06-17T16:20:18.809Z] DEBUG: Setup 로드 Completed: {
+  "enabledCategories": {
+    "docs": true,
+    "office": true,
+    "coding": true,
+    "sns": true,
+    "browser": true,
+    "game": false,
+    "media": true,
+    "other": true
+  },
+  "autoStartMonitoring": true,
+  "resumeAfterIdle": true,
+  "idleTimeout": 300,
+  "theme": "dark",
+  "windowMode": "windowed",
+  "darkMode": false,
+  "minimizeToTray": true,
+  "showTrayNotifications": true,
+  "enableMiniView": true,
+  "enableAnimations": true,
+  "fontSize": 14,
+  "fontFamily": "system-ui",
+  "useHardwareAcceleration": false,
+  "enableGPUAcceleration": true,
+  "gpuAccelerationLevel": 1,
+  "processingMode": "auto",
+  "reduceMemoryInBackground": true,
+  "enableMemoryOptimization": true,
+  "enableBackgroundCleanup": true,
+  "garbageCollectionInterval": 60000,
+  "maxMemoryThreshold": 100,
+  "memoryCleanupInterval": 300000,
+  "memoryThreshold": 80,
+  "autoCleanupLogs": true,
+  "maxHistoryItems": 500,
+  "logRetentionDays": 30,
+  "enableDataCollection": true,
+  "enableAnalytics": false,
+  "dataRetentionDays": 30,
+  "enableAutoSave": true,
+  "autoSaveInterval": 10000,
+  "enableWPMDisplay": true,
+  "enableAccuracyDisplay": true,
+  "enableRealTimeStats": true,
+  "enableTypingSound": false,
+  "enableKeyboardShortcuts": true,
+  "statsFilePath": "",
+  "enableTypingAnalysis": true,
+  "enableRealTimeAnalysis": false,
+  "statsCollectionInterval": 5000,
+  "enableKeyboardDetection": true,
+  "enablePatternLearning": false,
+  "keyboard": {
+    "autoStart": true,
+    "enableHangulSupport": true,
+    "enableJamoTracking": false,
+    "hangulMode": "auto",
+    "jamoSeparation": false,
+    "trackingInterval": 100
+  },
+  "windowSettings": {
+    "miniSize": {
+      "width": 300,
+      "height": 200
+    },
+    "opacity": 0.9,
+    "alwaysOnTop": false,
+    "autoHide": false,
+    "position": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  "windowOpacity": 1,
+  "alwaysOnTop": false,
+  "enableSystemMonitoring": false,
+  "enablePerformanceLogging": false,
+  "monitoringInterval": 5000,
+  "enableCPUMonitoring": false,
+  "enableMemoryMonitoring": false,
+  "enableDiskMonitoring": false,
+  "enableNotifications": true,
+  "enableTrayNotifications": true,
+  "enableDebugMode": false,
+  "enableConsoleLogging": false,
+  "enableErrorReporting": true,
+  "logLevel": "info",
+  "app": {
+    "version": "36.4.0"
+  },
+  "__internal__": {
+    "migrations": {
+      "version": "36.4.0"
+    }
+  }
+}
+[2025-06-17T16:20:18.917Z] DEBUG: 워커 초기화 Completed: 2025-06-17T16:20:18.916Z
+[2025-06-17T16:20:18.917Z] DEBUG: 대기 중인 작업 ${this.pendingTasks.length}개 처리 시작
+[2025-06-17T16:20:20.462Z] DEBUG: Setup에 따라 자동 모니터링 시작
+[2025-06-17T16:20:20.462Z] DEBUG: 타이핑 추적 Started
+[2025-06-17T16:20:30.492Z] DEBUG: 모니터링 시작 요청 수신
+[2025-06-17T16:20:31.643Z] DEBUG: 모니터링 시작 요청 수신
+[2025-06-17T16:20:32.392Z] DEBUG: 모니터링 시작 요청 수신
+[2025-06-17T16:20:32.808Z] DEBUG: 모니터링 시작 요청 수신
+[2025-06-17T16:20:39.475Z] DEBUG: 모니터링 시작 요청 수신
+[2025-06-17T16:21:34.726Z] DEBUG: Setup 변경 적용: ${key} = ${newValue}
+[2025-06-17T16:21:34.726Z] DEBUG: Setup 변경 적용: ${key} = ${newValue}
+[2025-06-17T16:21:34.726Z] DEBUG: Setup 변경 적용: ${key} = ${newValue}
+[2025-06-17T16:21:40.070Z] DEBUG: Setup 변경 적용: ${key} = ${newValue}
+[2025-06-17T16:21:40.070Z] DEBUG: Setup 변경 적용: ${key} = ${newValue}
+[2025-06-17T16:21:40.070Z] DEBUG: Setup 변경 적용: ${key} = ${newValue}
+[2025-06-17T16:21:52.969Z] DEBUG: Setup 변경 적용: ${key} = ${newValue}
+[2025-06-17T16:21:52.969Z] DEBUG: Setup 변경 적용: ${key} = ${newValue}
+[2025-06-17T16:21:52.969Z] DEBUG: Setup 변경 적용: ${key} = ${newValue}
+[2025-06-17T16:22:02.162Z] DEBUG: 모니터링 시작 요청 수신
+[2025-06-17T16:22:06.540Z] DEBUG: 모니터링 시작 요청 수신
+[2025-06-17T16:22:07.176Z] DEBUG: 모니터링 시작 요청 수신
+[2025-06-17T16:22:07.443Z] DEBUG: 모니터링 시작 요청 수신
+[2025-06-17T16:22:07.625Z] DEBUG: 모니터링 시작 요청 수신
+[2025-06-17T16:22:07.862Z] DEBUG: 모니터링 시작 요청 수신

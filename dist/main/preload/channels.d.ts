@@ -14,8 +14,8 @@ export declare const CHANNELS: {
     readonly EXPORT_DATA: "db:exportData";
     readonly IMPORT_DATA: "db:importData";
     readonly CLEAR_DATA: "db:clearData";
-    readonly START_MONITORING: "start-monitoring";
-    readonly STOP_MONITORING: "stop-monitoring";
+    readonly SYSTEM_START_MONITORING: "system:start-monitoring";
+    readonly SYSTEM_STOP_MONITORING: "system:stop-monitoring";
     readonly GET_CURRENT_METRICS: "system:getCurrentMetrics";
     readonly GET_METRICS_HISTORY: "system:getMetricsHistory";
     readonly GET_AVERAGE_METRICS: "system:getAverageMetrics";

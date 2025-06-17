@@ -808,13 +808,13 @@ export interface IpcChannelMap {
             success: boolean;
         };
     };
-    [CHANNELS.START_MONITORING]: {
+    [CHANNELS.SYSTEM_START_MONITORING]: {
         request: void;
         response: {
             success: boolean;
         };
     };
-    [CHANNELS.STOP_MONITORING]: {
+    [CHANNELS.SYSTEM_STOP_MONITORING]: {
         request: void;
         response: {
             success: boolean;

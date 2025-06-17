@@ -267,8 +267,8 @@ function registerTrackingHandlers() {
         return;
     }
     (0, utils_1.debugLog)('추적 관련 IPC 핸들러 등록 중...');
-    // 타이핑 추적 모니터링 시작 핸들러
-    electron_1.ipcMain.handle(channels_1.CHANNELS.TRACKING_START_MONITORING, async () => {
+    // 모니터링 시작 핸들러
+    electron_1.ipcMain.handle('start-monitoring', async () => {
         try {
             (0, utils_1.debugLog)('모니터링 시작 요청 수신');
             if (trackingState.isTracking) {
@@ -307,9 +307,78 @@ function registerTrackingHandlers() {
         }
     });
     // 모니터링 중지 핸들러
-    electron_1.ipcMain.handle(channels_1.CHANNELS.TRACKING_STOP_MONITORING, async () => {
+    electron_1.ipcMain.handle('stop-monitoring', async () => {
         try {
             (0, utils_1.debugLog)('모니터링 중지 요청 수신');
+            if (!trackingState.isTracking) {
+                return {
+                    success: true,
+                    message: '이미 모니터링이 중지되었습니다',
+                    isTracking: false,
+                    stats: trackingState.sessionStats
+                };
+            }
+            // 키보드 리스너 해제
+            const keyboardCleanupResult = (0, keyboardHandlers_1.cleanupKeyboardListener)();
+            (0, utils_1.debugLog)(`키보드 리스너 해제 ${keyboardCleanupResult ? '성공' : '실패'}`);
+            const success = stopTracking();
+            (0, utils_1.debugLog)(`모니터링 중지 ${success ? '성공' : '실패'}`);
+            return {
+                success,
+                message: success ? '모니터링 Stopped' : '모니터링 중지 Failed',
+                isTracking: trackingState.isTracking,
+                stats: trackingState.sessionStats,
+                keyboardCleaned: keyboardCleanupResult
+            };
+        }
+        catch (error) {
+            (0, utils_1.errorLog)('모니터링 중지 Error:', error);
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
+        }
+    });
+    // 타이핑 추적 모니터링 시작 핸들러 (기존)
+    electron_1.ipcMain.handle(channels_1.CHANNELS.TRACKING_START_MONITORING, async () => {
+        try {
+            (0, utils_1.debugLog)('타이핑 추적 모니터링 시작 요청 수신');
+            if (trackingState.isTracking) {
+                return {
+                    success: true,
+                    message: '이미 모니터링 중입니다',
+                    isTracking: true,
+                    stats: trackingState.sessionStats
+                };
+            }
+            // 키보드 리스너 먼저 설정
+            const keyboardHandlers = await Promise.resolve().then(() => __importStar(require('./keyboardHandlers')));
+            const keyboardListenerResult = await keyboardHandlers.setupKeyboardListenerIfNeeded();
+            if (!keyboardListenerResult) {
+                (0, utils_1.errorLog)('키보드 리스너 설정 Failed - 모니터링 시작 불가');
+                return {
+                    success: false,
+                    message: '키보드 리스너 설정 Failed - 모니터링 시작 불가',
+                    keyboardActive: false
+                };
+            }
+            (0, utils_1.debugLog)('키보드 리스너 설정 성공, 타이핑 추적 모니터링 시작 중...');
+            const success = startTracking();
+            (0, utils_1.debugLog)(`타이핑 추적 모니터링 시작 ${success ? '성공' : '실패'} (키보드 리스너: ${keyboardListenerResult ? '활성화됨' : '비활성화됨'})`);
+            return {
+                success,
+                message: success ? '타이핑 추적 모니터링 Started' : '타이핑 추적 모니터링 시작 Failed',
+                isTracking: trackingState.isTracking,
+                stats: trackingState.sessionStats,
+                keyboardActive: keyboardListenerResult
+            };
+        }
+        catch (error) {
+            (0, utils_1.errorLog)('타이핑 추적 모니터링 시작 Error:', error);
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
+        }
+    });
+    // 모니터링 중지 핸들러 (기존)
+    electron_1.ipcMain.handle(channels_1.CHANNELS.TRACKING_STOP_MONITORING, async () => {
+        try {
+            (0, utils_1.debugLog)('모니터링 중지 요청 수신 (기존 핸들러)');
             if (!trackingState.isTracking) {
                 return {
                     success: true,
@@ -422,8 +491,8 @@ function cleanupTrackingHandlers() {
         stopTracking();
     }
     // IPC 핸들러 제거
-    electron_1.ipcMain.removeHandler('tracking:start-monitoring');
-    electron_1.ipcMain.removeHandler('tracking:stop-monitoring');
+    electron_1.ipcMain.removeHandler('start-monitoring');
+    electron_1.ipcMain.removeHandler('stop-monitoring');
     electron_1.ipcMain.removeHandler('tracking:get-status');
     electron_1.ipcMain.removeHandler('tracking:save-stats');
     electron_1.ipcMain.removeHandler('tracking:reset');

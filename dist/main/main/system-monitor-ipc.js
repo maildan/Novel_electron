@@ -4,6 +4,39 @@
  *
  * SystemMonitor 클래스와 연동하여 시스템 메트릭 정보를 제공합니다.
  */
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerSystemMonitorIpcHandlers = registerSystemMonitorIpcHandlers;
 exports.cleanupSystemMonitorIpcHandlers = cleanupSystemMonitorIpcHandlers;
@@ -17,19 +50,69 @@ const ipc_1 = require("../types/ipc");
 function registerSystemMonitorIpcHandlers() {
     console.log('[SystemMonitor IPC] 시스템 모니터링 관련 IPC 핸들러 등록 시작');
     const systemMonitor = system_monitor_1.SystemMonitor.getInstance();
-    // 모니터링 시작
-    electron_1.ipcMain.handle(channels_1.CHANNELS.START_MONITORING, async () => {
+    // 통합 모니터링 시작 (시스템 + 타이핑 추적 + 키보드)
+    electron_1.ipcMain.handle(channels_1.CHANNELS.SYSTEM_START_MONITORING, async () => {
         try {
-            // SystemMonitor의 모니터링이 이미 시작되어 있는지 확인
-            const isAlreadyRunning = systemMonitor.getCurrentMetrics() !== null;
-            if (!isAlreadyRunning) {
-                // 모니터링 시작 (SystemMonitor는 싱글톤이므로 getInstance만으로도 모니터링이 시작됨)
-                console.log('[SystemMonitor IPC] 시스템 모니터링 시작');
+            console.log('[SystemMonitor IPC] 통합 모니터링 시작 요청');
+            const results = {
+                started: false,
+                systemMonitoring: false,
+                typingTracking: false,
+                keyboardListener: false,
+                clipboardWatcher: false,
+                message: ''
+            };
+            // 1. 시스템 모니터링 시작
+            try {
+                const isAlreadyRunning = systemMonitor.getCurrentMetrics() !== null;
+                if (!isAlreadyRunning) {
+                    console.log('[SystemMonitor IPC] 시스템 모니터링 시작');
+                }
+                results.systemMonitoring = true;
             }
-            return (0, ipc_1.createSuccessResponse)({ started: true });
+            catch (error) {
+                console.error('[SystemMonitor IPC] 시스템 모니터링 시작 실패:', error);
+            }
+            // 2. 타이핑 추적 시작
+            try {
+                const { startTracking } = await Promise.resolve().then(() => __importStar(require('./tracking-handlers')));
+                const trackingResult = startTracking();
+                results.typingTracking = trackingResult;
+                console.log('[SystemMonitor IPC] 타이핑 추적 시작:', trackingResult ? '성공' : '실패');
+            }
+            catch (error) {
+                console.error('[SystemMonitor IPC] 타이핑 추적 시작 실패:', error);
+            }
+            // 3. 키보드 리스너 시작
+            try {
+                const { setupKeyboardListenerIfNeeded } = await Promise.resolve().then(() => __importStar(require('./keyboardHandlers')));
+                const keyboardResult = await setupKeyboardListenerIfNeeded();
+                results.keyboardListener = keyboardResult;
+                console.log('[SystemMonitor IPC] 키보드 리스너 시작:', keyboardResult ? '성공' : '실패');
+            }
+            catch (error) {
+                console.error('[SystemMonitor IPC] 키보드 리스너 시작 실패:', error);
+            }
+            // 4. 클립보드 감시 시작
+            try {
+                const { startWatching } = await Promise.resolve().then(() => __importStar(require('./clipboard-watcher')));
+                startWatching();
+                results.clipboardWatcher = true;
+                console.log('[SystemMonitor IPC] 클립보드 감시 시작: 성공');
+            }
+            catch (error) {
+                console.error('[SystemMonitor IPC] 클립보드 감시 시작 실패:', error);
+            }
+            // 전체 결과 확인
+            results.started = results.systemMonitoring || results.typingTracking || results.keyboardListener;
+            results.message = results.started ?
+                `모니터링 시작됨 (시스템: ${results.systemMonitoring}, 타이핑: ${results.typingTracking}, 키보드: ${results.keyboardListener}, 클립보드: ${results.clipboardWatcher})` :
+                '모든 모니터링 시작 실패';
+            console.log('[SystemMonitor IPC] 통합 모니터링 결과:', results);
+            return (0, ipc_1.createSuccessResponse)(results);
         }
         catch (error) {
-            console.error('[SystemMonitor IPC] 모니터링 시작 Error:', error);
+            console.error('[SystemMonitor IPC] 통합 모니터링 시작 Error:', error);
             const ipcError = (0, ipc_1.createIpcError)('START_MONITORING_ERROR', error instanceof Error ? error.message : String(error), { operation: 'startMonitoring' }, error instanceof Error ? error.stack : undefined);
             return (0, ipc_1.createErrorResponse)(ipcError);
         }
@@ -262,7 +345,7 @@ function registerSystemMonitorIpcHandlers() {
  * 시스템 모니터링 관련 IPC 핸들러 정리
  */
 function cleanupSystemMonitorIpcHandlers() {
-    electron_1.ipcMain.removeHandler(channels_1.CHANNELS.START_MONITORING);
+    electron_1.ipcMain.removeHandler(channels_1.CHANNELS.SYSTEM_START_MONITORING);
     electron_1.ipcMain.removeHandler(channels_1.CHANNELS.GET_CURRENT_METRICS);
     electron_1.ipcMain.removeHandler(channels_1.CHANNELS.GET_METRICS_HISTORY);
     electron_1.ipcMain.removeHandler(channels_1.CHANNELS.GET_AVERAGE_METRICS);
