@@ -247,7 +247,7 @@ class GPUManager {
         try {
             if (!this.settings.acceleration) {
                 (0, utils_1.debugLog)('GPU 가속이 비활성화되어 있음');
-                return null;
+                return { success: false, error: 'GPU acceleration is disabled' };
             }
             const nativeModule = await native_modules_1.nativeModuleLoader.loadModule();
             if (nativeModule.isAvailable && nativeModule.gpuAccelerate) {
@@ -292,14 +292,19 @@ class GPUManager {
      */
     analyzeTypingJS(data) {
         try {
-            const { keystrokes, timeSpent, errors } = data;
+            const keystrokes = typeof data.keystrokes === 'number' ? data.keystrokes : 0;
+            const timeSpent = typeof data.timeSpent === 'number' ? data.timeSpent : 1;
+            const errors = typeof data.errors === 'number' ? data.errors : 0;
             const wpm = (keystrokes / 5) / (timeSpent / 60000);
-            const accuracy = ((keystrokes - errors) / keystrokes) * 100;
+            const accuracy = keystrokes > 0 ? ((keystrokes - errors) / keystrokes) * 100 : 0;
             return {
-                wpm: Math.round(wpm),
-                accuracy: Math.round(accuracy),
-                performance_index: Math.round(wpm * (accuracy / 100)),
-                calculated_with: 'javascript_fallback'
+                success: true,
+                result: {
+                    wpm: Math.round(wpm),
+                    accuracy: Math.round(accuracy),
+                    performance_index: Math.round(wpm * (accuracy / 100)),
+                    calculated_with: 'javascript_fallback'
+                }
             };
         }
         catch (error) {
@@ -313,7 +318,13 @@ class GPUManager {
     processImageJS(data) {
         console.log('[GPU유틸] JavaScript 이미지 처리 폴백 시작, 데이터 타입:', typeof data);
         (0, utils_1.debugLog)('JavaScript 이미지 처리 폴백');
-        return { success: true, processed: false, method: 'javascript_fallback' };
+        return {
+            success: true,
+            result: {
+                processed: false,
+                method: 'javascript_fallback'
+            }
+        };
     }
     /**
    * 성능 메트릭 기록

@@ -269,8 +269,8 @@ function setupGlobalExceptionHandlers() {
     process.on('uncaughtException', (error) => {
         (0, debug_1.errorLog)('처리되지 않은 예외:', error);
         // 중요한 Error의 경우 앱 종료
-        if (error.message.includes('EADDRINUSE') ||
-            error.message.includes('permission denied')) {
+        const errorString = error instanceof Error ? error.message : String(error);
+        if (errorString.includes('EADDRINUSE') || errorString.includes('permission denied')) {
             process.exit(1);
         }
     });

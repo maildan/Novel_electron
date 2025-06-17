@@ -3,8 +3,6 @@ import './window';
 import './handlers-manager';
 import './settings-manager';
 import './memory-manager';
-import './memory-ipc';
-import './system-monitor-ipc';
 import './app-lifecycle';
 import './auto-launch-manager';
 import './browser-detector';

@@ -7,8 +7,8 @@
 import { AppSettings } from './constants';
 export interface SettingsChangeEvent {
     key: keyof AppSettings;
-    oldValue: any;
-    newValue: any;
+    oldValue: unknown;
+    newValue: unknown;
     timestamp: number;
 }
 export interface SettingsValidationResult {
@@ -93,7 +93,7 @@ declare const SettingsManager: {
     initialize: typeof initializeSettingsManager;
     getSettings: typeof getSettings;
     getSetting: typeof getSetting;
-    updateSetting: (key: keyof AppSettings, value: any) => Promise<boolean>;
+    updateSetting: (key: keyof AppSettings, value: unknown) => Promise<boolean>;
     updateMultipleSettings: typeof saveSettings;
     resetSettings: typeof resetSettings;
     exportSettings: typeof exportSettings;

@@ -156,9 +156,9 @@ let keyEventProcessor: NodeJS.Timeout | null = null;
  * 자모에서 한글 음절 조합
  */
 function composeHangul(cho: string, jung: string, jong: string = ''): string {
-  if (!CHOSEONG_TABLE.hasOwnProperty(cho) ||
-      !JUNGSEONG_TABLE.hasOwnProperty(jung) ||
-      (jong && !JONGSEONG_TABLE.hasOwnProperty(jong))) {
+  if (!(cho in CHOSEONG_TABLE) ||
+      !(jung in JUNGSEONG_TABLE) ||
+      (jong && !(jong in JONGSEONG_TABLE))) {
     return '';
   }
 
@@ -556,7 +556,6 @@ function setupKeyboardIpcHandlers(): void {
   // 시스템 권한 Setup 열기
   ipcMain.handle('openPermissionsSettings', async () => {
     try {
-      const { shell } = require('electron');
       if (process.platform === 'darwin') {
         // macOS - 보안 및 개인정보 환경설정 열기
         await shell.openExternal('x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility');

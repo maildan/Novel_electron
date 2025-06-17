@@ -4,6 +4,17 @@
  * Loop 3의 keyboard-handlers.js를 TypeScript로 완전 마이그레이션
  * Setup keyboard event listeners/관리, 한글 입력 처리, IME 지원 등을 담당합니다.
  */
+interface KeyboardStatus {
+    isListening: boolean;
+    managerAvailable: boolean;
+    lastKeyTime: number;
+    recentKeys: string[];
+    settings: Record<string, unknown>;
+}
+interface HangulTestResult {
+    success: boolean;
+    result: Record<string, unknown>;
+}
 /**
  * 한글 문자의 자모 개수 계산
  */
@@ -23,7 +34,7 @@ export declare function cleanupKeyboardListener(): boolean;
 /**
  * 키보드 상태 정보 가져오기
  */
-export declare function getKeyboardStatus(): any;
+export declare function getKeyboardStatus(): KeyboardStatus;
 /**
  * IPC 핸들러 등록
  */
@@ -45,10 +56,7 @@ declare const _default: {
     getKeyboardStatus: typeof getKeyboardStatus;
     initializeKeyboardHandlers: typeof initializeKeyboardHandlers;
     cleanupKeyboardHandlers: typeof cleanupKeyboardHandlers;
-    testHangulInput: () => Promise<{
-        success: boolean;
-        result: any;
-    }>;
+    testHangulInput: () => Promise<HangulTestResult>;
 };
 export default _default;
 //# sourceMappingURL=keyboardHandlers.d.ts.map

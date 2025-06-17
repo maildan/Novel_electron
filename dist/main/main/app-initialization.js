@@ -55,8 +55,9 @@ const static_server_1 = require("./static-server");
 const handlers_manager_1 = require("./handlers-manager");
 const windowHandlers_1 = require("./windowHandlers");
 const keyboardHandlers_1 = require("./keyboardHandlers");
-const systemInfoIpc_1 = require("./systemInfoIpc");
-const native_ipc_1 = require("./native-ipc");
+// 중복 방지를 위해 주석 처리 - handlers-manager에서 중앙 관리
+// import { registerSystemInfoIpcHandlers } from './systemInfoIpc';
+// import { registerNativeIpcHandlers } from './native-ipc';
 // 환경 설정
 const app_config_1 = require("./app-config");
 // 데이터 수집기 (임시)
@@ -134,11 +135,8 @@ async function registerAllIpcHandlers() {
         if (!handlersSetup) {
             throw new Error('핸들러 등록에 실패했습니다');
         }
-        // 개별 IPC 핸들러들도 등록 확인
-        (0, windowHandlers_1.registerWindowHandlers)();
-        (0, keyboardHandlers_1.registerKeyboardHandlers)();
-        (0, systemInfoIpc_1.registerSystemInfoIpcHandlers)();
-        (0, native_ipc_1.registerNativeIpcHandlers)();
+        // setupAllHandlers()에서 모든 핸들러를 등록하므로 개별 호출은 불필요 (중복 방지)
+        // 핸들러들이 이미 handlers-manager에서 중앙화되어 등록됨
         // BrowserWindow 관련 정보 로깅
         const allWindows = electron_1.BrowserWindow.getAllWindows();
         console.log(`현재 BrowserWindow 개수: ${allWindows.length}`);

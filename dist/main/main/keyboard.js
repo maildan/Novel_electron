@@ -154,9 +154,9 @@ let keyEventProcessor = null;
  * 자모에서 한글 음절 조합
  */
 function composeHangul(cho, jung, jong = '') {
-    if (!CHOSEONG_TABLE.hasOwnProperty(cho) ||
-        !JUNGSEONG_TABLE.hasOwnProperty(jung) ||
-        (jong && !JONGSEONG_TABLE.hasOwnProperty(jong))) {
+    if (!(cho in CHOSEONG_TABLE) ||
+        !(jung in JUNGSEONG_TABLE) ||
+        (jong && !(jong in JONGSEONG_TABLE))) {
         return '';
     }
     const LIndex = CHOSEONG_TABLE[cho];
@@ -505,20 +505,19 @@ function setupKeyboardIpcHandlers() {
     // 시스템 권한 Setup 열기
     electron_1.ipcMain.handle('openPermissionsSettings', async () => {
         try {
-            const { shell } = require('electron');
             if (process.platform === 'darwin') {
                 // macOS - 보안 및 개인정보 환경설정 열기
-                await shell.openExternal('x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility');
+                await electron_1.shell.openExternal('x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility');
                 return { success: true, message: '시스템 환경Setup이 열렸습니다' };
             }
             else if (process.platform === 'win32') {
                 // Windows - 개인정보 설정 열기
-                await shell.openExternal('ms-settings:privacy-general');
+                await electron_1.shell.openExternal('ms-settings:privacy-general');
                 return { success: true, message: '개인정보 Setup이 열렸습니다' };
             }
             else {
                 // Linux - 시스템 설정 열기 (배포판별 상이함)
-                await shell.openExternal('gnome-control-center');
+                await electron_1.shell.openExternal('gnome-control-center');
                 return { success: true, message: '시스템 Setup이 열렸습니다' };
             }
         }

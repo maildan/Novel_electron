@@ -17,8 +17,9 @@ import { StaticServer } from './static-server';
 import { setupAllHandlers } from './handlers-manager';
 import { registerWindowHandlers, initializeWindowHandlers } from './windowHandlers';
 import { registerKeyboardHandlers, initializeKeyboardHandlers } from './keyboardHandlers';
-import { registerSystemInfoIpcHandlers } from './systemInfoIpc';
-import { registerNativeIpcHandlers } from './native-ipc';
+// 중복 방지를 위해 주석 처리 - handlers-manager에서 중앙 관리
+// import { registerSystemInfoIpcHandlers } from './systemInfoIpc';
+// import { registerNativeIpcHandlers } from './native-ipc';
 
 // 환경 설정
 import { isDev } from './app-config';
@@ -122,11 +123,8 @@ export async function registerAllIpcHandlers(): Promise<void> {
       throw new Error('핸들러 등록에 실패했습니다');
     }
     
-    // 개별 IPC 핸들러들도 등록 확인
-    registerWindowHandlers();
-    registerKeyboardHandlers();
-    registerSystemInfoIpcHandlers();
-    registerNativeIpcHandlers();
+    // setupAllHandlers()에서 모든 핸들러를 등록하므로 개별 호출은 불필요 (중복 방지)
+    // 핸들러들이 이미 handlers-manager에서 중앙화되어 등록됨
     
     // BrowserWindow 관련 정보 로깅
     const allWindows = BrowserWindow.getAllWindows();

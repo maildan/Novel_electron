@@ -261,7 +261,7 @@ export class UpdateManager extends EventEmitter {
       this.state.status = UpdateStatus.ERROR;
       this.state.error = error;
       this.emit('error', error);
-      this.notifyRenderer('update-error', { message: error.message });
+      this.notifyRenderer('update-error', { message: error instanceof Error ? error.message : 'Unknown error occurred' });
     });
   }
   

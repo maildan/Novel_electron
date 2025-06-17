@@ -87,7 +87,7 @@ function showErrorDialog(errorOrMessage, title = '오류 발생', context = '', 
     }
     else {
         error = errorOrMessage;
-        errorMessage = error.message || error.toString();
+        errorMessage = error instanceof Error ? error.message : String(error);
     }
     let detailedMessage = `${context ? context + '\n\n' : ''}${errorMessage}`;
     if (error.stack) {
@@ -131,7 +131,7 @@ function showErrorDialog(errorOrMessage, title = '오류 발생', context = '', 
  * 네이티브 모듈 로딩 오류 처리
  */
 function handleNativeModuleError(moduleName, error, isCritical = false) {
-    const errorMessage = `네이티브 모듈 '${moduleName}' 로드 실패: ${error.message || '알 수 없는 오류'}`;
+    const errorMessage = `네이티브 모듈 '${moduleName}' 로드 실패: ${error instanceof Error ? error.message : String(error) || '알 수 없는 오류'}`;
     console.log(`[ERROR] ${errorMessage}`);
     logErrorToFile(error, `native-module:${moduleName}`);
     if (isCritical && electron_1.app.isReady()) {

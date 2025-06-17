@@ -424,7 +424,7 @@ function executeSystemCommand(command: string): Promise<string> {
   return new Promise((resolve, reject) => {
     exec(command, { timeout: 5000 }, (error, stdout, stderr) => {
       if (error) {
-        console.error(`시스템 명령어 실행 실패 [${command}]:`, error.message);
+        console.error(`시스템 명령어 실행 실패 [${command}]:`, error instanceof Error ? error.message : String(error));
         if (stderr) {
           console.error('stderr:', stderr);
         }
@@ -677,7 +677,7 @@ export function initializeSystemInfo(): void {
     executeSystemCommand('uname -a').then(result => {
       console.log('시스템 정보:', result);
     }).catch(error => {
-      console.log('시스템 명령어 실행 실패:', error.message);
+      console.log('시스템 명령어 실행 실패:', error instanceof Error ? error.message : String(error));
     });
   }
   

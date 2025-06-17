@@ -26,7 +26,7 @@ const LOG_FILE = path.join(LOG_DIR, `app-${new Date().toISOString().split('T')[0
 /**
  * Debug logging with console output and file saving
  */
-export function debugLog(...args: any[]): void {
+export function debugLog(...args: unknown[]): void {
   const timestamp = new Date().toISOString();
   const logMessage = `[${timestamp}] DEBUG: ${args.map(arg => 
     typeof arg === 'object' ? JSON.stringify(arg, null, 2) : arg
@@ -50,7 +50,7 @@ export function debugLog(...args: any[]): void {
 /**
  * Error logging with console output and file saving
  */
-export function errorLog(...args: any[]): void {
+export function errorLog(...args: unknown[]): void {
   const timestamp = new Date().toISOString();
   const logMessage = `[${timestamp}] ERROR: ${args.map(arg => 
     typeof arg === 'object' ? JSON.stringify(arg, null, 2) : arg
@@ -74,7 +74,7 @@ export function errorLog(...args: any[]): void {
 /**
  * Warning logging with console output and file saving
  */
-export function warnLog(...args: any[]): void {
+export function warnLog(...args: unknown[]): void {
   const timestamp = new Date().toISOString();
   const logMessage = `[${timestamp}] WARN: ${args.map(arg => 
     typeof arg === 'object' ? JSON.stringify(arg, null, 2) : arg
@@ -133,7 +133,7 @@ export function safePath(basePath: string, ...segments: string[]): string {
 /**
  * Safely require module with fallback
  */
-export function safeRequire<T = any>(modulePath: string, fallback?: T): T | null {
+export function safeRequire<T = unknown>(modulePath: string, fallback?: T): T | null {
   if (!modulePath) {
     console.warn('Module path not specified');
     return fallback || null;
@@ -201,7 +201,7 @@ export function safeJsonParse<T = any>(jsonString: string, fallback?: T): T | nu
 /**
  * Safely stringify JSON with fallback
  */
-export function safeJsonStringify(obj: any, fallback: string = '{}'): string {
+export function safeJsonStringify(obj: unknown, fallback: string = '{}'): string {
   try {
     return JSON.stringify(obj, null, 2);
   } catch (error) {
@@ -347,7 +347,7 @@ export function formatBytes(bytes: number, decimals: number = 2): string {
 /**
  * Debounce function
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
@@ -362,7 +362,7 @@ export function debounce<T extends (...args: any[]) => any>(
 /**
  * Throttle function
  */
-export function throttle<T extends (...args: any[]) => any>(
+export function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
   limit: number
 ): (...args: Parameters<T>) => void {

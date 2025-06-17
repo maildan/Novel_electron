@@ -71,7 +71,12 @@ async function loadActiveWin() {
 // TypingStats 타입 검증 함수 (한국어 디버깅)
 function validateTypingStats(data) {
     console.log('[TypingStats 타입 검증] 데이터 유효성 확인:', data);
-    return data && typeof data.appName === 'string' && typeof data.windowTitle === 'string';
+    return data !== null &&
+        typeof data === 'object' &&
+        'appName' in data &&
+        'windowTitle' in data &&
+        typeof data.appName === 'string' &&
+        typeof data.windowTitle === 'string';
 }
 // Platform Configurations
 const PLATFORM_KEY_CONFIGS = {
@@ -467,9 +472,9 @@ class AdvancedKeyboardManager {
      * Compose Hangul syllable from jamo
      */
     composeHangul(cho, jung, jong = '') {
-        if (!CHOSEONG_TABLE.hasOwnProperty(cho) ||
-            !JUNGSEONG_TABLE.hasOwnProperty(jung) ||
-            (jong && !JONGSEONG_TABLE.hasOwnProperty(jong))) {
+        if (!(cho in CHOSEONG_TABLE) ||
+            !(jung in JUNGSEONG_TABLE) ||
+            (jong && !(jong in JONGSEONG_TABLE))) {
             return '';
         }
         const LIndex = CHOSEONG_TABLE[cho];

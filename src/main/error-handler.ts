@@ -58,7 +58,7 @@ function showErrorDialog(
     error = new Error(errorOrMessage);
   } else {
     error = errorOrMessage;
-    errorMessage = error.message || error.toString();
+    errorMessage = error instanceof Error ? error.message : String(error);
   }
   
   let detailedMessage = `${context ? context + '\n\n' : ''}${errorMessage}`;
@@ -103,7 +103,7 @@ function showErrorDialog(
  * 네이티브 모듈 로딩 오류 처리
  */
 function handleNativeModuleError(moduleName: string, error: Error, isCritical: boolean = false): void {
-  const errorMessage = `네이티브 모듈 '${moduleName}' 로드 실패: ${error.message || '알 수 없는 오류'}`;
+  const errorMessage = `네이티브 모듈 '${moduleName}' 로드 실패: ${error instanceof Error ? error.message : String(error) || '알 수 없는 오류'}`;
   console.log(`[ERROR] ${errorMessage}`);
   
   logErrorToFile(error, `native-module:${moduleName}`);

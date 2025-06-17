@@ -1,0 +1,3 @@
+{
+  "/api/getLogs/route": "app/api/getLogs/route.js"
+}

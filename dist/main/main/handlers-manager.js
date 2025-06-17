@@ -5,6 +5,39 @@
  * 모든 IPC 핸들러를 관리하고 초기화하는 중앙 관리자입니다.
  * Loop 3의 handlers/index.js를 완전히 마이그레이션하고 확장했습니다.
  */
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -24,12 +57,13 @@ const keyboardHandlers_1 = require("./keyboardHandlers");
 Object.defineProperty(exports, "registerKeyboardHandlers", { enumerable: true, get: function () { return keyboardHandlers_1.registerKeyboardHandlers; } });
 const windowHandlers_1 = require("./windowHandlers");
 Object.defineProperty(exports, "registerWindowHandlers", { enumerable: true, get: function () { return windowHandlers_1.registerWindowHandlers; } });
-const settings_manager_1 = __importDefault(require("./settings-manager"));
+const settings_manager_1 = __importStar(require("./settings-manager"));
 const ipc_handlers_1 = require("./ipc-handlers");
 const memory_ipc_1 = require("./memory-ipc");
 const native_client_1 = require("./native-client");
 const systemInfoIpc_1 = require("./systemInfoIpc");
 const settingsIpcHandlers_1 = __importDefault(require("./settingsIpcHandlers"));
+const electron_1 = require("electron");
 // 간단한 디버그 로깅
 function debugLog(message, ...args) {
     console.log(`[HandlersManager] ${message}`, ...args);
@@ -37,22 +71,36 @@ function debugLog(message, ...args) {
 function errorLog(message, ...args) {
     console.error(`[HandlersManager] ${message}`, ...args);
 }
-// 전역 핸들러 상태
-let handlersState = {
+// 전역 핸들러 상태 - 더 안전한 초기화
+const handlersState = {
     isAllHandlersSetup: false,
     registeredHandlers: new Set(),
     initializationOrder: []
 };
+// 핸들러 상태 초기화 함수
+function initializeHandlersState() {
+    if (!handlersState.registeredHandlers) {
+        handlersState.registeredHandlers = new Set();
+    }
+    if (!handlersState.initializationOrder) {
+        handlersState.initializationOrder = [];
+    }
+    debugLog('핸들러 상태 초기화 완료');
+}
 /**
  * Setup 관련 핸들러 등록
  */
 function registerSettingsHandlers() {
     try {
+        // 중복 등록 방지
+        if (handlersState.registeredHandlers.has('settings')) {
+            debugLog('Setup 관련 핸들러 이미 등록됨');
+            return;
+        }
         // 설정 IPC 핸들러 등록 (setProcessingMode 등)
         settingsIpcHandlers_1.default.register();
         // 설정 관리자 초기화 및 IPC 핸들러 등록
-        const { initializeSettingsManager } = require('./settings-manager');
-        initializeSettingsManager();
+        (0, settings_manager_1.initializeSettingsManager)();
         // SettingsManager 인스턴스 확인
         const settingsManager = settings_manager_1.default;
         debugLog('SettingsManager 로드됨:', typeof settingsManager);
@@ -68,13 +116,19 @@ function registerSettingsHandlers() {
  */
 function registerSystemInfoHandlers() {
     try {
-        // 시스템 정보 핸들러를 실제로 등록
+        // 중복 등록 방지
+        if (handlersState.registeredHandlers.has('system-info')) {
+            debugLog('시스템 정보 관련 핸들러 이미 등록됨');
+            return;
+        }
+        // SystemInfo IPC 핸들러 등록
         (0, systemInfoIpc_1.registerSystemInfoIpcHandlers)();
         debugLog('시스템 정보 관련 핸들러 등록 Completed');
         handlersState.registeredHandlers.add('system-info');
     }
     catch (error) {
         errorLog('시스템 정보 핸들러 등록 Error:', error);
+        // 오류가 발생해도 다른 핸들러 등록은 계속 진행
     }
 }
 /**
@@ -82,18 +136,19 @@ function registerSystemInfoHandlers() {
  */
 function registerMemoryHandlers() {
     try {
-        // 메모리 핸들러가 main.ts에서 자동 등록되었는지 확인하고, 필요시 추가 등록
-        if (!handlersState.registeredHandlers.has('memory')) {
-            (0, memory_ipc_1.registerMemoryIpcHandlers)();
-            debugLog('메모리 관련 핸들러 등록 Completed');
-        }
-        else {
+        // 중복 등록 방지
+        if (handlersState.registeredHandlers.has('memory')) {
             debugLog('메모리 관련 핸들러 이미 등록됨');
+            return;
         }
+        // memory-ipc.ts에서 메모리 IPC 핸들러 등록
+        (0, memory_ipc_1.registerMemoryIpcHandlers)();
+        debugLog('메모리 관련 핸들러 등록 Completed');
         handlersState.registeredHandlers.add('memory');
     }
     catch (error) {
         errorLog('메모리 핸들러 등록 Error:', error);
+        // 오류가 발생해도 다른 핸들러 등록은 계속 진행
     }
 }
 /**
@@ -101,7 +156,11 @@ function registerMemoryHandlers() {
  */
 function registerNativeHandlers() {
     try {
-        // 네이티브 핸들러를 실제로 등록
+        // 중복 등록 방지
+        if (handlersState.registeredHandlers.has('native')) {
+            debugLog('네이티브 모듈 관련 핸들러 이미 등록됨');
+            return;
+        }
         (0, native_client_1.registerNativeIpcHandlers)();
         debugLog('네이티브 모듈 관련 핸들러 등록 Completed');
         handlersState.registeredHandlers.add('native');
@@ -115,6 +174,11 @@ function registerNativeHandlers() {
  */
 function registerIntegratedHandlers() {
     try {
+        // 중복 등록 방지
+        if (handlersState.registeredHandlers.has('integrated')) {
+            debugLog('통합 IPC 핸들러 이미 등록됨');
+            return;
+        }
         const ipcHandlers = ipc_handlers_1.IpcHandlers.getInstance();
         ipcHandlers.register();
         debugLog('통합 IPC 핸들러 등록 Completed');
@@ -138,9 +202,39 @@ function registerRestartHandlers() {
     }
 }
 /**
+ * IPC 핸들러 중복 등록 방지 유틸리티
+ */
+function isIpcHandlerRegistered(channel) {
+    try {
+        // Electron의 내부 API를 사용하여 핸들러가 이미 등록되어 있는지 확인
+        // 임시로 핸들러를 등록해보고 오류가 발생하면 이미 등록된 것으로 판단
+        return electron_1.ipcMain._handlers && electron_1.ipcMain._handlers.has(channel);
+    }
+    catch {
+        return false;
+    }
+}
+function safeHandlerRegistration(channel, handler) {
+    if (isIpcHandlerRegistered(channel)) {
+        debugLog(`⚠️  IPC 핸들러 '${channel}'이 이미 등록되어 있습니다. 건너뜁니다.`);
+        return false;
+    }
+    try {
+        electron_1.ipcMain.handle(channel, handler);
+        debugLog(`✅ IPC 핸들러 '${channel}' 등록 성공`);
+        return true;
+    }
+    catch (error) {
+        errorLog(`❌ IPC 핸들러 '${channel}' 등록 실패:`, error);
+        return false;
+    }
+}
+/**
  * 모든 IPC 핸들러를 순서대로 등록
  */
 async function setupAllHandlers() {
+    // 핸들러 상태 안전하게 초기화
+    initializeHandlersState();
     // 이미 Setup되었으면 중복 Setup 방지
     if (handlersState.isAllHandlersSetup) {
         debugLog('모든 핸들러가 이미 Setup되어 있습니다.');
@@ -278,11 +372,9 @@ function diagnoseHandlers() {
  * 핸들러 상태 리셋
  */
 function resetHandlersState() {
-    handlersState = {
-        isAllHandlersSetup: false,
-        registeredHandlers: new Set(),
-        initializationOrder: []
-    };
+    handlersState.isAllHandlersSetup = false;
+    handlersState.registeredHandlers.clear();
+    handlersState.initializationOrder = [];
     debugLog('핸들러 상태 리셋 Completed');
 }
 // 기본 내보내기

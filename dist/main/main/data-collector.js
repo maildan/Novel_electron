@@ -84,7 +84,7 @@ class DataCollector {
     }
     logError(error, context) {
         this.log('error', 'Error occurred', {
-            message: error.message,
+            message: error instanceof Error ? error.message : String(error),
             stack: error.stack,
             context
         }, 'error-handler');

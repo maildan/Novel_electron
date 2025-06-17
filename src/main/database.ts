@@ -3,13 +3,41 @@ import { app } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 import { AppConfig } from './config';
+import { 
+  DatabaseRecord, 
+  SessionRecord, 
+  KeystrokeRecord, 
+  SystemMetricRecord,
+  ExportData,
+  ExportOptions,
+  DatabaseExportResult,
+  DatabaseImportOptions,
+  DatabaseImportResult,
+  BackupMetadata
+} from '../types/database';
 
 interface KeystrokeData {
   id?: number;
-  timestamp: Date;
+  timestamp: Date | number;
   key: string;
+  keyCode?: number;
+  shiftKey?: boolean;
+  ctrlKey?: boolean;
+  altKey?: boolean;
+  metaKey?: boolean;
   windowTitle?: string;
   appName?: string;
+}
+
+interface TypingSession {
+  id?: number;
+  timestamp: Date;
+  keyCount: number;
+  typingTime: number;
+  windowTitle?: string;
+  browserName?: string;
+  accuracy?: number;
+  wpm?: number;
 }
 
 interface SystemMetric {
@@ -18,6 +46,39 @@ interface SystemMetric {
   cpuUsage: number;
   memoryUsage: number;
   gpuUsage?: number;
+}
+
+interface TypingLogData {
+  keyCount: number;
+  typingTime: number;
+  windowTitle?: string;
+  window?: string;
+  browserName?: string;
+  appName?: string;
+  app?: string;
+  accuracy?: number;
+  timestamp?: string | Date;
+  key?: string;
+  char?: string;
+}
+
+interface StatsParams {
+  days?: number;
+  type?: string;
+  startDate?: string;
+  endDate?: string;
+  appName?: string;
+}
+
+interface DatabaseStats {
+  success: boolean;
+  totalSessions: number;
+  totalKeystrokes: number;
+  averageWpm?: number;
+  averageAccuracy?: number;
+  topApps?: Array<{ appName: string; count: number }>;
+  dailyStats?: Array<{ date: string; keystrokes: number; sessions: number }>;
+  error?: string;
 }
 
 export class DatabaseManager {
@@ -163,7 +224,7 @@ export class DatabaseManager {
       `);
       
       stmt.run(
-        data.timestamp.toISOString(),
+        (data.timestamp instanceof Date ? data.timestamp : new Date(data.timestamp)).toISOString(),
         data.key,
         data.windowTitle,
         data.appName
@@ -203,7 +264,7 @@ export class DatabaseManager {
   /**
  * 최근 타이핑 세션 조회
  */
-  async getRecentTypingSessions(limit = 100): Promise<any[]> {
+  async getRecentTypingSessions(limit = 100): Promise<TypingSession[]> {
     if (!this.db) {
       throw new Error('데이터베이스가 초기화되지 않았습니다');
     }
@@ -215,7 +276,7 @@ export class DatabaseManager {
         LIMIT ?
       `);
       
-      return stmt.all(limit);
+      return stmt.all(limit) as TypingSession[];
     } catch (error) {
       console.error('[DB] 타이핑 세션 조회 Failed:', error);
       return [];
@@ -351,11 +412,11 @@ export class DatabaseManager {
         VALUES (?, ?, ?, ?)
       `);
 
-      const transaction = this.db.transaction((keystrokes: any[]) => {
+      const transaction = this.db.transaction((keystrokes: KeystrokeData[]) => {
         for (const keystroke of keystrokes) {
           stmt.run(
             keystroke.key,
-            new Date(keystroke.timestamp).toISOString(),
+            (keystroke.timestamp instanceof Date ? keystroke.timestamp : new Date(keystroke.timestamp)).toISOString(),
             keystroke.windowTitle || 'Unknown',
             keystroke.appName || 'Unknown'
           );
@@ -386,41 +447,59 @@ export class DatabaseManager {
     } catch {
       return false;
     }
-  }
-
-  /**
- * 데이터 내보내기
- */
-  async exportData(options: { format?: 'json' | 'csv'; tables?: string[] } = {}): Promise<any> {
+  }  /**
+   * 데이터 내보내기
+   */
+  async exportData(options: ExportOptions = {}): Promise<DatabaseExportResult> {
     if (!this.db) {
       throw new Error('데이터베이스가 초기화되지 않았습니다');
     }
 
     try {
       const { format = 'json', tables = ['sessions', 'keystrokes', 'system_metrics'] } = options;
-      const exportData: Record<string, any[]> = {};
+      const exportData: ExportData = {};
 
       for (const table of tables) {
         const stmt = this.db.prepare(`SELECT * FROM ${table} ORDER BY id DESC LIMIT 1000`);
         exportData[table] = stmt.all();
       }
 
+      const timestamp = new Date().toISOString();
+
       if (format === 'json') {
-        return JSON.stringify(exportData, null, 2);
+        return {
+          data: JSON.stringify(exportData, null, 2),
+          format: 'json',
+          timestamp,
+          tables
+        };
       } else if (format === 'csv') {
         // CSV 형식으로 변환 (간단한 구현)
-        const csv: Record<string, string> = {};
+        const csvData: Record<string, string> = {};
         for (const [tableName, data] of Object.entries(exportData)) {
           if (data.length > 0) {
-            const headers = Object.keys(data[0]).join(',');
-            const rows = data.map(row => Object.values(row).join(',')).join('\n');
-            csv[tableName] = `${headers}\n${rows}`;
+            const firstRow = data[0] as Record<string, unknown>;
+            const headers = Object.keys(firstRow).join(',');
+            const rows = data.map(row => 
+              Object.values(row as Record<string, unknown>).join(',')
+            ).join('\n');
+            csvData[tableName] = `${headers}\n${rows}`;
           }
         }
-        return csv;
+        return {
+          data: JSON.stringify(csvData, null, 2),
+          format: 'csv',
+          timestamp,
+          tables
+        };
       }
 
-      return exportData;
+      return {
+        data: JSON.stringify(exportData, null, 2),
+        format: 'json',
+        timestamp,
+        tables
+      };
     } catch (error) {
       console.error('[DB] 데이터 내보내기 Failed:', error);
       throw error;
@@ -447,7 +526,7 @@ export class DatabaseManager {
             `INSERT OR REPLACE INTO ${tableName} (${columns.join(',')}) VALUES (${placeholders})`
           );
 
-          const transaction = this.db.transaction((records: any[]) => {
+          const transaction = this.db.transaction((records: Record<string, unknown>[]) => {
             for (const record of records) {
               stmt.run(...columns.map(col => record[col]));
             }
@@ -474,7 +553,7 @@ export class DatabaseManager {
   /**
    * 타이핑 로그 저장 (IPC용)
    */
-  async saveTypingLog(logData: any): Promise<{ success: boolean; id?: number; error?: string }> {
+  async saveTypingLog(logData: TypingLogData): Promise<{ success: boolean; id?: number; error?: string }> {
     if (!this.db) {
       throw new Error('데이터베이스가 초기화되지 않았습니다');
     }
@@ -509,7 +588,7 @@ export class DatabaseManager {
   /**
    * 통계 데이터 조회 (IPC용)
    */
-  async getStats(params: any = {}): Promise<any> {
+  async getStats(params: StatsParams = {}): Promise<DatabaseStats | { success: false; error: string }> {
     if (!this.db) {
       throw new Error('데이터베이스가 초기화되지 않았습니다');
     }
@@ -522,11 +601,15 @@ export class DatabaseManager {
         endDate 
       } = params;
 
-      const stats: any = {};
+      const stats: Record<string, unknown> & { success: boolean; totalSessions: number; totalKeystrokes: number } = { 
+        success: true, 
+        totalSessions: 0, 
+        totalKeystrokes: 0 
+      };
 
       // 날짜 범위 Setup
       let dateFilter = '';
-      let dateParams: any[] = [];
+      let dateParams: (string | number)[] = [];
       
       if (startDate && endDate) {
         dateFilter = 'WHERE timestamp BETWEEN ? AND ?';
@@ -616,12 +699,7 @@ export class DatabaseManager {
         stats.apps = appStatsStmt.all(...dateParams);
       }
 
-      return {
-        success: true,
-        data: stats,
-        generatedAt: new Date().toISOString(),
-        params: { days, type, startDate, endDate }
-      };
+      return stats as DatabaseStats;
     } catch (error) {
       console.error('[DB] 통계 조회 Failed:', error);
       return {

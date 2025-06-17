@@ -54,6 +54,7 @@ exports.cleanupTrackingHandlers = cleanupTrackingHandlers;
 const electron_1 = require("electron");
 const utils_1 = require("./utils");
 const settings_manager_1 = __importDefault(require("./settings-manager"));
+const keyboardHandlers_1 = require("./keyboardHandlers");
 const channels_1 = require("../preload/channels");
 // 전역 추적 상태
 let trackingState = {
@@ -302,7 +303,7 @@ function registerTrackingHandlers() {
         }
         catch (error) {
             (0, utils_1.errorLog)('모니터링 시작 Error:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
         }
     });
     // 모니터링 중지 핸들러
@@ -318,8 +319,7 @@ function registerTrackingHandlers() {
                 };
             }
             // 키보드 리스너 해제
-            const { cleanupKeyboardListener } = require('./keyboardHandlers');
-            const keyboardCleanupResult = cleanupKeyboardListener();
+            const keyboardCleanupResult = (0, keyboardHandlers_1.cleanupKeyboardListener)();
             (0, utils_1.debugLog)(`키보드 리스너 해제 ${keyboardCleanupResult ? '성공' : '실패'}`);
             const success = stopTracking();
             (0, utils_1.debugLog)(`모니터링 중지 ${success ? '성공' : '실패'}`);
@@ -333,7 +333,7 @@ function registerTrackingHandlers() {
         }
         catch (error) {
             (0, utils_1.errorLog)('모니터링 중지 Error:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
         }
     });
     // 추적 상태 조회 핸들러
@@ -348,7 +348,7 @@ function registerTrackingHandlers() {
         }
         catch (error) {
             (0, utils_1.errorLog)('추적 상태 조회 Error:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
         }
     });
     // 통계 저장 핸들러
@@ -363,7 +363,7 @@ function registerTrackingHandlers() {
         }
         catch (error) {
             (0, utils_1.errorLog)('통계 저장 Error:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
         }
     });
     // 추적 상태 리셋 핸들러
@@ -379,7 +379,7 @@ function registerTrackingHandlers() {
         }
         catch (error) {
             (0, utils_1.errorLog)('추적 상태 리셋 Error:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
         }
     });
     // 키 입력 처리 핸들러
@@ -390,7 +390,7 @@ function registerTrackingHandlers() {
         }
         catch (error) {
             (0, utils_1.errorLog)('키 입력 처리 Error:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
         }
     });
     isRegistered = true;

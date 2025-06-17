@@ -10,6 +10,27 @@ import { WindowManager } from './window';
 import SettingsManager from './settings-manager';
 import { WindowModeType } from './constants';
 
+// 윈도우 경계 타입 정의
+interface WindowBounds {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+// 윈도우 상태 정보 타입 정의
+interface WindowStatusInfo {
+  mode: string;
+  bounds: WindowBounds;
+  isMaximized: boolean;
+  isMinimized: boolean;
+  isFullScreen: boolean;
+  isVisible: boolean;
+  isFocused: boolean;
+  isAlwaysOnTop: boolean;
+  title: string;
+}
+
 // 윈도우 핸들러 상태
 interface WindowHandlerState {
   isRegistered: boolean;
@@ -70,7 +91,7 @@ function applyWindowMode(mode: WindowModeType): boolean {
     
     console.log('윈도우 모드 적용 Completed: ${mode}');
     return true;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('윈도우 모드 적용 Error:', error);
     return false;
   }
@@ -97,7 +118,7 @@ function setWindowBounds(bounds: { x?: number; y?: number; width?: number; heigh
 
     console.log('윈도우 크기/위치 Setup Completed:', bounds);
     return true;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('윈도우 크기/위치 Setup Error:', error);
     return false;
   }
@@ -106,7 +127,7 @@ function setWindowBounds(bounds: { x?: number; y?: number; width?: number; heigh
 /**
  * 윈도우 상태 정보 가져오기
  */
-function getWindowStatus(): any {
+function getWindowStatus(): WindowStatusInfo | { error: string } {
   try {
     const mainWindow = BrowserWindow.getAllWindows().find(win => !win.isDestroyed());
     if (!mainWindow) {
@@ -127,9 +148,9 @@ function getWindowStatus(): any {
       isFocused: mainWindow.isFocused(),
       title: mainWindow.getTitle()
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('윈도우 상태 조회 Error:', error);
-    return { error: error.message };
+    return { error: error instanceof Error ? error instanceof Error ? error.message : 'Unknown error occurred' : 'Unknown error occurred' };
   }
 }
 
@@ -153,7 +174,7 @@ function setWindowOpacity(opacity: number): boolean {
     
     console.log('윈도우 투명도 Setup: ${clampedOpacity}');
     return true;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('윈도우 투명도 Setup Error:', error);
     return false;
   }
@@ -177,7 +198,7 @@ function setAlwaysOnTop(alwaysOnTop: boolean): boolean {
     
     console.log('윈도우 항상 위에 Setup: ${alwaysOnTop}');
     return true;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('윈도우 항상 위에 Setup Error:', error);
     return false;
   }
@@ -196,7 +217,7 @@ function broadcastWindowStatus(): void {
         window.webContents.send('window-status-update', status);
       }
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('윈도우 상태 브로드캐스트 Error:', error);
   }
 }
@@ -229,9 +250,9 @@ export function registerWindowHandlers(): void {
         mode,
         status
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('윈도우 모드 변경 Error:', error);
-      return { success: false, message: error.message };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
   });
 
@@ -243,9 +264,9 @@ export function registerWindowHandlers(): void {
         success: true,
         status
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('윈도우 상태 조회 Error:', error);
-      return { success: false, message: error.message };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
   });
 
@@ -262,9 +283,9 @@ export function registerWindowHandlers(): void {
         message: success ? '윈도우 크기/위치 Setup Completed' : '윈도우 크기/위치 Setup Failed',
         status
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('윈도우 크기/위치 Setup Error:', error);
-      return { success: false, message: error.message };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
   });
 
@@ -280,9 +301,9 @@ export function registerWindowHandlers(): void {
         opacity,
         status
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('윈도우 투명도 Setup Error:', error);
-      return { success: false, message: error.message };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
   });
 
@@ -300,9 +321,9 @@ export function registerWindowHandlers(): void {
         alwaysOnTop,
         status
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('항상 위에 Setup Error:', error);
-      return { success: false, message: error.message };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
   });
 
@@ -315,9 +336,9 @@ export function registerWindowHandlers(): void {
         return { success: true, message: '윈도우 최소화됨' };
       }
       return { success: false, message: '메인 윈도우를 찾을 수 없습니다' };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('윈도우 최소화 Error:', error);
-      return { success: false, message: error.message };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
   });
 
@@ -336,9 +357,9 @@ export function registerWindowHandlers(): void {
         return { success: true, message: '윈도우 최대화 토글됨', status };
       }
       return { success: false, message: '메인 윈도우를 찾을 수 없습니다' };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('윈도우 최대화 Error:', error);
-      return { success: false, message: error.message };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
   });
 
@@ -351,9 +372,9 @@ export function registerWindowHandlers(): void {
         return { success: true, message: '윈도우 닫기 요청됨' };
       }
       return { success: false, message: '메인 윈도우를 찾을 수 없습니다' };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('윈도우 닫기 Error:', error);
-      return { success: false, message: error.message };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
   });
 
@@ -367,9 +388,9 @@ export function registerWindowHandlers(): void {
         return { success: true, message: '윈도우 포커스됨' };
       }
       return { success: false, message: '메인 윈도우를 찾을 수 없습니다' };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('윈도우 포커스 Error:', error);
-      return { success: false, message: error.message };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
   });
 
@@ -391,7 +412,7 @@ export function initializeWindowHandlers(): void {
     }
     
     console.log('윈도우 핸들러 초기화 Completed');
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('윈도우 핸들러 초기화 Error:', error);
   }
 }

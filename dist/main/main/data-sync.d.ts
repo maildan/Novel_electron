@@ -94,7 +94,7 @@ declare class DataSyncManager {
     /**
    * 동기화 Setup 업데이트
    */
-    updateConfig(config: any): Promise<{
+    updateConfig(config: Record<string, unknown>): Promise<{
         success: boolean;
         error?: string;
     }>;

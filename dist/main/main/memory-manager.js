@@ -49,6 +49,7 @@ exports.cleanupMemoryIpcHandlers = cleanupMemoryIpcHandlers;
 const electron_1 = require("electron");
 const path = __importStar(require("path"));
 const fs = __importStar(require("fs"));
+const os = __importStar(require("os"));
 const utils_1 = require("../shared/utils");
 const native_client_1 = require("./native-client");
 // IPC 모듈 사용 확인
@@ -280,7 +281,7 @@ class AdvancedMemoryManager {
      */
     async getMemoryInfo() {
         try {
-            const os = require('os');
+            // os module is already imported
             const systemTotalMemory = os.totalmem();
             // NAPI 네이티브 모듈 먼저 시도
             const isAvailable = await native_client_1.nativeClient.isAvailable();
@@ -323,7 +324,7 @@ class AdvancedMemoryManager {
      * JavaScript 폴백 메모리 정보 (RSS 기반)
      */
     getMemoryInfoJS() {
-        const os = require('os');
+        // os module is already imported
         const memUsage = process.memoryUsage();
         // 시스템 메모리 정보
         const systemTotalMemory = os.totalmem();
@@ -553,8 +554,9 @@ async function checkAndOptimizeMemoryIfNeeded() {
  * 중복 방지를 위해 주석 처리
  */
 function registerMemoryIpcHandlers() {
-    (0, utils_1.debugLog)('메모리 관련 IPC 핸들러는 memory-ipc.ts에서 관리됩니다');
+    (0, utils_1.debugLog)('⚠️  메모리 관련 IPC 핸들러는 memory-ipc.ts에서 관리됩니다. 중복 등록 방지를 위해 이 함수는 비활성화됨');
     // 실제 핸들러 등록은 memory-ipc.ts에서 수행됨
+    // 중복 등록 방지를 위해 여기서는 아무것도 하지 않음
 }
 /**
  * IPC 핸들러 Cleanup (memory-ipc.ts로 이동됨)

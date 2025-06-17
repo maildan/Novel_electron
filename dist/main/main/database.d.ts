@@ -1,9 +1,25 @@
+import { ExportOptions, DatabaseExportResult } from '../types/database';
 interface KeystrokeData {
     id?: number;
-    timestamp: Date;
+    timestamp: Date | number;
     key: string;
+    keyCode?: number;
+    shiftKey?: boolean;
+    ctrlKey?: boolean;
+    altKey?: boolean;
+    metaKey?: boolean;
     windowTitle?: string;
     appName?: string;
+}
+interface TypingSession {
+    id?: number;
+    timestamp: Date;
+    keyCount: number;
+    typingTime: number;
+    windowTitle?: string;
+    browserName?: string;
+    accuracy?: number;
+    wpm?: number;
 }
 interface SystemMetric {
     id?: number;
@@ -11,6 +27,43 @@ interface SystemMetric {
     cpuUsage: number;
     memoryUsage: number;
     gpuUsage?: number;
+}
+interface TypingLogData {
+    keyCount: number;
+    typingTime: number;
+    windowTitle?: string;
+    window?: string;
+    browserName?: string;
+    appName?: string;
+    app?: string;
+    accuracy?: number;
+    timestamp?: string | Date;
+    key?: string;
+    char?: string;
+}
+interface StatsParams {
+    days?: number;
+    type?: string;
+    startDate?: string;
+    endDate?: string;
+    appName?: string;
+}
+interface DatabaseStats {
+    success: boolean;
+    totalSessions: number;
+    totalKeystrokes: number;
+    averageWpm?: number;
+    averageAccuracy?: number;
+    topApps?: Array<{
+        appName: string;
+        count: number;
+    }>;
+    dailyStats?: Array<{
+        date: string;
+        keystrokes: number;
+        sessions: number;
+    }>;
+    error?: string;
 }
 export declare class DatabaseManager {
     private db;
@@ -44,7 +97,7 @@ export declare class DatabaseManager {
     /**
    * 최근 타이핑 세션 조회
    */
-    getRecentTypingSessions(limit?: number): Promise<any[]>;
+    getRecentTypingSessions(limit?: number): Promise<TypingSession[]>;
     /**
    * 통계 데이터 조회
    */
@@ -79,14 +132,10 @@ export declare class DatabaseManager {
     /**
    * 헬스 체크
    */
-    healthCheck(): Promise<boolean>;
-    /**
-   * 데이터 내보내기
-   */
-    exportData(options?: {
-        format?: 'json' | 'csv';
-        tables?: string[];
-    }): Promise<any>;
+    healthCheck(): Promise<boolean>; /**
+     * 데이터 내보내기
+     */
+    exportData(options?: ExportOptions): Promise<DatabaseExportResult>;
     /**
    * 데이터 가져오기
    */
@@ -98,7 +147,7 @@ export declare class DatabaseManager {
     /**
      * 타이핑 로그 저장 (IPC용)
      */
-    saveTypingLog(logData: any): Promise<{
+    saveTypingLog(logData: TypingLogData): Promise<{
         success: boolean;
         id?: number;
         error?: string;
@@ -106,7 +155,10 @@ export declare class DatabaseManager {
     /**
      * 통계 데이터 조회 (IPC용)
      */
-    getStats(params?: any): Promise<any>;
+    getStats(params?: StatsParams): Promise<DatabaseStats | {
+        success: false;
+        error: string;
+    }>;
 }
 export {};
 //# sourceMappingURL=database.d.ts.map

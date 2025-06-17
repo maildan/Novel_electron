@@ -258,7 +258,7 @@ function handleUncaughtException(error, type) {
     try {
         const errorInfo = {
             type,
-            message: error.message,
+            message: error instanceof Error ? error.message : String(error),
             stack: error.stack,
             timestamp: new Date().toISOString(),
             severity: 'critical',
@@ -274,7 +274,7 @@ function handleUncaughtException(error, type) {
         logError(errorInfo);
         logCrash({
             type,
-            reason: error.message,
+            reason: error instanceof Error ? error.message : String(error),
             timestamp: errorInfo.timestamp,
             systemInfo: getSystemInfo()
         });

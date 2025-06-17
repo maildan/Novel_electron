@@ -8,6 +8,7 @@
 import { ipcMain, BrowserWindow } from 'electron';
 import { debugLog, errorLog } from './utils';
 import SettingsManager from './settings-manager';
+import { cleanupKeyboardListener } from './keyboardHandlers';
 import { CHANNELS } from '../preload/channels';
 
 // 추적 상태 관리
@@ -314,9 +315,9 @@ export function registerTrackingHandlers(): void {
         stats: trackingState.sessionStats,
         keyboardActive: keyboardListenerResult
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       errorLog('모니터링 시작 Error:', error);
-      return { success: false, message: error.message };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
   });
   
@@ -335,7 +336,6 @@ export function registerTrackingHandlers(): void {
       }
       
       // 키보드 리스너 해제
-      const { cleanupKeyboardListener } = require('./keyboardHandlers');
       const keyboardCleanupResult = cleanupKeyboardListener();
       
       debugLog(`키보드 리스너 해제 ${keyboardCleanupResult ? '성공' : '실패'}`);
@@ -351,9 +351,9 @@ export function registerTrackingHandlers(): void {
         stats: trackingState.sessionStats,
         keyboardCleaned: keyboardCleanupResult
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       errorLog('모니터링 중지 Error:', error);
-      return { success: false, message: error.message };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
   });
 
@@ -366,9 +366,9 @@ export function registerTrackingHandlers(): void {
         stats: trackingState.sessionStats,
         startTime: trackingState.startTime
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       errorLog('추적 상태 조회 Error:', error);
-      return { success: false, message: error.message };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
   });
 
@@ -383,9 +383,9 @@ export function registerTrackingHandlers(): void {
       await saveCurrentStats();
       
       return { success: true, message: '통계 저장 Completed' };
-    } catch (error: any) {
+    } catch (error: unknown) {
       errorLog('통계 저장 Error:', error);
-      return { success: false, message: error.message };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
   });
 
@@ -400,9 +400,9 @@ export function registerTrackingHandlers(): void {
         message: '추적 상태 초기화 Completed',
         stats: trackingState.sessionStats
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       errorLog('추적 상태 리셋 Error:', error);
-      return { success: false, message: error.message };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
   });
 
@@ -411,9 +411,9 @@ export function registerTrackingHandlers(): void {
     try {
       processKeyPress(keyData);
       return { success: true };
-    } catch (error: any) {
+    } catch (error: unknown) {
       errorLog('키 입력 처리 Error:', error);
-      return { success: false, message: error.message };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
   });
 
@@ -434,7 +434,7 @@ export function initializeAutoMonitoring(): void {
       // 윈도우가 없는 경우 지연 후 시작
       setTimeout(startAutoMonitoring, 2000);
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     errorLog('자동 모니터링 초기화 Error:', error);
   }
 }

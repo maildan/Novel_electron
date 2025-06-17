@@ -34,8 +34,8 @@ let handlersRegistered = false; // IPC 핸들러 등록 상태 추적
 // 타입 정의
 export interface SettingsChangeEvent {
   key: keyof AppSettings;
-  oldValue: any;
-  newValue: any;
+  oldValue: unknown;
+  newValue: unknown;
   timestamp: number;
 }
 
@@ -97,7 +97,7 @@ export async function initializeSettingsManager(): Promise<void> {
       cwd: PATHS.userData,
       defaults: DEFAULT_SETTINGS,
       migrations: {
-        '>=6.0.0': (store: any) => {
+        '>=6.0.0': (store: { get: (key: string) => unknown; set: (key: string, value: unknown) => void; size?: number }) => {
           // Loop 6 마이그레이션 로직
           console.log('🔄 Loop 6 Setup 마이그레이션 실행');
           console.log('🔄 Store 정보:', store?.size || 0, '개 설정 항목');
@@ -394,11 +394,11 @@ async function applySettingChange(change: SettingsChangeEvent): Promise<void> {
   switch (key) {
     case 'theme':
     case 'darkMode':
-      await applyThemeChange(newValue);
+      await applyThemeChange(typeof newValue === 'string' ? newValue : 'light');
       break;
 
     case 'windowMode':
-      await applyWindowModeChange(newValue);
+      await applyWindowModeChange(typeof newValue === 'string' ? newValue : 'windowed');
       break;
 
     case 'useHardwareAcceleration':
@@ -413,11 +413,11 @@ async function applySettingChange(change: SettingsChangeEvent): Promise<void> {
       break;
 
     case 'autoStartMonitoring':
-      await applyMonitoringSettingsChange(newValue);
+      await applyMonitoringSettingsChange(typeof newValue === 'boolean' ? newValue : false);
       break;
 
     case 'enableKeyboardShortcuts':
-      await applyShortcutSettingsChange(newValue);
+      await applyShortcutSettingsChange(typeof newValue === 'boolean' ? newValue : false);
       break;
 
     default:
@@ -685,11 +685,11 @@ function registerIPCHandlers(): void {
     return currentSettings;
   });
 
-  ipcMain.handle(CHANNELS.SETTINGS_SET, async (_, key: keyof AppSettings, value: any) => {
+  ipcMain.handle(CHANNELS.SETTINGS_SET, async (_, key: keyof AppSettings, value: unknown) => {
     return await saveSettings({ [key]: value });
   });
 
-  ipcMain.handle(CHANNELS.SETTINGS_UPDATE, async (_, key: keyof AppSettings, value: any) => {
+  ipcMain.handle(CHANNELS.SETTINGS_UPDATE, async (_, key: keyof AppSettings, value: unknown) => {
     return await saveSettings({ [key]: value });
   });
 
@@ -791,7 +791,7 @@ const SettingsManager = {
   initialize: initializeSettingsManager,
   getSettings,
   getSetting,
-  updateSetting: async (key: keyof AppSettings, value: any) => {
+  updateSetting: async (key: keyof AppSettings, value: unknown) => {
     return await saveSettings({ [key]: value });
   },
   updateMultipleSettings: saveSettings,

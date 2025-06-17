@@ -4,6 +4,39 @@
  *
  * 새로 빌드된 NAPI 네이티브 모듈과의 연동을 위한 클라이언트
  */
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -12,6 +45,7 @@ exports.nativeClient = void 0;
 exports.registerNativeIpcHandlers = registerNativeIpcHandlers;
 exports.cleanupNativeIpcHandlers = cleanupNativeIpcHandlers;
 const path_1 = __importDefault(require("path"));
+const fs = __importStar(require("fs"));
 const electron_1 = require("electron");
 const utils_1 = require("../shared/utils");
 class NativeModuleClient {
@@ -32,7 +66,6 @@ class NativeModuleClient {
     loadModule() {
         const startTime = Date.now();
         try {
-            const fs = require('fs');
             const isDev = process.env.NODE_ENV === 'development';
             // 가능한 네이티브 모듈 디렉토리 경로들을 우선순위 순으로 정의
             const possibleBasePaths = [];
@@ -339,7 +372,7 @@ function registerNativeIpcHandlers() {
             (0, utils_1.errorLog)('네이티브 모듈 사용 가능 여부 조회 Error:', error);
             return {
                 success: false,
-                error: error instanceof Error ? error.message : '알 수 없는 Error'
+                error: error instanceof Error ? error instanceof Error ? error.message : String(error) : '알 수 없는 Error'
             };
         }
     });
@@ -356,7 +389,7 @@ function registerNativeIpcHandlers() {
             (0, utils_1.errorLog)('네이티브 모듈 버전 조회 Error:', error);
             return {
                 success: false,
-                error: error instanceof Error ? error.message : '알 수 없는 Error'
+                error: error instanceof Error ? error instanceof Error ? error.message : String(error) : '알 수 없는 Error'
             };
         }
     });
@@ -373,7 +406,7 @@ function registerNativeIpcHandlers() {
             (0, utils_1.errorLog)('네이티브 모듈 상세 정보 조회 Error:', error);
             return {
                 success: false,
-                error: error instanceof Error ? error.message : '알 수 없는 Error'
+                error: error instanceof Error ? error instanceof Error ? error.message : String(error) : '알 수 없는 Error'
             };
         }
     });
@@ -388,7 +421,7 @@ function registerNativeIpcHandlers() {
                     isAvailable: status.isAvailable,
                     version: status.version,
                     loadTime: status.loadTime,
-                    error: status.error ? status.error.message : null
+                    error: status.error ? status.error instanceof Error ? status.error.message : String(status.error) : null
                 }
             };
         }
@@ -396,7 +429,7 @@ function registerNativeIpcHandlers() {
             (0, utils_1.errorLog)('네이티브 상태 조회 Error:', error);
             return {
                 success: false,
-                error: error instanceof Error ? error.message : '알 수 없는 Error'
+                error: error instanceof Error ? error instanceof Error ? error.message : String(error) : '알 수 없는 Error'
             };
         }
     });
@@ -412,7 +445,7 @@ function registerNativeIpcHandlers() {
             (0, utils_1.errorLog)('네이티브 정보 조회 Error:', error);
             return {
                 success: false,
-                error: error instanceof Error ? error.message : '알 수 없는 Error'
+                error: error instanceof Error ? error instanceof Error ? error.message : String(error) : '알 수 없는 Error'
             };
         }
     });

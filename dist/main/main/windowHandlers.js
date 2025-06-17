@@ -115,7 +115,7 @@ function getWindowStatus() {
     }
     catch (error) {
         console.error('윈도우 상태 조회 Error:', error);
-        return { error: error.message };
+        return { error: error instanceof Error ? error instanceof Error ? error.message : 'Unknown error occurred' : 'Unknown error occurred' };
     }
 }
 /**
@@ -205,7 +205,7 @@ function registerWindowHandlers() {
         }
         catch (error) {
             console.error('윈도우 모드 변경 Error:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
         }
     });
     // 윈도우 상태 조회 핸들러
@@ -219,7 +219,7 @@ function registerWindowHandlers() {
         }
         catch (error) {
             console.error('윈도우 상태 조회 Error:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
         }
     });
     // 윈도우 크기/위치 Setup 핸들러
@@ -236,7 +236,7 @@ function registerWindowHandlers() {
         }
         catch (error) {
             console.error('윈도우 크기/위치 Setup Error:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
         }
     });
     // 윈도우 투명도 Setup 핸들러
@@ -253,7 +253,7 @@ function registerWindowHandlers() {
         }
         catch (error) {
             console.error('윈도우 투명도 Setup Error:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
         }
     });
     // 항상 위에 Setup 핸들러
@@ -271,7 +271,7 @@ function registerWindowHandlers() {
         }
         catch (error) {
             console.error('항상 위에 Setup Error:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
         }
     });
     // 윈도우 최소화 핸들러
@@ -286,7 +286,7 @@ function registerWindowHandlers() {
         }
         catch (error) {
             console.error('윈도우 최소화 Error:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
         }
     });
     // 윈도우 최대화 핸들러
@@ -308,7 +308,7 @@ function registerWindowHandlers() {
         }
         catch (error) {
             console.error('윈도우 최대화 Error:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
         }
     });
     // 윈도우 닫기 핸들러
@@ -323,7 +323,7 @@ function registerWindowHandlers() {
         }
         catch (error) {
             console.error('윈도우 닫기 Error:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
         }
     });
     // 윈도우 포커스 핸들러
@@ -339,7 +339,7 @@ function registerWindowHandlers() {
         }
         catch (error) {
             console.error('윈도우 포커스 Error:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
         }
     });
     windowState.isRegistered = true;

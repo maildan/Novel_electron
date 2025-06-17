@@ -50,17 +50,38 @@ interface SyncError {
   itemsCount: number;
 }
 
+// 변경 스트림 관련 타입 정의
+interface _ChangeStreamEvent {
+  operationType: 'insert' | 'update' | 'delete' | 'replace';
+  fullDocument?: unknown;
+  documentKey?: { _id: unknown };
+  updateDescription?: {
+    updatedFields: Record<string, unknown>;
+    removedFields: string[];
+  };
+}
+
+// ETL 작업 관련 타입 정의
+interface ETLJobConfig {
+  fetchFunction: () => Promise<unknown[]>;
+  intervalHours: number;
+  lastRun?: Date;
+  nextRun?: Date;
+  runNow: () => Promise<void>;
+  stop: () => void;
+}
+
 interface DatabaseClient {
   connectToMongoDB(): Promise<void>;
   setupHealthCheck(interval: number): void;
-  startChangeStream(callback: (change: any) => Promise<void>): Promise<void>;
+  startChangeStream(callback: (change: _ChangeStreamEvent) => Promise<void>): Promise<void>;
   saveBatchTypingLogs(batch: TypingLogData[]): Promise<{ insertedCount: number }>;
 }
 
 interface SupabaseClient {
   testConnection(): Promise<boolean>;
   saveBatchTypingLogs(batch: TypingLogData[]): Promise<{ success: boolean; insertedCount?: number; error?: string }>;
-  scheduleETL(fetchFunction: () => Promise<any[]>, intervalHours: number): any;
+  scheduleETL(fetchFunction: () => Promise<unknown[]>, intervalHours: number): ETLJobConfig;
 }
 
 // 상태 변수
@@ -74,7 +95,7 @@ class DataSyncManager {
   private failedQueue: TypingLogData[] = [];
   private syncErrors: string[] = [];
   private syncInProgress = false;
-  private config: any = {};
+  private config: Record<string, unknown> = {};
   
   private syncStatus: SyncStatus = {
     lastMongoSync: null,
@@ -337,7 +358,7 @@ class DataSyncManager {
   /**
  * 동기화 Setup 업데이트
  */
-  async updateConfig(config: any): Promise<{ success: boolean; error?: string }> {
+  async updateConfig(config: Record<string, unknown>): Promise<{ success: boolean; error?: string }> {
     try {
       // Setup 업데이트 로직
       this.config = { ...this.config, ...config };

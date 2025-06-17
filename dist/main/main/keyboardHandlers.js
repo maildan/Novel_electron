@@ -216,7 +216,7 @@ async function testHangulInput() {
         (0, utils_1.errorLog)('한글 입력 테스트 Error:', error);
         return {
             success: false,
-            result: { error: error.message }
+            result: { error: error instanceof Error ? error.message : 'Unknown error occurred' }
         };
     }
 }
@@ -253,7 +253,7 @@ function registerKeyboardHandlers() {
         }
         catch (error) {
             (0, utils_1.errorLog)('키보드 리스너 시작 Error:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
         }
     });
     // 키보드 리스너 중지 핸들러
@@ -268,7 +268,7 @@ function registerKeyboardHandlers() {
         }
         catch (error) {
             (0, utils_1.errorLog)('키보드 리스너 중지 Error:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
         }
     });
     // 키보드 상태 조회 핸들러
@@ -281,7 +281,7 @@ function registerKeyboardHandlers() {
         }
         catch (error) {
             (0, utils_1.errorLog)('키보드 상태 조회 Error:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
         }
     });
     // 한글 입력 테스트 핸들러
@@ -291,7 +291,7 @@ function registerKeyboardHandlers() {
         }
         catch (error) {
             (0, utils_1.errorLog)('한글 입력 테스트 Error:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
         }
     });
     // 자모 개수 계산 핸들러
@@ -308,7 +308,7 @@ function registerKeyboardHandlers() {
         }
         catch (error) {
             (0, utils_1.errorLog)('자모 개수 계산 Error:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
         }
     });
     // 키 시퀀스 조회 핸들러
@@ -322,7 +322,7 @@ function registerKeyboardHandlers() {
         }
         catch (error) {
             (0, utils_1.errorLog)('키 시퀀스 조회 Error:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
         }
     });
     // 키보드 Setup 업데이트 핸들러
@@ -342,7 +342,7 @@ function registerKeyboardHandlers() {
         }
         catch (error) {
             (0, utils_1.errorLog)('키보드 Setup 업데이트 Error:', error);
-            return { success: false, message: error.message };
+            return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
         }
     });
     keyboardState.isRegistered = true;

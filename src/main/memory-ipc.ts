@@ -146,7 +146,7 @@ export function registerMemoryIpcHandlers(): void {
       console.error('[Memory IPC] 메모리 정보 조회 Error:', error);
       const ipcError = createIpcError(
         'MEMORY_INFO_ERROR',
-        error instanceof Error ? error.message : String(error),
+        error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error),
         { operation: 'getMemoryInfo' },
         error instanceof Error ? error.stack : undefined
       );
@@ -189,7 +189,7 @@ export function registerMemoryIpcHandlers(): void {
       console.error('[Memory IPC] 메모리 최적화 Error:', error);
       const ipcError = createIpcError(
         'MEMORY_OPTIMIZE_ERROR',
-        error instanceof Error ? error.message : String(error),
+        error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error),
         { operation: 'optimizeMemory' },
         error instanceof Error ? error.stack : undefined
       );
@@ -224,7 +224,7 @@ export function registerMemoryIpcHandlers(): void {
       console.error('[Memory IPC] 메모리 Cleanup Error:', error);
       const ipcError = createIpcError(
         'MEMORY_CLEANUP_ERROR',
-        error instanceof Error ? error.message : String(error),
+        error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error),
         { operation: 'memoryCleanup' },
         error instanceof Error ? error.stack : undefined
       );
@@ -244,7 +244,7 @@ export function registerMemoryIpcHandlers(): void {
         isAvailable: status.isAvailable, 
         available: available,
         version: status.version,
-        error: status.error ? status.error.message : null,
+        error: status.error ? status.error instanceof Error ? status.error.message : String(status.error) : null,
         nativeModule: nativeModuleStatus
       });
       
@@ -261,7 +261,7 @@ export function registerMemoryIpcHandlers(): void {
           network: true
         },
         timestamp: Date.now(),
-        loadError: status.error ? status.error.message : nativeModuleStatus.error || undefined
+        loadError: status.error ? status.error instanceof Error ? status.error.message : String(status.error) : nativeModuleStatus.error || undefined
       };
       
       return createSuccessResponse(moduleStatus);
@@ -269,7 +269,7 @@ export function registerMemoryIpcHandlers(): void {
       console.error('[Memory IPC] 네이티브 모듈 상태 조회 Error:', error);
       const ipcError = createIpcError(
         'NATIVE_STATUS_ERROR',
-        error instanceof Error ? error.message : String(error),
+        error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error),
         { operation: 'getNativeStatus' },
         error instanceof Error ? error.stack : undefined
       );
@@ -291,9 +291,10 @@ export function cleanupMemoryIpcHandlers(): void {
   console.log('[Memory IPC] 메모리 관련 IPC 핸들러 Cleanup Completed');
 }
 
-// 모듈 로드 시 자동으로 핸들러 등록
-try {
-  registerMemoryIpcHandlers();
-} catch (error) {
-  console.error('[Memory IPC] 핸들러 등록 중 오류:', error);
-}
+// 모듈 로드 시 자동 등록 제거 - handlers-manager에서 중앙 관리
+// 중복 방지를 위해 주석 처리
+// try {
+//   registerMemoryIpcHandlers();
+// } catch (error) {
+//   console.error('[Memory IPC] 핸들러 등록 중 오류:', error);
+// }

@@ -157,7 +157,7 @@ class DatabaseManager {
         INSERT INTO keystrokes (timestamp, key, windowTitle, appName)
         VALUES (?, ?, ?, ?)
       `);
-            stmt.run(data.timestamp.toISOString(), data.key, data.windowTitle, data.appName);
+            stmt.run((data.timestamp instanceof Date ? data.timestamp : new Date(data.timestamp)).toISOString(), data.key, data.windowTitle, data.appName);
         }
         catch (error) {
             console.error('[DB] 키스트로크 저장 Failed:', error);
@@ -305,7 +305,7 @@ class DatabaseManager {
       `);
             const transaction = this.db.transaction((keystrokes) => {
                 for (const keystroke of keystrokes) {
-                    stmt.run(keystroke.key, new Date(keystroke.timestamp).toISOString(), keystroke.windowTitle || 'Unknown', keystroke.appName || 'Unknown');
+                    stmt.run(keystroke.key, (keystroke.timestamp instanceof Date ? keystroke.timestamp : new Date(keystroke.timestamp)).toISOString(), keystroke.windowTitle || 'Unknown', keystroke.appName || 'Unknown');
                 }
             });
             transaction(keystrokes);
@@ -331,10 +331,9 @@ class DatabaseManager {
         catch {
             return false;
         }
-    }
-    /**
-   * 데이터 내보내기
-   */
+    } /**
+     * 데이터 내보내기
+     */
     async exportData(options = {}) {
         if (!this.db) {
             throw new Error('데이터베이스가 초기화되지 않았습니다');
@@ -346,22 +345,39 @@ class DatabaseManager {
                 const stmt = this.db.prepare(`SELECT * FROM ${table} ORDER BY id DESC LIMIT 1000`);
                 exportData[table] = stmt.all();
             }
+            const timestamp = new Date().toISOString();
             if (format === 'json') {
-                return JSON.stringify(exportData, null, 2);
+                return {
+                    data: JSON.stringify(exportData, null, 2),
+                    format: 'json',
+                    timestamp,
+                    tables
+                };
             }
             else if (format === 'csv') {
                 // CSV 형식으로 변환 (간단한 구현)
-                const csv = {};
+                const csvData = {};
                 for (const [tableName, data] of Object.entries(exportData)) {
                     if (data.length > 0) {
-                        const headers = Object.keys(data[0]).join(',');
+                        const firstRow = data[0];
+                        const headers = Object.keys(firstRow).join(',');
                         const rows = data.map(row => Object.values(row).join(',')).join('\n');
-                        csv[tableName] = `${headers}\n${rows}`;
+                        csvData[tableName] = `${headers}\n${rows}`;
                     }
                 }
-                return csv;
+                return {
+                    data: JSON.stringify(csvData, null, 2),
+                    format: 'csv',
+                    timestamp,
+                    tables
+                };
             }
-            return exportData;
+            return {
+                data: JSON.stringify(exportData, null, 2),
+                format: 'json',
+                timestamp,
+                tables
+            };
         }
         catch (error) {
             console.error('[DB] 데이터 내보내기 Failed:', error);
@@ -440,7 +456,11 @@ class DatabaseManager {
         }
         try {
             const { days = 7, type = 'all', startDate, endDate } = params;
-            const stats = {};
+            const stats = {
+                success: true,
+                totalSessions: 0,
+                totalKeystrokes: 0
+            };
             // 날짜 범위 Setup
             let dateFilter = '';
             let dateParams = [];
@@ -521,12 +541,7 @@ class DatabaseManager {
         `);
                 stats.apps = appStatsStmt.all(...dateParams);
             }
-            return {
-                success: true,
-                data: stats,
-                generatedAt: new Date().toISOString(),
-                params: { days, type, startDate, endDate }
-            };
+            return stats;
         }
         catch (error) {
             console.error('[DB] 통계 조회 Failed:', error);

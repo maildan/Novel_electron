@@ -365,10 +365,10 @@ async function applySettingChange(change) {
     switch (key) {
         case 'theme':
         case 'darkMode':
-            await applyThemeChange(newValue);
+            await applyThemeChange(typeof newValue === 'string' ? newValue : 'light');
             break;
         case 'windowMode':
-            await applyWindowModeChange(newValue);
+            await applyWindowModeChange(typeof newValue === 'string' ? newValue : 'windowed');
             break;
         case 'useHardwareAcceleration':
         case 'enableGPUAcceleration':
@@ -380,10 +380,10 @@ async function applySettingChange(change) {
             await applyTraySettingsChange();
             break;
         case 'autoStartMonitoring':
-            await applyMonitoringSettingsChange(newValue);
+            await applyMonitoringSettingsChange(typeof newValue === 'boolean' ? newValue : false);
             break;
         case 'enableKeyboardShortcuts':
-            await applyShortcutSettingsChange(newValue);
+            await applyShortcutSettingsChange(typeof newValue === 'boolean' ? newValue : false);
             break;
         default:
             (0, utils_1.debugLog)('Setup 변경 적용: ${key} = ${newValue}');

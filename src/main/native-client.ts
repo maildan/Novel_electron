@@ -5,6 +5,7 @@
  */
 
 import path from 'path';
+import * as fs from 'fs';
 import { ipcMain } from 'electron';
 import { debugLog, errorLog } from '../shared/utils';
 
@@ -115,7 +116,6 @@ class NativeModuleClient {
     const startTime = Date.now();
     
     try {
-      const fs = require('fs');
       const isDev = process.env.NODE_ENV === 'development';
       
       // 가능한 네이티브 모듈 디렉토리 경로들을 우선순위 순으로 정의
@@ -448,7 +448,7 @@ export function registerNativeIpcHandlers(): void {
       errorLog('네이티브 모듈 사용 가능 여부 조회 Error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '알 수 없는 Error'
+        error: error instanceof Error ? error instanceof Error ? error.message : String(error) : '알 수 없는 Error'
       };
     }
   });
@@ -465,7 +465,7 @@ export function registerNativeIpcHandlers(): void {
       errorLog('네이티브 모듈 버전 조회 Error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '알 수 없는 Error'
+        error: error instanceof Error ? error instanceof Error ? error.message : String(error) : '알 수 없는 Error'
       };
     }
   });
@@ -482,7 +482,7 @@ export function registerNativeIpcHandlers(): void {
       errorLog('네이티브 모듈 상세 정보 조회 Error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '알 수 없는 Error'
+        error: error instanceof Error ? error instanceof Error ? error.message : String(error) : '알 수 없는 Error'
       };
     }
   });
@@ -498,14 +498,14 @@ export function registerNativeIpcHandlers(): void {
           isAvailable: status.isAvailable,
           version: status.version,
           loadTime: status.loadTime,
-          error: status.error ? status.error.message : null
+          error: status.error ? status.error instanceof Error ? status.error.message : String(status.error) : null
         }
       };
     } catch (error) {
       errorLog('네이티브 상태 조회 Error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '알 수 없는 Error'
+        error: error instanceof Error ? error instanceof Error ? error.message : String(error) : '알 수 없는 Error'
       };
     }
   });
@@ -521,7 +521,7 @@ export function registerNativeIpcHandlers(): void {
       errorLog('네이티브 정보 조회 Error:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '알 수 없는 Error'
+        error: error instanceof Error ? error instanceof Error ? error.message : String(error) : '알 수 없는 Error'
       };
     }
   });

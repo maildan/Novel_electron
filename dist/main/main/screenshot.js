@@ -43,6 +43,7 @@ exports.getScreenshotStatus = getScreenshotStatus;
 const electron_1 = require("electron");
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
+const activeWin = __importStar(require("active-win"));
 const debug_1 = require("../utils/debug");
 // 전역 상태
 let mainWindow = null;
@@ -190,7 +191,6 @@ async function capturePrimaryScreen(options = {}) {
  */
 async function captureActiveWindow(options = {}) {
     try {
-        const activeWin = require('active-win');
         const activeWindow = await activeWin();
         if (!activeWindow) {
             throw new Error('No active window found');

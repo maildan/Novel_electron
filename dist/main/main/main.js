@@ -49,8 +49,7 @@ require("./window"); // WindowManager - 메인 윈도우 관리
 require("./handlers-manager"); // IPC 핸들러 관리자 (모든 핸들러 초기화 포함)
 require("./settings-manager"); // Settings 관리자 - 명시적으로 초기화 보장
 require("./memory-manager"); // 메모리 관리
-require("./memory-ipc"); // 메모리 관련 IPC 핸들러들
-require("./system-monitor-ipc"); // 시스템 모니터링 IPC 핸들러들
+// IPC 핸들러들은 handlers-manager에서 중앙화해서 등록 (중복 방지)
 // 사이드 이펙트 모듈들 (기존 동작 유지)
 require("./app-lifecycle");
 require("./auto-launch-manager");

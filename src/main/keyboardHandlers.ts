@@ -11,6 +11,36 @@ import { KeyboardManager } from './keyboard';
 import SettingsManager from './settings-manager';
 import { processKeyPress } from './tracking-handlers';
 
+// 키보드 이벤트 데이터 타입 정의
+interface KeyboardEventData {
+  key: string;
+  keyCode?: number;
+  timestamp: number;
+  appName?: string;
+  windowTitle?: string;
+  modifiers?: {
+    shift?: boolean;
+    ctrl?: boolean;
+    alt?: boolean;
+    meta?: boolean;
+  };
+}
+
+// 키보드 상태 타입 정의
+interface KeyboardStatus {
+  isListening: boolean;
+  managerAvailable: boolean;
+  lastKeyTime: number;
+  recentKeys: string[];
+  settings: Record<string, unknown>;
+}
+
+// 한글 테스트 결과 타입
+interface HangulTestResult {
+  success: boolean;
+  result: Record<string, unknown>;
+}
+
 // 키보드 핸들러 상태 관리
 interface KeyboardHandlerState {
   isRegistered: boolean;
@@ -80,7 +110,7 @@ export function getJamoCount(char: string): number {
     
     // 초성 + 중성 + (종성 있으면 추가)
     return hasJongseong ? 3 : 2;
-  } catch (error: any) {
+  } catch (error: unknown) {
     errorLog('자모 개수 계산 Error:', error);
     return 1; // Error 시 기본값
   }
@@ -118,7 +148,7 @@ export function decomposeHangul(char: string): string[] {
     }
     
     return result;
-  } catch (error: any) {
+  } catch (error: unknown) {
     errorLog('한글 분해 Error:', error);
     return [char];
   }
@@ -127,7 +157,7 @@ export function decomposeHangul(char: string): string[] {
 /**
  * 키보드 이벤트 처리
  */
-function handleKeyboardEvent(eventData: any): void {
+function handleKeyboardEvent(eventData: KeyboardEventData): void {
   try {
     const currentTime = Date.now();
     keyboardState.lastKeyTime = currentTime;
@@ -161,7 +191,7 @@ function handleKeyboardEvent(eventData: any): void {
       mainWindow.webContents.send('keyboard-event', extendedKeyData);
     }
     
-  } catch (error: any) {
+  } catch (error: unknown) {
     errorLog('키보드 이벤트 처리 Error:', error);
   }
 }
@@ -191,7 +221,7 @@ export async function setupKeyboardListenerIfNeeded(): Promise<boolean> {
       debugLog('키보드 리스너 Setup Failed');
       return false;
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     errorLog('키보드 리스너 Setup Error:', error);
     return false;
   }
@@ -209,7 +239,7 @@ export function cleanupKeyboardListener(): boolean {
       return true;
     }
     return false;
-  } catch (error: any) {
+  } catch (error: unknown) {
     errorLog('키보드 리스너 Cleanup 중 Error:', error);
     return false;
   }
@@ -218,7 +248,7 @@ export function cleanupKeyboardListener(): boolean {
 /**
  * 한글 입력 테스트
  */
-async function testHangulInput(): Promise<{ success: boolean; result: any }> {
+async function testHangulInput(): Promise<HangulTestResult> {
   try {
     const testChars = ['가', '나', '다', '라', '마', '한', '글', '테', '스', '트'];
     const results = testChars.map(char => ({
@@ -237,11 +267,11 @@ async function testHangulInput(): Promise<{ success: boolean; result: any }> {
         managerAvailable: !!keyboardState.keyboardManager
       }
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     errorLog('한글 입력 테스트 Error:', error);
     return {
       success: false,
-      result: { error: error.message }
+      result: { error: error instanceof Error ? error.message : 'Unknown error occurred' }
     };
   }
 }
@@ -249,7 +279,7 @@ async function testHangulInput(): Promise<{ success: boolean; result: any }> {
 /**
  * 키보드 상태 정보 가져오기
  */
-export function getKeyboardStatus(): any {
+export function getKeyboardStatus(): KeyboardStatus {
   return {
     isListening: keyboardState.isListening,
     managerAvailable: !!keyboardState.keyboardManager,
@@ -279,9 +309,9 @@ export function registerKeyboardHandlers(): void {
         message: success ? '키보드 리스너 Started' : '키보드 리스너 시작 Failed',
         status: getKeyboardStatus()
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       errorLog('키보드 리스너 시작 Error:', error);
-      return { success: false, message: error.message };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
   });
 
@@ -294,9 +324,9 @@ export function registerKeyboardHandlers(): void {
         message: success ? '키보드 리스너 Stopped' : '키보드 리스너 중지 Failed',
         status: getKeyboardStatus()
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       errorLog('키보드 리스너 중지 Error:', error);
-      return { success: false, message: error.message };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
   });
 
@@ -307,9 +337,9 @@ export function registerKeyboardHandlers(): void {
         success: true,
         status: getKeyboardStatus()
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       errorLog('키보드 상태 조회 Error:', error);
-      return { success: false, message: error.message };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
   });
 
@@ -317,9 +347,9 @@ export function registerKeyboardHandlers(): void {
   ipcMain.handle('test-hangul-input', async () => {
     try {
       return await testHangulInput();
-    } catch (error: any) {
+    } catch (error: unknown) {
       errorLog('한글 입력 테스트 Error:', error);
-      return { success: false, message: error.message };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
   });
 
@@ -334,9 +364,9 @@ export function registerKeyboardHandlers(): void {
         jamoCount: count,
         decomposed: decomposeHangul(char)
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       errorLog('자모 개수 계산 Error:', error);
-      return { success: false, message: error.message };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
   });
 
@@ -348,9 +378,9 @@ export function registerKeyboardHandlers(): void {
         sequence: [...keyboardState.keySequence],
         lastKeyTime: keyboardState.lastKeyTime
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       errorLog('키 시퀀스 조회 Error:', error);
-      return { success: false, message: error.message };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
   });
 
@@ -369,9 +399,9 @@ export function registerKeyboardHandlers(): void {
         message: '키보드 Setup 업데이트 Completed',
         settings: SettingsManager.getSettings().keyboard
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       errorLog('키보드 Setup 업데이트 Error:', error);
-      return { success: false, message: error.message };
+      return { success: false, message: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
   });
 
@@ -392,7 +422,7 @@ export async function initializeKeyboardHandlers(): Promise<void> {
     }
     
     debugLog('키보드 핸들러 초기화 Completed');
-  } catch (error: any) {
+  } catch (error: unknown) {
     errorLog('키보드 핸들러 초기화 Error:', error);
   }
 }

@@ -8,19 +8,20 @@
 import { registerTrackingHandlers, cleanupTrackingHandlers, initializeAutoMonitoring } from './tracking-handlers';
 import { registerKeyboardHandlers, cleanupKeyboardHandlers, initializeKeyboardHandlers } from './keyboardHandlers';
 import { registerWindowHandlers, cleanupWindowHandlers, initializeWindowHandlers } from './windowHandlers';
-import SettingsManager from './settings-manager';
+import SettingsManager, { initializeSettingsManager } from './settings-manager';
 import { IpcHandlers } from './ipc-handlers';
 import { registerMemoryIpcHandlers } from './memory-ipc';
 import { registerNativeIpcHandlers } from './native-client';
 import { registerSystemInfoIpcHandlers } from './systemInfoIpc';
 import settingsIpcHandlers from './settingsIpcHandlers';
+import { ipcMain } from 'electron';
 
 // 간단한 디버그 로깅
-function debugLog(message: string, ...args: any[]): void {
+function debugLog(message: string, ...args: unknown[]): void {
   console.log(`[HandlersManager] ${message}`, ...args);
 }
 
-function errorLog(message: string, ...args: any[]): void {
+function errorLog(message: string, ...args: unknown[]): void {
   console.error(`[HandlersManager] ${message}`, ...args);
 }
 
@@ -31,23 +32,39 @@ interface HandlersState {
   initializationOrder: string[];
 }
 
-// 전역 핸들러 상태
-let handlersState: HandlersState = {
+// 전역 핸들러 상태 - 더 안전한 초기화
+const handlersState: HandlersState = {
   isAllHandlersSetup: false,
   registeredHandlers: new Set(),
   initializationOrder: []
 };
+
+// 핸들러 상태 초기화 함수
+function initializeHandlersState(): void {
+  if (!handlersState.registeredHandlers) {
+    handlersState.registeredHandlers = new Set();
+  }
+  if (!handlersState.initializationOrder) {
+    handlersState.initializationOrder = [];
+  }
+  debugLog('핸들러 상태 초기화 완료');
+}
 
 /**
  * Setup 관련 핸들러 등록
  */
 function registerSettingsHandlers(): void {
   try {
+    // 중복 등록 방지
+    if (handlersState.registeredHandlers.has('settings')) {
+      debugLog('Setup 관련 핸들러 이미 등록됨');
+      return;
+    }
+    
     // 설정 IPC 핸들러 등록 (setProcessingMode 등)
     settingsIpcHandlers.register();
     
     // 설정 관리자 초기화 및 IPC 핸들러 등록
-    const { initializeSettingsManager } = require('./settings-manager');
     initializeSettingsManager();
     
     // SettingsManager 인스턴스 확인
@@ -66,12 +83,19 @@ function registerSettingsHandlers(): void {
  */
 function registerSystemInfoHandlers(): void {
   try {
-    // 시스템 정보 핸들러를 실제로 등록
+    // 중복 등록 방지
+    if (handlersState.registeredHandlers.has('system-info')) {
+      debugLog('시스템 정보 관련 핸들러 이미 등록됨');
+      return;
+    }
+    
+    // SystemInfo IPC 핸들러 등록
     registerSystemInfoIpcHandlers();
     debugLog('시스템 정보 관련 핸들러 등록 Completed');
     handlersState.registeredHandlers.add('system-info');
   } catch (error) {
     errorLog('시스템 정보 핸들러 등록 Error:', error);
+    // 오류가 발생해도 다른 핸들러 등록은 계속 진행
   }
 }
 
@@ -80,16 +104,19 @@ function registerSystemInfoHandlers(): void {
  */
 function registerMemoryHandlers(): void {
   try {
-    // 메모리 핸들러가 main.ts에서 자동 등록되었는지 확인하고, 필요시 추가 등록
-    if (!handlersState.registeredHandlers.has('memory')) {
-      registerMemoryIpcHandlers();
-      debugLog('메모리 관련 핸들러 등록 Completed');
-    } else {
+    // 중복 등록 방지
+    if (handlersState.registeredHandlers.has('memory')) {
       debugLog('메모리 관련 핸들러 이미 등록됨');
+      return;
     }
+    
+    // memory-ipc.ts에서 메모리 IPC 핸들러 등록
+    registerMemoryIpcHandlers();
+    debugLog('메모리 관련 핸들러 등록 Completed');
     handlersState.registeredHandlers.add('memory');
   } catch (error) {
     errorLog('메모리 핸들러 등록 Error:', error);
+    // 오류가 발생해도 다른 핸들러 등록은 계속 진행
   }
 }
 
@@ -98,7 +125,12 @@ function registerMemoryHandlers(): void {
  */
 function registerNativeHandlers(): void {
   try {
-    // 네이티브 핸들러를 실제로 등록
+    // 중복 등록 방지
+    if (handlersState.registeredHandlers.has('native')) {
+      debugLog('네이티브 모듈 관련 핸들러 이미 등록됨');
+      return;
+    }
+    
     registerNativeIpcHandlers();
     debugLog('네이티브 모듈 관련 핸들러 등록 Completed');
     handlersState.registeredHandlers.add('native');
@@ -112,6 +144,12 @@ function registerNativeHandlers(): void {
  */
 function registerIntegratedHandlers(): void {
   try {
+    // 중복 등록 방지
+    if (handlersState.registeredHandlers.has('integrated')) {
+      debugLog('통합 IPC 핸들러 이미 등록됨');
+      return;
+    }
+    
     const ipcHandlers = IpcHandlers.getInstance();
     ipcHandlers.register();
     debugLog('통합 IPC 핸들러 등록 Completed');
@@ -135,9 +173,41 @@ function registerRestartHandlers(): void {
 }
 
 /**
+ * IPC 핸들러 중복 등록 방지 유틸리티
+ */
+function isIpcHandlerRegistered(channel: string): boolean {
+  try {
+    // Electron의 내부 API를 사용하여 핸들러가 이미 등록되어 있는지 확인
+    // 임시로 핸들러를 등록해보고 오류가 발생하면 이미 등록된 것으로 판단
+    return (ipcMain as any)._handlers && (ipcMain as any)._handlers.has(channel);
+  } catch {
+    return false;
+  }
+}
+
+function safeHandlerRegistration(channel: string, handler: (...args: any[]) => any): boolean {
+  if (isIpcHandlerRegistered(channel)) {
+    debugLog(`⚠️  IPC 핸들러 '${channel}'이 이미 등록되어 있습니다. 건너뜁니다.`);
+    return false;
+  }
+  
+  try {
+    ipcMain.handle(channel, handler);
+    debugLog(`✅ IPC 핸들러 '${channel}' 등록 성공`);
+    return true;
+  } catch (error) {
+    errorLog(`❌ IPC 핸들러 '${channel}' 등록 실패:`, error);
+    return false;
+  }
+}
+
+/**
  * 모든 IPC 핸들러를 순서대로 등록
  */
 export async function setupAllHandlers(): Promise<boolean> {
+  // 핸들러 상태 안전하게 초기화
+  initializeHandlersState();
+  
   // 이미 Setup되었으면 중복 Setup 방지
   if (handlersState.isAllHandlersSetup) {
     debugLog('모든 핸들러가 이미 Setup되어 있습니다.');
@@ -291,11 +361,9 @@ export function diagnoseHandlers(): any {
  * 핸들러 상태 리셋
  */
 export function resetHandlersState(): void {
-  handlersState = {
-    isAllHandlersSetup: false,
-    registeredHandlers: new Set(),
-    initializationOrder: []
-  };
+  handlersState.isAllHandlersSetup = false;
+  handlersState.registeredHandlers.clear();
+  handlersState.initializationOrder = [];
   debugLog('핸들러 상태 리셋 Completed');
 }
 

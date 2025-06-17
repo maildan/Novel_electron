@@ -5,6 +5,7 @@
 import { desktopCapturer, ipcMain, app, BrowserWindow, nativeImage } from 'electron';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as activeWin from 'active-win';
 import { debugLog } from '../utils/debug';
 
 interface ScreenshotOptions {
@@ -201,8 +202,7 @@ async function capturePrimaryScreen(options: ScreenshotOptions = {}): Promise<{ 
  */
 async function captureActiveWindow(options: ScreenshotOptions = {}): Promise<{ buffer: Buffer; metadata: ScreenshotMetadata }> {
   try {
-    const activeWin = require('active-win');
-    const activeWindow = await activeWin();
+    const activeWindow = await (activeWin as any)();
     
     if (!activeWindow) {
       throw new Error('No active window found');

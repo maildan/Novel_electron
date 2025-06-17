@@ -1,8 +1,8 @@
-import js from '@eslint/js';
-import tseslint from 'typescript-eslint';
-import nextPlugin from '@next/eslint-plugin-next';
+const js = require('@eslint/js');
+const tseslint = require('typescript-eslint');
+const nextPlugin = require('@next/eslint-plugin-next');
 
-export default tseslint.config(
+module.exports = tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {

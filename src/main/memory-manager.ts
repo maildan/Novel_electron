@@ -6,6 +6,7 @@
 import { app, ipcMain } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as os from 'os';
 import { debugLog, errorLog } from '../shared/utils';
 import { nativeClient } from './native-client';
 
@@ -309,7 +310,7 @@ class AdvancedMemoryManager {
    */
   async getMemoryInfo(): Promise<MemoryInfo> {
     try {
-      const os = require('os');
+      // os module is already imported
       const systemTotalMemory = os.totalmem();
       
       // NAPI 네이티브 모듈 먼저 시도
@@ -359,7 +360,7 @@ class AdvancedMemoryManager {
    * JavaScript 폴백 메모리 정보 (RSS 기반)
    */
   private getMemoryInfoJS(): MemoryInfo {
-    const os = require('os');
+    // os module is already imported
     const memUsage = process.memoryUsage();
     
     // 시스템 메모리 정보
@@ -627,8 +628,9 @@ export async function checkAndOptimizeMemoryIfNeeded(): Promise<void> {
  * 중복 방지를 위해 주석 처리
  */
 export function registerMemoryIpcHandlers(): void {
-  debugLog('메모리 관련 IPC 핸들러는 memory-ipc.ts에서 관리됩니다');
+  debugLog('⚠️  메모리 관련 IPC 핸들러는 memory-ipc.ts에서 관리됩니다. 중복 등록 방지를 위해 이 함수는 비활성화됨');
   // 실제 핸들러 등록은 memory-ipc.ts에서 수행됨
+  // 중복 등록 방지를 위해 여기서는 아무것도 하지 않음
 }
 
 /**

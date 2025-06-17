@@ -9,6 +9,22 @@ import * as fs from 'fs';
 import { debugLog, errorLog } from '../shared/utils';
 import { nativeModuleLoader } from '../native-modules';
 
+// GPU 작업 관련 타입 정의
+interface GPUTaskData {
+  [key: string]: unknown;
+}
+
+interface GPUTaskResult {
+  success: boolean;
+  result?: unknown;
+  error?: string;
+  fallback?: boolean;
+  performance?: {
+    duration: number;
+    memoryUsed: number;
+  };
+}
+
 // GPU Setup 인터페이스
 interface GPUSettings {
   acceleration: boolean;
@@ -258,11 +274,11 @@ class GPUManager {
   /**
    * GPU 가속화 실행
    */
-  async runGpuAcceleration(task: string, data: any): Promise<any> {
+  async runGpuAcceleration(task: string, data: GPUTaskData): Promise<GPUTaskResult> {
     try {
       if (!this.settings.acceleration) {
         debugLog('GPU 가속이 비활성화되어 있음');
-        return null;
+        return { success: false, error: 'GPU acceleration is disabled' };
       }
       
       const nativeModule = await nativeModuleLoader.loadModule();
@@ -294,7 +310,7 @@ class GPUManager {
   /**
    * JavaScript 폴백 구현
    */
-  private runJavaScriptFallback(task: string, data: any): any {
+  private runJavaScriptFallback(task: string, data: GPUTaskData): GPUTaskResult {
     debugLog('JavaScript 폴백으로 ${task} 작업 실행');
     
     switch (task) {
@@ -310,18 +326,23 @@ class GPUManager {
   /**
    * JavaScript 타이핑 분석 폴백
    */
-  private analyzeTypingJS(data: any): any {
+  private analyzeTypingJS(data: GPUTaskData): GPUTaskResult {
     try {
-      const { keystrokes, timeSpent, errors } = data;
+      const keystrokes = typeof data.keystrokes === 'number' ? data.keystrokes : 0;
+      const timeSpent = typeof data.timeSpent === 'number' ? data.timeSpent : 1;
+      const errors = typeof data.errors === 'number' ? data.errors : 0;
       
       const wpm = (keystrokes / 5) / (timeSpent / 60000);
-      const accuracy = ((keystrokes - errors) / keystrokes) * 100;
+      const accuracy = keystrokes > 0 ? ((keystrokes - errors) / keystrokes) * 100 : 0;
       
       return {
-        wpm: Math.round(wpm),
-        accuracy: Math.round(accuracy),
-        performance_index: Math.round(wpm * (accuracy / 100)),
-        calculated_with: 'javascript_fallback'
+        success: true,
+        result: {
+          wpm: Math.round(wpm),
+          accuracy: Math.round(accuracy),
+          performance_index: Math.round(wpm * (accuracy / 100)),
+          calculated_with: 'javascript_fallback'
+        }
       };
     } catch (error) {
       errorLog('JavaScript 타이핑 분석 중 Error:', error);
@@ -332,10 +353,16 @@ class GPUManager {
   /**
    * JavaScript 이미지 처리 폴백
    */
-  private processImageJS(data: any): any {
+  private processImageJS(data: GPUTaskData): GPUTaskResult {
     console.log('[GPU유틸] JavaScript 이미지 처리 폴백 시작, 데이터 타입:', typeof data);
     debugLog('JavaScript 이미지 처리 폴백');
-    return { success: true, processed: false, method: 'javascript_fallback' };
+    return { 
+      success: true, 
+      result: { 
+        processed: false, 
+        method: 'javascript_fallback' 
+      } 
+    };
   }
 
   /**
@@ -484,7 +511,7 @@ export function isHardwareAccelerationEnabled(): boolean {
 /**
  * GPU 가속화 실행
  */
-export async function runGpuAcceleration(task: string, data: any): Promise<any> {
+export async function runGpuAcceleration(task: string, data: GPUTaskData): Promise<GPUTaskResult> {
   const manager = getGPUManager();
   return await manager.runGpuAcceleration(task, data);
 }

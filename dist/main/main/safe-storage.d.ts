@@ -11,7 +11,7 @@ export declare function initializeSecureStorage(): Promise<boolean>;
 /**
  * 데이터 안전하게 저장
  */
-export declare function storeSecureData(key: string, data: any): Promise<boolean>;
+export declare function storeSecureData(key: string, data: unknown): Promise<boolean>;
 /**
  * 안전하게 저장된 데이터 로드
  */

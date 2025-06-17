@@ -148,7 +148,7 @@ function registerMemoryIpcHandlers() {
         }
         catch (error) {
             console.error('[Memory IPC] 메모리 정보 조회 Error:', error);
-            const ipcError = (0, ipc_1.createIpcError)('MEMORY_INFO_ERROR', error instanceof Error ? error.message : String(error), { operation: 'getMemoryInfo' }, error instanceof Error ? error.stack : undefined);
+            const ipcError = (0, ipc_1.createIpcError)('MEMORY_INFO_ERROR', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error), { operation: 'getMemoryInfo' }, error instanceof Error ? error.stack : undefined);
             return (0, ipc_1.createErrorResponse)(ipcError);
         }
     });
@@ -179,7 +179,7 @@ function registerMemoryIpcHandlers() {
         }
         catch (error) {
             console.error('[Memory IPC] 메모리 최적화 Error:', error);
-            const ipcError = (0, ipc_1.createIpcError)('MEMORY_OPTIMIZE_ERROR', error instanceof Error ? error.message : String(error), { operation: 'optimizeMemory' }, error instanceof Error ? error.stack : undefined);
+            const ipcError = (0, ipc_1.createIpcError)('MEMORY_OPTIMIZE_ERROR', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error), { operation: 'optimizeMemory' }, error instanceof Error ? error.stack : undefined);
             return (0, ipc_1.createErrorResponse)(ipcError);
         }
     });
@@ -204,7 +204,7 @@ function registerMemoryIpcHandlers() {
         }
         catch (error) {
             console.error('[Memory IPC] 메모리 Cleanup Error:', error);
-            const ipcError = (0, ipc_1.createIpcError)('MEMORY_CLEANUP_ERROR', error instanceof Error ? error.message : String(error), { operation: 'memoryCleanup' }, error instanceof Error ? error.stack : undefined);
+            const ipcError = (0, ipc_1.createIpcError)('MEMORY_CLEANUP_ERROR', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error), { operation: 'memoryCleanup' }, error instanceof Error ? error.stack : undefined);
             return (0, ipc_1.createErrorResponse)(ipcError);
         }
     });
@@ -219,7 +219,7 @@ function registerMemoryIpcHandlers() {
                 isAvailable: status.isAvailable,
                 available: available,
                 version: status.version,
-                error: status.error ? status.error.message : null,
+                error: status.error ? status.error instanceof Error ? status.error.message : String(status.error) : null,
                 nativeModule: nativeModuleStatus
             });
             // NativeModuleStatus 형식으로 변환
@@ -235,13 +235,13 @@ function registerMemoryIpcHandlers() {
                     network: true
                 },
                 timestamp: Date.now(),
-                loadError: status.error ? status.error.message : nativeModuleStatus.error || undefined
+                loadError: status.error ? status.error instanceof Error ? status.error.message : String(status.error) : nativeModuleStatus.error || undefined
             };
             return (0, ipc_1.createSuccessResponse)(moduleStatus);
         }
         catch (error) {
             console.error('[Memory IPC] 네이티브 모듈 상태 조회 Error:', error);
-            const ipcError = (0, ipc_1.createIpcError)('NATIVE_STATUS_ERROR', error instanceof Error ? error.message : String(error), { operation: 'getNativeStatus' }, error instanceof Error ? error.stack : undefined);
+            const ipcError = (0, ipc_1.createIpcError)('NATIVE_STATUS_ERROR', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error), { operation: 'getNativeStatus' }, error instanceof Error ? error.stack : undefined);
             return (0, ipc_1.createErrorResponse)(ipcError);
         }
     });
@@ -257,11 +257,11 @@ function cleanupMemoryIpcHandlers() {
     electron_1.ipcMain.removeHandler(channels_1.CHANNELS.NATIVE_GET_STATUS);
     console.log('[Memory IPC] 메모리 관련 IPC 핸들러 Cleanup Completed');
 }
-// 모듈 로드 시 자동으로 핸들러 등록
-try {
-    registerMemoryIpcHandlers();
-}
-catch (error) {
-    console.error('[Memory IPC] 핸들러 등록 중 오류:', error);
-}
+// 모듈 로드 시 자동 등록 제거 - handlers-manager에서 중앙 관리
+// 중복 방지를 위해 주석 처리
+// try {
+//   registerMemoryIpcHandlers();
+// } catch (error) {
+//   console.error('[Memory IPC] 핸들러 등록 중 오류:', error);
+// }
 //# sourceMappingURL=memory-ipc.js.map

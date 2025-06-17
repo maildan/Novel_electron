@@ -5,6 +5,23 @@
  * 윈도우 모드 변경, 미니뷰, 창 제어 등 UI 관련 기능을 처리합니다.
  */
 import { WindowModeType } from './constants';
+interface WindowBounds {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+interface WindowStatusInfo {
+    mode: string;
+    bounds: WindowBounds;
+    isMaximized: boolean;
+    isMinimized: boolean;
+    isFullScreen: boolean;
+    isVisible: boolean;
+    isFocused: boolean;
+    isAlwaysOnTop: boolean;
+    title: string;
+}
 /**
  * 윈도우 모드 적용
  */
@@ -21,7 +38,9 @@ declare function setWindowBounds(bounds: {
 /**
  * 윈도우 상태 정보 가져오기
  */
-declare function getWindowStatus(): any;
+declare function getWindowStatus(): WindowStatusInfo | {
+    error: string;
+};
 /**
  * 윈도우 투명도 Setup
  */

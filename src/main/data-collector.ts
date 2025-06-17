@@ -69,7 +69,7 @@ export class DataCollector {
 
   public logError(error: Error, context?: string): void {
     this.log('error', 'Error occurred', {
-      message: error.message,
+      message: error instanceof Error ? error.message : String(error),
       stack: error.stack,
       context
     }, 'error-handler');

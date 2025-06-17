@@ -151,7 +151,7 @@ async function saveStorageMetadata(): Promise<void> {
 /**
  * 데이터 암호화
  */
-function encryptData(data: any): Buffer {
+function encryptData(data: unknown): Buffer {
   if (!encryptionKey) {
     throw new Error('암호화 키가 초기화되지 않았습니다.');
   }
@@ -249,7 +249,7 @@ function sanitizeKey(key: string): string {
 /**
  * 데이터 안전하게 저장
  */
-export async function storeSecureData(key: string, data: any): Promise<boolean> {
+export async function storeSecureData(key: string, data: unknown): Promise<boolean> {
   if (!key || typeof key !== 'string') {
     throw new Error('유효한 키가 필요합니다.');
   }

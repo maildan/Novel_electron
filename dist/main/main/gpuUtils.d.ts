@@ -2,6 +2,19 @@
  * Loop 6 GPU 유틸리티 모듈
  * Loop 3의 고급 GPU 관리 기능을 TypeScript로 완전 마이그레이션
  */
+interface GPUTaskData {
+    [key: string]: unknown;
+}
+interface GPUTaskResult {
+    success: boolean;
+    result?: unknown;
+    error?: string;
+    fallback?: boolean;
+    performance?: {
+        duration: number;
+        memoryUsed: number;
+    };
+}
 interface GPUSettings {
     acceleration: boolean;
     batteryOptimization: boolean;
@@ -66,7 +79,7 @@ declare class GPUManager {
     /**
      * GPU 가속화 실행
      */
-    runGpuAcceleration(task: string, data: any): Promise<any>;
+    runGpuAcceleration(task: string, data: GPUTaskData): Promise<GPUTaskResult>;
     /**
      * JavaScript 폴백 구현
      */
@@ -132,7 +145,7 @@ export declare function isHardwareAccelerationEnabled(): boolean;
 /**
  * GPU 가속화 실행
  */
-export declare function runGpuAcceleration(task: string, data: any): Promise<any>;
+export declare function runGpuAcceleration(task: string, data: GPUTaskData): Promise<GPUTaskResult>;
 /**
  * GPU 벤치마크 실행
  */

@@ -1,15 +1,15 @@
 /**
  * Debug logging with console output and file saving
  */
-export declare function debugLog(...args: any[]): void;
+export declare function debugLog(...args: unknown[]): void;
 /**
  * Error logging with console output and file saving
  */
-export declare function errorLog(...args: any[]): void;
+export declare function errorLog(...args: unknown[]): void;
 /**
  * Warning logging with console output and file saving
  */
-export declare function warnLog(...args: any[]): void;
+export declare function warnLog(...args: unknown[]): void;
 /**
  * Time formatting function (for debugging)
  */
@@ -21,7 +21,7 @@ export declare function safePath(basePath: string, ...segments: string[]): strin
 /**
  * Safely require module with fallback
  */
-export declare function safeRequire<T = any>(modulePath: string, fallback?: T): T | null;
+export declare function safeRequire<T = unknown>(modulePath: string, fallback?: T): T | null;
 /**
  * Check if local server is running
  */
@@ -37,7 +37,7 @@ export declare function safeJsonParse<T = any>(jsonString: string, fallback?: T)
 /**
  * Safely stringify JSON with fallback
  */
-export declare function safeJsonStringify(obj: any, fallback?: string): string;
+export declare function safeJsonStringify(obj: unknown, fallback?: string): string;
 /**
  * Delay execution for specified milliseconds
  */
@@ -83,11 +83,11 @@ export declare function formatBytes(bytes: number, decimals?: number): string;
 /**
  * Debounce function
  */
-export declare function debounce<T extends (...args: any[]) => any>(func: T, wait: number): (...args: Parameters<T>) => void;
+export declare function debounce<T extends (...args: unknown[]) => unknown>(func: T, wait: number): (...args: Parameters<T>) => void;
 /**
  * Throttle function
  */
-export declare function throttle<T extends (...args: any[]) => any>(func: T, limit: number): (...args: Parameters<T>) => void;
+export declare function throttle<T extends (...args: unknown[]) => unknown>(func: T, limit: number): (...args: Parameters<T>) => void;
 export declare const CONSTANTS: {
     readonly LOG_DIR: string;
     readonly LOG_FILE: string;

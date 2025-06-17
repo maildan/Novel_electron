@@ -302,7 +302,7 @@ function handleUncaughtException(error: Error, type: 'uncaught-exception' | 'unh
   try {
     const errorInfo: ErrorInfo = {
       type,
-      message: error.message,
+      message: error instanceof Error ? error.message : String(error),
       stack: error.stack,
       timestamp: new Date().toISOString(),
       severity: 'critical',
@@ -320,7 +320,7 @@ function handleUncaughtException(error: Error, type: 'uncaught-exception' | 'unh
     logError(errorInfo);
     logCrash({
       type,
-      reason: error.message,
+      reason: error instanceof Error ? error.message : String(error),
       timestamp: errorInfo.timestamp,
       systemInfo: getSystemInfo()
     });

@@ -68,9 +68,14 @@ interface TypingStats {
 }
 
 // TypingStats 타입 검증 함수 (한국어 디버깅)
-function validateTypingStats(data: any): data is TypingStats {
+function validateTypingStats(data: unknown): data is TypingStats {
   console.log('[TypingStats 타입 검증] 데이터 유효성 확인:', data);
-  return data && typeof data.appName === 'string' && typeof data.windowTitle === 'string';
+  return data !== null && 
+         typeof data === 'object' && 
+         'appName' in data && 
+         'windowTitle' in data &&
+         typeof (data as { appName: unknown }).appName === 'string' && 
+         typeof (data as { windowTitle: unknown }).windowTitle === 'string';
 }
 
 interface PermissionStatus {
@@ -534,9 +539,9 @@ export class AdvancedKeyboardManager {
    * Compose Hangul syllable from jamo
    */
   private composeHangul(cho: string, jung: string, jong: string = ''): string {
-    if (!CHOSEONG_TABLE.hasOwnProperty(cho) ||
-        !JUNGSEONG_TABLE.hasOwnProperty(jung) ||
-        (jong && !JONGSEONG_TABLE.hasOwnProperty(jong))) {
+    if (!(cho in CHOSEONG_TABLE) ||
+        !(jung in JUNGSEONG_TABLE) ||
+        (jong && !(jong in JONGSEONG_TABLE))) {
       return '';
     }
     
