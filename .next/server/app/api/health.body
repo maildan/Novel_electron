@@ -1,0 +1,1 @@
+{"status":"ok","timestamp":"2025-06-17T15:25:04.408Z","uptime":0.409370916,"environment":"production","port":"5500","pid":79124,"memory":{"rss":97517568,"heapTotal":40632320,"heapUsed":24511376,"external":3429837,"arrayBuffers":88713},"version":"v22.16.0","requestInfo":{"url":"http://localhost:3000/api/health/","method":"GET","userAgent":"unknown"}}

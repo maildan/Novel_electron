@@ -364,10 +364,3 @@ export function cleanupSystemMonitorIpcHandlers(): void {
   
   console.log('[SystemMonitor IPC] 시스템 모니터링 관련 IPC 핸들러 정리 완료');
 }
-
-// 모듈 로드 시 자동으로 핸들러 등록
-try {
-  registerSystemMonitorIpcHandlers();
-} catch (error) {
-  console.error('[SystemMonitor IPC] 핸들러 등록 중 오류:', error);
-}

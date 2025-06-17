@@ -11,9 +11,9 @@ export declare function cleanupNativeIpcHandlers(): void;
  */
 export declare function getNativeModuleStatus(): {
     loaded: boolean;
-    error: string | null;
+    error: string;
     functions: number;
-    version: string | null;
+    version: string;
     available: boolean;
 };
 //# sourceMappingURL=native-ipc.d.ts.map

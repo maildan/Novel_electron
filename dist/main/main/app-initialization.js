@@ -53,8 +53,9 @@ const ipc_handlers_1 = require("./ipc-handlers");
 const static_server_1 = require("./static-server");
 // IPC 핸들러들 import
 const handlers_manager_1 = require("./handlers-manager");
-const windowHandlers_1 = require("./windowHandlers");
-const keyboardHandlers_1 = require("./keyboardHandlers");
+// 개별 핸들러들은 handlers-manager에서 중앙 관리되므로 제거
+// import { registerWindowHandlers, initializeWindowHandlers } from './windowHandlers';
+// import { registerKeyboardHandlers, initializeKeyboardHandlers } from './keyboardHandlers';
 // 중복 방지를 위해 주석 처리 - handlers-manager에서 중앙 관리
 // import { registerSystemInfoIpcHandlers } from './systemInfoIpc';
 // import { registerNativeIpcHandlers } from './native-ipc';
@@ -166,14 +167,14 @@ async function initializeCoreSystem() {
         if (exports.appState.keyboardManager && !exports.appState.keyboardInitialized) {
             console.log('키보드 시스템 초기화 중...');
             await exports.appState.keyboardManager.initialize();
-            // 키보드 핸들러도 초기화
-            await (0, keyboardHandlers_1.initializeKeyboardHandlers)();
+            // 키보드 핸들러 초기화는 handlers-manager에서 처리됨
+            // await initializeKeyboardHandlers();
             exports.appState.keyboardInitialized = true;
             console.log('키보드 시스템 초기화 완료');
         }
-        // 윈도우 핸들러 초기화
-        (0, windowHandlers_1.initializeWindowHandlers)();
-        console.log('윈도우 핸들러 초기화 완료');
+        // 윈도우 핸들러 초기화는 handlers-manager에서 처리됨
+        // initializeWindowHandlers();
+        console.log('윈도우 핸들러 초기화는 handlers-manager에서 처리됨');
         // Start static server if available
         if (exports.appState.staticServer) {
             console.log('정적 서버 시작 중...');

@@ -8,6 +8,9 @@ import { registerTrackingHandlers, cleanupTrackingHandlers } from './tracking-ha
 import { registerKeyboardHandlers, cleanupKeyboardHandlers } from './keyboardHandlers';
 import { registerWindowHandlers, cleanupWindowHandlers } from './windowHandlers';
 /**
+ * IPC 핸들러 중복 등록 방지 유틸리티
+ */
+/**
  * 모든 IPC 핸들러를 순서대로 등록
  */
 export declare function setupAllHandlers(): Promise<boolean>;
@@ -32,9 +35,19 @@ export declare function reregisterHandler(handlerName: string): boolean;
  */
 export declare function cleanupAllHandlers(): void;
 /**
+ * 핸들러 상태 진단 - 반환 타입 인터페이스
+ */
+interface HandlersDiagnosticResult {
+    isAllSetup: boolean;
+    registeredHandlers: string[];
+    initializationOrder: string[];
+    settingsInitialized: boolean;
+    timestamp: string;
+}
+/**
  * 핸들러 상태 진단
  */
-export declare function diagnoseHandlers(): any;
+export declare function diagnoseHandlers(): HandlersDiagnosticResult;
 /**
  * 핸들러 상태 리셋
  */

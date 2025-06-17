@@ -1,0 +1,18 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/favicon.ico/route": "/favicon.ico",
+  "/api/db-test/route": "/api/db-test",
+  "/api/getLogs/route": "/api/getLogs",
+  "/api/health/route": "/api/health",
+  "/api/logs/save/route": "/api/logs/save",
+  "/api/native/gpu/acceleration/route": "/api/native/gpu/acceleration",
+  "/api/logs/search/route": "/api/logs/search",
+  "/api/native/gpu/settings/route": "/api/native/gpu/settings",
+  "/api/init-db/route": "/api/init-db",
+  "/api/native/memory/optimize/route": "/api/native/memory/optimize",
+  "/api/native/status/route": "/api/native/status",
+  "/api/saveLogs/route": "/api/saveLogs",
+  "/api/native/gpu/route": "/api/native/gpu",
+  "/api/native/memory/route": "/api/native/memory",
+  "/page": "/"
+}

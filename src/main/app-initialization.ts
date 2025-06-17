@@ -15,8 +15,9 @@ import { StaticServer } from './static-server';
 
 // IPC 핸들러들 import
 import { setupAllHandlers } from './handlers-manager';
-import { registerWindowHandlers, initializeWindowHandlers } from './windowHandlers';
-import { registerKeyboardHandlers, initializeKeyboardHandlers } from './keyboardHandlers';
+// 개별 핸들러들은 handlers-manager에서 중앙 관리되므로 제거
+// import { registerWindowHandlers, initializeWindowHandlers } from './windowHandlers';
+// import { registerKeyboardHandlers, initializeKeyboardHandlers } from './keyboardHandlers';
 // 중복 방지를 위해 주석 처리 - handlers-manager에서 중앙 관리
 // import { registerSystemInfoIpcHandlers } from './systemInfoIpc';
 // import { registerNativeIpcHandlers } from './native-ipc';
@@ -159,16 +160,16 @@ export async function initializeCoreSystem(): Promise<void> {
       console.log('키보드 시스템 초기화 중...');
       await appState.keyboardManager.initialize();
       
-      // 키보드 핸들러도 초기화
-      await initializeKeyboardHandlers();
+      // 키보드 핸들러 초기화는 handlers-manager에서 처리됨
+      // await initializeKeyboardHandlers();
       
       appState.keyboardInitialized = true;
       console.log('키보드 시스템 초기화 완료');
     }
     
-    // 윈도우 핸들러 초기화
-    initializeWindowHandlers();
-    console.log('윈도우 핸들러 초기화 완료');
+    // 윈도우 핸들러 초기화는 handlers-manager에서 처리됨
+    // initializeWindowHandlers();
+    console.log('윈도우 핸들러 초기화는 handlers-manager에서 처리됨');
     
     // Start static server if available
     if (appState.staticServer) {

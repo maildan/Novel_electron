@@ -61,7 +61,7 @@ export declare const nativeModuleLoader: NativeModuleLoader;
 export declare function loadNativeModule(): Promise<NativeModule>;
 export declare function getNativeModuleStatus(): {
     isLoaded: boolean;
-    error: string | null;
+    error: string;
 };
 export declare function getGpuInfo(): Promise<GpuInfo>;
 export declare function getGpuMemoryStats(): Promise<GpuMemoryStats>;

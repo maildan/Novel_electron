@@ -4,16 +4,16 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { AppConfig } from './config';
 import { 
-  DatabaseRecord, 
-  SessionRecord, 
-  KeystrokeRecord, 
-  SystemMetricRecord,
+  DatabaseRecord as _DatabaseRecord, 
+  SessionRecord as _SessionRecord, 
+  KeystrokeRecord as _KeystrokeRecord, 
+  SystemMetricRecord as _SystemMetricRecord,
   ExportData,
   ExportOptions,
   DatabaseExportResult,
-  DatabaseImportOptions,
-  DatabaseImportResult,
-  BackupMetadata
+  DatabaseImportOptions as _DatabaseImportOptions,
+  DatabaseImportResult as _DatabaseImportResult,
+  BackupMetadata as _BackupMetadata
 } from '../types/database';
 
 interface KeystrokeData {

@@ -272,11 +272,4 @@ function cleanupSystemMonitorIpcHandlers() {
     electron_1.ipcMain.removeHandler(channels_1.CHANNELS.OPTIMIZE_MEMORY);
     console.log('[SystemMonitor IPC] 시스템 모니터링 관련 IPC 핸들러 정리 완료');
 }
-// 모듈 로드 시 자동으로 핸들러 등록
-try {
-    registerSystemMonitorIpcHandlers();
-}
-catch (error) {
-    console.error('[SystemMonitor IPC] 핸들러 등록 중 오류:', error);
-}
 //# sourceMappingURL=system-monitor-ipc.js.map

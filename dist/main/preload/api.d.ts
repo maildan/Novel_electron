@@ -192,7 +192,7 @@ export declare const electronAPI: {
             versions: NodeJS.ProcessVersions;
             platform: NodeJS.Platform;
             arch: NodeJS.Architecture;
-            env: string | undefined;
+            env: string;
         };
         log: (message: string, ...args: unknown[]) => void;
     };

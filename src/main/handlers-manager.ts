@@ -15,6 +15,7 @@ import { registerNativeIpcHandlers } from './native-client';
 import { registerSystemInfoIpcHandlers } from './systemInfoIpc';
 import settingsIpcHandlers from './settingsIpcHandlers';
 import { ipcMain } from 'electron';
+import { registerSystemMonitorIpcHandlers } from './system-monitor-ipc';
 
 // 간단한 디버그 로깅
 function debugLog(message: string, ...args: unknown[]): void {
@@ -173,33 +174,32 @@ function registerRestartHandlers(): void {
 }
 
 /**
- * IPC 핸들러 중복 등록 방지 유틸리티
+ * 시스템 모니터링 관련 핸들러 등록
  */
-function isIpcHandlerRegistered(channel: string): boolean {
+function registerSystemMonitorHandlers(): void {
   try {
-    // Electron의 내부 API를 사용하여 핸들러가 이미 등록되어 있는지 확인
-    // 임시로 핸들러를 등록해보고 오류가 발생하면 이미 등록된 것으로 판단
-    return (ipcMain as any)._handlers && (ipcMain as any)._handlers.has(channel);
-  } catch {
-    return false;
+    // 중복 등록 방지
+    if (handlersState.registeredHandlers.has('system-monitor')) {
+      debugLog('시스템 모니터링 관련 핸들러 이미 등록됨');
+      return;
+    }
+    
+    // SystemMonitor IPC 핸들러 등록
+    registerSystemMonitorIpcHandlers();
+    debugLog('시스템 모니터링 관련 핸들러 등록 Completed');
+    handlersState.registeredHandlers.add('system-monitor');
+  } catch (error) {
+    errorLog('시스템 모니터링 핸들러 등록 Error:', error);
+    // 오류가 발생해도 다른 핸들러 등록은 계속 진행
   }
 }
 
-function safeHandlerRegistration(channel: string, handler: (...args: any[]) => any): boolean {
-  if (isIpcHandlerRegistered(channel)) {
-    debugLog(`⚠️  IPC 핸들러 '${channel}'이 이미 등록되어 있습니다. 건너뜁니다.`);
-    return false;
-  }
-  
-  try {
-    ipcMain.handle(channel, handler);
-    debugLog(`✅ IPC 핸들러 '${channel}' 등록 성공`);
-    return true;
-  } catch (error) {
-    errorLog(`❌ IPC 핸들러 '${channel}' 등록 실패:`, error);
-    return false;
-  }
-}
+/**
+ * IPC 핸들러 중복 등록 방지 유틸리티
+ */
+// isIpcHandlerRegistered 함수도 사용되지 않으므로 제거됨
+// 사용되지 않던 safeHandlerRegistration 함수 제거됨
+// 대신 각 핸들러 등록 함수에서 중복 체크를 수행함
 
 /**
  * 모든 IPC 핸들러를 순서대로 등록
@@ -219,15 +219,16 @@ export async function setupAllHandlers(): Promise<boolean> {
 
     // 초기화 순서 정의 (의존성 순서)
     const initOrder = [
-      'settings',      // Setup 먼저
-      'integrated',    // 통합 IPC 핸들러 (네이티브 모듈 포함)
-      'system-info',   // 시스템 정보
-      'native',        // 네이티브 모듈
-      'window',        // 윈도우 관리
-      'memory',        // 메모리 관리
-      'keyboard',      // 키보드 이벤트
-      'tracking',      // 추적/모니터링
-      'restart'        // 재시작 관련
+      'settings',        // Setup 먼저
+      'integrated',      // 통합 IPC 핸들러 (네이티브 모듈 포함)
+      'system-info',     // 시스템 정보
+      'system-monitor',  // 시스템 모니터링 (start-monitoring 핸들러 포함)
+      'native',          // 네이티브 모듈
+      'window',          // 윈도우 관리
+      'memory',          // 메모리 관리
+      'keyboard',        // 키보드 이벤트
+      'tracking',        // 추적/모니터링
+      'restart'          // 재시작 관련
     ];
 
     handlersState.initializationOrder = initOrder;
@@ -236,6 +237,7 @@ export async function setupAllHandlers(): Promise<boolean> {
     registerSettingsHandlers();
     registerIntegratedHandlers();
     registerSystemInfoHandlers();
+    registerSystemMonitorHandlers(); // 시스템 모니터링 핸들러 등록 (start-monitoring 포함)
     registerNativeHandlers();
     registerWindowHandlers();
     registerMemoryHandlers();
@@ -248,10 +250,37 @@ export async function setupAllHandlers(): Promise<boolean> {
     await initializeKeyboardHandlers();
     initializeAutoMonitoring();
 
+    // 등록된 핸들러를 handlersState에 추가
+    handlersState.registeredHandlers.add('keyboard');
+    handlersState.registeredHandlers.add('tracking');
+    handlersState.registeredHandlers.add('window');
+
     // 핸들러 Setup Completed
     handlersState.isAllHandlersSetup = true;
     
+    // 등록된 핸들러 상세 로그
     debugLog(`모든 IPC 핸들러 등록 완료. 등록된 핸들러: ${Array.from(handlersState.registeredHandlers).join(', ')}`);
+    
+    // 실제 IPC 핸들러 등록 확인
+    try {
+      // TypeScript에서는 ipcMain._handlers에 직접 접근할 수 없으므로
+      // listenerCount를 사용하여 간접적으로 확인
+      const criticalHandlers = [
+        'start-monitoring', 'get-current-metrics', 'get-metrics-history',
+        'tracking:start-monitoring', 'tracking:stop-monitoring', 'tracking:get-status',
+        'start-keyboard-listener', 'stop-keyboard-listener', 'get-keyboard-status',
+        'memory:getInfo', 'systemGetInfo'
+      ];
+      
+      debugLog('주요 핸들러 등록 상태 확인:');
+      criticalHandlers.forEach(handler => {
+        const listenerCount = ipcMain.listenerCount(handler);
+        debugLog(`  - ${handler}: ${listenerCount > 0 ? '등록됨' : '등록되지 않음'} (리스너 수: ${listenerCount})`);
+      });
+    } catch (checkError) {
+      debugLog('핸들러 등록 상태 확인 중 오류:', checkError);
+    }
+    
     return true;
   } catch (error) {
     errorLog('핸들러 Setup 중 Error 발생:', error);
@@ -309,6 +338,15 @@ export function reregisterHandler(handlerName: string): boolean {
       case 'restart':
         registerRestartHandlers();
         break;
+      case 'system-monitor': // 시스템 모니터 핸들러 재등록 케이스 추가
+        registerSystemMonitorHandlers();
+        break;
+      case 'native':
+        registerNativeHandlers();
+        break;
+      case 'integrated':
+        registerIntegratedHandlers();
+        break;
       default:
         errorLog(`알 수 없는 핸들러: ${handlerName}`);
         return false;
@@ -345,9 +383,20 @@ export function cleanupAllHandlers(): void {
 }
 
 /**
+ * 핸들러 상태 진단 - 반환 타입 인터페이스
+ */
+interface HandlersDiagnosticResult {
+  isAllSetup: boolean;
+  registeredHandlers: string[];
+  initializationOrder: string[];
+  settingsInitialized: boolean;
+  timestamp: string;
+}
+
+/**
  * 핸들러 상태 진단
  */
-export function diagnoseHandlers(): any {
+export function diagnoseHandlers(): HandlersDiagnosticResult {
   return {
     isAllSetup: handlersState.isAllHandlersSetup,
     registeredHandlers: Array.from(handlersState.registeredHandlers),
