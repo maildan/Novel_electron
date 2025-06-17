@@ -8,7 +8,7 @@ interface AppState {
     securityInitialized: boolean;
     memoryManagerActive: boolean;
     keyboardMonitoringActive: boolean;
-    settings: any;
+    settings: Record<string, unknown>;
 }
 /**
  * 애플리케이션 초기화

@@ -10,7 +10,7 @@ interface AppConfig {
   soundEnabled: boolean
   monitoring: boolean
   privacy: boolean
-  [key: string]: any
+  [key: string]: unknown
 }
 
 interface UseConfigReturn {

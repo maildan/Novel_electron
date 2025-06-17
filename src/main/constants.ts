@@ -201,7 +201,7 @@ export interface AppState {
   allowQuit: boolean;
   
   // 키보드
-  keyboardListener: any;
+  keyboardListener: unknown;
   lastActiveTime: number;
   idleTime: number;
   
@@ -227,12 +227,12 @@ export interface AppState {
   currentStats: TypingStats;
   
   // 시스템 정보
-  lastActiveWindowInfo: any;
+  lastActiveWindowInfo: Record<string, unknown> | null;
   systemInfo: SystemInfo | null;
   
   // GPU
   gpuEnabled: boolean;
-  gpuResources: any;
+  gpuResources: Record<string, unknown> | null;
   
   // 미니뷰
   miniViewLastMode: 'icon' | 'normal';

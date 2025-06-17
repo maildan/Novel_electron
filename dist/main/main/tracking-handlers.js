@@ -5,6 +5,39 @@
  * Loop 3의 tracking-handlers.js를 TypeScript로 완전 마이그레이션
  * 타이핑 추적 시작/중지, 통계 저장, 자동 모니터링 등을 처리합니다.
  */
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -21,6 +54,7 @@ exports.cleanupTrackingHandlers = cleanupTrackingHandlers;
 const electron_1 = require("electron");
 const utils_1 = require("./utils");
 const settings_manager_1 = __importDefault(require("./settings-manager"));
+const channels_1 = require("../preload/channels");
 // 전역 추적 상태
 let trackingState = {
     isTracking: false,
@@ -97,9 +131,23 @@ async function saveCurrentStats() {
     try {
         const settings = settings_manager_1.default.getSettings();
         const statsFilePath = settings.statsFilePath || 'typing-stats.json';
-        // 파일 시스템에 통계 저장 로직 구현
-        // TODO: 실제 파일 저장 로직 구현
-        (0, utils_1.debugLog)('통계 저장됨:', trackingState.sessionStats);
+        // statsFilePath를 사용하여 파일 시스템에 통계 저장
+        const fs = await Promise.resolve().then(() => __importStar(require('fs/promises')));
+        const path = await Promise.resolve().then(() => __importStar(require('path')));
+        const statsData = {
+            ...trackingState.sessionStats,
+            timestamp: Date.now(),
+            filePath: statsFilePath
+        };
+        (0, utils_1.debugLog)(`통계 파일에 저장: ${path.resolve(statsFilePath)}`, statsData);
+        // 실제 파일 저장 로직 구현
+        try {
+            await fs.writeFile(path.resolve(statsFilePath), JSON.stringify(statsData, null, 2));
+            (0, utils_1.debugLog)(`통계 파일 저장 완료: ${path.resolve(statsFilePath)}`);
+        }
+        catch (writeError) {
+            (0, utils_1.errorLog)('통계 파일 저장 실패:', writeError);
+        }
     }
     catch (error) {
         (0, utils_1.errorLog)('통계 저장 Error:', error);
@@ -219,7 +267,7 @@ function registerTrackingHandlers() {
     }
     (0, utils_1.debugLog)('추적 관련 IPC 핸들러 등록 중...');
     // 타이핑 추적 모니터링 시작 핸들러
-    electron_1.ipcMain.handle('tracking:start-monitoring', async () => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.TRACKING_START_MONITORING, async () => {
         try {
             (0, utils_1.debugLog)('모니터링 시작 요청 수신');
             if (trackingState.isTracking) {
@@ -231,8 +279,8 @@ function registerTrackingHandlers() {
                 };
             }
             // 키보드 리스너 먼저 설정
-            const { setupKeyboardListenerIfNeeded } = require('./keyboardHandlers');
-            const keyboardListenerResult = await setupKeyboardListenerIfNeeded();
+            const keyboardHandlers = await Promise.resolve().then(() => __importStar(require('./keyboardHandlers')));
+            const keyboardListenerResult = await keyboardHandlers.setupKeyboardListenerIfNeeded();
             if (!keyboardListenerResult) {
                 (0, utils_1.errorLog)('키보드 리스너 설정 Failed - 모니터링 시작 불가');
                 return {
@@ -258,7 +306,7 @@ function registerTrackingHandlers() {
         }
     });
     // 모니터링 중지 핸들러
-    electron_1.ipcMain.handle('tracking:stop-monitoring', async () => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.TRACKING_STOP_MONITORING, async () => {
         try {
             (0, utils_1.debugLog)('모니터링 중지 요청 수신');
             if (!trackingState.isTracking) {
@@ -289,7 +337,7 @@ function registerTrackingHandlers() {
         }
     });
     // 추적 상태 조회 핸들러
-    electron_1.ipcMain.handle('tracking:get-status', async () => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.TRACKING_GET_STATUS, async () => {
         try {
             return {
                 success: true,
@@ -304,7 +352,7 @@ function registerTrackingHandlers() {
         }
     });
     // 통계 저장 핸들러
-    electron_1.ipcMain.handle('tracking:save-stats', async (event, statsData) => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.TRACKING_SAVE_STATS, async (event, statsData) => {
         try {
             // 외부에서 전달받은 통계 데이터 처리
             if (statsData) {
@@ -319,7 +367,7 @@ function registerTrackingHandlers() {
         }
     });
     // 추적 상태 리셋 핸들러
-    electron_1.ipcMain.handle('tracking:reset', async () => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.TRACKING_RESET, async () => {
         try {
             resetTrackingState();
             sendTrackingStatusToRenderer();
@@ -335,7 +383,7 @@ function registerTrackingHandlers() {
         }
     });
     // 키 입력 처리 핸들러
-    electron_1.ipcMain.handle('tracking:process-key', async (event, keyData) => {
+    electron_1.ipcMain.handle(channels_1.CHANNELS.TRACKING_PROCESS_KEY, async (event, keyData) => {
         try {
             processKeyPress(keyData);
             return { success: true };

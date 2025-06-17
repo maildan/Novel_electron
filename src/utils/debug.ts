@@ -40,12 +40,12 @@ export function errorLog(...args: any[]): void {
 /**
  * 성능 측정 시작
  */
-export function startPerformanceTimer(label: string): () => number {
+export function startPerformanceTimer(_label: string): () => number {
   const start = performance.now();
   
   return (): number => {
     const elapsed = performance.now() - start;
-    debugLog('Performance [${label}]: ${elapsed.toFixed(2)}ms');
+    debugLog(`Performance [${_label}]: ${elapsed.toFixed(2)}ms`);
     return elapsed;
   };
 }

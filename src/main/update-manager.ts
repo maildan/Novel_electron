@@ -224,7 +224,7 @@ export class UpdateManager extends EventEmitter {
       this.showUpdateAvailableNotification();
     });
     
-    (autoUpdater as any).on('update-not-available', (info: any) => {
+    (autoUpdater as any).on('update-not-available', (_info: any) => {
       debugLog('[UpdateManager] Update not available');
       this.state.status = UpdateStatus.NOT_AVAILABLE;
       this.state.available = false;
@@ -245,7 +245,7 @@ export class UpdateManager extends EventEmitter {
       this.notifyRenderer('update-download-progress', this.state.progress);
     });
     
-    autoUpdater.on('update-downloaded', (info: any) => {
+    autoUpdater.on('update-downloaded', (_info: any) => {
       debugLog('[UpdateManager] Update downloaded');
       this.state.status = UpdateStatus.DOWNLOADED;
       this.state.downloaded = true;

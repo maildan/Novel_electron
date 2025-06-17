@@ -300,7 +300,7 @@ export class WindowManager {
   }
 
   // IPC 핸들러를 위한 추가 메서드들
-  createWindow(options: any): Promise<BrowserWindow> {
+  createWindow(_options: any): Promise<BrowserWindow> {
     // createMainWindow를 createWindow 별칭으로 사용
     return this.createMainWindow()
   }

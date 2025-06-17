@@ -18,7 +18,7 @@ interface ErrorInfo {
     stack?: string;
     timestamp: string;
     severity: 'low' | 'medium' | 'high' | 'critical';
-    context?: any;
+    context?: Record<string, unknown>;
     recoverable?: boolean;
 }
 /**
@@ -28,7 +28,7 @@ export declare function initializeCrashReporter(crashOptions?: CrashReporterOpti
 /**
  * 충돌 보고서 정보 조회
  */
-export declare function getCrashReportInfo(): any;
+export declare function getCrashReportInfo(): Record<string, unknown>;
 /**
  * 업로드 Setup 변경
  */
@@ -43,6 +43,6 @@ export declare function getLogPaths(): {
 /**
  * 수동 Error 보고
  */
-export declare function reportError(message: string, stack?: string, severity?: ErrorInfo['severity'], context?: any): void;
+export declare function reportError(message: string, stack?: string, severity?: ErrorInfo['severity'], context?: Record<string, unknown>): void;
 export {};
 //# sourceMappingURL=crash-reporter.d.ts.map

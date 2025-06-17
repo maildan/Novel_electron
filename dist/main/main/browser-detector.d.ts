@@ -118,7 +118,7 @@ export declare class BrowserDetector {
     /**
    * Setup 업데이트
    */
-    updateSettings(settings: any): Promise<{
+    updateSettings(settings: Record<string, unknown>): Promise<{
         success: boolean;
         error?: string;
     }>;

@@ -1,1 +1,1 @@
-{"version":3,"file":"native-ipc.d.ts","sourceRoot":"","sources":["../../../src/main/native-ipc.ts"],"names":[],"mappings":"AA+KA;;GAEG;AACH,wBAAgB,yBAAyB,IAAI,IAAI,CAiRhD;AAED;;GAEG;AACH,wBAAgB,wBAAwB,IAAI,IAAI,CAyD/C;AAED;;GAEG;AACH,wBAAgB,qBAAqB;;;;;;EAQpC"}
+{"version":3,"file":"native-ipc.d.ts","sourceRoot":"","sources":["../../../src/main/native-ipc.ts"],"names":[],"mappings":"AAsLA;;GAEG;AACH,wBAAgB,yBAAyB,IAAI,IAAI,CAsRhD;AAED;;GAEG;AACH,wBAAgB,wBAAwB,IAAI,IAAI,CAyD/C;AAED;;GAEG;AACH,wBAAgB,qBAAqB;;;;;;EAQpC"}

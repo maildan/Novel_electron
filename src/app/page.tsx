@@ -3,16 +3,12 @@
 import { useState, useEffect } from 'react';
 import { TypingBox } from './components/ui/typing-box';
 import { StatsChart } from './components/ui/stats-chart';
-import MemoryMonitor from './components/ui/memory-monitor';
 import { TypingAnalyzer } from './components/ui/typing-analyzer';
-import NativeModuleStatus from './components/ui/native-module-status';
 import { Settings } from './components/ui/settings';
-import ActivityMonitor from './components/ui/activity-monitor';
 import initStyles from './utils/init-styles';
 import { AppHeader } from './components/layout';
-import ClientIcon from './components/ui/client-icon';
 import { MonitoringButton } from './components/ui/monitoring-button';
-import { Zap, Target, TrendingUp, Clock, Award, BarChart3 } from 'lucide-react';
+import { Target } from 'lucide-react';
 
 interface Log {
   id?: string;
@@ -29,12 +25,21 @@ export default function HomePage() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('home');
   const [logs, setLogs] = useState<Log[]>([]);
   const [loading, setLoading] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [imageError, setImageError] = useState(false);
+
+  // 사이드바, 이미지 상태 로깅
+  const logUIState = () => {
+    console.log('페이지 UI 상태:', {
+      activeTab,
+      logsCount: logs.length,
+      isLoading: loading,
+      timestamp: new Date().toISOString()
+    });
+  };
 
   // 로그 데이터 로드 및 CSS 설정
   useEffect(() => {
     loadLogs();
+    logUIState();
     
     // CSS 스타일 강제 적용
     initStyles();
@@ -86,6 +91,15 @@ export default function HomePage() {
     { id: 'analysis' as ActiveTab, label: '분석' },
     { id: 'settings' as ActiveTab, label: '설정' },
   ];
+
+  // 내비게이션 아이템 로깅
+  const logNavigation = () => {
+    console.log('내비게이션 아이템 구성:', {
+      items: navItems.map(item => ({ id: item.id, label: item.label })),
+      currentTab: activeTab,
+      timestamp: new Date().toISOString()
+    });
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -195,9 +209,10 @@ export default function HomePage() {
       {/* 새로운 AppHeader 사용 */}
       <AppHeader 
         activeTab={activeTab}
-        onTabChange={(tab) => setActiveTab(tab as ActiveTab)}
-        isRefreshing={loading}
-        onRefresh={loadLogs}
+        onTabChange={(tab) => {
+          logNavigation();
+          setActiveTab(tab as ActiveTab);
+        }}
       />
 
       {/* Main Content */}

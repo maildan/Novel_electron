@@ -6,6 +6,14 @@ export const revalidate = false;
 
 export async function GET(request: NextRequest) {
   try {
+    // 요청 분석을 위한 로깅
+    console.log('메모리 정보 요청 받음:', {
+      url: request.url,
+      method: request.method,
+      userAgent: request.headers.get('user-agent') || 'unknown',
+      timestamp: new Date().toISOString()
+    });
+
     // 메모리 정보 조회
     let memoryInfo = null;
     
@@ -18,11 +26,11 @@ export async function GET(request: NextRequest) {
       
       // 폴백: 브라우저 API 사용
       if (typeof window !== 'undefined' && 'performance' in window && 'memory' in window.performance) {
-        const memory = (window.performance as any).memory;
+        const memory = (window.performance as { memory?: { totalJSHeapSize?: number; usedJSHeapSize?: number; jsHeapSizeLimit?: number } }).memory;
         memoryInfo = {
-          totalJSHeapSize: memory.totalJSHeapSize || 0,
-          usedJSHeapSize: memory.usedJSHeapSize || 0,
-          jsHeapSizeLimit: memory.jsHeapSizeLimit || 0,
+          totalJSHeapSize: memory?.totalJSHeapSize || 0,
+          usedJSHeapSize: memory?.usedJSHeapSize || 0,
+          jsHeapSizeLimit: memory?.jsHeapSizeLimit || 0,
           system: {
             total: 0,
             free: 0,

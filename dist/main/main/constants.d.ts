@@ -90,7 +90,7 @@ export declare const DATABASE_CONFIG: {
 export declare const LOGGING_CONFIG: {
     readonly MAX_FILE_SIZE: number;
     readonly MAX_FILES: 5;
-    readonly LOG_LEVEL: "debug" | "info";
+    readonly LOG_LEVEL: "info" | "debug";
     readonly CONSOLE_LOG_ENABLED: true;
     readonly FILE_LOG_ENABLED: true;
     readonly ERROR_REPORTING_ENABLED: true;
@@ -155,7 +155,7 @@ export interface AppState {
     isRestarting: boolean;
     inBackgroundMode: boolean;
     allowQuit: boolean;
-    keyboardListener: any;
+    keyboardListener: unknown;
     lastActiveTime: number;
     idleTime: number;
     windowMode: WindowModeType;
@@ -169,10 +169,10 @@ export interface AppState {
     lastGcTime: number;
     memoryUsage: MemoryInfo;
     currentStats: TypingStats;
-    lastActiveWindowInfo: any;
+    lastActiveWindowInfo: Record<string, unknown> | null;
     systemInfo: SystemInfo | null;
     gpuEnabled: boolean;
-    gpuResources: any;
+    gpuResources: Record<string, unknown> | null;
     miniViewLastMode: 'icon' | 'normal';
     settings: AppSettings;
 }
@@ -749,7 +749,7 @@ declare const _default: {
     LOGGING_CONFIG: {
         readonly MAX_FILE_SIZE: number;
         readonly MAX_FILES: 5;
-        readonly LOG_LEVEL: "debug" | "info";
+        readonly LOG_LEVEL: "info" | "debug";
         readonly CONSOLE_LOG_ENABLED: true;
         readonly FILE_LOG_ENABLED: true;
         readonly ERROR_REPORTING_ENABLED: true;

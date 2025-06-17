@@ -8,5 +8,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = require("dotenv");
 (0, dotenv_1.config)();
 // Import and initialize the main process
-require('./main');
+require("./main");
 //# sourceMappingURL=index.js.map

@@ -1,7 +1,7 @@
 "use strict";
 /**
- * 데이터 수집 및 로깅 시스템
- * COPILOT_GUIDE.md 규칙에 따른 지속적 데이터 수집
+ * Data collection and logging system
+ * Continuous data collection according to COPILOT_GUIDE.md rules
  */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -43,7 +43,7 @@ const path = __importStar(require("path"));
 class DataCollector {
     constructor() {
         this.sessionId = new Date().toISOString().replace(/[:.]/g, '-');
-        console.log('[데이터수집기] 세션 ID 생성됨:', this.sessionId);
+        console.log('[DataCollector] Session ID generated:', this.sessionId);
         this.logPath = path.join(process.cwd(), 'thinking', 'logs');
         this.ensureLogDirectory();
     }
@@ -60,37 +60,37 @@ class DataCollector {
             data,
             source
         };
-        // 일별 로그 파일에 저장
+        // Save to daily log file
         const dateStr = new Date().toISOString().split('T')[0];
         const logFile = path.join(this.logPath, `data-collection-${dateStr}.jsonl`);
         try {
             fs.appendFileSync(logFile, JSON.stringify(entry) + '\n');
         }
         catch (error) {
-            console.error('로그 저장 Failed:', error);
+            console.error('Log save failed:', error);
         }
     }
     logSystemInfo(info) {
-        this.log('system', '시스템 정보 수집', info, 'system-monitor');
+        this.log('system', 'System information collected', info, 'system-monitor');
     }
     logKeyboardEvent(event) {
-        this.log('keyboard', '키보드 이벤트 감지', event, 'keyboard-manager');
+        this.log('keyboard', 'Keyboard event detected', event, 'keyboard-manager');
     }
     logMemoryUsage(usage) {
-        this.log('memory', '메모리 사용량 수집', usage, 'memory-manager');
+        this.log('memory', 'Memory usage collected', usage, 'memory-manager');
     }
     logGpuInfo(info) {
-        this.log('gpu', 'GPU 정보 수집', info, 'gpu-utils');
+        this.log('gpu', 'GPU information collected', info, 'gpu-utils');
     }
     logError(error, context) {
-        this.log('error', 'Error 발생', {
+        this.log('error', 'Error occurred', {
             message: error.message,
             stack: error.stack,
             context
         }, 'error-handler');
     }
     logPerformance(metric, value, unit = 'ms') {
-        this.log('performance', '성능 지표 수집', {
+        this.log('performance', 'Performance metric collected', {
             metric,
             value,
             unit
@@ -121,14 +121,14 @@ class DataCollector {
             };
             const reportFile = path.join(this.logPath, `daily-report-${dateStr}.json`);
             fs.writeFileSync(reportFile, JSON.stringify(report, null, 2));
-            console.log('일일 보고서 생성 Completed: ${reportFile}');
+            console.log(`Daily report generated successfully: ${reportFile}`);
         }
         catch (error) {
-            console.error('일일 보고서 생성 Failed:', error);
+            console.error('Daily report generation failed:', error);
         }
     }
 }
 exports.DataCollector = DataCollector;
-// 전역 데이터 수집기 인스턴스
+// Global data collector instance
 exports.dataCollector = new DataCollector();
 //# sourceMappingURL=data-collector.js.map

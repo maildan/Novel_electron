@@ -5,7 +5,7 @@
  */
 
 import { ipcMain } from 'electron';
-import { SystemMonitor } from './system-monitor';
+import { SystemMonitor, SystemMetrics, SystemInfo } from './system-monitor';
 import { CHANNELS } from '../preload/channels';
 
 // 새로운 통합 타입 시스템 사용
@@ -51,7 +51,7 @@ export function registerSystemMonitorIpcHandlers(): void {
   });
 
   // 현재 메트릭 조회
-  ipcMain.handle(CHANNELS.GET_CURRENT_METRICS, async (): Promise<IpcResponse<any>> => {
+  ipcMain.handle(CHANNELS.GET_CURRENT_METRICS, async (): Promise<IpcResponse<SystemMetrics>> => {
     try {
       const metrics = systemMonitor.getCurrentMetrics();
       if (!metrics) {
@@ -83,12 +83,21 @@ export function registerSystemMonitorIpcHandlers(): void {
   });
 
   // 메트릭 히스토리 조회
-  ipcMain.handle(CHANNELS.GET_METRICS_HISTORY, async (_, minutes?: number): Promise<IpcResponse<any[]>> => {
+  ipcMain.handle(CHANNELS.GET_METRICS_HISTORY, async (_, minutes?: number): Promise<IpcResponse<SystemMetrics[]>> => {
     try {
-      const history = systemMonitor.getMetricsHistory(minutes);
+      const allHistory = systemMonitor.getMetricsHistory();
+      
+      // minutes 매개변수가 제공된 경우, 해당 시간 범위의 데이터만 필터링
+      let history = allHistory;
+      if (minutes && minutes > 0) {
+        const cutoffTime = Date.now() - (minutes * 60 * 1000);
+        history = allHistory.filter(metric => metric.timestamp >= cutoffTime);
+      }
+      
       console.log('[SystemMonitor IPC] 메트릭 히스토리 조회 성공:', {
-        count: history.length,
-        minutes: minutes || 5,
+        totalCount: allHistory.length,
+        filteredCount: history.length,
+        minutes: minutes || 'all',
         timeRange: history.length > 0 ? {
           from: new Date(history[0].timestamp).toISOString(),
           to: new Date(history[history.length - 1].timestamp).toISOString()
@@ -108,11 +117,19 @@ export function registerSystemMonitorIpcHandlers(): void {
     }
   });
 
-  // 평균 메트릭 조회
-  ipcMain.handle(CHANNELS.GET_AVERAGE_METRICS, async (_, minutes?: number): Promise<IpcResponse<any>> => {
+  // 평균 메트릭 조회 (직접 계산)
+  ipcMain.handle(CHANNELS.GET_AVERAGE_METRICS, async (_, minutes?: number): Promise<IpcResponse<SystemMetrics | null>> => {
     try {
-      const averageMetrics = systemMonitor.getAverageMetrics(minutes);
-      if (!averageMetrics) {
+      const allHistory = systemMonitor.getMetricsHistory();
+      let history = allHistory;
+      
+      // minutes 매개변수가 제공된 경우, 해당 시간 범위의 데이터만 필터링
+      if (minutes && minutes > 0) {
+        const cutoffTime = Date.now() - (minutes * 60 * 1000);
+        history = allHistory.filter(metric => metric.timestamp >= cutoffTime);
+      }
+      
+      if (history.length === 0) {
         const ipcError = createIpcError(
           'NO_AVERAGE_METRICS',
           '평균 메트릭 데이터를 계산할 수 없습니다. 충분한 히스토리 데이터가 없을 수 있습니다.',
@@ -121,13 +138,56 @@ export function registerSystemMonitorIpcHandlers(): void {
         return createErrorResponse(ipcError);
       }
       
-      console.log('[SystemMonitor IPC] 평균 메트릭 조회 성공:', {
-        cpu: averageMetrics.cpu?.usage ? `${averageMetrics.cpu.usage.toFixed(1)}%` : 'N/A',
-        memory: averageMetrics.memory?.percentage ? `${averageMetrics.memory.percentage.toFixed(1)}%` : 'N/A',
-        minutes: minutes || 5
+      // 평균 계산
+      const avgMetrics: SystemMetrics = {
+        cpu: {
+          usage: history.reduce((sum, m) => sum + m.cpu.usage, 0) / history.length,
+          processes: history[history.length - 1].cpu.processes // 최신 프로세스 수 사용
+        },
+        memory: {
+          total: history[0].memory.total, // 첫 번째 메트릭의 총 메모리 사용
+          used: history.reduce((sum, m) => sum + m.memory.used, 0) / history.length,
+          free: history.reduce((sum, m) => sum + m.memory.free, 0) / history.length,
+          percentage: history.reduce((sum, m) => sum + m.memory.percentage, 0) / history.length
+        },
+        disk: {
+          total: history[0].disk.total,
+          free: history.reduce((sum, m) => sum + m.disk.free, 0) / history.length,
+          used: history.reduce((sum, m) => sum + m.disk.used, 0) / history.length,
+          percentage: history.reduce((sum, m) => sum + m.disk.percentage, 0) / history.length
+        },
+        network: {
+          downloadSpeed: history.reduce((sum, m) => sum + m.network.downloadSpeed, 0) / history.length,
+          uploadSpeed: history.reduce((sum, m) => sum + m.network.uploadSpeed, 0) / history.length
+        },
+        power: {
+          isOnBattery: history[history.length - 1].power.isOnBattery, // 최신 배터리 상태 사용
+          batteryLevel: history.reduce((sum, m) => sum + (m.power.batteryLevel || 0), 0) / history.length,
+          isCharging: history[history.length - 1].power.isCharging
+        },
+        timestamp: Date.now()
+      };
+
+      // GPU 메트릭이 있는 경우에만 평균 계산
+      if (history.some(m => m.gpu)) {
+        const gpuHistory = history.filter(m => m.gpu);
+        if (gpuHistory.length > 0) {
+          avgMetrics.gpu = {
+            usage: gpuHistory.reduce((sum, m) => sum + (m.gpu?.usage || 0), 0) / gpuHistory.length,
+            memory: gpuHistory.reduce((sum, m) => sum + (m.gpu?.memory || 0), 0) / gpuHistory.length,
+            temperature: gpuHistory.reduce((sum, m) => sum + (m.gpu?.temperature || 0), 0) / gpuHistory.length
+          };
+        }
+      }
+      
+      console.log('[SystemMonitor IPC] 평균 메트릭 계산 성공:', {
+        sampleCount: history.length,
+        minutes: minutes || 'all',
+        avgCpu: `${avgMetrics.cpu.usage.toFixed(1)}%`,
+        avgMemory: `${avgMetrics.memory.percentage.toFixed(1)}%`
       });
       
-      return createSuccessResponse(averageMetrics);
+      return createSuccessResponse(avgMetrics);
     } catch (error) {
       console.error('[SystemMonitor IPC] 평균 메트릭 조회 Error:', error);
       const ipcError = createIpcError(
@@ -141,7 +201,7 @@ export function registerSystemMonitorIpcHandlers(): void {
   });
 
   // 시스템 건강 상태 조회
-  ipcMain.handle(CHANNELS.GET_SYSTEM_HEALTH, async (): Promise<IpcResponse<any>> => {
+  ipcMain.handle(CHANNELS.GET_SYSTEM_HEALTH, async (): Promise<IpcResponse<{ status: 'good' | 'warning' | 'critical'; issues: string[]; score: number }>> => {
     try {
       const health = systemMonitor.getSystemHealth();
       console.log('[SystemMonitor IPC] 시스템 건강 상태 조회 성공:', {
@@ -164,13 +224,13 @@ export function registerSystemMonitorIpcHandlers(): void {
   });
 
   // 시스템 정보 조회
-  ipcMain.handle(CHANNELS.GET_SYSTEM_INFO, async (): Promise<IpcResponse<any>> => {
+  ipcMain.handle(CHANNELS.GET_SYSTEM_INFO, async (): Promise<IpcResponse<SystemInfo>> => {
     try {
       const systemInfo = await systemMonitor.getSystemInfo();
       console.log('[SystemMonitor IPC] 시스템 정보 조회 성공:', {
         platform: systemInfo.platform,
         arch: systemInfo.arch,
-        cpuModel: systemInfo.cpu?.model?.substring(0, 30) + '...',
+        cpuModel: systemInfo.cpus > 0 ? `${systemInfo.cpus} cores` : 'Unknown',
         totalMemory: `${(systemInfo.memory.total / (1024 * 1024 * 1024)).toFixed(1)}GB`
       });
       
@@ -188,7 +248,7 @@ export function registerSystemMonitorIpcHandlers(): void {
   });
 
   // 메모리 사용량 조회 (현재 메트릭을 사용)
-  ipcMain.handle(CHANNELS.GET_MEMORY_USAGE, async (): Promise<IpcResponse<any>> => {
+  ipcMain.handle(CHANNELS.GET_MEMORY_USAGE, async (): Promise<IpcResponse<{ used: number; total: number; free: number; percentage: number; timestamp: number }>> => {
     try {
       const currentMetrics = systemMonitor.getCurrentMetrics();
       if (!currentMetrics) {
@@ -229,7 +289,7 @@ export function registerSystemMonitorIpcHandlers(): void {
   });
 
   // 메모리 최적화 (가용한 메모리 정리 시뮬레이션)
-  ipcMain.handle(CHANNELS.OPTIMIZE_MEMORY, async (): Promise<IpcResponse<any>> => {
+  ipcMain.handle(CHANNELS.OPTIMIZE_MEMORY, async (): Promise<IpcResponse<{ beforeUsage: number; afterUsage: number; freedMemory: number; optimizationTime: number; timestamp: number }>> => {
     try {
       // 현재 메트릭 기록
       const beforeMetrics = systemMonitor.getCurrentMetrics();

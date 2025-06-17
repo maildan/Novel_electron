@@ -21,6 +21,20 @@ interface KeyboardStatus {
   totalTypingCount: number;
 }
 
+interface PermissionStatus {
+  screenRecording?: boolean;
+  accessibility?: boolean;
+}
+
+interface ElectronAPI {
+  getKeyboardPermissions?: () => Promise<PermissionStatus>;
+  startKeyboardTracking?: () => Promise<unknown>;
+  stopKeyboardTracking?: () => Promise<unknown>;
+  getKeyboardStatus?: () => Promise<KeyboardStatus>;
+  requestPermissions?: () => Promise<unknown>;
+  openPermissionsSettings?: () => void;
+}
+
 export function MonitoringButton() {
   const [monitoringState, setMonitoringState] = useState<MonitoringState>({
     isActive: false,
@@ -38,8 +52,9 @@ export function MonitoringButton() {
       setMonitoringState(prev => ({ ...prev, isChecking: true, error: undefined }));
 
       // 키보드 권한 상태 확인
-      if ((window.electronAPI as any)?.getKeyboardPermissions) {
-        const permissions = await (window.electronAPI as any).getKeyboardPermissions();
+      const electronAPI = (window as { electronAPI?: ElectronAPI }).electronAPI;
+      if (electronAPI?.getKeyboardPermissions) {
+        const permissions = await electronAPI.getKeyboardPermissions();
         
         const hasPermissions = permissions?.screenRecording === true && 
                               permissions?.accessibility === true;
@@ -118,13 +133,13 @@ export function MonitoringButton() {
       } else {
         throw new Error('ElectronAPI를 사용할 수 없습니다.');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('[MonitoringButton] 모니터링 시작 오류:', error);
       setMonitoringState(prev => ({
         ...prev,
         isActive: false,
         isChecking: false,
-        error: error.message || '모니터링 시작 중 오류가 발생했습니다.'
+        error: error instanceof Error ? error.message : '모니터링 시작 중 오류가 발생했습니다.'
       }));
     }
   }, [checkKeyboardStatus]);
@@ -158,12 +173,12 @@ export function MonitoringButton() {
       } else {
         throw new Error('ElectronAPI를 사용할 수 없습니다.');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('[MonitoringButton] 모니터링 중지 오류:', error);
       setMonitoringState(prev => ({
         ...prev,
         isChecking: false,
-        error: error.message || '모니터링 중지 중 오류가 발생했습니다.'
+        error: error instanceof Error ? error.message : '모니터링 중지 중 오류가 발생했습니다.'
       }));
     }
   }, [checkKeyboardStatus]);
@@ -187,8 +202,9 @@ export function MonitoringButton() {
    * 권한 설정 열기
    */
   const openPermissionsSettings = useCallback(() => {
-    if ((window.electronAPI as any)?.openPermissionsSettings) {
-      (window.electronAPI as any).openPermissionsSettings();
+    const electronAPI = (window as { electronAPI?: ElectronAPI }).electronAPI;
+    if (electronAPI?.openPermissionsSettings) {
+      electronAPI.openPermissionsSettings();
     } else {
       console.warn('[MonitoringButton] 권한 설정 API를 사용할 수 없습니다.');
     }

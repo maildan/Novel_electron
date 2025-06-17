@@ -7,7 +7,7 @@ interface ClientIconProps {
   icon: LucideIcon;
   className?: string;
   size?: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**

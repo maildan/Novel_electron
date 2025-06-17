@@ -8,4 +8,4 @@ import { config } from 'dotenv';
 config();
 
 // Import and initialize the main process
-require('./main');
+import './main';

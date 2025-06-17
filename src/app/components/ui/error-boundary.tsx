@@ -46,7 +46,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
     });
     
     // 에러 정보 전달
-    if (typeof window !== 'undefined' && (window as any).electronAPI) {
+    if (typeof window !== 'undefined' && (window as { electronAPI?: unknown }).electronAPI) {
       try {
         console.log('Electron API로 에러 정보 전송:', {
           message: error.message,

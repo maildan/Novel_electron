@@ -1,6 +1,6 @@
 /**
- * 데이터 수집 및 로깅 시스템
- * COPILOT_GUIDE.md 규칙에 따른 지속적 데이터 수집
+ * Data collection and logging system
+ * Continuous data collection according to COPILOT_GUIDE.md rules
  */
 
 import * as fs from 'fs';
@@ -10,7 +10,7 @@ interface LogEntry {
   timestamp: string;
   type: 'system' | 'keyboard' | 'memory' | 'gpu' | 'error' | 'performance';
   message: string;
-  data?: any;
+  data?: Record<string, unknown>;
   source: string;
 }
 
@@ -20,7 +20,7 @@ export class DataCollector {
 
   constructor() {
     this.sessionId = new Date().toISOString().replace(/[:.]/g, '-');
-    console.log('[데이터수집기] 세션 ID 생성됨:', this.sessionId);
+    console.log('[DataCollector] Session ID generated:', this.sessionId);
     this.logPath = path.join(process.cwd(), 'thinking', 'logs');
     this.ensureLogDirectory();
   }
@@ -31,7 +31,7 @@ export class DataCollector {
     }
   }
 
-  public log(type: LogEntry['type'], message: string, data?: any, source: string = 'main'): void {
+  public log(type: LogEntry['type'], message: string, data?: Record<string, unknown>, source: string = 'main'): void {
     const entry: LogEntry = {
       timestamp: new Date().toISOString(),
       type,
@@ -40,35 +40,35 @@ export class DataCollector {
       source
     };
 
-    // 일별 로그 파일에 저장
+    // Save to daily log file
     const dateStr = new Date().toISOString().split('T')[0];
     const logFile = path.join(this.logPath, `data-collection-${dateStr}.jsonl`);
     
     try {
       fs.appendFileSync(logFile, JSON.stringify(entry) + '\n');
     } catch (error) {
-      console.error('로그 저장 Failed:', error);
+      console.error('Log save failed:', error);
     }
   }
 
-  public logSystemInfo(info: any): void {
-    this.log('system', '시스템 정보 수집', info, 'system-monitor');
+  public logSystemInfo(info: Record<string, unknown>): void {
+    this.log('system', 'System information collected', info, 'system-monitor');
   }
 
-  public logKeyboardEvent(event: any): void {
-    this.log('keyboard', '키보드 이벤트 감지', event, 'keyboard-manager');
+  public logKeyboardEvent(event: Record<string, unknown>): void {
+    this.log('keyboard', 'Keyboard event detected', event, 'keyboard-manager');
   }
 
-  public logMemoryUsage(usage: any): void {
-    this.log('memory', '메모리 사용량 수집', usage, 'memory-manager');
+  public logMemoryUsage(usage: Record<string, unknown>): void {
+    this.log('memory', 'Memory usage collected', usage, 'memory-manager');
   }
 
-  public logGpuInfo(info: any): void {
-    this.log('gpu', 'GPU 정보 수집', info, 'gpu-utils');
+  public logGpuInfo(info: Record<string, unknown>): void {
+    this.log('gpu', 'GPU information collected', info, 'gpu-utils');
   }
 
   public logError(error: Error, context?: string): void {
-    this.log('error', 'Error 발생', {
+    this.log('error', 'Error occurred', {
       message: error.message,
       stack: error.stack,
       context
@@ -76,7 +76,7 @@ export class DataCollector {
   }
 
   public logPerformance(metric: string, value: number, unit: string = 'ms'): void {
-    this.log('performance', '성능 지표 수집', {
+    this.log('performance', 'Performance metric collected', {
       metric,
       value,
       unit
@@ -113,12 +113,12 @@ export class DataCollector {
       const reportFile = path.join(this.logPath, `daily-report-${dateStr}.json`);
       fs.writeFileSync(reportFile, JSON.stringify(report, null, 2));
       
-      console.log('일일 보고서 생성 Completed: ${reportFile}');
+      console.log(`Daily report generated successfully: ${reportFile}`);
     } catch (error) {
-      console.error('일일 보고서 생성 Failed:', error);
+      console.error('Daily report generation failed:', error);
     }
   }
 }
 
-// 전역 데이터 수집기 인스턴스
+// Global data collector instance
 export const dataCollector = new DataCollector();

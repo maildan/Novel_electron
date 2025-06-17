@@ -1,0 +1,97 @@
+{
+	"enabledCategories": {
+		"docs": true,
+		"office": true,
+		"coding": true,
+		"sns": true,
+		"browser": true,
+		"game": false,
+		"media": true,
+		"other": true
+	},
+	"autoStartMonitoring": true,
+	"resumeAfterIdle": true,
+	"idleTimeout": 300,
+	"theme": "system",
+	"windowMode": "windowed",
+	"darkMode": false,
+	"minimizeToTray": true,
+	"showTrayNotifications": true,
+	"enableMiniView": true,
+	"enableAnimations": true,
+	"fontSize": 14,
+	"fontFamily": "system-ui",
+	"useHardwareAcceleration": false,
+	"enableGPUAcceleration": true,
+	"gpuAccelerationLevel": 1,
+	"processingMode": "auto",
+	"reduceMemoryInBackground": true,
+	"enableMemoryOptimization": true,
+	"enableBackgroundCleanup": true,
+	"garbageCollectionInterval": 60000,
+	"maxMemoryThreshold": 100,
+	"memoryCleanupInterval": 300000,
+	"memoryThreshold": 80,
+	"autoCleanupLogs": true,
+	"maxHistoryItems": 500,
+	"logRetentionDays": 30,
+	"enableDataCollection": true,
+	"enableAnalytics": false,
+	"dataRetentionDays": 30,
+	"enableAutoSave": true,
+	"autoSaveInterval": 10000,
+	"enableWPMDisplay": true,
+	"enableAccuracyDisplay": true,
+	"enableRealTimeStats": true,
+	"enableTypingSound": false,
+	"enableKeyboardShortcuts": true,
+	"statsFilePath": "typing-stats.json",
+	"enableTypingAnalysis": true,
+	"enableRealTimeAnalysis": true,
+	"statsCollectionInterval": 30,
+	"enableKeyboardDetection": true,
+	"enablePatternLearning": true,
+	"keyboard": {
+		"autoStart": true,
+		"enableHangulSupport": true,
+		"enableJamoTracking": true,
+		"hangulMode": "auto",
+		"jamoSeparation": true,
+		"trackingInterval": 50
+	},
+	"windowSettings": {
+		"miniSize": {
+			"width": 400,
+			"height": 300
+		},
+		"opacity": 1,
+		"alwaysOnTop": false,
+		"autoHide": false,
+		"position": {
+			"x": 100,
+			"y": 100
+		}
+	},
+	"windowOpacity": 1,
+	"alwaysOnTop": false,
+	"enableSystemMonitoring": true,
+	"enablePerformanceLogging": false,
+	"monitoringInterval": 1000,
+	"enableCPUMonitoring": true,
+	"enableMemoryMonitoring": true,
+	"enableDiskMonitoring": false,
+	"enableNotifications": true,
+	"enableTrayNotifications": true,
+	"enableDebugMode": true,
+	"enableConsoleLogging": true,
+	"enableErrorReporting": true,
+	"logLevel": "debug",
+	"app": {
+		"version": "36.4.0"
+	},
+	"__internal__": {
+		"migrations": {
+			"version": "36.4.0"
+		}
+	}
+}

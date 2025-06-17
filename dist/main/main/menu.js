@@ -96,6 +96,7 @@ function createApplicationMenu(options) {
     const isMac = process.platform === 'darwin';
     const isWindows = process.platform === 'win32';
     const isDev = process.env.NODE_ENV === 'development';
+    console.log(`메뉴 생성 - 플랫폼: ${isMac ? 'macOS' : isWindows ? 'Windows' : 'Linux'}, 개발모드: ${isDev}`);
     const template = [];
     // macOS 앱 메뉴
     if (isMac) {
@@ -223,6 +224,7 @@ function createFileMenu(options) {
  * 편집 메뉴 생성
  */
 function createEditMenu(options) {
+    console.log(`편집 메뉴 생성 - 옵션: ${JSON.stringify(options.appName || 'default')}`);
     return {
         label: '편집',
         submenu: [
@@ -273,6 +275,7 @@ function createViewMenu(options) {
  * 윈도우 메뉴 생성
  */
 function createWindowMenu(options) {
+    console.log(`윈도우 메뉴 생성 - 앱명: ${options.appName || 'Unknown'}`);
     const submenu = [
         { role: 'minimize', label: '최소화' },
         { role: 'close', label: '닫기' }
@@ -384,6 +387,9 @@ function convertToMenuItemOptions(item) {
 function handleMenuAction(action, data) {
     try {
         const focusedWindow = electron_1.BrowserWindow.getFocusedWindow();
+        // 메뉴 카테고리별 로깅
+        const category = getMenuCategory(action);
+        console.log(`메뉴 액션 [${category}]: ${action}`);
         // 액션 Add to history
         menuActionHistory.unshift({
             action,
@@ -421,6 +427,29 @@ function handleMenuAction(action, data) {
     }
     catch (error) {
         console.error('메뉴 액션 처리 Error (${action}):', error);
+    }
+}
+/**
+ * 메뉴 액션의 카테고리 파악
+ */
+function getMenuCategory(action) {
+    if (action.includes('file') || action.includes('open') || action.includes('save')) {
+        return MENU_CATEGORIES.FILE;
+    }
+    else if (action.includes('edit') || action.includes('copy') || action.includes('paste')) {
+        return MENU_CATEGORIES.EDIT;
+    }
+    else if (action.includes('view') || action.includes('zoom') || action.includes('dev')) {
+        return MENU_CATEGORIES.VIEW;
+    }
+    else if (action.includes('window') || action.includes('minimize') || action.includes('close')) {
+        return MENU_CATEGORIES.WINDOW;
+    }
+    else if (action.includes('help') || action.includes('about') || action.includes('shortcuts')) {
+        return MENU_CATEGORIES.HELP;
+    }
+    else {
+        return MENU_CATEGORIES.CUSTOM;
     }
 }
 /**

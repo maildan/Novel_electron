@@ -104,19 +104,19 @@ export declare class StatsManager {
     /**
    * 통계 데이터 가져오기
    */
-    getStats(options?: any): Promise<any>;
+    getStats(options?: Record<string, unknown>): Promise<Record<string, unknown>>;
     /**
    * 타이핑 패턴 분석
    */
-    analyzeTypingPattern(data: any): Promise<any>;
+    analyzeTypingPattern(data: Record<string, unknown>): Promise<Record<string, unknown>>;
     /**
    * Setup 업데이트
    */
-    updateSettings(settings: any): Promise<any>;
+    updateSettings(settings: Record<string, unknown>): Promise<Record<string, unknown>>;
     /**
    * 메모리 최적화
    */
-    optimizeMemory(): Promise<any>;
+    optimizeMemory(): Promise<Record<string, unknown>>;
     /**
    * 모듈 재시작
    */

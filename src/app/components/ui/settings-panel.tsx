@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Settings, User, Database, Monitor, Palette, Shield } from 'lucide-react'
+import { Settings, User, Monitor, Shield } from 'lucide-react'
 
 interface SettingsData {
   theme: 'light' | 'dark' | 'auto'

@@ -271,7 +271,7 @@ export class BrowserDetector {
     try {
       if (process.platform === 'darwin') {
         const activeWin = await import('active-win');
-        const windowInfo = await (activeWin as any)();
+        const windowInfo = await (activeWin as unknown as () => Promise<WindowInfo>)();
         return windowInfo as WindowInfo;
       } else {
         // Windows/Linux 구현
@@ -563,7 +563,7 @@ export class BrowserDetector {
   /**
  * Setup 업데이트
  */
-  async updateSettings(settings: any): Promise<{ success: boolean; error?: string }> {
+  async updateSettings(settings: Record<string, unknown>): Promise<{ success: boolean; error?: string }> {
     try {
       // settings 매개변수 사용 확인
       console.log('[브라우저감지] 설정 업데이트 요청:', typeof settings, settings ? Object.keys(settings).length : 0, '개 설정');

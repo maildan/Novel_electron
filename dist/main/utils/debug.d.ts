@@ -23,7 +23,7 @@ export declare function errorLog(...args: any[]): void;
 /**
  * 성능 측정 시작
  */
-export declare function startPerformanceTimer(label: string): () => number;
+export declare function startPerformanceTimer(_label: string): () => number;
 /**
  * 메모리 사용량 로깅
  */

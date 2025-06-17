@@ -6,6 +6,14 @@ export const revalidate = false;
 
 export async function GET(request: NextRequest) {
   try {
+    // 요청 분석을 위한 로깅
+    console.log('GPU 정보 요청 받음:', {
+      url: request.url,
+      method: request.method,
+      userAgent: request.headers.get('user-agent') || 'unknown',
+      timestamp: new Date().toISOString()
+    });
+
     // GPU 정보 조회 (네이티브 모듈을 통해)
     let gpuInfo = null;
     let accelerationAvailable = false;
@@ -127,13 +135,13 @@ export async function POST(request: NextRequest) {
 }
 
 // CPU 폴백 처리 함수
-async function fallbackCpuProcessing(data: any) {
+async function fallbackCpuProcessing(data: unknown) {
   // 간단한 CPU 기반 처리 구현
   const startTime = Date.now();
   
   // 데이터 처리 시뮬레이션
   if (data && Array.isArray(data)) {
-    const result = data.map((item: any) => {
+    const result = data.map((item: Record<string, unknown>) => {
       // 간단한 계산 수행
       return {
         ...item,

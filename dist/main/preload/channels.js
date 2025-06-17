@@ -34,6 +34,13 @@ exports.CHANNELS = {
     MEMORY_GET_STATS: 'memory:getStats',
     MEMORY_GET_INFO: 'memory:getInfo',
     MEMORY_OPTIMIZE: 'memory:optimize',
+    // 타이핑 추적
+    TRACKING_START_MONITORING: 'tracking:start-monitoring',
+    TRACKING_STOP_MONITORING: 'tracking:stop-monitoring',
+    TRACKING_GET_STATUS: 'tracking:get-status',
+    TRACKING_SAVE_STATS: 'tracking:save-stats',
+    TRACKING_RESET: 'tracking:reset',
+    TRACKING_PROCESS_KEY: 'tracking:process-key',
     // GPU 관리
     GPU_GET_INFO: 'gpu:getInfo',
     GPU_COMPUTE: 'gpu:compute',

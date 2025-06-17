@@ -202,7 +202,7 @@ class UpdateManager extends events_1.EventEmitter {
             // Show notification to user
             this.showUpdateAvailableNotification();
         });
-        electron_1.autoUpdater.on('update-not-available', (info) => {
+        electron_1.autoUpdater.on('update-not-available', (_info) => {
             (0, utils_1.debugLog)('[UpdateManager] Update not available');
             this.state.status = UpdateStatus.NOT_AVAILABLE;
             this.state.available = false;
@@ -221,7 +221,7 @@ class UpdateManager extends events_1.EventEmitter {
             this.emit('download-progress', this.state.progress);
             this.notifyRenderer('update-download-progress', this.state.progress);
         });
-        electron_1.autoUpdater.on('update-downloaded', (info) => {
+        electron_1.autoUpdater.on('update-downloaded', (_info) => {
             (0, utils_1.debugLog)('[UpdateManager] Update downloaded');
             this.state.status = UpdateStatus.DOWNLOADED;
             this.state.downloaded = true;

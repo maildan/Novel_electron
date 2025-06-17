@@ -1,4 +1,5 @@
-import { app, webContents, ipcMain } from 'electron';
+import { app, webContents, ipcMain, session } from 'electron';
+import * as os from 'os';
 import { AppConfig } from './config';
 
 // IPC 모듈 사용 확인
@@ -94,7 +95,6 @@ export class MemoryManager {
    * Node.js memoryUsage를 React 컴포넌트가 기대하는 ReactMemoryInfo 형태로 변환 (RSS 기반)
    */
   private convertNodeMemoryToMemoryInfo(nodeMemory: NodeJS.MemoryUsage): ReactMemoryInfo {
-    const os = require('os');
     const systemTotalMemory = os.totalmem();
     
     // 바이트를 메가바이트로 정확하게 변환
@@ -179,7 +179,6 @@ export class MemoryManager {
  * 시스템 메모리 정보 조회
  */
   private getSystemMemoryInfo(): { total: number; free: number; used: number } {
-    const os = require('os');
     const totalMemory = os.totalmem();
     const freeMemory = os.freemem();
     const usedMemory = totalMemory - freeMemory;
@@ -297,14 +296,14 @@ export class MemoryManager {
    */
   private async clearCaches(): Promise<void> {
     try {
-      const session = require('electron').session.defaultSession;
+      const defaultSession = session.defaultSession;
       
       // HTTP 캐시 Cleanup
-      await session.clearCache();
+      await defaultSession.clearCache();
       
       // 이미지 캐시 Cleanup (부분적)
-      await session.clearStorageData({
-        storages: ['appcache', 'serviceworkers'],
+      await defaultSession.clearStorageData({
+        storages: ['cachestorage', 'serviceworkers'],
       });
 
     } catch (error) {
@@ -345,8 +344,8 @@ export class MemoryManager {
 
       // 모든 캐시 강제 Cleanup
       await this.clearCaches();
-      const session = require('electron').session.defaultSession;
-      await session.clearStorageData();
+      const defaultSession = session.defaultSession;
+      await defaultSession.clearStorageData();
 
     } catch (error) {
       console.error('[Memory] 긴급 Cleanup Failed:', error);
@@ -497,7 +496,16 @@ export class MemoryManager {
   /**
    * 메모리 최적화 실행 (IPC용)
    */
-  async optimize(): Promise<any> {
+  async optimize(): Promise<{
+    before: ReactMemoryData;
+    after: ReactMemoryData;
+    freed: {
+      main: number;
+      renderer: number;
+      system: number;
+    };
+    timestamp: number;
+  }> {
     try {
       console.log('[MemoryManager] 메모리 최적화 시작');
       
@@ -591,24 +599,18 @@ export class MemoryManager {
  */
   private async aggressiveCacheCleanup(): Promise<void> {
     try {
-      const session = require('electron').session.defaultSession;
+      const defaultSession = session.defaultSession;
       
       // 1. 모든 캐시 타입 강제 Cleanup
-      await session.clearCache();
+      await defaultSession.clearCache();
       
       // 2. 모든 스토리지 데이터 Cleanup
-      await session.clearStorageData({
+      await defaultSession.clearStorageData({
         storages: [
-          'appcache', 'cookies', 'filesystem', 'indexdb',
+          'cachestorage', 'cookies', 'filesystem', 'indexdb',
           'localstorage', 'shadercache', 'websql', 'serviceworkers'
         ],
       });
-
-      // 3. 코드 캐시 Cleanup
-      await session.clearCodeCaches({});
-
-      // 4. 호스트 리졸버 캐시 Cleanup
-      await session.clearHostResolverCache();
 
       console.log('[Memory] 적극적 캐시 Cleanup Completed');
 
@@ -622,19 +624,14 @@ export class MemoryManager {
  */
   private async clearSessionData(): Promise<void> {
     try {
-      const session = require('electron').session.defaultSession;
+      const defaultSession = session.defaultSession;
       
       // 1. 모든 세션 관련 데이터 Cleanup
-      await session.clearStorageData();
+      await defaultSession.clearStorageData();
       
       // 2. 인증 캐시 Cleanup
-      await session.clearAuthCache();
+      await defaultSession.clearAuthCache();
       
-      // 3. 코드 캐시 Cleanup
-      if (session.clearCodeCaches) {
-        await session.clearCodeCaches({});
-      }
-
       console.log('[Memory] 세션 데이터 Cleanup Completed');
       
     } catch (error) {

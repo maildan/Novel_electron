@@ -62,7 +62,7 @@ let trayStats = {
 };
 // 기본 Setup
 const DEFAULT_TRAY_CONFIG = {
-    iconPath: path.join(__dirname, '../../public/tray-icon.png'),
+    iconPath: path.join(__dirname, '../../public/appIcon.webp'),
     tooltip: 'Loop Typing Monitor - Active',
     showStats: true,
     enableMiniView: false,

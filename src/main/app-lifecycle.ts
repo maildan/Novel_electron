@@ -30,10 +30,10 @@ import {
   createWindow,
   setupIpcHandlers,
   initUpdates,
-  getMainWindow,
   destroyTray,
   closeDatabase
 } from './stub-functions';
+import { getMainWindow } from './window';
 
 // 앱 상태 관리
 interface AppState {
@@ -42,7 +42,7 @@ interface AppState {
   securityInitialized: boolean;
   memoryManagerActive: boolean;
   keyboardMonitoringActive: boolean;
-  settings: any;
+  settings: Record<string, unknown>;
 }
 
 const appState: AppState = {
@@ -230,7 +230,7 @@ export async function initializeApp(): Promise<void> {
     
     // 1. Setup 로드
     await loadSettings();
-    appState.settings = await SettingsManager.getSettings();
+    appState.settings = await SettingsManager.getSettings() as unknown as Record<string, unknown>;
     
     // 2. 단일 인스턴스 보장
     setupSingleInstance();

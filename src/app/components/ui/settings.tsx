@@ -1,22 +1,19 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { 
   Settings as SettingsIcon, 
   Save, 
   RotateCcw, 
-  Monitor, 
   Moon, 
   Sun, 
   Minimize2, 
   Maximize2, 
   Eye, 
   Bell, 
-  Cpu, 
-  Zap, 
   Activity, 
   User, 
-  BarChart3, 
+  BarChart3,
   Database, 
   Shield,
   HardDrive,
@@ -30,7 +27,24 @@ import ActivityMonitor from './activity-monitor';
 import NativeModuleStatus from './native-module-status';
 
 // 설정 카테고리 타입
-type SettingCategory = 'general' | 'typing' | 'performance' | 'data';
+type SettingCategory = 'general' | 'typing' | 'performance' | 'data' | 'typing-advanced';
+
+// 확장된 ElectronAPI 헬퍼 함수들
+const getElectronAPI = () => {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  const electronAPI = (window as unknown as { electronAPI?: unknown }).electronAPI;
+  if (!electronAPI) {
+    return null;
+  }
+  return electronAPI as {
+    invoke: (channel: string, ...args: unknown[]) => Promise<unknown>;
+    settings?: { updateMultiple: (settings: Record<string, unknown>) => Promise<{ success: boolean; error?: string }> };
+    memory?: { optimize: () => Promise<{ success: boolean; error?: string }> };
+    app?: { restart: () => void };
+  };
+};
 
 // 성능 설정 탭 타입
 type PerformanceTab = 'settings' | 'memory' | 'activity' | 'system';
@@ -48,24 +62,62 @@ interface SettingsProps {
   initialSettings?: SettingsState;
 }
 
-export function Settings({ onSave, initialSettings }: SettingsProps) {
+export function Settings({ onSave }: SettingsProps) {
+  // 초기 설정 로깅
+  console.log('설정 컴포넌트 초기화 - 프롭스 확인:', { 
+    hasOnSave: !!onSave,
+    timestamp: new Date().toISOString()
+  });
+
   const { 
     settings, 
     isLoading,
-    error,
+    error: settingsError,
     saveSettings,
     resetSettings,  
   } = useSettings();
+
+  // 에러 로깅
+  if (settingsError) {
+    console.error('설정 에러 발생:', {
+      error: settingsError,
+      timestamp: new Date().toISOString()
+    });
+  }
   
   const { 
     theme, 
     isDarkMode, 
-    toggleDarkMode: themeToggleDarkMode, 
-    toggleTheme,
-    setTheme 
+    toggleDarkMode: themeToggleDarkMode
   } = useTheme();
+
+  // 테마 관련 로깅 함수들
+  const logToggleTheme = () => {
+    console.log('테마 토글 요청:', { 
+      currentTheme: theme, 
+      timestamp: new Date().toISOString() 
+    });
+  };
+
+  const logSetTheme = (newTheme: string) => {
+    console.log('테마 설정 요청:', { 
+      newTheme, 
+      currentTheme: theme, 
+      timestamp: new Date().toISOString() 
+    });
+  };
   
-  const [needsRestart, setNeedsRestart] = useState(false);
+  const [_needsRestart, setNeedsRestart] = useState(false);
+
+  // 재시작 로깅 함수
+  const logRestartNeeded = (needed: boolean, reason?: string) => {
+    console.log('재시작 필요 상태 변경:', { 
+      needed, 
+      reason,
+      timestamp: new Date().toISOString() 
+    });
+    setNeedsRestart(needed);
+  };
   const [showSaveConfirm, setShowSaveConfirm] = useState(false);
   const [showRestartDialog, setShowRestartDialog] = useState(false);
   const [activePerformanceTab, setActivePerformanceTab] = useState<PerformanceTab>('settings');
@@ -102,6 +154,10 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
   // 카테고리 전환 핸들러 - 애니메이션 설정에 따라 동작
   const handleCategoryChange = (newCategory: SettingCategory) => {
     if (newCategory === activeCategory || isTransitioning) return;
+    
+    // 카테고리 변경 로깅
+    logToggleTheme();
+    logSetTheme(newCategory);
     
     // 애니메이션이 비활성화된 경우 즉시 전환
     if (!settings.enableAnimations) {
@@ -150,14 +206,15 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
     
     // GPU 설정 변경 시 IPC 호출 및 재시작 권장
     try {
-      if (window.electronAPI) {
-        const result = await window.electronAPI.invoke('setGPUAcceleration', newValue);
+      const electronAPI = getElectronAPI();
+      if (electronAPI) {
+        const result = await electronAPI.invoke('setGPUAcceleration', newValue) as { success: boolean; requiresRestart?: boolean };
         if (result.success) {
           console.log(`GPU 가속: ${newValue ? '활성화' : '비활성화'}`);
           if (result.requiresRestart) {
             setRestartReason(`GPU 가속 ${actionText}`);
             setShowRestartDialog(true);
-            setNeedsRestart(true);
+            logRestartNeeded(true, 'GPU 가속 설정 변경');
           }
         }
       }
@@ -201,12 +258,13 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
       const modeText = mode === 'gpu-intensive' ? 'GPU 집약적 모드' : 'CPU 집약적 모드';
       setRestartReason(`처리 모드 변경 (${modeText})`);
       setShowRestartDialog(true);
-      setNeedsRestart(true);
+      logRestartNeeded(true, `처리 모드 변경: ${modeText}`);
     }
     
     // 처리 모드 변경을 즉시 적용
     try {
-      if (window.electronAPI) {
+      const electronAPI = getElectronAPI();
+      if (electronAPI) {
         // 처리 모드에 따른 설정 적용 (향후 구현)
         console.log(`처리 모드 변경: ${mode}`);
       }
@@ -231,8 +289,9 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
     // 메모리 최적화가 활성화되면 실제 최적화 실행
     if (newValue) {
       try {
-        if (window.electronAPI?.memory?.optimize) {
-          const result = await window.electronAPI.memory.optimize();
+        const electronAPI = getElectronAPI();
+        if (electronAPI?.memory?.optimize) {
+          const result = await electronAPI.memory.optimize();
           console.log('메모리 최적화 완료:', result);
           // 간단한 피드백 제공
           setShowSaveConfirm(true);
@@ -252,15 +311,16 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
       setShowSaveConfirm(false);
       
       // 백엔드 연결 상태 확인
-      if (typeof window !== 'undefined' && (window as any).electronAPI?.ipcRenderer) {
+      const electronAPI = getElectronAPI();
+      if (electronAPI) {
         console.log('🔌 Settings: Electron IPC를 통한 저장 시도');
         
         try {
           // 백엔드에 설정 저장 요청
-          const result = await (window as any).electronAPI.settings.updateMultiple(settings);
+          const result = await electronAPI.settings?.updateMultiple?.(settings as unknown as Record<string, unknown>);
           console.log('📡 Settings: 백엔드 응답:', result);
           
-          if (result === true || (result && result.success !== false)) {
+          if (result && result.success !== false) {
             console.log('✅ Settings: 백엔드 저장 성공');
             
             // 저장 성공 메시지 표시
@@ -274,9 +334,10 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
             if (!isGPUOnlyChange) {
               console.log('🔄 Settings: GPU 가속화 외 설정 변경으로 인한 앱 새로고침');
               setTimeout(() => {
-                if (typeof window !== 'undefined' && (window as any).electronAPI?.app?.restart) {
+                const electronAPI = getElectronAPI();
+                if (electronAPI?.app?.restart) {
                   // Electron 환경에서는 앱 재시작
-                  (window as any).electronAPI.app.restart();
+                  electronAPI.app.restart();
                 } else {
                   // 웹 환경에서는 페이지 새로고침
                   window.location.reload();
@@ -526,7 +587,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
           </div>
         );
 
-      case 'typing':
+      case 'typing-advanced':
         return (
           <div className="space-y-6">
             <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
@@ -586,6 +647,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
                     onChange={(e) => {
                       // 슬라이더 이동 중에는 시각적 업데이트만, 실제 저장은 onMouseUp에서
                       const newValue = parseInt(e.target.value);
+                      console.debug('[설정] 통계 수집 간격 슬라이더 조정:', {newValue, 현재값: settings.statsCollectionInterval});
                       // 임시로 DOM 값을 업데이트 (시각적 피드백)
                     }}
                     onMouseUp={(e) => updateSettingAndSave('statsCollectionInterval', parseInt((e.target as HTMLInputElement).value))}
@@ -633,7 +695,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
           </div>
         );
 
-      case 'performance':
+      case 'performance': {
         const performanceTabs = [
           { id: 'settings' as PerformanceTab, label: '성능 설정', icon: Activity },
           { id: 'memory' as PerformanceTab, label: '메모리 모니터', icon: HardDrive },
@@ -675,6 +737,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
             </div>
           </div>
         );
+      }
 
       case 'data':
         return (
@@ -886,6 +949,7 @@ export function Settings({ onSave, initialSettings }: SettingsProps) {
             value={settings.maxMemoryThreshold}
             onChange={(e) => {
               // 슬라이더 이동 중에는 시각적 업데이트만, 실제 저장은 onMouseUp에서
+              console.debug('[설정] 메모리 임계값 슬라이더 조정:', {값: e.target.value, 현재값: settings.maxMemoryThreshold});
             }}
             onMouseUp={(e) => updateSettingAndSave('maxMemoryThreshold', parseInt((e.target as HTMLInputElement).value))}
             className="w-full"

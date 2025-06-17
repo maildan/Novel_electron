@@ -3,11 +3,18 @@
  * Loop 3에서 Loop 6로 마이그레이션하는 동안의 임시 구현
  */
 
+import { App } from 'electron';
 import { debugLog, errorLog } from '../utils/debug';
 
 // 프로토콜 Setup
 export async function setupProtocols(): Promise<void> {
-  debugLog('프로토콜 Setup (스텁)');
+  try {
+    debugLog('프로토콜 Setup (스텁)');
+    // TODO: 실제 프로토콜 Setup 로직 구현
+  } catch (error) {
+    errorLog('프로토콜 Setup 오류:', error);
+    throw error;
+  }
 }
 
 // 세이프 스토리지 Setup
@@ -46,8 +53,17 @@ export function setupCrashReporter(): void {
 }
 
 // 스크린샷 모듈 초기화
-export function initScreenshotModule(app: any): void {
-  debugLog('스크린샷 모듈 초기화 (스텁)');
+export function initScreenshotModule(app: App): void {
+  try {
+    debugLog('스크린샷 모듈 초기화 (스텁)');
+    // app 객체를 사용하여 스크린샷 모듈 설정
+    if (app && typeof app === 'object') {
+      debugLog('앱 정보:', { isReady: app.isReady, name: app.name || 'unknown' });
+    }
+    // TODO: 실제 스크린샷 모듈 초기화 로직 구현
+  } catch (error) {
+    errorLog('스크린샷 모듈 초기화 오류:', error);
+  }
 }
 
 // 글로벌 단축키 Setup
@@ -66,9 +82,19 @@ export function setupMenu(): void {
 }
 
 // Setup 로드
-export function loadSettings(): any {
-  debugLog('Setup 로드 (스텁)');
-  return {};
+export function loadSettings(): Record<string, unknown> {
+  try {
+    debugLog('Setup 로드 (스텁)');
+    // TODO: 실제 설정 로드 로직 구현
+    return {
+      version: '6.0.0',
+      initialized: true,
+      lastUpdate: Date.now()
+    };
+  } catch (error) {
+    errorLog('Setup 로드 오류:', error);
+    return {};
+  }
 }
 
 // 데이터베이스 초기화
@@ -78,9 +104,15 @@ export function initDatabase(): Promise<void> {
 }
 
 // 윈도우 생성
-export function createWindow(): any {
-  debugLog('윈도우 생성 (스텁)');
-  return null;
+export function createWindow(): unknown {
+  try {
+    debugLog('윈도우 생성 (스텁)');
+    // TODO: 실제 윈도우 생성 로직 구현
+    return null;
+  } catch (error) {
+    errorLog('윈도우 생성 오류:', error);
+    return null;
+  }
 }
 
 // IPC 핸들러 Setup
@@ -94,9 +126,15 @@ export function initUpdates(): void {
 }
 
 // 메인 윈도우 가져오기
-export function getMainWindow(): any {
-  debugLog('메인 윈도우 가져오기 (스텁)');
-  return null;
+export function getMainWindow(): unknown {
+  try {
+    debugLog('메인 윈도우 가져오기 (스텁)');
+    // TODO: 실제 메인 윈도우 가져오기 로직 구현
+    return null;
+  } catch (error) {
+    errorLog('메인 윈도우 가져오기 오류:', error);
+    return null;
+  }
 }
 
 // 트레이 제거

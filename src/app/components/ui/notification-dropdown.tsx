@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Bell, X, CheckCircle, AlertCircle, Info, MoreHorizontal } from 'lucide-react';
+import { Bell, X, CheckCircle, AlertCircle, Info } from 'lucide-react';
 
 export interface NotificationItem {
   id: string;

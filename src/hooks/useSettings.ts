@@ -53,9 +53,18 @@ export function useSettings() {
           
           if (loadedSettings && typeof loadedSettings === 'object') {
             // 백엔드에서 로드된 설정이 있으면 해당 설정을 우선 사용
-            const mergedSettings = { ...defaultSettings, ...loadedSettings };
-            setSettings(mergedSettings);
-            console.debug('📝 useSettings: 백엔드 설정으로 상태 업데이트 완료');
+            const mergedSettings = mergeSettings(defaultSettings, loadedSettings);
+            const isValid = validateSettings(mergedSettings);
+            
+            console.debug('[설정 검증] 병합된 설정:', {isValid: isValid, settingCount: Object.keys(mergedSettings).length});
+            
+            if (isValid) {
+              setSettings(mergedSettings);
+              console.debug('📝 useSettings: 백엔드 설정으로 상태 업데이트 완료');
+            } else {
+              console.warn('[설정 검증] 유효하지 않은 설정, 기본값 사용');
+              setSettings(defaultSettings);
+            }
             
             // localStorage에도 동기화 (백업용)
             try {
@@ -70,7 +79,7 @@ export function useSettings() {
             
             // 기본값을 백엔드에 저장
             try {
-              const saveResult = await electronAPI.settings.updateMultiple(defaultSettings);
+              const saveResult = await electronAPI.settings.updateMultiple({...defaultSettings});
               console.debug('✅ useSettings: 기본 설정을 백엔드에 저장 완료:', saveResult);
             } catch (defaultSaveError) {
               console.warn('⚠️ useSettings: 기본 설정 백엔드 저장 실패:', defaultSaveError);

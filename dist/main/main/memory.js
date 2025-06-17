@@ -1,7 +1,41 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MemoryManager = void 0;
 const electron_1 = require("electron");
+const os = __importStar(require("os"));
 const config_1 = require("./config");
 // IPC 모듈 사용 확인
 console.log('[Memory] IPC 모듈 확인:', typeof electron_1.ipcMain);
@@ -55,7 +89,6 @@ class MemoryManager {
      * Node.js memoryUsage를 React 컴포넌트가 기대하는 ReactMemoryInfo 형태로 변환 (RSS 기반)
      */
     convertNodeMemoryToMemoryInfo(nodeMemory) {
-        const os = require('os');
         const systemTotalMemory = os.totalmem();
         // 바이트를 메가바이트로 정확하게 변환
         const rssMB = Math.round(nodeMemory.rss / (1024 * 1024) * 100) / 100;
@@ -130,7 +163,6 @@ class MemoryManager {
    * 시스템 메모리 정보 조회
    */
     getSystemMemoryInfo() {
-        const os = require('os');
         const totalMemory = os.totalmem();
         const freeMemory = os.freemem();
         const usedMemory = totalMemory - freeMemory;
@@ -233,12 +265,12 @@ class MemoryManager {
      */
     async clearCaches() {
         try {
-            const session = require('electron').session.defaultSession;
+            const defaultSession = electron_1.session.defaultSession;
             // HTTP 캐시 Cleanup
-            await session.clearCache();
+            await defaultSession.clearCache();
             // 이미지 캐시 Cleanup (부분적)
-            await session.clearStorageData({
-                storages: ['appcache', 'serviceworkers'],
+            await defaultSession.clearStorageData({
+                storages: ['cachestorage', 'serviceworkers'],
             });
         }
         catch (error) {
@@ -274,8 +306,8 @@ class MemoryManager {
             }
             // 모든 캐시 강제 Cleanup
             await this.clearCaches();
-            const session = require('electron').session.defaultSession;
-            await session.clearStorageData();
+            const defaultSession = electron_1.session.defaultSession;
+            await defaultSession.clearStorageData();
         }
         catch (error) {
             console.error('[Memory] 긴급 Cleanup Failed:', error);
@@ -484,20 +516,16 @@ class MemoryManager {
    */
     async aggressiveCacheCleanup() {
         try {
-            const session = require('electron').session.defaultSession;
+            const defaultSession = electron_1.session.defaultSession;
             // 1. 모든 캐시 타입 강제 Cleanup
-            await session.clearCache();
+            await defaultSession.clearCache();
             // 2. 모든 스토리지 데이터 Cleanup
-            await session.clearStorageData({
+            await defaultSession.clearStorageData({
                 storages: [
-                    'appcache', 'cookies', 'filesystem', 'indexdb',
+                    'cachestorage', 'cookies', 'filesystem', 'indexdb',
                     'localstorage', 'shadercache', 'websql', 'serviceworkers'
                 ],
             });
-            // 3. 코드 캐시 Cleanup
-            await session.clearCodeCaches({});
-            // 4. 호스트 리졸버 캐시 Cleanup
-            await session.clearHostResolverCache();
             console.log('[Memory] 적극적 캐시 Cleanup Completed');
         }
         catch (error) {
@@ -509,15 +537,11 @@ class MemoryManager {
    */
     async clearSessionData() {
         try {
-            const session = require('electron').session.defaultSession;
+            const defaultSession = electron_1.session.defaultSession;
             // 1. 모든 세션 관련 데이터 Cleanup
-            await session.clearStorageData();
+            await defaultSession.clearStorageData();
             // 2. 인증 캐시 Cleanup
-            await session.clearAuthCache();
-            // 3. 코드 캐시 Cleanup
-            if (session.clearCodeCaches) {
-                await session.clearCodeCaches({});
-            }
+            await defaultSession.clearAuthCache();
             console.log('[Memory] 세션 데이터 Cleanup Completed');
         }
         catch (error) {

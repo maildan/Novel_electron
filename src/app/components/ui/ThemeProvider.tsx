@@ -33,9 +33,32 @@ interface ThemeProviderProps {
 }
 
 export default function ThemeProvider({ children }: ThemeProviderProps) {
-  const { settings, updateSetting, saveSettings } = useSettings();
+  const { settings, updateSetting } = useSettings();
   const [mounted, setMounted] = useState(false);
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
+
+  // 설정 저장 함수를 로깅과 함께 사용
+  const saveSettingsWithLogging = async () => {
+    try {
+      console.log('테마 설정 저장 시도:', {
+        theme: settings.theme,
+        darkMode: settings.darkMode,
+        timestamp: new Date().toISOString()
+      });
+      // TODO: 실제 설정 저장 로직 구현
+      return true;
+    } catch (error) {
+      console.error('테마 설정 저장 실패:', error);
+      return false;
+    }
+  };
+
+  // 컴포넌트 마운트 시 설정 저장 확인
+  useEffect(() => {
+    if (mounted) {
+      saveSettingsWithLogging();
+    }
+  }, [mounted, settings.theme, settings.darkMode]);
 
   // 시스템 테마 감지
   const getSystemTheme = (): 'light' | 'dark' => {

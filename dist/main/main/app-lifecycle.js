@@ -22,6 +22,7 @@ const settings_manager_1 = __importDefault(require("./settings-manager"));
 const screenshot_1 = require("./screenshot");
 const system_info_1 = require("./system-info");
 const stub_functions_1 = require("./stub-functions");
+const window_2 = require("./window");
 const appState = {
     isReady: false,
     gpuEnabled: false,
@@ -167,7 +168,7 @@ async function initializeApp() {
         (0, debug_1.debugLog)('KeyboardManager 초기화 완료');
         // 먼저 메인 윈도우 생성
         await (0, stub_functions_1.createWindow)();
-        const mainWindow = (0, stub_functions_1.getMainWindow)();
+        const mainWindow = (0, window_2.getMainWindow)();
         // 스크린샷 모듈 초기화 (메인 윈도우 필요)
         if (mainWindow) {
             await (0, screenshot_1.initScreenshot)(mainWindow);
@@ -221,7 +222,7 @@ function setupSingleInstance() {
     }
     // 두 번째 인스턴스가 실행되었을 때
     electron_1.app.on('second-instance', () => {
-        const mainWindow = (0, stub_functions_1.getMainWindow)();
+        const mainWindow = (0, window_2.getMainWindow)();
         if (mainWindow) {
             if (mainWindow.isMinimized())
                 mainWindow.restore();

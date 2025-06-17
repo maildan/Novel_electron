@@ -149,17 +149,17 @@ export class AppConfig {
   }
 
   // Setup 관리 메서드들
-  private static configStore: Map<string, any> = new Map()
+  private static configStore: Map<string, unknown> = new Map()
 
-  static get(key: string): any {
+  static get(key: string): unknown {
     return this.configStore.get(key)
   }
 
-  static set(key: string, value: any): void {
+  static set(key: string, value: unknown): void {
     this.configStore.set(key, value)
   }
 
-  static getAll(): Record<string, any> {
+  static getAll(): Record<string, unknown> {
     return Object.fromEntries(this.configStore)
   }
 

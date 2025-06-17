@@ -29,6 +29,13 @@ interface TypingStats {
   lastActive: number;
 }
 
+interface KeyData {
+  key?: string;
+  isCorrect?: boolean;
+  timestamp?: number;
+  [key: string]: unknown;
+}
+
 // 전역 추적 상태
 let trackingState: TrackingState = {
   isTracking: false,
@@ -70,7 +77,7 @@ export function startTracking(): boolean {
     sendTrackingStatusToRenderer();
     
     return true;
-  } catch (error: any) {
+  } catch (error: unknown) {
     errorLog('추적 시작 Error:', error);
     return false;
   }
@@ -105,7 +112,7 @@ export function stopTracking(): boolean {
     sendTrackingStatusToRenderer();
     
     return true;
-  } catch (error: any) {
+  } catch (error: unknown) {
     errorLog('추적 중지 Error:', error);
     return false;
   }
@@ -119,10 +126,27 @@ async function saveCurrentStats(): Promise<void> {
     const settings = SettingsManager.getSettings();
     const statsFilePath = settings.statsFilePath || 'typing-stats.json';
     
-    // 파일 시스템에 통계 저장 로직 구현
-    // TODO: 실제 파일 저장 로직 구현
-    debugLog('통계 저장됨:', trackingState.sessionStats);
-  } catch (error: any) {
+    // statsFilePath를 사용하여 파일 시스템에 통계 저장
+    const fs = await import('fs/promises');
+    const path = await import('path');
+    
+    const statsData = {
+      ...trackingState.sessionStats,
+      timestamp: Date.now(),
+      filePath: statsFilePath
+    };
+    
+    debugLog(`통계 파일에 저장: ${path.resolve(statsFilePath)}`, statsData);
+    
+    // 실제 파일 저장 로직 구현
+    try {
+      await fs.writeFile(path.resolve(statsFilePath), JSON.stringify(statsData, null, 2));
+      debugLog(`통계 파일 저장 완료: ${path.resolve(statsFilePath)}`);
+    } catch (writeError: unknown) {
+      errorLog('통계 파일 저장 실패:', writeError);
+    }
+    
+  } catch (error: unknown) {
     errorLog('통계 저장 Error:', error);
   }
 }
@@ -130,7 +154,7 @@ async function saveCurrentStats(): Promise<void> {
 /**
  * 키 입력 처리
  */
-export function processKeyPress(keyData: any): void {
+export function processKeyPress(keyData: KeyData): void {
   if (!trackingState.isTracking) return;
 
   try {
@@ -163,7 +187,7 @@ export function processKeyPress(keyData: any): void {
     if (trackingState.sessionStats.totalKeystrokes % 10 === 0) {
       sendTrackingStatusToRenderer();
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     errorLog('키 입력 처리 Error:', error);
   }
 }
@@ -187,7 +211,7 @@ function startAutoMonitoring(): void {
         });
       }
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     errorLog('자동 모니터링 시작 Error:', error);
   }
 }
@@ -206,7 +230,7 @@ export function sendTrackingStatusToRenderer(): void {
         startTime: trackingState.startTime
       });
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     errorLog('상태 전송 중 Error:', error);
   }
 }
@@ -251,7 +275,7 @@ export function registerTrackingHandlers(): void {
   debugLog('추적 관련 IPC 핸들러 등록 중...');
 
   // 타이핑 추적 모니터링 시작 핸들러
-  ipcMain.handle('tracking:start-monitoring', async () => {
+  ipcMain.handle(CHANNELS.TRACKING_START_MONITORING, async () => {
     try {
       debugLog('모니터링 시작 요청 수신');
       
@@ -265,8 +289,8 @@ export function registerTrackingHandlers(): void {
       }
       
       // 키보드 리스너 먼저 설정
-      const { setupKeyboardListenerIfNeeded } = require('./keyboardHandlers');
-      const keyboardListenerResult = await setupKeyboardListenerIfNeeded();
+      const keyboardHandlers = await import('./keyboardHandlers');
+      const keyboardListenerResult = await keyboardHandlers.setupKeyboardListenerIfNeeded();
       
       if (!keyboardListenerResult) {
         errorLog('키보드 리스너 설정 Failed - 모니터링 시작 불가');
@@ -297,7 +321,7 @@ export function registerTrackingHandlers(): void {
   });
   
   // 모니터링 중지 핸들러
-  ipcMain.handle('tracking:stop-monitoring', async () => {
+  ipcMain.handle(CHANNELS.TRACKING_STOP_MONITORING, async () => {
     try {
       debugLog('모니터링 중지 요청 수신');
       
@@ -334,7 +358,7 @@ export function registerTrackingHandlers(): void {
   });
 
   // 추적 상태 조회 핸들러
-  ipcMain.handle('tracking:get-status', async () => {
+  ipcMain.handle(CHANNELS.TRACKING_GET_STATUS, async () => {
     try {
       return {
         success: true,
@@ -349,7 +373,7 @@ export function registerTrackingHandlers(): void {
   });
 
   // 통계 저장 핸들러
-  ipcMain.handle('tracking:save-stats', async (event, statsData) => {
+  ipcMain.handle(CHANNELS.TRACKING_SAVE_STATS, async (event, statsData) => {
     try {
       // 외부에서 전달받은 통계 데이터 처리
       if (statsData) {
@@ -366,7 +390,7 @@ export function registerTrackingHandlers(): void {
   });
 
   // 추적 상태 리셋 핸들러
-  ipcMain.handle('tracking:reset', async () => {
+  ipcMain.handle(CHANNELS.TRACKING_RESET, async () => {
     try {
       resetTrackingState();
       sendTrackingStatusToRenderer();
@@ -383,7 +407,7 @@ export function registerTrackingHandlers(): void {
   });
 
   // 키 입력 처리 핸들러
-  ipcMain.handle('tracking:process-key', async (event, keyData) => {
+  ipcMain.handle(CHANNELS.TRACKING_PROCESS_KEY, async (event, keyData) => {
     try {
       processKeyPress(keyData);
       return { success: true };

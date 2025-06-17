@@ -70,13 +70,17 @@ try {
     for (const modulePath of possiblePaths) {
         if (fs.existsSync(modulePath)) {
             try {
+                // eslint-disable-next-line @typescript-eslint/no-require-imports
                 nativeModule = require(modulePath);
                 debugLog('네이티브 모듈 로드 Success', { path: modulePath });
                 moduleLoaded = true;
                 break;
             }
             catch (err) {
-                debugLog('네이티브 모듈 로드 Failed', { path: modulePath, error: err.message });
+                debugLog('네이티브 모듈 로드 Failed', {
+                    path: modulePath,
+                    error: err instanceof Error ? err.message : String(err)
+                });
             }
         }
     }
@@ -109,8 +113,26 @@ try {
     }
 }
 catch (error) {
-    debugLog('네이티브 모듈 초기화 Error', { error: error.message });
+    debugLog('네이티브 모듈 초기화 Error', {
+        error: error instanceof Error ? error.message : String(error)
+    });
     nativeModule = null;
+}
+// 캐시 관리 함수
+function getCachedData(key) {
+    return dataCache?.[key] || null;
+}
+function setCachedData(key, value) {
+    if (!dataCache) {
+        dataCache = {};
+    }
+    dataCache[key] = value;
+    // 캐시 크기 제한 (10개 항목으로 제한)
+    const keys = Object.keys(dataCache);
+    if (keys.length > 10) {
+        const oldestKey = keys[0];
+        delete dataCache[oldestKey];
+    }
 }
 // 메모리 모니터링 함수
 function checkMemoryUsage() {
@@ -147,11 +169,23 @@ function calculateStats(data) {
     try {
         checkMemoryUsage();
         const startTime = process.hrtime.bigint();
+        // 입력 데이터 유효성 검사 및 기본값 설정
+        const safeKeystrokes = typeof data.keystrokes === 'number' ? data.keystrokes : 0;
+        const safeTimeMs = typeof data.timeMs === 'number' && data.timeMs > 0 ? data.timeMs : 1;
+        const safeCorrect = typeof data.correct === 'number' ? data.correct : 0;
+        const safeTotal = typeof data.total === 'number' && data.total > 0 ? data.total : 1;
+        // 캐시 확인
+        const cacheKey = `stats_${safeKeystrokes}_${safeTimeMs}_${safeCorrect}_${safeTotal}`;
+        const cached = getCachedData(cacheKey);
+        if (cached) {
+            debugLog('캐시된 결과 반환');
+            return cached;
+        }
         // 네이티브 모듈 사용 시도
-        if (nativeModule) {
+        if (nativeModule?.calculate_wpm && nativeModule?.calculate_accuracy) {
             try {
-                const wpm = nativeModule.calculate_wpm(data.keystrokes || 0, data.timeMs || 1);
-                const accuracy = nativeModule.calculate_accuracy(data.correct || 0, data.total || 1);
+                const wpm = nativeModule.calculate_wpm(safeKeystrokes, safeTimeMs);
+                const accuracy = nativeModule.calculate_accuracy(safeCorrect, safeTotal);
                 const endTime = process.hrtime.bigint();
                 const processingTime = Number(endTime - startTime) / 1000000; // ms로 변환
                 debugLog('네이티브 모듈로 통계 계산 Completed', {
@@ -159,22 +193,31 @@ function calculateStats(data) {
                     accuracy,
                     processingTime: `${processingTime.toFixed(2)}ms`
                 });
-                return {
-                    wpm,
-                    accuracy,
+                const result = {
+                    wpm: Number(wpm),
+                    accuracy: Number(accuracy),
                     processingTime,
                     timestamp: new Date().toISOString(),
                     memoryUsage: process.memoryUsage().heapUsed
                 };
+                // 결과 캐시에 저장
+                setCachedData(cacheKey, result);
+                return result;
             }
             catch (error) {
-                debugLog('네이티브 모듈 계산 Error, 폴백 사용', { error: error.message });
+                debugLog('네이티브 모듈 계산 Error, 폴백 사용', {
+                    error: error instanceof Error ? error.message : String(error)
+                });
             }
         }
-        // 폴백 계산
-        const timeMinutes = (data.timeMs || 1) / (1000 * 60);
-        const wpm = Math.round(((data.keystrokes || 0) / 5) / timeMinutes);
-        const accuracy = data.total > 0 ? Math.round(((data.correct || 0) / data.total) * 100) : 100;
+        // 폴백 계산 - 타입 안전하게 처리
+        const fallbackTimeMs = Number(data.timeMs) || 1;
+        const fallbackKeystrokes = Number(data.keystrokes) || 0;
+        const fallbackCorrect = Number(data.correct) || 0;
+        const fallbackTotal = Number(data.total) || 0;
+        const timeMinutes = fallbackTimeMs / (1000 * 60);
+        const wpm = Math.round((fallbackKeystrokes / 5) / timeMinutes);
+        const accuracy = fallbackTotal > 0 ? Math.round((fallbackCorrect / fallbackTotal) * 100) : 100;
         const endTime = process.hrtime.bigint();
         const processingTime = Number(endTime - startTime) / 1000000;
         debugLog('폴백 계산으로 통계 Completed', {
@@ -182,16 +225,21 @@ function calculateStats(data) {
             accuracy,
             processingTime: `${processingTime.toFixed(2)}ms`
         });
-        return {
+        const result = {
             wpm,
             accuracy,
             processingTime,
             timestamp: new Date().toISOString(),
             memoryUsage: process.memoryUsage().heapUsed
         };
+        // 결과 캐시에 저장
+        setCachedData(cacheKey, result);
+        return result;
     }
     catch (error) {
-        debugLog('통계 계산 중 Error 발생', { error: error.message });
+        debugLog('통계 계산 중 Error 발생', {
+            error: error instanceof Error ? error.message : String(error)
+        });
         throw error;
     }
 }
@@ -211,31 +259,32 @@ if (worker_threads_1.parentPort) {
                 });
                 return;
             }
-            if (!data.type || typeof data.type !== 'string') {
+            const message = data;
+            if (!message.type || typeof message.type !== 'string') {
                 debugLog('❌ 메시지 타입이 없거나 올바르지 않음', { data });
                 worker_threads_1.parentPort?.postMessage({
                     type: 'error',
-                    id: data.id || 'unknown',
+                    id: message.id || 'unknown',
                     error: '메시지 타입이 필요합니다',
                     success: false
                 });
                 return;
             }
             debugLog('✅ 메시지 수신됨', {
-                type: data.type,
-                id: data.id,
-                hasPayload: !!data.payload
+                type: message.type,
+                id: message.id,
+                hasPayload: !!message.payload
             });
-            switch (data.type) {
-                case 'initialize':
-                    debugLog('🚀 워커 초기화 요청 받음', { config: data.config });
-                    if (data.config) {
-                        processingMode = data.config.processingMode || 'normal';
+            switch (message.type) {
+                case 'initialize': {
+                    debugLog('🚀 워커 초기화 요청 받음', { config: message.config });
+                    if (message.config) {
+                        processingMode = message.config.processingMode || 'normal';
                         // memoryLimit 업데이트 (필요시)
                     }
                     worker_threads_1.parentPort?.postMessage({
                         type: 'initialized',
-                        id: data.id,
+                        id: message.id,
                         status: {
                             mode: processingMode,
                             nativeModuleAvailable: !!nativeModule,
@@ -245,8 +294,9 @@ if (worker_threads_1.parentPort) {
                         timestamp: new Date().toISOString()
                     });
                     break;
-                case 'calculate-stats':
-                    const result = calculateStats(data.payload);
+                }
+                case 'calculate-stats': {
+                    const result = calculateStats(data.payload || {});
                     worker_threads_1.parentPort?.postMessage({
                         type: 'stats-result',
                         id: data.id,
@@ -254,8 +304,10 @@ if (worker_threads_1.parentPort) {
                         success: true
                     });
                     break;
-                case 'set-mode':
-                    processingMode = data.payload?.mode || 'normal';
+                }
+                case 'set-mode': {
+                    const modePayload = data.payload;
+                    processingMode = modePayload?.mode || 'normal';
                     debugLog('🔧 처리 모드 변경됨', { mode: processingMode });
                     worker_threads_1.parentPort?.postMessage({
                         type: 'mode-changed',
@@ -264,7 +316,8 @@ if (worker_threads_1.parentPort) {
                         success: true
                     });
                     break;
-                case 'memory-cleanup':
+                }
+                case 'memory-cleanup': {
                     if (shouldOptimizeMemory) {
                         dataCache = null;
                         performGC();
@@ -277,7 +330,8 @@ if (worker_threads_1.parentPort) {
                         success: true
                     });
                     break;
-                case 'status':
+                }
+                case 'status': {
                     worker_threads_1.parentPort?.postMessage({
                         type: 'status-response',
                         id: data.id,
@@ -290,8 +344,9 @@ if (worker_threads_1.parentPort) {
                         success: true
                     });
                     break;
+                }
                 case 'shutdown':
-                case 'terminate':
+                case 'terminate': {
                     debugLog('🛑 워커 종료 요청 받음');
                     worker_threads_1.parentPort?.postMessage({
                         type: 'shutdown-acknowledged',
@@ -299,8 +354,9 @@ if (worker_threads_1.parentPort) {
                         success: true
                     });
                     process.exit(0);
-                    break;
-                default:
+                    break; // 도달하지 않지만 ESLint 경고 방지
+                }
+                default: {
                     debugLog('❓ 알 수 없는 메시지 타입', {
                         type: data.type,
                         availableTypes: ['calculate-stats', 'set-mode', 'memory-cleanup', 'status', 'shutdown', 'terminate']
@@ -312,18 +368,20 @@ if (worker_threads_1.parentPort) {
                         details: `사용 가능한 타입: calculate-stats, set-mode, memory-cleanup, status, shutdown, terminate`,
                         success: false
                     });
+                    break;
+                }
             }
         }
         catch (error) {
             debugLog('💥 메시지 Processing Error', {
-                error: error.message,
-                stack: error.stack,
+                error: error instanceof Error ? error.message : String(error),
+                stack: error instanceof Error ? error.stack : undefined,
                 messageType: data?.type
             });
             worker_threads_1.parentPort?.postMessage({
                 type: 'error',
                 id: data?.id || 'unknown',
-                error: error.message,
+                error: error instanceof Error ? error.message : String(error),
                 success: false
             });
         }

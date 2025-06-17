@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useCallback } from 'react'
-import { Activity, Cpu, MemoryStick, HardDrive, Zap, RefreshCw, AlertTriangle, Monitor } from 'lucide-react'
+import { Activity, Cpu, MemoryStick, Zap, RefreshCw, AlertTriangle, Monitor } from 'lucide-react'
 
 interface ProcessInfo {
   pid: number

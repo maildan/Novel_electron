@@ -1,10 +1,22 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 // Static export 설정
 export const dynamic = 'force-static';
 export const revalidate = false;
-
 export const runtime = 'nodejs';
+
+// 메모리 최적화 실행 헬퍼 함수
+async function executeMemoryOptimization(): Promise<void> {
+  return new Promise((resolve) => {
+    // 메모리 최적화 시뮬레이션
+    setTimeout(() => {
+      if (global.gc) {
+        global.gc(); // V8 가비지 컬렉션 강제 실행
+      }
+      resolve();
+    }, 1000);
+  });
+}
 
 /**
  * 메모리 최적화 실행
@@ -19,7 +31,7 @@ export async function POST() {
     };
 
     // 메모리 최적화 시뮬레이션
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await executeMemoryOptimization();
 
     const afterOptimization = {
       heapUsed: 100 * 1024 * 1024, // 100MB

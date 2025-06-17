@@ -17,7 +17,7 @@ interface WindowHandlerState {
 }
 
 // 전역 윈도우 핸들러 상태
-let windowState: WindowHandlerState = {
+const windowState: WindowHandlerState = {
   isRegistered: false,
   windowManager: null
 };

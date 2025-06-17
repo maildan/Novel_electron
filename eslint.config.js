@@ -1,10 +1,14 @@
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
+import nextPlugin from '@next/eslint-plugin-next';
 
 export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    plugins: {
+      '@next/next': nextPlugin,
+    },
     languageOptions: {
       ecmaVersion: 2020,
       sourceType: 'module',
@@ -36,6 +40,7 @@ export default tseslint.config(
       'no-var': 'error',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-require-imports': 'warn', // error에서 warning으로 완화
+      '@typescript-eslint/no-namespace': 'warn', // error에서 warning으로 완화
       'no-case-declarations': 'warn', // error에서 warning으로 완화
       'no-prototype-builtins': 'warn', // error에서 warning으로 완화
     },

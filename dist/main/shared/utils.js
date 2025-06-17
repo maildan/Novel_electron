@@ -81,8 +81,8 @@ catch {
  */
 function debugLog(...args) {
     if (exports.isDev) {
-        const timestamp = new Date().toISOString();
-        console.log('[DEBUG ${timestamp}]', ...args);
+        const _timestamp = new Date().toISOString();
+        console.log(`[DEBUG ${_timestamp}]`, ...args);
         // 파일 로깅 (메인 프로세스에서만)
         if (logDir) {
             writeLogToFile('debug', args);
@@ -93,8 +93,8 @@ function debugLog(...args) {
  * 정보 로그 출력
  */
 function infoLog(...args) {
-    const timestamp = new Date().toISOString();
-    console.info(`[INFO ${timestamp}]`, ...args);
+    const _timestamp = new Date().toISOString();
+    console.info(`[INFO ${_timestamp}]`, ...args);
     // 파일 로깅 (메인 프로세스에서만)
     if (logDir) {
         writeLogToFile('info', args);
@@ -104,8 +104,8 @@ function infoLog(...args) {
  * Warning 로그 출력
  */
 function warnLog(...args) {
-    const timestamp = new Date().toISOString();
-    console.warn('[WARN ${timestamp}]', ...args);
+    const _timestamp = new Date().toISOString();
+    console.warn(`[WARN ${_timestamp}]`, ...args);
     // 파일 로깅 (메인 프로세스에서만)
     if (logDir) {
         writeLogToFile('warn', args);
@@ -115,8 +115,8 @@ function warnLog(...args) {
  * 에러 로그 출력
  */
 function errorLog(...args) {
-    const timestamp = new Date().toISOString();
-    console.error('[ERROR ${timestamp}]', ...args);
+    const _timestamp = new Date().toISOString();
+    console.error(`[ERROR ${_timestamp}]`, ...args);
     // 파일 로깅 (메인 프로세스에서만)
     if (logDir) {
         writeLogToFile('error', args);

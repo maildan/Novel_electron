@@ -8,6 +8,8 @@ interface WindowControlsProps {
 }
 
 export function WindowControls({ className, isDarkMode = false }: WindowControlsProps) {
+  console.debug('[윈도우 컨트롤] 초기화:', {다크모드: isDarkMode, 클래스명: className});
+  
   const handleMinimize = () => {
     if (typeof window !== 'undefined' && window.electronAPI) {
       window.electronAPI.window.minimize();

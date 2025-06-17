@@ -15,7 +15,7 @@ export declare class WindowManager {
    * 윈도우 정보 조회
    */
     getWindowInfo(): any;
-    createWindow(options: any): Promise<BrowserWindow>;
+    createWindow(_options: any): Promise<BrowserWindow>;
     getWindowFromEvent(event: any): BrowserWindow | null;
 }
 export declare function createWindow(): Promise<BrowserWindow>;

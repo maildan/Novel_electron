@@ -67,11 +67,12 @@ class SettingsIpcHandlers {
                     case 'cpu-intensive':
                         await settings_manager_1.default.updateSetting('enableGPUAcceleration', false);
                         break;
-                    case 'auto':
+                    case 'auto': {
                         // GPU 사용 가능 여부에 따라 자동 Setup
                         const gpuAvailable = await this.checkGPUAvailability();
                         await settings_manager_1.default.updateSetting('enableGPUAcceleration', gpuAvailable);
                         break;
+                    }
                 }
                 const response = {
                     success: true,

@@ -113,7 +113,16 @@ export declare class MemoryManager {
     /**
      * 메모리 최적화 실행 (IPC용)
      */
-    optimize(): Promise<any>;
+    optimize(): Promise<{
+        before: ReactMemoryData;
+        after: ReactMemoryData;
+        freed: {
+            main: number;
+            renderer: number;
+            system: number;
+        };
+        timestamp: number;
+    }>;
     /**
    * 렌더러 프로세스 적극적 Cleanup
    */

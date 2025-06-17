@@ -50,8 +50,8 @@ try {
       /ipcRenderer\.invoke\s*\(\s*['"`]([^'"`]+)['"`]/g
     ];
     
-    let exposedApis = [];
-    let ipcChannels = [];
+    const exposedApis = [];
+    const ipcChannels = [];
     
     // API 노출 패턴 찾기
     let match;
@@ -95,7 +95,7 @@ try {
     'src/main/createWindow.ts'
   ];
   
-  let allHandlers = [];
+  const allHandlers = [];
   
   mainFiles.forEach(file => {
     const filePath = path.join(__dirname, file);
@@ -143,8 +143,8 @@ try {
       const interfacePattern = /interface\s+(\w+)/g;
       const typePattern = /type\s+(\w+)/g;
       
-      let interfaces = [];
-      let types = [];
+      const interfaces = [];
+      const types = [];
       
       let match;
       while ((match = interfacePattern.exec(content)) !== null) {

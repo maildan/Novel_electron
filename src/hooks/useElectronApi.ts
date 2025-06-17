@@ -1,16 +1,51 @@
 import { useState, useEffect } from 'react';
 
+// 타입 정의들
+interface TypingStats {
+  keyCount: number;
+  typingTime: number;
+  startTime: string | null;
+  lastActiveTime: string | null;
+  currentWindow: string | null;
+  currentBrowser: string | null;
+  totalChars: number;
+  totalWords: number;
+  totalCharsNoSpace: number;
+  pages: number;
+  accuracy: number;
+}
+
+interface BrowserInfo {
+  name: string | null;
+  isGoogleDocs: boolean;
+  title: string | null;
+}
+
+interface DebugInfo {
+  isTracking: boolean;
+  currentStats: TypingStats;
+  platform: string;
+  electronVersion: string;
+  nodeVersion: string;
+}
+
+interface Settings {
+  darkMode: boolean;
+  windowMode: string;
+  [key: string]: unknown;
+}
+
 interface ElectronAPI {
   windowControl: (action: string) => void;
-  onTypingStatsUpdate: (callback: (data: any) => void) => () => void;
-  onStatsSaved: (callback: (data: any) => void) => () => void;
+  onTypingStatsUpdate: (callback: (data: TypingStats) => void) => () => void;
+  onStatsSaved: (callback: (data: TypingStats) => void) => () => void;
   startTracking: () => void;
   stopTracking: () => void;
-  saveStats: (data?: any) => Promise<boolean>;
-  loadSettings: () => any;
-  saveSettings: (settings: any) => boolean;
-  getCurrentBrowserInfo: () => Promise<any>;
-  getDebugInfo: () => Promise<any>;
+  saveStats: (data?: TypingStats) => Promise<boolean>;
+  loadSettings: () => Settings;
+  saveSettings: (settings: Settings) => boolean;
+  getCurrentBrowserInfo: () => Promise<BrowserInfo>;
+  getDebugInfo: () => Promise<DebugInfo>;
   setDarkMode: (darkMode: boolean) => Promise<{ success: boolean }>;
   setWindowMode: (mode: string) => Promise<{ success: boolean }>;
   getWindowMode: () => Promise<string>;
@@ -105,7 +140,8 @@ export function useElectronApi() {
     // 브라우저 환경 확인
     if (typeof window !== 'undefined') {
       // window 객체에 electronAPI가 있는지 확인
-      const electronAPI = (window as any).electronAPI as ElectronAPI | undefined;
+      const globalWindow = window as unknown as { electronAPI?: ElectronAPI };
+      const electronAPI = globalWindow.electronAPI;
       
       if (electronAPI) {
         // Electron 환경에서 실행 중

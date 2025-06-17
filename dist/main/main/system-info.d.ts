@@ -19,4 +19,8 @@ export declare function getSystemInfoStatus(): {
     fallbackMode: boolean;
     lastPermissionCheck: number;
 };
+/**
+ * 시스템 정보 모듈 초기화 (모든 함수 테스트)
+ */
+export declare function initializeSystemInfo(): void;
 //# sourceMappingURL=system-info.d.ts.map

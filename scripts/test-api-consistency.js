@@ -35,7 +35,7 @@ try {
       'getCurrentMemoryUsage'
     ];
     
-    let missingFunctions = [];
+    const missingFunctions = [];
     expectedFunctions.forEach(func => {
       if (typeof nativeModule[func] === 'function') {
         console.log(`   ✅ ${func}: 존재함`);

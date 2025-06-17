@@ -124,15 +124,18 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 // 개발 모드에서 라이브 리로드 활성화
 if (app_config_1.isDev) {
-    try {
-        require('electron-reload')(__dirname, {
-            electron: path.join(__dirname, '../../../node_modules/.bin/electron'),
-            hardResetMethod: 'exit'
-        });
-    }
-    catch (error) {
-        console.log('electron-reload not available:', error.message);
-    }
+    (async () => {
+        try {
+            const electronReload = await Promise.resolve().then(() => __importStar(require('electron-reload')));
+            electronReload.default(__dirname, {
+                electron: path.join(__dirname, '../../../node_modules/.bin/electron'),
+                hardResetMethod: 'exit'
+            });
+        }
+        catch (error) {
+            console.log('electron-reload not available:', error instanceof Error ? error.message : String(error));
+        }
+    })();
 }
 var app_config_2 = require("./app-config");
 Object.defineProperty(exports, "isDev", { enumerable: true, get: function () { return app_config_2.isDev; } });

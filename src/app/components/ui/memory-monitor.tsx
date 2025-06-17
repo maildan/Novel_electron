@@ -33,8 +33,17 @@ export const MemoryMonitor: React.FC<MemoryMonitorProps> = ({
   const [memoryData, setMemoryData] = useState<MemoryData | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [history, setHistory] = useState<MemoryData[]>([])
+  const [_history, setHistory] = useState<MemoryData[]>([])
   const [isGCRunning, setIsGCRunning] = useState(false)
+
+  // 히스토리 로깅 함수
+  const logHistoryUpdate = useCallback((newData: MemoryData) => {
+    console.log('메모리 히스토리 업데이트:', {
+      timestamp: new Date().toISOString(),
+      mainUsed: newData.main.used,
+      historyLength: _history.length
+    });
+  }, [_history.length]);
 
   // 메모리 정보 가져오기
   const fetchMemoryInfo = useCallback(async () => {
@@ -52,6 +61,7 @@ export const MemoryMonitor: React.FC<MemoryMonitorProps> = ({
           }
           
           setMemoryData(newData)
+          logHistoryUpdate(newData)
           setHistory(prev => {
             const updated = [...prev, newData]
             // 최근 60개 데이터만 유지 (2분간 데이터)

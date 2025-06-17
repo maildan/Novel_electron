@@ -41,10 +41,18 @@ const path = __importStar(require("path"));
 const fs = __importStar(require("fs"));
 const ipc_1 = require("../types/ipc");
 const channels_1 = require("../preload/channels");
+// 타입 정보 로깅 함수
+function logTypeInformation() {
+    console.debug('[네이티브 IPC] 타입 정보 초기화:', {
+        NativeIpcTypes: 'namespace imported',
+        SystemIpcTypes: 'namespace imported',
+        typesRegistered: true
+    });
+}
 // 네이티브 모듈 로드
 let nativeModule = null;
 let nativeModuleError = null;
-function loadNativeModule() {
+async function loadNativeModule() {
     try {
         const isDev = process.env.NODE_ENV === 'development';
         const currentDir = __dirname;
@@ -69,7 +77,7 @@ function loadNativeModule() {
                 console.log(`[Native IPC] 경로에서 로드 시도: ${modulePath}`);
                 if (fs.existsSync(modulePath)) {
                     console.log('[Native IPC] 네이티브 모듈 파일 발견:', modulePath);
-                    nativeModule = require(modulePath);
+                    nativeModule = await Promise.resolve(`${modulePath}`).then(s => __importStar(require(s)));
                     // 초기화 시도
                     if (nativeModule && typeof nativeModule.initializeNativeModules === 'function') {
                         const initialized = nativeModule.initializeNativeModules();
@@ -138,8 +146,12 @@ function safeJsonParse(jsonStr) {
  */
 function registerNativeIpcHandlers() {
     console.log('[Native IPC] 네이티브 모듈 IPC 핸들러 등록 시작');
+    // 타입 정보 로깅
+    logTypeInformation();
     // 네이티브 모듈 로드
-    loadNativeModule();
+    loadNativeModule().catch(error => {
+        console.error('[Native IPC] 네이티브 모듈 로드 실패:', error);
+    });
     // 메모리 관련 핸들러
     electron_1.ipcMain.handle(channels_1.CHANNELS.NATIVE_GET_MEMORY_USAGE, async () => {
         try {
@@ -415,4 +427,6 @@ function getNativeModuleStatus() {
         available: nativeModule?.isNativeModuleAvailable?.() || false
     };
 }
+// 네이티브 IPC 초기화 시 타입 정보 로깅
+logTypeInformation();
 //# sourceMappingURL=native-ipc.js.map

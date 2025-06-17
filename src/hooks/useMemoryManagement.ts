@@ -56,8 +56,9 @@ export const useMemoryManagement = ({
     if (typeof window === 'undefined') return null
     
     // Performance API 사용
-    if (window.performance && (window.performance as any).memory) {
-      return (window.performance as any).memory as MemoryInfo
+    const performance = window.performance as unknown as { memory?: MemoryInfo };
+    if (window.performance && performance.memory) {
+      return performance.memory;
     }
     
     return null

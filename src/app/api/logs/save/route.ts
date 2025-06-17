@@ -46,13 +46,10 @@ export async function POST(request: NextRequest) {
       accuracy: 100 // 기본값, 실제 구현에서는 더 정교한 계산 필요
     };
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        ...log,
-        stats
-      }
-    });
+    return NextResponse.json(createSuccessResponse({
+      ...log,
+      stats
+    }));
 
   } catch (error) {
     console.error('로그 저장 중 오류:', error);
@@ -100,23 +97,16 @@ export async function GET(request: NextRequest) {
 
     const total = await prisma.typingLog.count();
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        logs: logsWithStats,
-        total,
-        hasMore: total > offset + limit
-      }
-    });
+    return NextResponse.json(createSuccessResponse({
+      logs: logsWithStats,
+      total,
+      hasMore: total > offset + limit
+    }));
 
   } catch (error) {
     console.error('로그 조회 중 오류:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: '로그 조회에 실패했습니다',
-        details: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined
-      },
+      createErrorResponse('로그 조회에 실패했습니다', error),
       { status: 500 }
     );
   }

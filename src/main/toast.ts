@@ -7,6 +7,14 @@
 
 import { Notification, BrowserWindow } from 'electron';
 
+// BrowserWindow 타입 사용을 위한 초기화 함수
+function initializeToastWindow() {
+  console.debug('[토스트] BrowserWindow 타입 초기화:', {
+    BrowserWindow타입사용가능: !!BrowserWindow,
+    윈도우생성가능: typeof BrowserWindow === 'function'
+  });
+}
+
 export interface ToastOptions {
   title: string;
   body: string;
@@ -83,3 +91,6 @@ export function showWarningToast(message: string, title: string = '경고'): voi
 
 // 토스트 모듈 초기화
 console.log('[toast] 토스트 알림 모듈 로드됨');
+
+// 토스트 모듈 초기화 시 타입 정보 로깅
+initializeToastWindow();

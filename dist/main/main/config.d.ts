@@ -86,9 +86,9 @@ export declare class AppConfig {
     static get isProduction(): boolean;
     static get nextUrl(): string;
     private static configStore;
-    static get(key: string): any;
-    static set(key: string, value: any): void;
-    static getAll(): Record<string, any>;
+    static get(key: string): unknown;
+    static set(key: string, value: unknown): void;
+    static getAll(): Record<string, unknown>;
     static reset(): void;
 }
 //# sourceMappingURL=config.d.ts.map

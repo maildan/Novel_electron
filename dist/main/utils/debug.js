@@ -46,11 +46,11 @@ function errorLog(...args) {
 /**
  * 성능 측정 시작
  */
-function startPerformanceTimer(label) {
+function startPerformanceTimer(_label) {
     const start = performance.now();
     return () => {
         const elapsed = performance.now() - start;
-        debugLog('Performance [${label}]: ${elapsed.toFixed(2)}ms');
+        debugLog(`Performance [${_label}]: ${elapsed.toFixed(2)}ms`);
         return elapsed;
     };
 }

@@ -54,7 +54,7 @@ let isWatchingEnabled = false;
 let watchInterval = DEFAULT_WATCH_INTERVAL;
 let clipboardTimer: NodeJS.Timeout | null = null;
 let changeCallback: ((content: ClipboardContent) => void) | undefined = undefined;
-let clipboardHistory: ClipboardContent[] = [];
+const clipboardHistory: ClipboardContent[] = [];
 let watcherOptions: ClipboardWatcherOptions = {
   interval: DEFAULT_WATCH_INTERVAL,
   enableHistory: true,
@@ -63,7 +63,7 @@ let watcherOptions: ClipboardWatcherOptions = {
 };
 
 // 통계
-let clipboardStats: ClipboardStats = {
+const clipboardStats: ClipboardStats = {
   totalChanges: 0,
   internalCopies: 0,
   externalChanges: 0,
@@ -517,23 +517,25 @@ export function getClipboardStats(): ClipboardStats {
 export async function saveClipboardToFile(filePath: string, type: 'text' | 'html' | 'image' = 'text'): Promise<boolean> {
   try {
     switch (type) {
-      case 'text':
+      case 'text': {
         const text = readTextFromClipboard();
         if (text) {
           fs.writeFileSync(filePath, text, 'utf8');
           return true;
         }
         break;
+      }
 
-      case 'html':
+      case 'html': {
         const html = readHtmlFromClipboard();
         if (html) {
           fs.writeFileSync(filePath, html, 'utf8');
           return true;
         }
         break;
+      }
 
-      case 'image':
+      case 'image': {
         const image = readImageFromClipboard();
         if (image) {
           const buffer = image.toPNG();
@@ -541,6 +543,7 @@ export async function saveClipboardToFile(filePath: string, type: 'text' | 'html
           return true;
         }
         break;
+      }
     }
 
     return false;

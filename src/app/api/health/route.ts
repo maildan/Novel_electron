@@ -6,6 +6,14 @@ export const revalidate = false;
 
 export async function GET(request: NextRequest) {
   try {
+    // 요청 분석을 위한 로깅
+    console.log('헬스체크 요청 받음:', {
+      url: request.url,
+      method: request.method,
+      headers: Object.fromEntries(request.headers),
+      timestamp: new Date().toISOString()
+    });
+
     // 기본 헬스체크 응답
     const healthCheck = {
       status: 'ok',
@@ -15,7 +23,12 @@ export async function GET(request: NextRequest) {
       port: process.env.NEXT_PORT || 5500,
       pid: process.pid,
       memory: process.memoryUsage(),
-      version: process.version
+      version: process.version,
+      requestInfo: {
+        url: request.url,
+        method: request.method,
+        userAgent: request.headers.get('user-agent') || 'unknown'
+      }
     };
 
     return NextResponse.json(healthCheck, { 
@@ -40,6 +53,13 @@ export async function GET(request: NextRequest) {
 }
 
 export async function HEAD(request: NextRequest) {
+  // 요청 분석을 위한 로깅
+  console.log('헬스체크 HEAD 요청 받음:', {
+    url: request.url,
+    method: request.method,
+    timestamp: new Date().toISOString()
+  });
+
   // HEAD 요청을 위한 간단한 응답
   return new NextResponse(null, { 
     status: 200,

@@ -8,11 +8,24 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.security = exports.SecurityManager = void 0;
 exports.getSecurityManager = getSecurityManager;
+exports.initializeSecurityManager = initializeSecurityManager;
 const electron_1 = require("electron");
 // 개발 모드 확인
 const isDev = process.env.NODE_ENV === 'development';
 const disableSecurity = process.env.DISABLE_SECURITY === 'true';
 const disableCSP = process.env.DISABLE_CSP === 'true';
+/**
+ * WebContents 보안 상태 확인 (WebContents 타입 사용)
+ */
+function checkWebContentsSecurityState(webContents) {
+    console.log('WebContents 보안 상태 확인:', {
+        id: webContents.id,
+        url: webContents.getURL(),
+        userAgent: webContents.getUserAgent(),
+        devToolsOpened: webContents.isDevToolsOpened(),
+        crashed: webContents.isCrashed()
+    });
+}
 /**
  * 보안 관리자 클래스
  */
@@ -258,11 +271,11 @@ class SecurityManager {
             console.log('[Security] Applying CSP to all sessions (count: ${allSessions.length + 1})');
             allSessions.forEach((sess, idx) => {
                 try {
-                    console.log('[Security] Applying CSP to session #${idx + 1}');
+                    console.log(`[Security] Applying CSP to session #${idx + 1}`);
                     this.registerCSPForSession(sess);
                 }
                 catch (error) {
-                    console.error('[Security] Failed to apply CSP to session #${idx + 1}:', error);
+                    console.error(`[Security] Failed to apply CSP to session #${idx + 1}:`, error);
                 }
             });
             console.log('[Security] CSP applied to all sessions');
@@ -539,4 +552,17 @@ exports.security = {
     }
 };
 exports.default = exports.security;
+/**
+ * 보안 모듈 초기화 및 테스트 (WebContents 함수 사용)
+ */
+function initializeSecurityManager() {
+    console.log('보안 관리자 초기화 시작');
+    // 현재 활성 윈도우들의 WebContents 보안 상태 확인
+    const allWindows = electron_1.BrowserWindow.getAllWindows();
+    allWindows.forEach((window, index) => {
+        console.log(`윈도우 ${index + 1}/${allWindows.length} 보안 상태 확인 중...`);
+        checkWebContentsSecurityState(window.webContents);
+    });
+    console.log('보안 관리자 초기화 완료');
+}
 //# sourceMappingURL=security-manager.js.map

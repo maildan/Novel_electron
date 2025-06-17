@@ -36,12 +36,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.initSystemInfo = initSystemInfo;
 exports.cleanupSystemInfo = cleanupSystemInfo;
 exports.getSystemInfoStatus = getSystemInfoStatus;
+exports.initializeSystemInfo = initializeSystemInfo;
 /**
  * 고급 시스템 정보 및 모니터링 모듈
  * 시스템 통계, 브라우저 감지, 디버그 정보, 권한을 처리합니다
  */
 const electron_1 = require("electron");
 const os = __importStar(require("os"));
+const fs = __importStar(require("fs"));
+const path = __importStar(require("path"));
 const child_process_1 = require("child_process");
 // active-win 호환성을 위한 동적 가져오기
 let activeWinModule = null;
@@ -341,6 +344,92 @@ function getDebugInfo() {
     };
 }
 /**
+ * 시스템 디렉토리 및 파일 체크 (fs 모듈 사용)
+ */
+function checkSystemFiles() {
+    try {
+        const tempDir = path.join(os.tmpdir(), 'loop-system');
+        // 임시 디렉토리 확인 및 생성
+        if (!fs.existsSync(tempDir)) {
+            fs.mkdirSync(tempDir, { recursive: true });
+            console.log('시스템 임시 디렉토리 생성:', tempDir);
+        }
+        // 시스템 정보 파일 체크
+        const infoFile = path.join(tempDir, 'system-info.json');
+        const systemInfo = getSystemInfo();
+        fs.writeFileSync(infoFile, JSON.stringify(systemInfo, null, 2));
+        console.log('시스템 정보 파일 저장:', infoFile);
+        return true;
+    }
+    catch (error) {
+        console.error('시스템 파일 체크 실패:', error);
+        return false;
+    }
+}
+/**
+ * 시스템 명령어 실행 (exec 모듈 사용)
+ */
+function executeSystemCommand(command) {
+    return new Promise((resolve, reject) => {
+        (0, child_process_1.exec)(command, { timeout: 5000 }, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`시스템 명령어 실행 실패 [${command}]:`, error.message);
+                if (stderr) {
+                    console.error('stderr:', stderr);
+                }
+                reject(error);
+            }
+            else {
+                console.log(`시스템 명령어 실행 성공 [${command}]`);
+                if (stderr) {
+                    console.warn('stderr (경고):', stderr);
+                }
+                resolve(stdout.trim());
+            }
+        });
+    });
+}
+/**
+ * 권한 체크 쿨다운 관리 (PERMISSION_CHECK_COOLDOWN 사용)
+ */
+function canCheckPermissions() {
+    const now = Date.now();
+    if (now - lastPermissionCheckTime < PERMISSION_CHECK_COOLDOWN) {
+        console.log('권한 체크 쿨다운 중:', PERMISSION_CHECK_COOLDOWN - (now - lastPermissionCheckTime), 'ms 남음');
+        return false;
+    }
+    lastPermissionCheckTime = now;
+    return true;
+}
+/**
+ * 개발 앱 권한 상태 로깅 (permissionApps 사용)
+ */
+function logPermissionAppsStatus() {
+    console.log('개발 앱 권한 상태:');
+    Object.entries(permissionApps).forEach(([key, app]) => {
+        console.log(`- [${key}] ${app.name}: 필요=${app.required}, 승인=${app.granted}, 경로=${app.path}`);
+    });
+}
+/**
+ * 활성 윈도우 정보 가져오기 (loadActiveWin 사용)
+ */
+async function getActiveWindowInfo() {
+    try {
+        const activeWin = await loadActiveWin();
+        if (activeWin && activeWin.default) {
+            const windowInfo = await activeWin.default();
+            console.log('활성 윈도우 정보:', windowInfo?.title || 'Unknown');
+            return windowInfo;
+        }
+        console.log('active-win 모듈을 사용할 수 없습니다');
+        return null;
+    }
+    catch (error) {
+        console.error('활성 윈도우 정보 가져오기 실패:', error);
+        return null;
+    }
+}
+/**
  * Setup system info IPC handlers
  */
 function setupSystemInfoIpcHandlers() {
@@ -479,5 +568,35 @@ function getSystemInfoStatus() {
         fallbackMode: isInFallbackMode,
         lastPermissionCheck: lastPermissionCheckTime
     };
+}
+/**
+ * 시스템 정보 모듈 초기화 (모든 함수 테스트)
+ */
+function initializeSystemInfo() {
+    console.log('시스템 정보 모듈 초기화 시작');
+    // 파일 시스템 체크
+    checkSystemFiles();
+    // 권한 상태 로깅
+    logPermissionAppsStatus();
+    // 권한 체크 쿨다운 테스트
+    if (canCheckPermissions()) {
+        console.log('권한 체크 가능');
+    }
+    // 활성 윈도우 정보 가져오기
+    getActiveWindowInfo().then(windowInfo => {
+        if (windowInfo) {
+            console.log('활성 윈도우 감지됨');
+        }
+    });
+    // 시스템 명령어 테스트 (macOS에서만)
+    if (process.platform === 'darwin') {
+        executeSystemCommand('uname -a').then(result => {
+            console.log('시스템 정보:', result);
+        }).catch(error => {
+            console.log('시스템 명령어 실행 실패:', error.message);
+        });
+    }
+    systemInfoInitialized = true;
+    console.log('시스템 정보 모듈 초기화 완료');
 }
 //# sourceMappingURL=system-info.js.map

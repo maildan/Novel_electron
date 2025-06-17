@@ -7,53 +7,18 @@
 import { ipcRenderer } from 'electron';
 import { CHANNELS } from './channels';
 
-// 타입 정의
-interface MemoryInfo {
-  total: number
-  used: number
-  free: number
-  percentage: number
-}
-
-interface MemoryData {
-  main: MemoryInfo
-  renderer: MemoryInfo
-  gpu?: MemoryInfo
-  system: MemoryInfo
-  timestamp: number
-}
-
-interface NativeModuleStatus {
-  available: boolean
-  fallbackMode: boolean
-  version: string
-  features: {
-    memory: boolean
-    gpu: boolean
-    worker: boolean
-  }
-  timestamp: number
-  loadError?: string
-}
-
-interface APIResponse<T = any> {
-  success: boolean
-  data?: T
-  error?: string
-}
-
 // 데이터베이스 API
 const databaseAPI = {
-  saveTypingSession: (data: any) => ipcRenderer.invoke(CHANNELS.SAVE_TYPING_SESSION, data),
+  saveTypingSession: (data: Record<string, unknown>) => ipcRenderer.invoke(CHANNELS.SAVE_TYPING_SESSION, data),
   getRecentSessions: (limit?: number) => ipcRenderer.invoke(CHANNELS.GET_RECENT_SESSIONS, limit),
   getStatistics: (days?: number) => ipcRenderer.invoke(CHANNELS.GET_STATISTICS, days),
   cleanup: () => ipcRenderer.invoke(CHANNELS.DB_CLEANUP),
   healthCheck: () => ipcRenderer.invoke(CHANNELS.DB_HEALTH_CHECK),
-  getKeystrokeData: (params: any) => ipcRenderer.invoke(CHANNELS.GET_KEYSTROKE_DATA, params),
-  getSessions: (params: any) => ipcRenderer.invoke(CHANNELS.GET_SESSIONS, params),
-  exportData: (params: any) => ipcRenderer.invoke(CHANNELS.EXPORT_DATA, params),
-  importData: (params: any) => ipcRenderer.invoke(CHANNELS.IMPORT_DATA, params),
-  clearData: (params: any) => ipcRenderer.invoke(CHANNELS.CLEAR_DATA, params)
+  getKeystrokeData: (params: Record<string, unknown>) => ipcRenderer.invoke(CHANNELS.GET_KEYSTROKE_DATA, params),
+  getSessions: (params: Record<string, unknown>) => ipcRenderer.invoke(CHANNELS.GET_SESSIONS, params),
+  exportData: (params: Record<string, unknown>) => ipcRenderer.invoke(CHANNELS.EXPORT_DATA, params),
+  importData: (params: Record<string, unknown>) => ipcRenderer.invoke(CHANNELS.IMPORT_DATA, params),
+  clearData: (params: Record<string, unknown>) => ipcRenderer.invoke(CHANNELS.CLEAR_DATA, params)
 };
 
 // 네이티브 모듈 API
@@ -137,7 +102,7 @@ const systemAPI = {
   getProcesses: () => ipcRenderer.invoke('system:getProcesses'),
   gpu: {
     getInfo: () => ipcRenderer.invoke(CHANNELS.GPU_GET_INFO),
-    compute: (data: any) => ipcRenderer.invoke(CHANNELS.GPU_COMPUTE, data),
+    compute: (data: Record<string, unknown>) => ipcRenderer.invoke(CHANNELS.GPU_COMPUTE, data),
     enable: () => ipcRenderer.invoke(CHANNELS.GPU_ENABLE),
     disable: () => ipcRenderer.invoke(CHANNELS.GPU_DISABLE),
   },
@@ -161,10 +126,10 @@ const memoryAPI = {
 const settingsAPI = {
   // 기본 CRUD
   get: (key?: string) => ipcRenderer.invoke(CHANNELS.SETTINGS_GET, key),
-  set: (key: string, value: any) => ipcRenderer.invoke(CHANNELS.SETTINGS_SET, key, value),
+  set: (key: string, value: unknown) => ipcRenderer.invoke(CHANNELS.SETTINGS_SET, key, value),
   getAll: () => ipcRenderer.invoke(CHANNELS.SETTINGS_GET_ALL),
-  update: (key: string, value: any) => ipcRenderer.invoke(CHANNELS.SETTINGS_UPDATE, key, value),
-  updateMultiple: (settings: Record<string, any>) => ipcRenderer.invoke(CHANNELS.SETTINGS_UPDATE_MULTIPLE, settings),
+  update: (key: string, value: unknown) => ipcRenderer.invoke(CHANNELS.SETTINGS_UPDATE, key, value),
+  updateMultiple: (settings: Record<string, unknown>) => ipcRenderer.invoke(CHANNELS.SETTINGS_UPDATE_MULTIPLE, settings),
   reset: () => ipcRenderer.invoke(CHANNELS.SETTINGS_RESET),
   save: () => ipcRenderer.invoke(CHANNELS.SETTINGS_SAVE),
   load: () => ipcRenderer.invoke(CHANNELS.SETTINGS_LOAD),
@@ -173,7 +138,7 @@ const settingsAPI = {
   getSetting: (key: string) => ipcRenderer.invoke('settingsGetSetting', key),
   export: (filePath: string) => ipcRenderer.invoke('settingsExport', filePath),
   import: (filePath: string) => ipcRenderer.invoke('settingsImport', filePath),
-  validate: (settings: Record<string, any>) => ipcRenderer.invoke('settingsValidate', settings),
+  validate: (settings: Record<string, unknown>) => ipcRenderer.invoke('settingsValidate', settings),
   createBackup: () => ipcRenderer.invoke('settingsCreateBackup'),
   getHistory: () => ipcRenderer.invoke('settingsGetHistory'),
   clearHistory: () => ipcRenderer.invoke('settingsClearHistory'),
@@ -181,7 +146,7 @@ const settingsAPI = {
 
 // 윈도우 API
 const windowAPI = {
-  create: (options?: any) => ipcRenderer.invoke(CHANNELS.WINDOW_CREATE, options),
+  create: (options?: Record<string, unknown>) => ipcRenderer.invoke(CHANNELS.WINDOW_CREATE, options),
   minimize: () => ipcRenderer.invoke(CHANNELS.MINIMIZE_WINDOW),
   maximize: () => ipcRenderer.invoke(CHANNELS.MAXIMIZE_WINDOW),
   toggleMaximize: () => ipcRenderer.invoke(CHANNELS.TOGGLE_MAXIMIZE),
@@ -205,7 +170,7 @@ const windowAPI = {
   isFocused: () => ipcRenderer.invoke('window:isFocused'),
   setWindowMode: (mode: string) => ipcRenderer.invoke('setWindowMode', mode),
   getWindowStatus: () => ipcRenderer.invoke('getWindowStatus'),
-  setWindowBounds: (bounds: any) => ipcRenderer.invoke('setWindowBounds', bounds),
+  setWindowBounds: (bounds: Record<string, unknown>) => ipcRenderer.invoke('setWindowBounds', bounds),
 };
 
 // 앱 API
@@ -225,7 +190,7 @@ const appAPI = {
 // Config API - 기존 config 시스템 지원
 const configAPI = {
   get: (key?: string) => ipcRenderer.invoke(CHANNELS.GET_CONFIG, key),
-  set: (key: string, value: any) => ipcRenderer.invoke(CHANNELS.SET_CONFIG, key, value),
+  set: (key: string, value: unknown) => ipcRenderer.invoke(CHANNELS.SET_CONFIG, key, value),
   getAll: () => ipcRenderer.invoke(CHANNELS.GET_ALL_CONFIG),
   reset: () => ipcRenderer.invoke(CHANNELS.RESET_CONFIG)
 };
@@ -233,13 +198,13 @@ const configAPI = {
 // IPC 렌더러 - 이벤트 리스너와 메시지 전송을 위한 안전한 래퍼
 const ipcRendererAPI = {
   // 메시지 전송
-  send: (channel: string, ...args: any[]) => {
+  send: (channel: string, ...args: unknown[]) => {
     console.log('📤 IPC Send:', channel, args);
     ipcRenderer.send(channel, ...args);
   },
   
   // 메시지 요청 (응답 대기)
-  invoke: async (channel: string, ...args: any[]) => {
+  invoke: async (channel: string, ...args: unknown[]) => {
     console.log('📞 IPC Invoke:', channel, args);
     try {
       const result = await ipcRenderer.invoke(channel, ...args);
@@ -252,9 +217,9 @@ const ipcRendererAPI = {
   },
   
   // 이벤트 리스너 등록
-  on: (channel: string, listener: (event: any, ...args: any[]) => void) => {
+  on: (channel: string, listener: (event: Electron.IpcRendererEvent, ...args: unknown[]) => void) => {
     console.log('👂 IPC On:', channel);
-    const subscription = (event: any, ...args: any[]) => {
+    const subscription = (event: Electron.IpcRendererEvent, ...args: unknown[]) => {
       console.log('📥 IPC Event:', channel, args);
       listener(event, ...args);
     };
@@ -266,9 +231,9 @@ const ipcRendererAPI = {
   },
   
   // 일회성 이벤트 리스너
-  once: (channel: string, listener: (event: any, ...args: any[]) => void) => {
+  once: (channel: string, listener: (event: Electron.IpcRendererEvent, ...args: unknown[]) => void) => {
     console.log('👂 IPC Once:', channel);
-    const subscription = (event: any, ...args: any[]) => {
+    const subscription = (event: Electron.IpcRendererEvent, ...args: unknown[]) => {
       console.log('📥 IPC Event (Once):', channel, args);
       listener(event, ...args);
     };
@@ -276,7 +241,7 @@ const ipcRendererAPI = {
   },
   
   // 리스너 제거
-  removeListener: (channel: string, listener: (...args: any[]) => void) => {
+  removeListener: (channel: string, listener: (...args: unknown[]) => void) => {
     console.log('🔇 IPC Remove Listener:', channel);
     ipcRenderer.removeListener(channel, listener);
   },
@@ -291,7 +256,7 @@ const ipcRendererAPI = {
 // 전체 Electron API 객체
 export const electronAPI = {
   // 최상위 레벨에 invoke 메서드 노출
-  invoke: async (channel: string, ...args: any[]) => {
+  invoke: async (channel: string, ...args: unknown[]) => {
     console.log('📞 IPC Invoke:', channel, args);
     try {
       const result = await ipcRenderer.invoke(channel, ...args);
@@ -328,15 +293,15 @@ export const electronAPI = {
   config: configAPI,
   
   // 이벤트 리스너 API
-  on: (channel: string, listener: (...args: any[]) => void) => {
+  on: (channel: string, listener: (...args: unknown[]) => void) => {
     ipcRenderer.on(channel, listener)
   },
   
-  off: (channel: string, listener: (...args: any[]) => void) => {
+  off: (channel: string, listener: (...args: unknown[]) => void) => {
     ipcRenderer.off(channel, listener)
   },
 
-  once: (channel: string, listener: (...args: any[]) => void) => {
+  once: (channel: string, listener: (...args: unknown[]) => void) => {
     ipcRenderer.once(channel, listener)
   },
 
@@ -357,7 +322,7 @@ export const electronAPI = {
       arch: process.arch,
       env: process.env.NODE_ENV
     }),
-    log: (message: string, ...args: any[]) => {
+    log: (message: string, ...args: unknown[]) => {
       console.log('[Preload] ${message}', ...args);
     }
   }

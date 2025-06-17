@@ -2,60 +2,106 @@
 
 import { useState, useEffect } from 'react';
 
+// System metrics interfaces
+interface SystemMetrics {
+  cpu: {
+    usage: number;
+    temperature?: number;
+  };
+  memory: {
+    used: number;
+    total: number;
+    percentage: number;
+  };
+  gpu?: {
+    usage: number;
+    memory?: {
+      used: number;
+      total: number;
+    };
+  };
+}
+
+interface GPUInfo {
+  name: string;
+  driver?: string;
+  memory?: {
+    total: number;
+    used: number;
+  };
+  vendor?: string;
+}
+
+interface MemoryStats {
+  used: number;
+  total: number;
+  free: number;
+  percentage: number;
+  rss?: number;
+  heapUsed?: number;
+  heapTotal?: number;
+}
+
+interface NativeStatus {
+  loaded: boolean;
+  error?: string;
+  version?: string;
+}
+
 interface SystemAPI {
-  startMonitoring: () => Promise<any>;
-  stopMonitoring: () => Promise<any>;
-  getCurrentMetrics: () => Promise<any>;
-  getMetricsHistory: (minutes?: number) => Promise<any>;
-  cleanup: (force?: boolean) => Promise<any>;
-  getUsage: () => Promise<any>;
-  getStats: () => Promise<any>;
-  optimizeMemory: () => Promise<any>;
+  startMonitoring: () => Promise<boolean>;
+  stopMonitoring: () => Promise<boolean>;
+  getCurrentMetrics: () => Promise<SystemMetrics>;
+  getMetricsHistory: (minutes?: number) => Promise<SystemMetrics[]>;
+  cleanup: (force?: boolean) => Promise<boolean>;
+  getUsage: () => Promise<SystemMetrics>;
+  getStats: () => Promise<SystemMetrics>;
+  optimizeMemory: () => Promise<boolean>;
   gpu: {
-    getInfo: () => Promise<any>;
-    compute: (data: any) => Promise<any>;
-    enable: () => Promise<any>;
-    disable: () => Promise<any>;
+    getInfo: () => Promise<GPUInfo>;
+    compute: (data: unknown) => Promise<unknown>;
+    enable: () => Promise<boolean>;
+    disable: () => Promise<boolean>;
   };
   native: {
-    getStatus: () => Promise<any>;
+    getStatus: () => Promise<NativeStatus>;
   };
 }
 
 interface MemoryAPI {
-  cleanup: (force?: boolean) => Promise<any>;
-  getUsage: () => Promise<any>;
-  getStats: () => Promise<any>;
-  getInfo: () => Promise<any>;
-  optimize: () => Promise<any>;
+  cleanup: (force?: boolean) => Promise<boolean>;
+  getUsage: () => Promise<MemoryStats>;
+  getStats: () => Promise<MemoryStats>;
+  getInfo: () => Promise<MemoryStats>;
+  optimize: () => Promise<boolean>;
 }
 
 interface ConfigAPI {
-  get: (key: string) => Promise<any>;
-  set: (key: string, value: any) => Promise<any>;
-  getAll: () => Promise<any>;
-  setMultiple: (config: Record<string, any>) => Promise<any>;
-  reset: () => Promise<any>;
+  get: (key: string) => Promise<unknown>;
+  set: (key: string, value: unknown) => Promise<boolean>;
+  getAll: () => Promise<Record<string, unknown>>;
+  setMultiple: (config: Record<string, unknown>) => Promise<boolean>;
+  reset: () => Promise<boolean>;
 }
 
 interface SettingsAPI {
-  get: (key?: string) => Promise<any>;
-  set: (key: string, value: any) => Promise<any>;
-  getAll: () => Promise<any>;
-  update: (key: string, value: any) => Promise<any>;
-  updateMultiple: (settings: Record<string, any>) => Promise<any>;
-  reset: () => Promise<any>;
-  save: () => Promise<any>;
-  load: () => Promise<any>;
+  get: (key?: string) => Promise<unknown>;
+  set: (key: string, value: unknown) => Promise<boolean>;
+  getAll: () => Promise<Record<string, unknown>>;
+  update: (key: string, value: unknown) => Promise<boolean>;
+  updateMultiple: (settings: Record<string, unknown>) => Promise<boolean>;
+  reset: () => Promise<boolean>;
+  save: () => Promise<boolean>;
+  load: () => Promise<Record<string, unknown>>;
 }
 
 interface ElectronAPI {
   ipcRenderer: {
-    on: (channel: string, listener: (event: any, ...args: any[]) => void) => void;
-    once: (channel: string, listener: (event: any, ...args: any[]) => void) => void;
-    send: (channel: string, ...args: any[]) => void;
-    invoke: (channel: string, ...args: any[]) => Promise<any>;
-    removeListener: (channel: string, listener: (...args: any[]) => void) => void;
+    on: (channel: string, listener: (event: Electron.IpcRendererEvent, ...args: unknown[]) => void) => void;
+    once: (channel: string, listener: (event: Electron.IpcRendererEvent, ...args: unknown[]) => void) => void;
+    send: (channel: string, ...args: unknown[]) => void;
+    invoke: (channel: string, ...args: unknown[]) => Promise<unknown>;
+    removeListener: (channel: string, listener: (...args: unknown[]) => void) => void;
   };
   system: SystemAPI;
   memory: MemoryAPI;
@@ -89,10 +135,11 @@ export function useElectron(): UseElectronResult {
     
     if (checkElectron) {
       // window.electronAPI가 전역 객체로 정의되어 있는지 확인
-      const api = (window as any).electronAPI;
+      const globalWindow = window as unknown as { electronAPI?: ElectronAPI };
+      const api = globalWindow.electronAPI;
       
       if (api && api.ipcRenderer) {
-        setElectronAPI(api as ElectronAPI);
+        setElectronAPI(api);
       } else {
         console.warn('Electron API를 찾을 수 없습니다.');
         setElectronAPI(null);

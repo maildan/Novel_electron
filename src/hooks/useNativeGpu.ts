@@ -27,7 +27,7 @@ interface GpuInfo {
 
 interface GpuComputationResult {
   success: boolean
-  result?: any
+  result?: unknown
   executionTime?: number
   memorySaved?: number
   performanceGain?: number
@@ -63,7 +63,7 @@ interface UseNativeGpuReturn {
   fetchGpuInfo: () => Promise<void>
   fetchMemoryStats: () => Promise<void>
   toggleGpuAcceleration: (enable: boolean) => Promise<void>
-  computeWithGpu: (taskType: GpuTaskType, data?: any) => Promise<GpuComputationResult>
+  computeWithGpu: (taskType: GpuTaskType, data?: unknown) => Promise<GpuComputationResult>
   optimizeMemory: () => Promise<GpuComputationResult>
   cleanupGpuMemory: () => Promise<GpuComputationResult>
   runBenchmark: () => Promise<GpuComputationResult>
@@ -204,7 +204,7 @@ export const useNativeGpu = (): UseNativeGpuReturn => {
   }, [available])
 
   // GPU 컴퓨팅 실행
-  const computeWithGpu = useCallback(async (taskType: GpuTaskType, data?: any): Promise<GpuComputationResult> => {
+  const computeWithGpu = useCallback(async (taskType: GpuTaskType, data?: unknown): Promise<GpuComputationResult> => {
     if (!available || !enabled) {
       return {
         success: false,

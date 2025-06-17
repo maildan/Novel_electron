@@ -28,6 +28,12 @@ export declare const CHANNELS: {
     readonly MEMORY_GET_STATS: "memory:getStats";
     readonly MEMORY_GET_INFO: "memory:getInfo";
     readonly MEMORY_OPTIMIZE: "memory:optimize";
+    readonly TRACKING_START_MONITORING: "tracking:start-monitoring";
+    readonly TRACKING_STOP_MONITORING: "tracking:stop-monitoring";
+    readonly TRACKING_GET_STATUS: "tracking:get-status";
+    readonly TRACKING_SAVE_STATS: "tracking:save-stats";
+    readonly TRACKING_RESET: "tracking:reset";
+    readonly TRACKING_PROCESS_KEY: "tracking:process-key";
     readonly GPU_GET_INFO: "gpu:getInfo";
     readonly GPU_COMPUTE: "gpu:compute";
     readonly GPU_ENABLE: "gpu:enable";

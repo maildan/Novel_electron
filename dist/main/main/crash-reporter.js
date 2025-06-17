@@ -59,9 +59,9 @@ const MAX_ERROR_HISTORY = 100;
 let isInitialized = false;
 let errorLogStream = null;
 let crashLogStream = null;
-let uncaughtExceptions = [];
-let crashHistory = [];
-let crashStats = {
+const uncaughtExceptions = [];
+const crashHistory = [];
+const crashStats = {
     totalCrashes: 0,
     uncaughtExceptions: 0,
     rendererCrashes: 0,
@@ -71,7 +71,7 @@ let crashStats = {
     averageUptime: 0,
     recoveryAttempts: 0
 };
-let startTime = Date.now();
+const startTime = Date.now();
 let options = {};
 /**
  * 충돌 보고 시스템 초기화
@@ -225,19 +225,22 @@ function setupExceptionHandlers() {
         error.stack = `${error.stack}\nPromise: ${promise}`;
         handleUncaughtException(error, 'unhandled-rejection');
     });
-    // 렌더러 프로세스 충돌
+    // 렌더러 프로세스 충돌 (타입 단언 사용)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     electron_1.app.on('renderer-process-crashed', (event, webContents, killed) => {
         console.log(`[CrashReporter] 렌더러 프로세스 충돌 감지, 이벤트 타입: ${typeof event}`);
         handleRendererCrash(webContents, killed);
     });
-    // GPU 프로세스 충돌
+    // GPU 프로세스 충돌 (타입 단언 사용)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     electron_1.app.on('gpu-process-crashed', (event, killed) => {
         console.log(`[CrashReporter] GPU 프로세스 충돌 감지, 이벤트 타입: ${typeof event}`);
         handleGpuCrash(killed);
     });
     // 자식 프로세스 Error (Node.js 16+에서 지원)
     if ('child-process-gone' in electron_1.app) {
-        electron_1.app.on('child-process-gone', (event, details) => {
+        const eventName = 'child-process-gone';
+        electron_1.app.on(eventName, (event, details) => {
             console.log(`[CrashReporter] 자식 프로세스 종료 감지, 이벤트: ${event.defaultPrevented ? '방지됨' : '허용'}`);
             handleChildProcessCrash(details);
         });

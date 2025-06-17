@@ -46,7 +46,7 @@ const HANGUL_JAMO: JamoInfo = {
 };
 
 // 전역 키보드 핸들러 상태
-let keyboardState: KeyboardHandlerState = {
+const keyboardState: KeyboardHandlerState = {
   isRegistered: false,
   keyboardManager: null,
   isListening: false,

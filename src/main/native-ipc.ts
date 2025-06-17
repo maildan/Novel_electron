@@ -4,8 +4,6 @@ import * as fs from 'fs';
 
 // 새로운 통합 타입 시스템 사용
 import type { 
-  NativeIpcTypes,
-  SystemIpcTypes,
   IpcResponse
 } from '../types/ipc';
 import { 
@@ -17,25 +15,29 @@ import { CHANNELS } from '../preload/channels';
 
 // 타입 정보 로깅 함수
 function logTypeInformation(): void {
-  console.log('네이티브 IPC 타입과 시스템 IPC 타입이 로드되었습니다.');
+  console.debug('[네이티브 IPC] 타입 정보 초기화:', {
+    NativeIpcTypes: 'namespace imported',
+    SystemIpcTypes: 'namespace imported',
+    typesRegistered: true
+  });
 }
 
 // 네이티브 모듈 타입 정의
 interface NativeModule {
   // 메모리 관련
-  getMemoryUsage: () => any;
+  getMemoryUsage: () => { rss: number; heapTotal: number; heapUsed: number; external: number };
   startMemoryMonitoring: () => boolean;
-  getMemoryStats: () => any;
+  getMemoryStats: () => { total: number; used: number; free: number; percentage: number };
   optimizeMemory: () => boolean;
-  cleanupMemory: () => any;
-  optimizeMemoryAdvanced: () => any;
+  cleanupMemory: () => { success: boolean; freedBytes?: number };
+  optimizeMemoryAdvanced: () => { success: boolean; details?: Record<string, unknown> };
   resetMemoryMonitoring: () => boolean;
   
   // GPU 관련
-  getGpuInfo: () => any;
-  getGpuMemoryStats: () => any;
-  runGpuAcceleration: (data: string) => any;
-  runGpuBenchmark: () => any;
+  getGpuInfo: () => { name: string; vendor: string; memory: number; utilization: number };
+  getGpuMemoryStats: () => { total: number; used: number; free: number };
+  runGpuAcceleration: (data: string) => { success: boolean; result?: unknown };
+  runGpuBenchmark: () => { score: number; details: Record<string, unknown> };
   
   // 시스템 관련
   getSystemInfo: () => string;
@@ -47,13 +49,13 @@ interface NativeModule {
   getTimestamp: () => number;
   
   // 워커 관련
-  addWorkerTask: (taskData: string) => any;
-  getWorkerTaskStatus: (taskId: string) => any;
-  getWorkerStats: () => any;
+  addWorkerTask: (taskData: string) => { taskId: string; success: boolean };
+  getWorkerTaskStatus: (taskId: string) => { status: 'pending' | 'running' | 'completed' | 'failed'; result?: unknown };
+  getWorkerStats: () => { activeWorkers: number; queuedTasks: number; completedTasks: number };
   getPendingTaskCount: () => number;
   resetWorkerPool: () => boolean;
-  executeCpuTask: (taskData: string) => any;
-  processDataParallel: (data: string) => any;
+  executeCpuTask: (taskData: string) => { result: unknown; executionTime: number };
+  processDataParallel: (data: string) => { results: unknown[]; totalTime: number };
   
   // 유틸리티 관련
   calculateFileHash: (filePath: string) => string;
@@ -67,14 +69,14 @@ interface NativeModule {
   getEnvVar: (name: string) => string | null;
   getProcessId: () => number;
   startPerformanceMeasurement: (label: string) => string;
-  endPerformanceMeasurement: (measurementId: string) => any;
+  endPerformanceMeasurement: (measurementId: string) => { duration: number; label: string };
 }
 
 // 네이티브 모듈 로드
 let nativeModule: NativeModule | null = null;
 let nativeModuleError: string | null = null;
 
-function loadNativeModule(): void {
+async function loadNativeModule(): Promise<void> {
   try {
     const isDev = process.env.NODE_ENV === 'development';
     const currentDir = __dirname;
@@ -105,7 +107,7 @@ function loadNativeModule(): void {
         
         if (fs.existsSync(modulePath)) {
           console.log('[Native IPC] 네이티브 모듈 파일 발견:', modulePath);
-          nativeModule = require(modulePath);
+          nativeModule = await import(modulePath);
           
           // 초기화 시도
           if (nativeModule && typeof nativeModule.initializeNativeModules === 'function') {
@@ -138,7 +140,7 @@ function loadNativeModule(): void {
 // 안전한 네이티브 함수 호출 래퍼
 function safeNativeCall<T>(
   functionName: keyof NativeModule, 
-  ...args: any[]
+  ...args: unknown[]
 ): { success: boolean; data?: T; error?: string } {
   try {
     if (!nativeModule) {
@@ -157,8 +159,8 @@ function safeNativeCall<T>(
     }
     
     // this 컨텍스트 문제 해결을 위해 직접 호출
-    const result = (func as (...args: any[]) => any)(...args);
-    return { success: true, data: result };
+    const result = (func as (...args: unknown[]) => unknown)(...args);
+    return { success: true, data: result as T };
   } catch (error) {
     console.error(`[Native IPC] ${String(functionName)} 호출 오류:`, error);
     return { 
@@ -169,7 +171,7 @@ function safeNativeCall<T>(
 }
 
 // JSON 파싱 헬퍼
-function safeJsonParse(jsonStr: string): any {
+function safeJsonParse(jsonStr: string): unknown {
   try {
     return JSON.parse(jsonStr);
   } catch (error) {
@@ -188,13 +190,15 @@ export function registerNativeIpcHandlers(): void {
   logTypeInformation();
   
   // 네이티브 모듈 로드
-  loadNativeModule();
+  loadNativeModule().catch(error => {
+    console.error('[Native IPC] 네이티브 모듈 로드 실패:', error);
+  });
   
   // 메모리 관련 핸들러
-  ipcMain.handle(CHANNELS.NATIVE_GET_MEMORY_USAGE, async (): Promise<IpcResponse<any>> => {
+  ipcMain.handle(CHANNELS.NATIVE_GET_MEMORY_USAGE, async (): Promise<IpcResponse<{ used: number; total: number; free: number; percentage: number }>> => {
     try {
       const result = safeNativeCall('getMemoryUsage');
-      return createSuccessResponse(result.data);
+      return createSuccessResponse(result.data as { used: number; total: number; free: number; percentage: number });
     } catch (error) {
       const ipcError = createIpcError(
         'NATIVE_MEMORY_USAGE_ERROR',
@@ -222,7 +226,7 @@ export function registerNativeIpcHandlers(): void {
     }
   });
 
-  ipcMain.handle(CHANNELS.NATIVE_GET_MEMORY_STATS, async (): Promise<IpcResponse<any>> => {
+  ipcMain.handle(CHANNELS.NATIVE_GET_MEMORY_STATS, async (): Promise<IpcResponse<unknown>> => {
     try {
       const result = safeNativeCall('getMemoryStats');
       return createSuccessResponse(result.data);
@@ -236,7 +240,7 @@ export function registerNativeIpcHandlers(): void {
     }
   });
 
-  ipcMain.handle(CHANNELS.NATIVE_OPTIMIZE_MEMORY, async (): Promise<IpcResponse<any>> => {
+  ipcMain.handle(CHANNELS.NATIVE_OPTIMIZE_MEMORY, async (): Promise<IpcResponse<unknown>> => {
     try {
       const result = safeNativeCall('optimizeMemory');
       return createSuccessResponse(result.data);
@@ -264,7 +268,7 @@ export function registerNativeIpcHandlers(): void {
     }
   });
 
-  ipcMain.handle(CHANNELS.NATIVE_OPTIMIZE_MEMORY_ADVANCED, async (): Promise<IpcResponse<any>> => {
+  ipcMain.handle(CHANNELS.NATIVE_OPTIMIZE_MEMORY_ADVANCED, async (): Promise<IpcResponse<unknown>> => {
     try {
       const result = safeNativeCall('optimizeMemoryAdvanced');
       return createSuccessResponse(result.data);
@@ -293,7 +297,7 @@ export function registerNativeIpcHandlers(): void {
   });
 
   // GPU 관련 핸들러
-  ipcMain.handle(CHANNELS.NATIVE_GET_GPU_INFO, async (): Promise<IpcResponse<any>> => {
+  ipcMain.handle(CHANNELS.NATIVE_GET_GPU_INFO, async (): Promise<IpcResponse<unknown>> => {
     try {
       const result = safeNativeCall('getGpuInfo');
       return createSuccessResponse(result.data);
@@ -307,7 +311,7 @@ export function registerNativeIpcHandlers(): void {
     }
   });
 
-  ipcMain.handle(CHANNELS.NATIVE_GET_GPU_MEMORY_STATS, async (): Promise<IpcResponse<any>> => {
+  ipcMain.handle(CHANNELS.NATIVE_GET_GPU_MEMORY_STATS, async (): Promise<IpcResponse<unknown>> => {
     try {
       const result = safeNativeCall('getGpuMemoryStats');
       return createSuccessResponse(result.data);
@@ -533,3 +537,6 @@ export function getNativeModuleStatus() {
     available: nativeModule?.isNativeModuleAvailable?.() || false
   };
 }
+
+// 네이티브 IPC 초기화 시 타입 정보 로깅
+logTypeInformation();

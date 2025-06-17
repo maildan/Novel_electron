@@ -91,6 +91,7 @@ export namespace MemoryIpcTypes {
 // 데이터베이스 관련 타입
 // =============================================================================
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace DatabaseIpcTypes {
   /**
    * 타이핑 세션 데이터

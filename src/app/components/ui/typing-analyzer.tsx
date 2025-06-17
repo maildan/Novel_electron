@@ -60,6 +60,11 @@ function analyzeTypingWithJS(data: TypingData): TypingAnalysisResult {
 }
 
 export function TypingAnalyzer({ stats, isTracking, className }: TypingAnalyzerProps) {
+  console.debug('[타이핑 분석기] 컴포넌트 초기화:', {
+    통계데이터유무: !!stats,
+    추적상태: isTracking,
+    키개수: stats?.keyCount || 0
+  });
   const defaultStats = {
     keyCount: 0,
     typingTime: 0,
@@ -86,6 +91,11 @@ export function TypingAnalyzer({ stats, isTracking, className }: TypingAnalyzerP
   // GPU로 타이핑 분석 수행
   const computeWithGpu = useCallback(async (data: TypingData): Promise<TypingAnalysisResult | null> => {
     try {
+      console.debug('[GPU 연산] 타이핑 데이터 처리 시도:', {
+        키개수: data.keyCount,
+        타이핑시간: data.typingTime,
+        정확도: data.accuracy
+      });
       // GPU 기능은 현재 비활성화
       return null;
     } catch (err) {

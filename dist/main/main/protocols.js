@@ -89,6 +89,28 @@ const DEFAULT_SECURITY_CONFIG = {
 let protocolsInitialized = false;
 let securityConfig = { ...DEFAULT_SECURITY_CONFIG };
 /**
+ * 네트워크 연결 상태 확인 (net 모듈 사용)
+ */
+function checkNetworkConnectivity() {
+    return new Promise((resolve) => {
+        const request = electron_1.net.request('https://www.google.com');
+        request.on('response', (response) => {
+            console.log('네트워크 연결 상태:', response.statusCode);
+            resolve(true);
+        });
+        request.on('error', (error) => {
+            console.log('네트워크 연결 실패:', error);
+            resolve(false);
+        });
+        // 타임아웃 처리
+        setTimeout(() => {
+            request.abort();
+            resolve(false);
+        }, 5000);
+        request.end();
+    });
+}
+/**
  * 파일 경로를 프로토콜 URL로 변환
  */
 function filePathToProtocolUrl(filePath) {
@@ -186,6 +208,11 @@ function handleProtocolRequest(request) {
     try {
         const url = new url_1.URL(request.url);
         (0, debug_1.debugLog)('프로토콜 요청: ${request.url}');
+        (0, debug_1.debugLog)('URL 구성요소:', {
+            hostname: url.hostname,
+            pathname: url.pathname,
+            protocol: url.protocol
+        });
         // 파일 경로로 변환
         const filePath = protocolUrlToFilePath(request.url);
         (0, debug_1.debugLog)('해결된 파일 경로: ${filePath}');
@@ -275,6 +302,7 @@ function setupDeepLinkHandler() {
     // Handle second instance for deep links
     electron_1.app.on('second-instance', (event, commandLine, workingDirectory) => {
         (0, debug_1.debugLog)('Second instance detected with command line:', commandLine);
+        (0, debug_1.debugLog)('Working directory:', workingDirectory);
         // Find protocol URL in command line
         const protocolUrl = commandLine.find(arg => arg.startsWith(`${APP_PROTOCOL}://`));
         if (protocolUrl) {
@@ -378,6 +406,10 @@ function initProtocolSchemes() {
 function setupProtocolHandlers() {
     try {
         (0, debug_1.debugLog)('Setting up protocol handlers...');
+        // 네트워크 연결 상태 확인
+        checkNetworkConnectivity().then(isConnected => {
+            console.log('네트워크 연결 상태:', isConnected ? '연결됨' : '연결 안됨');
+        });
         // Register custom protocol handler
         registerProtocolHandler();
         // Setup deep link handling

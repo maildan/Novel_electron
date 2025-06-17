@@ -2,6 +2,7 @@
   "name": "loop-6",
   "version": "6.0.0",
   "description": "Loop 6 - Typing Analysis Desktop Application",
+  "type": "module",
   "main": "dist/main/main/main.js",
   "scripts": {
     "dev": "concurrently -n \"next,main,electron\" -c \"blue,yellow,green\" \"yarn dev:next\" \"yarn build:main:watch\" \"yarn dev:electron\"",
@@ -80,6 +81,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
+    "@next/eslint-plugin-next": "^15.3.3",
     "@next/swc-darwin-arm64": "15.3.3",
     "@tailwindcss/postcss": "^4.1.8",
     "@types/better-sqlite3": "^7.6.13",

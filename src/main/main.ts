@@ -99,14 +99,17 @@ process.on('unhandledRejection', (reason, promise) => {
 
 // 개발 모드에서 라이브 리로드 활성화
 if (isDev) {
-  try {
-    require('electron-reload')(__dirname, {
-      electron: path.join(__dirname, '../../../node_modules/.bin/electron'),
-      hardResetMethod: 'exit'
-    });
-  } catch (error: any) {
-    console.log('electron-reload not available:', error.message);
-  }
+  (async () => {
+    try {
+      const electronReload = await import('electron-reload');
+      electronReload.default(__dirname, {
+        electron: path.join(__dirname, '../../../node_modules/.bin/electron'),
+        hardResetMethod: 'exit'
+      });
+    } catch (error: unknown) {
+      console.log('electron-reload not available:', error instanceof Error ? error.message : String(error));
+    }
+  })();
 }
 
 // 상태 내보내기

@@ -27,7 +27,14 @@ exports.closeDatabase = closeDatabase;
 const debug_1 = require("../utils/debug");
 // 프로토콜 Setup
 async function setupProtocols() {
-    (0, debug_1.debugLog)('프로토콜 Setup (스텁)');
+    try {
+        (0, debug_1.debugLog)('프로토콜 Setup (스텁)');
+        // TODO: 실제 프로토콜 Setup 로직 구현
+    }
+    catch (error) {
+        (0, debug_1.errorLog)('프로토콜 Setup 오류:', error);
+        throw error;
+    }
 }
 // 세이프 스토리지 Setup
 async function setupSafeStorage() {
@@ -59,7 +66,17 @@ function setupCrashReporter() {
 }
 // 스크린샷 모듈 초기화
 function initScreenshotModule(app) {
-    (0, debug_1.debugLog)('스크린샷 모듈 초기화 (스텁)');
+    try {
+        (0, debug_1.debugLog)('스크린샷 모듈 초기화 (스텁)');
+        // app 객체를 사용하여 스크린샷 모듈 설정
+        if (app && typeof app === 'object') {
+            (0, debug_1.debugLog)('앱 정보:', { isReady: app.isReady, name: app.name || 'unknown' });
+        }
+        // TODO: 실제 스크린샷 모듈 초기화 로직 구현
+    }
+    catch (error) {
+        (0, debug_1.errorLog)('스크린샷 모듈 초기화 오류:', error);
+    }
 }
 // 글로벌 단축키 Setup
 function setupGlobalShortcuts() {
@@ -75,8 +92,19 @@ function setupMenu() {
 }
 // Setup 로드
 function loadSettings() {
-    (0, debug_1.debugLog)('Setup 로드 (스텁)');
-    return {};
+    try {
+        (0, debug_1.debugLog)('Setup 로드 (스텁)');
+        // TODO: 실제 설정 로드 로직 구현
+        return {
+            version: '6.0.0',
+            initialized: true,
+            lastUpdate: Date.now()
+        };
+    }
+    catch (error) {
+        (0, debug_1.errorLog)('Setup 로드 오류:', error);
+        return {};
+    }
 }
 // 데이터베이스 초기화
 function initDatabase() {
@@ -85,8 +113,15 @@ function initDatabase() {
 }
 // 윈도우 생성
 function createWindow() {
-    (0, debug_1.debugLog)('윈도우 생성 (스텁)');
-    return null;
+    try {
+        (0, debug_1.debugLog)('윈도우 생성 (스텁)');
+        // TODO: 실제 윈도우 생성 로직 구현
+        return null;
+    }
+    catch (error) {
+        (0, debug_1.errorLog)('윈도우 생성 오류:', error);
+        return null;
+    }
 }
 // IPC 핸들러 Setup
 function setupIpcHandlers() {
@@ -98,8 +133,15 @@ function initUpdates() {
 }
 // 메인 윈도우 가져오기
 function getMainWindow() {
-    (0, debug_1.debugLog)('메인 윈도우 가져오기 (스텁)');
-    return null;
+    try {
+        (0, debug_1.debugLog)('메인 윈도우 가져오기 (스텁)');
+        // TODO: 실제 메인 윈도우 가져오기 로직 구현
+        return null;
+    }
+    catch (error) {
+        (0, debug_1.errorLog)('메인 윈도우 가져오기 오류:', error);
+        return null;
+    }
 }
 // 트레이 제거
 function destroyTray() {

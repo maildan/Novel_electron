@@ -318,9 +318,8 @@ class IpcHandlers {
                 console.log('[IPC] 앱 재시작 요청 받음');
                 // 짧은 지연 후 앱 재시작 (UI가 응답을 받을 시간 제공)
                 setTimeout(() => {
-                    const { app } = require('electron');
-                    app.relaunch();
-                    app.exit(0);
+                    electron_1.app.relaunch();
+                    electron_1.app.exit(0);
                 }, 500);
                 return { success: true, message: 'App restart initiated' };
             }

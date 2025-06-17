@@ -6,6 +6,36 @@
  *
  * 이 파일은 preload/index.ts의 모든 중요한 기능을 통합한 authoritative preload script입니다.
  */
+interface MemoryInfo {
+    total: number;
+    used: number;
+    free: number;
+    percentage: number;
+}
+interface MemoryData {
+    main: MemoryInfo;
+    renderer: MemoryInfo;
+    gpu?: MemoryInfo;
+    system: MemoryInfo;
+    timestamp: number;
+}
+interface NativeModuleStatus {
+    available: boolean;
+    fallbackMode: boolean;
+    version: string;
+    features: {
+        memory: boolean;
+        gpu: boolean;
+        worker: boolean;
+    };
+    timestamp: number;
+    loadError?: string;
+}
+interface APIResponse<T = any> {
+    success: boolean;
+    data?: T;
+    error?: string;
+}
 declare const electronAPI: {
     invoke: (channel: string, ...args: any[]) => Promise<any>;
     database: {
@@ -52,12 +82,12 @@ declare const electronAPI: {
             disable: () => Promise<any>;
         };
         native: {
-            getStatus: () => Promise<any>;
+            getStatus: () => Promise<APIResponse<NativeModuleStatus> | APIResponse<undefined>>;
         };
     };
     memory: {
         cleanup: (force?: boolean) => Promise<any>;
-        getUsage: () => Promise<any>;
+        getUsage: () => Promise<APIResponse<undefined> | APIResponse<MemoryData>>;
         getStats: () => Promise<any>;
         getInfo: () => Promise<any>;
         optimize: () => Promise<any>;

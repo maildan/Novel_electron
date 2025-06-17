@@ -68,9 +68,9 @@ const extensions = {
     'darwin': '.dylib',
     'linux': '.so'
 };
-const extension = extensions[process.platform] || '.so';
+const _extension = extensions[process.platform] || '.so';
 // 플랫폼별 접두사
-const prefix = process.platform === 'win32' ? '' : 'lib';
+const _prefix = process.platform === 'win32' ? '' : 'lib';
 class NativeModuleLoader {
     constructor() {
         this.nativeModule = null;
@@ -167,7 +167,7 @@ class NativeModuleLoader {
                 logger.debug('네이티브 모듈 미사용 - JS 폴백으로 메모리 최적화');
                 return this.optimizeMemoryJS();
             },
-            gpuAccelerate: (task, data) => {
+            gpuAccelerate: (_task, _data) => {
                 logger.debug('네이티브 모듈 미사용 - GPU 가속 사용 불가');
                 return null;
             },
@@ -184,7 +184,7 @@ class NativeModuleLoader {
                 supportsCompute: false,
                 timestamp: Date.now().toString()
             }),
-            runGpuAcceleration: (data) => ({
+            runGpuAcceleration: (_data) => ({
                 success: false,
                 executionTimeMs: 0,
                 memorySavedMb: 0,

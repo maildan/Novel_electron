@@ -9,12 +9,12 @@ export interface ApiError {
   code?: string;
 }
 
-export interface ApiSuccess<T = any> {
+export interface ApiSuccess<T = unknown> {
   success: true;
   data: T;
 }
 
-export type ApiResponse<T = any> = ApiSuccess<T> | ApiError;
+export type ApiResponse<T = unknown> = ApiSuccess<T> | ApiError;
 
 /**
  * unknown 타입의 에러를 안전하게 처리

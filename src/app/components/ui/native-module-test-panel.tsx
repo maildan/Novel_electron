@@ -29,7 +29,7 @@ export default function NativeModuleTestPanel({ className }: { className?: strin
   // 상태 관리
   const [memoryInfo, setMemoryInfo] = useState<MemoryInfo | null>(null);
   const [gpuInfo, setGpuInfo] = useState<LocalGpuInfo | null>(null);
-  const [optimizationResult, setOptimizationResult] = useState<any>(null);
+  const [optimizationResult, setOptimizationResult] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState({
     memory: false,
     gpu: false,

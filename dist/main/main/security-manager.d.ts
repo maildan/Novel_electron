@@ -142,4 +142,8 @@ export declare const security: {
     resetIMEState(): void;
 };
 export default security;
+/**
+ * 보안 모듈 초기화 및 테스트 (WebContents 함수 사용)
+ */
+export declare function initializeSecurityManager(): void;
 //# sourceMappingURL=security-manager.d.ts.map

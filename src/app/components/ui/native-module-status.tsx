@@ -5,6 +5,16 @@ import { Card, CardContent, CardHeader, CardTitle } from './card';
 import { Badge } from './badge';
 import { CheckCircle, XCircle, AlertCircle, Cpu, Activity, Settings } from 'lucide-react';
 
+interface ElectronNativeAPI {
+  memory?: {
+    getInfo?: () => Promise<unknown>;
+  };
+  debug?: {
+    getProcessInfo?: () => Record<string, unknown>;
+  };
+  native?: unknown;
+}
+
 interface StatusData {
   uiohook: {
     available: boolean;
@@ -133,14 +143,14 @@ export default function NativeModuleStatus() {
         }
 
         // Electron API 대기
-        let electronAPI = (window as any).electronAPI;
+        let electronAPI = (window as { electronAPI?: ElectronNativeAPI }).electronAPI;
         let waitAttempts = 0;
         const maxWaitAttempts = 30; // 3초
         
         while (!electronAPI && waitAttempts < maxWaitAttempts) {
           console.log(`⏳ Electron API 로드 대기 중... (${waitAttempts + 1}/${maxWaitAttempts})`);
           await new Promise(resolve => setTimeout(resolve, 100));
-          electronAPI = (window as any).electronAPI;
+          electronAPI = (window as { electronAPI?: ElectronNativeAPI }).electronAPI;
           waitAttempts++;
         }
 
@@ -153,11 +163,15 @@ export default function NativeModuleStatus() {
         console.log('✅ Electron API 발견됨:', Object.keys(electronAPI));
 
         // 안전한 API 호출 헬퍼
-        const safeCall = async (api: any, funcName: string, ...args: any[]) => {
+        const safeCall = async (api: unknown, funcName: string, ...args: unknown[]) => {
           try {
-            if (api && typeof api[funcName] === 'function') {
-              const result = await api[funcName](...args);
-              return result?.success ? result.data : result;
+            if (api && typeof api === 'object' && api !== null && funcName in api) {
+              const func = (api as Record<string, unknown>)[funcName];
+              if (typeof func === 'function') {
+                const result = await (func as (...args: unknown[]) => Promise<unknown>)(...args);
+                return (result as { success?: boolean; data?: unknown })?.success ? 
+                       (result as { data: unknown }).data : result;
+              }
             }
             return null;
           } catch (error) {
@@ -170,14 +184,24 @@ export default function NativeModuleStatus() {
         const getSystemInfo = async () => {
           try {
             // debug API에서 프로세스 정보 가져오기
-            const processInfo = electronAPI.debug?.getProcessInfo?.() || {};
+            const processInfo = (electronAPI.debug?.getProcessInfo?.() || {}) as {
+              platform?: string;
+              arch?: string;
+              versions?: {
+                node?: string;
+                electron?: string;
+                chrome?: string;
+              };
+              pid?: number;
+              env?: string;
+            };
             
             return {
-              platform: processInfo.platform || navigator.platform,
-              arch: processInfo.arch || '알 수 없음',
-              node: processInfo.versions?.node || '알 수 없음',
-              electron: processInfo.versions?.electron || '알 수 없음',
-              chrome: processInfo.versions?.chrome || navigator.userAgent,
+              platform: String(processInfo.platform || navigator.platform),
+              arch: String(processInfo.arch || '알 수 없음'),
+              node: String(processInfo.versions?.node || '알 수 없음'),
+              electron: String(processInfo.versions?.electron || '알 수 없음'),
+              chrome: String(processInfo.versions?.chrome || navigator.userAgent),
               hostname: 'localhost',
               uptime: 0,
               cpuCount: navigator.hardwareConcurrency || 1,
@@ -206,21 +230,33 @@ export default function NativeModuleStatus() {
         // 성능 정보 수집
         const getPerformanceInfo = async () => {
           try {
-            const memoryInfo = await safeCall(electronAPI.memory, 'getInfo');
-            const processInfo = electronAPI.debug?.getProcessInfo?.() || {};
+            const memoryInfo = (await safeCall(electronAPI.memory, 'getInfo')) as {
+              process?: {
+                memoryUsage?: {
+                  rss?: number;
+                  heapTotal?: number;
+                  heapUsed?: number;
+                  external?: number;
+                  arrayBuffers?: number;
+                };
+              };
+            };
+            const processInfo = (electronAPI.debug?.getProcessInfo?.() || {}) as {
+              pid?: number;
+            };
             
             // 실제 process 정보 활용
             const actualMemoryUsage = memoryInfo?.process?.memoryUsage || {};
-            const actualPid = processInfo.pid || process.pid || Date.now() % 100000; // 임시 PID
+            const actualPid = Number(processInfo.pid || process?.pid || Date.now() % 100000); // 임시 PID
             
             return {
               processUptime: Math.floor(Date.now() / 1000) % 3600, // 임시 uptime (초)
               memoryUsage: {
-                rss: actualMemoryUsage.rss || Math.floor(Math.random() * 200 + 50) * 1024 * 1024, // 50-250MB
-                heapTotal: actualMemoryUsage.heapTotal || Math.floor(Math.random() * 100 + 30) * 1024 * 1024, // 30-130MB
-                heapUsed: actualMemoryUsage.heapUsed || Math.floor(Math.random() * 80 + 20) * 1024 * 1024, // 20-100MB
-                external: actualMemoryUsage.external || Math.floor(Math.random() * 10 + 5) * 1024 * 1024, // 5-15MB
-                arrayBuffers: actualMemoryUsage.arrayBuffers || Math.floor(Math.random() * 5 + 1) * 1024 * 1024 // 1-6MB
+                rss: Number(actualMemoryUsage.rss) || Math.floor(Math.random() * 200 + 50) * 1024 * 1024, // 50-250MB
+                heapTotal: Number(actualMemoryUsage.heapTotal) || Math.floor(Math.random() * 100 + 30) * 1024 * 1024, // 30-130MB
+                heapUsed: Number(actualMemoryUsage.heapUsed) || Math.floor(Math.random() * 80 + 20) * 1024 * 1024, // 20-100MB
+                external: Number(actualMemoryUsage.external) || Math.floor(Math.random() * 10 + 5) * 1024 * 1024, // 5-15MB
+                arrayBuffers: Number(actualMemoryUsage.arrayBuffers) || Math.floor(Math.random() * 5 + 1) * 1024 * 1024 // 1-6MB
               },
               resourceUsage: null,
               pid: actualPid,
@@ -248,10 +284,12 @@ export default function NativeModuleStatus() {
         // 환경 정보 수집  
         const getEnvironmentInfo = async () => {
           try {
-            const processInfo = electronAPI.debug?.getProcessInfo?.() || {};
+            const processInfo = (electronAPI.debug?.getProcessInfo?.() || {}) as {
+              env?: string;
+            };
             
             return {
-              nodeEnv: processInfo.env || 'unknown',
+              nodeEnv: String(processInfo.env || 'unknown'),
               isDev: processInfo.env === 'development',
               userAgent: navigator.userAgent,
               workingDirectory: '알 수 없음'

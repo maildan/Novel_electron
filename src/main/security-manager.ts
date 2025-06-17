@@ -52,6 +52,19 @@ const disableSecurity = process.env.DISABLE_SECURITY === 'true';
 const disableCSP = process.env.DISABLE_CSP === 'true';
 
 /**
+ * WebContents 보안 상태 확인 (WebContents 타입 사용)
+ */
+function checkWebContentsSecurityState(webContents: WebContents): void {
+  console.log('WebContents 보안 상태 확인:', {
+    id: webContents.id,
+    url: webContents.getURL(),
+    userAgent: webContents.getUserAgent(),
+    devToolsOpened: webContents.isDevToolsOpened(),
+    crashed: webContents.isCrashed()
+  });
+}
+
+/**
  * 보안 관리자 클래스
  */
 export class SecurityManager {
@@ -335,10 +348,10 @@ export class SecurityManager {
 
       allSessions.forEach((sess: any, idx: number) => {
         try {
-          console.log('[Security] Applying CSP to session #${idx + 1}');
+          console.log(`[Security] Applying CSP to session #${idx + 1}`);
           this.registerCSPForSession(sess);
         } catch (error) {
-          console.error('[Security] Failed to apply CSP to session #${idx + 1}:', error);
+          console.error(`[Security] Failed to apply CSP to session #${idx + 1}:`, error);
         }
       });
 
@@ -633,3 +646,19 @@ export const security = {
 };
 
 export default security;
+
+/**
+ * 보안 모듈 초기화 및 테스트 (WebContents 함수 사용)
+ */
+export function initializeSecurityManager(): void {
+  console.log('보안 관리자 초기화 시작');
+  
+  // 현재 활성 윈도우들의 WebContents 보안 상태 확인
+  const allWindows = BrowserWindow.getAllWindows();
+  allWindows.forEach((window, index) => {
+    console.log(`윈도우 ${index + 1}/${allWindows.length} 보안 상태 확인 중...`);
+    checkWebContentsSecurityState(window.webContents);
+  });
+  
+  console.log('보안 관리자 초기화 완료');
+}

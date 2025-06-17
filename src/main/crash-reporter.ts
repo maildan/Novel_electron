@@ -5,7 +5,7 @@
  * Error 로깅, 충돌 보고서 수집, 복구 메커니즘을 제공합니다.
  */
 
-import { app, crashReporter, dialog, BrowserWindow, ipcMain } from 'electron';
+import { app, crashReporter, dialog, BrowserWindow, ipcMain, WebContents } from 'electron';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
@@ -26,7 +26,7 @@ interface ErrorInfo {
   stack?: string;
   timestamp: string;
   severity: 'low' | 'medium' | 'high' | 'critical';
-  context?: any;
+  context?: Record<string, unknown>;
   recoverable?: boolean;
 }
 
@@ -75,9 +75,9 @@ const MAX_ERROR_HISTORY = 100;
 let isInitialized = false;
 let errorLogStream: fs.WriteStream | null = null;
 let crashLogStream: fs.WriteStream | null = null;
-let uncaughtExceptions: ErrorInfo[] = [];
-let crashHistory: CrashInfo[] = [];
-let crashStats: CrashStats = {
+const uncaughtExceptions: ErrorInfo[] = [];
+const crashHistory: CrashInfo[] = [];
+const crashStats: CrashStats = {
   totalCrashes: 0,
   uncaughtExceptions: 0,
   rendererCrashes: 0,
@@ -88,7 +88,7 @@ let crashStats: CrashStats = {
   recoveryAttempts: 0
 };
 
-let startTime = Date.now();
+const startTime = Date.now();
 let options: CrashReporterOptions = {};
 
 /**
@@ -264,21 +264,24 @@ function setupExceptionHandlers(): void {
     handleUncaughtException(error, 'unhandled-rejection');
   });
 
-  // 렌더러 프로세스 충돌
-  (app as any).on('renderer-process-crashed', (event: any, webContents: any, killed: boolean) => {
+  // 렌더러 프로세스 충돌 (타입 단언 사용)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (app as any).on('renderer-process-crashed', (event: unknown, webContents: WebContents, killed: boolean) => {
     console.log(`[CrashReporter] 렌더러 프로세스 충돌 감지, 이벤트 타입: ${typeof event}`);
     handleRendererCrash(webContents, killed);
   });
 
-  // GPU 프로세스 충돌
-  (app as any).on('gpu-process-crashed', (event: any, killed: boolean) => {
+  // GPU 프로세스 충돌 (타입 단언 사용)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (app as any).on('gpu-process-crashed', (event: unknown, killed: boolean) => {
     console.log(`[CrashReporter] GPU 프로세스 충돌 감지, 이벤트 타입: ${typeof event}`);
     handleGpuCrash(killed);
   });
 
   // 자식 프로세스 Error (Node.js 16+에서 지원)
   if ('child-process-gone' in app) {
-    app.on('child-process-gone' as any, (event, details) => {
+    const eventName = 'child-process-gone' as const;
+    app.on(eventName, (event, details) => {
       console.log(`[CrashReporter] 자식 프로세스 종료 감지, 이벤트: ${event.defaultPrevented ? '방지됨' : '허용'}`);
       handleChildProcessCrash(details);
     });
@@ -410,7 +413,7 @@ function handleGpuCrash(killed: boolean): void {
 /**
  * 자식 프로세스 충돌 처리
  */
-function handleChildProcessCrash(details: any): void {
+function handleChildProcessCrash(details: { pid?: number; exitCode?: number; reason?: string }): void {
   try {
     const crashInfo: CrashInfo = {
       type: 'child-process-crash',
@@ -733,7 +736,7 @@ function setupCrashReporterIpcHandlers(): void {
 /**
  * 충돌 보고서 정보 조회
  */
-export function getCrashReportInfo(): any {
+export function getCrashReportInfo(): Record<string, unknown> {
   return {
     directory: CRASH_REPORTS_DIR,
     enabled: crashReporter.getUploadToServer(),
@@ -766,7 +769,7 @@ export function getLogPaths(): { errorLog: string; crashLog: string } {
 /**
  * 수동 Error 보고
  */
-export function reportError(message: string, stack?: string, severity: ErrorInfo['severity'] = 'medium', context?: any): void {
+export function reportError(message: string, stack?: string, severity: ErrorInfo['severity'] = 'medium', context?: Record<string, unknown>): void {
   const errorInfo: ErrorInfo = {
     type: 'manual-report',
     message,

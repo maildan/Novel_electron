@@ -4,7 +4,7 @@
  * 모든 Electron IPC API들을 정의하고 export합니다.
  */
 export declare const electronAPI: {
-    invoke: (channel: string, ...args: any[]) => Promise<any>;
+    invoke: (channel: string, ...args: unknown[]) => Promise<any>;
     getKeyboardPermissions: () => Promise<any>;
     toggleKeyboardMonitoring: () => Promise<any>;
     getTypingStats: () => Promise<any>;
@@ -15,23 +15,23 @@ export declare const electronAPI: {
     stopMonitoring: () => Promise<any>;
     getTrackingStatus: () => Promise<any>;
     database: {
-        saveTypingSession: (data: any) => Promise<any>;
+        saveTypingSession: (data: Record<string, unknown>) => Promise<any>;
         getRecentSessions: (limit?: number) => Promise<any>;
         getStatistics: (days?: number) => Promise<any>;
         cleanup: () => Promise<any>;
         healthCheck: () => Promise<any>;
-        getKeystrokeData: (params: any) => Promise<any>;
-        getSessions: (params: any) => Promise<any>;
-        exportData: (params: any) => Promise<any>;
-        importData: (params: any) => Promise<any>;
-        clearData: (params: any) => Promise<any>;
+        getKeystrokeData: (params: Record<string, unknown>) => Promise<any>;
+        getSessions: (params: Record<string, unknown>) => Promise<any>;
+        exportData: (params: Record<string, unknown>) => Promise<any>;
+        importData: (params: Record<string, unknown>) => Promise<any>;
+        clearData: (params: Record<string, unknown>) => Promise<any>;
     };
     ipcRenderer: {
-        send: (channel: string, ...args: any[]) => void;
-        invoke: (channel: string, ...args: any[]) => Promise<any>;
-        on: (channel: string, listener: (event: any, ...args: any[]) => void) => () => void;
-        once: (channel: string, listener: (event: any, ...args: any[]) => void) => void;
-        removeListener: (channel: string, listener: (...args: any[]) => void) => void;
+        send: (channel: string, ...args: unknown[]) => void;
+        invoke: (channel: string, ...args: unknown[]) => Promise<any>;
+        on: (channel: string, listener: (event: Electron.IpcRendererEvent, ...args: unknown[]) => void) => () => void;
+        once: (channel: string, listener: (event: Electron.IpcRendererEvent, ...args: unknown[]) => void) => void;
+        removeListener: (channel: string, listener: (...args: unknown[]) => void) => void;
         removeAllListeners: (channel: string) => void;
     };
     system: {
@@ -53,7 +53,7 @@ export declare const electronAPI: {
         getProcesses: () => Promise<any>;
         gpu: {
             getInfo: () => Promise<any>;
-            compute: (data: any) => Promise<any>;
+            compute: (data: Record<string, unknown>) => Promise<any>;
             enable: () => Promise<any>;
             disable: () => Promise<any>;
         };
@@ -72,23 +72,23 @@ export declare const electronAPI: {
     };
     settings: {
         get: (key?: string) => Promise<any>;
-        set: (key: string, value: any) => Promise<any>;
+        set: (key: string, value: unknown) => Promise<any>;
         getAll: () => Promise<any>;
-        update: (key: string, value: any) => Promise<any>;
-        updateMultiple: (settings: Record<string, any>) => Promise<any>;
+        update: (key: string, value: unknown) => Promise<any>;
+        updateMultiple: (settings: Record<string, unknown>) => Promise<any>;
         reset: () => Promise<any>;
         save: () => Promise<any>;
         load: () => Promise<any>;
         getSetting: (key: string) => Promise<any>;
         export: (filePath: string) => Promise<any>;
         import: (filePath: string) => Promise<any>;
-        validate: (settings: Record<string, any>) => Promise<any>;
+        validate: (settings: Record<string, unknown>) => Promise<any>;
         createBackup: () => Promise<any>;
         getHistory: () => Promise<any>;
         clearHistory: () => Promise<any>;
     };
     window: {
-        create: (options?: any) => Promise<any>;
+        create: (options?: Record<string, unknown>) => Promise<any>;
         minimize: () => Promise<any>;
         maximize: () => Promise<any>;
         toggleMaximize: () => Promise<any>;
@@ -112,7 +112,7 @@ export declare const electronAPI: {
         isFocused: () => Promise<any>;
         setWindowMode: (mode: string) => Promise<any>;
         getWindowStatus: () => Promise<any>;
-        setWindowBounds: (bounds: any) => Promise<any>;
+        setWindowBounds: (bounds: Record<string, unknown>) => Promise<any>;
     };
     app: {
         getVersion: () => Promise<any>;
@@ -175,13 +175,13 @@ export declare const electronAPI: {
     };
     config: {
         get: (key?: string) => Promise<any>;
-        set: (key: string, value: any) => Promise<any>;
+        set: (key: string, value: unknown) => Promise<any>;
         getAll: () => Promise<any>;
         reset: () => Promise<any>;
     };
-    on: (channel: string, listener: (...args: any[]) => void) => void;
-    off: (channel: string, listener: (...args: any[]) => void) => void;
-    once: (channel: string, listener: (...args: any[]) => void) => void;
+    on: (channel: string, listener: (...args: unknown[]) => void) => void;
+    off: (channel: string, listener: (...args: unknown[]) => void) => void;
+    once: (channel: string, listener: (...args: unknown[]) => void) => void;
     utils: {
         removeAllListeners: (channel: string) => void;
         platform: NodeJS.Platform;
@@ -194,7 +194,7 @@ export declare const electronAPI: {
             arch: NodeJS.Architecture;
             env: string | undefined;
         };
-        log: (message: string, ...args: any[]) => void;
+        log: (message: string, ...args: unknown[]) => void;
     };
 };
 export type ElectronAPI = typeof electronAPI;

@@ -20,6 +20,12 @@ interface TypingStats {
     sessionCount: number;
     lastActive: number;
 }
+interface KeyData {
+    key?: string;
+    isCorrect?: boolean;
+    timestamp?: number;
+    [key: string]: unknown;
+}
 /**
  * 추적 시작
  */
@@ -31,7 +37,7 @@ export declare function stopTracking(): boolean;
 /**
  * 키 입력 처리
  */
-export declare function processKeyPress(keyData: any): void;
+export declare function processKeyPress(keyData: KeyData): void;
 /**
  * 렌더러에 추적 상태 전송
  */

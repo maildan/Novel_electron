@@ -7,6 +7,28 @@ export const revalidate = false;
 
 const prisma = new PrismaClient();
 
+// 에러 응답 생성 헬퍼 함수
+function createErrorResponse(message: string, error?: unknown) {
+  console.error('API 에러:', { message, error });
+  return {
+    success: false,
+    error: message,
+    details: process.env.NODE_ENV === 'development' ? 
+      (error instanceof Error ? error.message : String(error)) : undefined,
+    timestamp: new Date().toISOString()
+  };
+}
+
+// 성공 응답 생성 헬퍼 함수
+function createSuccessResponse(data: unknown) {
+  console.log('API 성공 응답:', { dataSize: JSON.stringify(data).length });
+  return {
+    success: true,
+    data,
+    timestamp: new Date().toISOString()
+  };
+}
+
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
@@ -16,7 +38,11 @@ export async function GET(request: NextRequest) {
     const startDate = searchParams.get('startDate');
     const endDate = searchParams.get('endDate');
 
-    let whereClause: any = {};
+    // 타입 안전한 WHERE 절 구성
+    const whereClause: {
+      content?: { contains: string; mode: 'insensitive' };
+      timestamp?: { gte?: Date; lte?: Date };
+    } = {};
 
     // 검색 쿼리가 있는 경우
     if (query) {
@@ -58,23 +84,15 @@ export async function GET(request: NextRequest) {
       where: whereClause
     });
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        logs,
-        total,
-        hasMore: total > offset + limit
-      }
-    });
+    return NextResponse.json(createSuccessResponse({
+      logs,
+      total,
+      hasMore: total > offset + limit
+    }));
 
   } catch (error) {
-    console.error('로그 검색 중 오류:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: '로그 검색에 실패했습니다',
-        details: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined
-      },
+      createErrorResponse('로그 검색에 실패했습니다', error),
       { status: 500 }
     );
   }

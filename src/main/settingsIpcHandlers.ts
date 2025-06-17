@@ -18,8 +18,7 @@ console.log('[설정IPC핸들러] GPU 유틸리티 모듈 로드됨:', {
 
 // 새로운 타입 시스템 적용
 import type { 
-  SettingsIpcTypes, 
-  IpcResponse 
+  SettingsIpcTypes
 } from '../types/ipc';
 import { 
   createSuccessResponse,
@@ -84,11 +83,12 @@ export class SettingsIpcHandlers {
           case 'cpu-intensive':
             await SettingsManager.updateSetting('enableGPUAcceleration', false);
             break;
-          case 'auto':
+          case 'auto': {
             // GPU 사용 가능 여부에 따라 자동 Setup
             const gpuAvailable = await this.checkGPUAvailability();
             await SettingsManager.updateSetting('enableGPUAcceleration', gpuAvailable);
             break;
+          }
         }
 
         const response: SettingsIpcTypes.SettingsIpcResponse<{ mode: string }> = {

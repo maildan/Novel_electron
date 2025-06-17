@@ -12,6 +12,13 @@ exports.showErrorToast = showErrorToast;
 exports.showInfoToast = showInfoToast;
 exports.showWarningToast = showWarningToast;
 const electron_1 = require("electron");
+// BrowserWindow 타입 사용을 위한 초기화 함수
+function initializeToastWindow() {
+    console.debug('[토스트] BrowserWindow 타입 초기화:', {
+        BrowserWindow타입사용가능: !!electron_1.BrowserWindow,
+        윈도우생성가능: typeof electron_1.BrowserWindow === 'function'
+    });
+}
 /**
  * 토스트 알림 표시
  */
@@ -72,4 +79,6 @@ function showWarningToast(message, title = '경고') {
 }
 // 토스트 모듈 초기화
 console.log('[toast] 토스트 알림 모듈 로드됨');
+// 토스트 모듈 초기화 시 타입 정보 로깅
+initializeToastWindow();
 //# sourceMappingURL=toast.js.map

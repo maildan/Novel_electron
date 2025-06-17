@@ -16,7 +16,7 @@ const electron_1 = require("electron");
 const window_1 = require("./window");
 const settings_manager_1 = __importDefault(require("./settings-manager"));
 // 전역 윈도우 핸들러 상태
-let windowState = {
+const windowState = {
     isRegistered: false,
     windowManager: null
 };

@@ -1,4 +1,4 @@
-import { ipcMain, BrowserWindow } from 'electron';
+import { ipcMain, BrowserWindow, app } from 'electron';
 import dataSyncManager from './data-sync';
 import statsManager from './stats-manager';
 import browserDetector from './browser-detector';
@@ -330,7 +330,6 @@ export class IpcHandlers {
         
         // 짧은 지연 후 앱 재시작 (UI가 응답을 받을 시간 제공)
         setTimeout(() => {
-          const { app } = require('electron');
           app.relaunch();
           app.exit(0);
         }, 500);

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Home, BarChart3, TrendingUp, Settings, RefreshCw } from 'lucide-react';
+import { Home, BarChart3, TrendingUp, Settings } from 'lucide-react';
 import { NotificationDropdown } from '../notifications';
 
 /**
@@ -19,11 +19,14 @@ interface NavigationItem {
 interface AppHeaderProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
-  isRefreshing: boolean;
-  onRefresh: () => void;
 }
 
-export function AppHeader({ activeTab, onTabChange, isRefreshing, onRefresh }: AppHeaderProps) {
+export function AppHeader({ activeTab, onTabChange }: AppHeaderProps) {
+  // 새로고침 상태 로깅
+  console.log('헤더 렌더링:', {
+    activeTab,
+    timestamp: new Date().toISOString()
+  });
   const navigationItems: NavigationItem[] = [
     { id: 'home', label: '홈', icon: <Home className="w-4 h-4" /> },
     { id: 'stats', label: '통계', icon: <BarChart3 className="w-4 h-4" /> },

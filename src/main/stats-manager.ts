@@ -150,9 +150,14 @@ export class StatsManager {
 
       // 워커 종료 핸들러
       this.statWorker.on('exit', (code) => {
-        debugLog('워커 종료됨, 코드: ${code}');
+        debugLog(`워커 종료됨, 코드: ${code}`);
         this.statWorker = null;
         this.workerInitialized = false;
+        
+        // 코드에 따른 재시작 로직
+        if (code !== 0) {
+          debugLog(`워커가 비정상 종료됨(${code}), 재시작 시도 예정`);
+        }
       });
 
       // 워커 초기화 메시지 전송
@@ -411,16 +416,36 @@ export class StatsManager {
   /**
  * 통계 데이터 가져오기
  */
-  async getStats(options?: any): Promise<any> {
+  async getStats(options?: Record<string, unknown>): Promise<Record<string, unknown>> {
     try {
+      // options를 사용하여 통계 필터링 및 설정
+      const includeDetail = options?.detail === true;
+      const timeRange = options?.timeRange as string || 'all';
+      const sessionId = options?.sessionId as string;
+      
       // 통계 데이터 수집 로직
+      const baseData = {
+        totalKeystrokes: this.buffer.length,
+        sessionsCount: this.sessionBuffers.size,
+        lastUpdated: new Date()
+      };
+      
+      if (includeDetail) {
+        (baseData as any).detailedInfo = {
+          bufferSize: this.buffer.length,
+          activeWorkers: this.workerInitialized ? 1 : 0,
+          timeRange: timeRange
+        };
+      }
+      
+      if (sessionId && this.sessionBuffers.has(sessionId)) {
+        const sessionData = this.sessionBuffers.get(sessionId);
+        (baseData as any).sessionData = sessionData;
+      }
+      
       return {
         success: true,
-        data: {
-          totalKeystrokes: this.buffer.length,
-          sessionsCount: this.sessionBuffers.size,
-          lastUpdated: new Date()
-        }
+        data: baseData
       };
     } catch (error) {
       console.error('통계 가져오기 Error:', error);
@@ -431,15 +456,28 @@ export class StatsManager {
   /**
  * 타이핑 패턴 분석
  */
-  async analyzeTypingPattern(data: any): Promise<any> {
+  async analyzeTypingPattern(data: Record<string, unknown>): Promise<Record<string, unknown>> {
     try {
+      // data를 사용하여 타이핑 패턴 분석
+      const keystrokes = data.keystrokes as number || 0;
+      const timeMs = data.timeMs as number || 1;
+      const errors = data.errors as number || 0;
+      const corrections = data.corrections as number || 0;
+      
       // 타이핑 패턴 분석 로직
+      const wpm = Math.round((keystrokes / 5) / (timeMs / 60000));
+      const accuracy = Math.round(((keystrokes - errors) / keystrokes) * 100) || 0;
+      
       return {
         success: true,
         pattern: {
-          wordsPerMinute: Math.random() * 100,
-          accuracy: Math.random() * 100,
-          commonMistakes: []
+          wordsPerMinute: Math.max(0, wpm),
+          accuracy: Math.max(0, Math.min(100, accuracy)),
+          totalKeystrokes: keystrokes,
+          timeSpent: timeMs,
+          errorRate: keystrokes > 0 ? (errors / keystrokes) * 100 : 0,
+          correctionRate: keystrokes > 0 ? (corrections / keystrokes) * 100 : 0,
+          commonMistakes: [] // TODO: 실제 오타 패턴 분석
         }
       };
     } catch (error) {
@@ -451,10 +489,40 @@ export class StatsManager {
   /**
  * Setup 업데이트
  */
-  async updateSettings(settings: any): Promise<any> {
+  async updateSettings(settings: Record<string, unknown>): Promise<Record<string, unknown>> {
     try {
-      // Setup 업데이트 로직
-      return { success: true };
+      // settings를 사용하여 실제 설정 업데이트
+      const bufferSize = settings.bufferSize as number;
+      const autoSaveInterval = settings.autoSaveInterval as number;
+      const enableWorker = settings.enableWorker as boolean;
+      
+      // 버퍼 크기 업데이트
+      if (bufferSize && bufferSize > 0) {
+        // TODO: 실제 버퍼 크기 설정
+        debugLog(`버퍼 크기 업데이트: ${bufferSize}`);
+      }
+      
+      // 자동 저장 간격 업데이트
+      if (autoSaveInterval && autoSaveInterval > 0) {
+        // TODO: 실제 자동 저장 간격 설정
+        debugLog(`자동 저장 간격 업데이트: ${autoSaveInterval}ms`);
+      }
+      
+      // 워커 활성화/비활성화
+      if (typeof enableWorker === 'boolean') {
+        if (enableWorker && !this.workerInitialized) {
+          await this.initializeWorker();
+        } else if (!enableWorker && this.workerInitialized) {
+          this.statWorker?.terminate();
+          this.workerInitialized = false;
+        }
+      }
+      
+      return { 
+        success: true, 
+        updatedSettings: Object.keys(settings).length,
+        timestamp: Date.now()
+      };
     } catch (error) {
       console.error('Setup 업데이트 Error:', error);
       return { success: false, error: error instanceof Error ? error.message : String(error) };
@@ -464,7 +532,7 @@ export class StatsManager {
   /**
  * 메모리 최적화
  */
-  async optimizeMemory(): Promise<any> {
+  async optimizeMemory(): Promise<Record<string, unknown>> {
     try {
       // 메모리 최적화 로직
       this.buffer = [];

@@ -43,7 +43,7 @@ export interface SystemInfo {
 
 // CPU 사용률 계산을 위한 이전 데이터 저장
 let previousCPUInfo: os.CpuInfo[] | null = null;
-let previousTime = Date.now();
+let _previousTime = Date.now();
 
 /**
  * CPU 사용률 계산
@@ -51,16 +51,20 @@ let previousTime = Date.now();
 function calculateCPUUsage(): Promise<number> {
   return new Promise((resolve) => {
     const cpus = os.cpus();
+    const currentTime = Date.now();
     
     if (!previousCPUInfo) {
       previousCPUInfo = cpus;
-      previousTime = Date.now();
+      _previousTime = currentTime;
       setTimeout(() => {
         resolve(calculateCPUUsage());
       }, 100);
       return;
     }
 
+    // 시간 간격 계산 (밀리초)
+    const timeDelta = currentTime - _previousTime;
+    
     let totalIdle = 0;
     let totalTick = 0;
 
@@ -76,10 +80,16 @@ function calculateCPUUsage(): Promise<number> {
       totalTick += total;
     }
 
-    const usage = 100 - (100 * totalIdle / totalTick);
+    // CPU 사용률 계산 (시간 간격을 고려하여 정확도 향상)
+    const usage = totalTick > 0 ? 100 - (100 * totalIdle / totalTick) : 0;
     
     previousCPUInfo = cpus;
-    previousTime = Date.now();
+    _previousTime = currentTime;
+    
+    // 시간 간격이 너무 짧으면 부정확할 수 있으므로 최소 간격 확인
+    if (timeDelta < 50) {
+      console.debug(`[SystemInfo] CPU 계산 시간 간격이 짧습니다: ${timeDelta}ms`);
+    }
     
     resolve(Math.round(usage * 100) / 100);
   });
