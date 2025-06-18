@@ -27,7 +27,7 @@ function ensureErrorLogDir(): void {
 /**
  * 오류를 로그 파일에 기록
  */
-function logErrorToFile(error: Error, context: string = 'unknown'): void {
+function logErrorToFile(error: Error, context = 'unknown'): void {
   ensureErrorLogDir();
   
   const timestamp = new Date().toISOString();
