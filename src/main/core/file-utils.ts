@@ -30,7 +30,7 @@ export interface SecurityConfig {
   strictMode: boolean;
 }
 
-export interface FileOperationResult<T = unknown> {
+export interface FileOperationResult<T = string | Buffer> {
   success: boolean;
   data?: T;
   error?: string;
@@ -66,15 +66,20 @@ function logFileOperation(level: 'info' | 'warn' | 'error', message: string, con
   const timestamp = new Date().toISOString();
   const logMessage = `[${timestamp}] FILE-UTILS ${level.toUpperCase()}: ${message}`;
   
+  // 타입 가드를 사용해서 context를 안전하게 처리
+  const safeContext = context instanceof Error ? context : 
+                     typeof context === 'string' ? context :
+                     typeof context === 'object' && context ? context : undefined;
+  
   switch (level) {
     case 'info':
-      console.log(logMessage, context || '');
+      console.log(logMessage, safeContext || '');
       break;
     case 'warn':
-      console.warn(logMessage, context || '');
+      console.warn(logMessage, safeContext || '');
       break;
     case 'error':
-      console.error(logMessage, context || '');
+      console.error(logMessage, safeContext || '');
       break;
   }
 }

@@ -225,14 +225,14 @@ function setupExceptionHandlers() {
         error.stack = `${error.stack}\nPromise: ${promise}`;
         handleUncaughtException(error, 'unhandled-rejection');
     });
-    // 렌더러 프로세스 충돌 (타입 단언 사용)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // 렌더러 프로세스 충돌 - Electron 타입 시스템 제약으로 인한 불가피한 any 사용
+    // @ts-expect-error - Electron의 이벤트 타입이 완전하지 않음
     electron_1.app.on('renderer-process-crashed', (event, webContents, killed) => {
         console.log(`[CrashReporter] 렌더러 프로세스 충돌 감지, 이벤트 타입: ${typeof event}`);
         handleRendererCrash(webContents, killed);
     });
-    // GPU 프로세스 충돌 (타입 단언 사용)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // GPU 프로세스 충돌 - Electron 타입 시스템 제약으로 인한 불가피한 타입 단언
+    // @ts-expect-error - Electron의 이벤트 타입이 완전하지 않음
     electron_1.app.on('gpu-process-crashed', (event, killed) => {
         console.log(`[CrashReporter] GPU 프로세스 충돌 감지, 이벤트 타입: ${typeof event}`);
         handleGpuCrash(killed);

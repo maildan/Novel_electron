@@ -9,34 +9,12 @@ import { initializeAppConfig, isDev } from './app-config';
 import { onAppReady, appState } from './app-initialization';
 import { cleanupApplication } from './app-cleanup';
 
-// 핵심 시스템 모듈들 (윈도우, IPC, 메모리 관리)
-import './window';           // WindowManager - 메인 윈도우 관리
-import './handlers-manager'; // IPC 핸들러 관리자 (모든 핸들러 초기화 포함)
-import './settings-manager'; // Settings 관리자 - 명시적으로 초기화 보장
-import './memory-manager';   // 메모리 관리
-// IPC 핸들러들은 handlers-manager에서 중앙화해서 등록 (중복 방지)
+// ✅ CRITICAL 중복 수정: 불필요한 중복 import 제거
+// app-initialization.ts에서 모든 매니저 초기화를 중앙 관리하므로 
+// 개별 import는 제거하고 생명주기 이벤트만 import
 
-// 사이드 이펙트 모듈들 (기존 동작 유지)
-import './app-lifecycle';
-import './auto-launch-manager';
-import './browser-detector';
-import './clipboard-watcher';
-import './crash-reporter';
-import './data-collector';
-import './error-handler';
-import './file-handler';
-import './menu';
-import './native-client';
-import './security-manager';
-import './system-info';
-import './theme-manager';
-import './toast';
-import './update-manager';
-import './utils';
-import './tray';             
-import './shortcuts';        
-import './protocols';       
-import './screenshot';      
+// 생명주기 이벤트 전용 (실제 초기화는 app-initialization.ts에서 수행)
+import './app-lifecycle';      
 
 // 앱 설정 초기화 (가장 먼저 실행)
 initializeAppConfig();

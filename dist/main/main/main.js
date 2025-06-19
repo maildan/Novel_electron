@@ -44,33 +44,11 @@ const app_config_1 = require("./app-config");
 const app_initialization_1 = require("./app-initialization");
 Object.defineProperty(exports, "appState", { enumerable: true, get: function () { return app_initialization_1.appState; } });
 const app_cleanup_1 = require("./app-cleanup");
-// 핵심 시스템 모듈들 (윈도우, IPC, 메모리 관리)
-require("./window"); // WindowManager - 메인 윈도우 관리
-require("./handlers-manager"); // IPC 핸들러 관리자 (모든 핸들러 초기화 포함)
-require("./settings-manager"); // Settings 관리자 - 명시적으로 초기화 보장
-require("./memory-manager"); // 메모리 관리
-// IPC 핸들러들은 handlers-manager에서 중앙화해서 등록 (중복 방지)
-// 사이드 이펙트 모듈들 (기존 동작 유지)
+// ✅ CRITICAL 중복 수정: 불필요한 중복 import 제거
+// app-initialization.ts에서 모든 매니저 초기화를 중앙 관리하므로 
+// 개별 import는 제거하고 생명주기 이벤트만 import
+// 생명주기 이벤트 전용 (실제 초기화는 app-initialization.ts에서 수행)
 require("./app-lifecycle");
-require("./auto-launch-manager");
-require("./browser-detector");
-require("./clipboard-watcher");
-require("./crash-reporter");
-require("./data-collector");
-require("./error-handler");
-require("./file-handler");
-require("./menu");
-require("./native-client");
-require("./security-manager");
-require("./system-info");
-require("./theme-manager");
-require("./toast");
-require("./update-manager");
-require("./utils");
-require("./tray");
-require("./shortcuts");
-require("./protocols");
-require("./screenshot");
 // 앱 설정 초기화 (가장 먼저 실행)
 (0, app_config_1.initializeAppConfig)();
 console.log('Electron main process starting...');

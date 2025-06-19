@@ -84,55 +84,65 @@ try {
   ];
 
   let moduleLoaded = false;
-  for (const modulePath of possiblePaths) {
-    if (fs.existsSync(modulePath)) {
-      try {
-        // dynamic import 사용하여 타입 안전성 확보
-        const moduleImport = await import(modulePath);
-        nativeModule = moduleImport.default || moduleImport as NativeModule;
-        debugLog('네이티브 모듈 로드 Success', { path: modulePath });
-        moduleLoaded = true;
-        break;
-      } catch (err: unknown) {
-        debugLog('네이티브 모듈 로드 Failed', { 
-          path: modulePath, 
-          error: err instanceof Error ? err.message : String(err) 
-        });
+  
+  // async 함수로 래핑하여 top-level await 문제 해결
+  async function loadNativeModule(): Promise<void> {
+    for (const modulePath of possiblePaths) {
+      if (fs.existsSync(modulePath)) {
+        try {
+          // dynamic import 사용하여 타입 안전성 확보
+          const moduleImport = await import(modulePath);
+          nativeModule = moduleImport.default || moduleImport as NativeModule;
+          debugLog('네이티브 모듈 로드 Success', { path: modulePath });
+          moduleLoaded = true;
+          break;
+        } catch (err: unknown) {
+          debugLog('네이티브 모듈 로드 Failed', { 
+            path: modulePath, 
+            error: err instanceof Error ? err.message : String(err) 
+          });
+        }
       }
     }
   }
   
-  // 모듈 로드 Failed 시 폴백 구현
-  if (!moduleLoaded) {
-    debugLog('폴백 구현 사용 중');
-    nativeModule = {
-      get_memory_info: function() {
-        const memoryUsage = process.memoryUsage();
-        return JSON.stringify({
-          heap_used: memoryUsage.heapUsed,
-          heap_total: memoryUsage.heapTotal,
-          external: memoryUsage.external,
-          rss: memoryUsage.rss
-        });
-      },
-      calculate_wpm: function(keystrokes: number, timeMs: number) {
-        if (timeMs <= 0) return 0;
-        const minutes = timeMs / (1000 * 60);
-        const wordsPerMinute = (keystrokes / 5) / minutes;
-        return Math.round(wordsPerMinute);
-      },
-      calculate_accuracy: function(correct: number, total: number) {
-        if (total <= 0) return 100;
-        return Math.round((correct / total) * 100);
-      }
-    };
+  // 워커 초기화 함수 (비동기)
+  async function initializeWorker(): Promise<void> {
+    try {
+      await loadNativeModule();
+      
+      // 모듈 로드 Failed 시 폴백 구현
+      if (!moduleLoaded) {
+        debugLog('폴백 구현 사용 중');
+        nativeModule = {
+          get_memory_info: function() {
+            const memoryUsage = process.memoryUsage();
+            return JSON.stringify({
+              heap_used: memoryUsage.heapUsed,
+              heap_total: memoryUsage.heapTotal,
+              external: memoryUsage.external,
+              rss: memoryUsage.rss
+            });
+          },
+          calculate_wpm: function(keystrokes: number, timeMs: number) {
+            if (timeMs <= 0) return 0;
+            const minutes = timeMs / (1000 * 60);
+            const wordsPerMinute = (keystrokes / 5) / minutes;
+            return Math.round(wordsPerMinute);
+        },
+        calculate_accuracy: function(correct: number, total: number) {
+          if (total <= 0) return 100;
+          return Math.round((correct / total) * 100);
+        }
+      };
+    }
+  } catch (error: unknown) {
+    debugLog('네이티브 모듈 초기화 Error', { 
+      error: error instanceof Error ? error.message : String(error) 
+    });
+    nativeModule = null;
   }
-} catch (error: unknown) {
-  debugLog('네이티브 모듈 초기화 Error', { 
-    error: error instanceof Error ? error.message : String(error) 
-  });
-  nativeModule = null;
-}
+} // <- 이 중괄호만 추가
 
 // 캐시 관리 함수
 function getCachedData(key: string): unknown {
@@ -447,4 +457,5 @@ if (parentPort) {
 } else {
   debugLog('부모 포트가 없어 워커 종료');
   process.exit(1);
+}
 }

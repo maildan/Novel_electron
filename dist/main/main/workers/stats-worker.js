@@ -70,8 +70,9 @@ try {
     for (const modulePath of possiblePaths) {
         if (fs.existsSync(modulePath)) {
             try {
-                // eslint-disable-next-line @typescript-eslint/no-require-imports
-                nativeModule = require(modulePath);
+                // dynamic import 사용하여 타입 안전성 확보
+                const moduleImport = await Promise.resolve(`${modulePath}`).then(s => __importStar(require(s)));
+                nativeModule = moduleImport.default || moduleImport;
                 debugLog('네이티브 모듈 로드 Success', { path: modulePath });
                 moduleLoaded = true;
                 break;

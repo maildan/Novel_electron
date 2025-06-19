@@ -28,20 +28,42 @@ type NativeModuleStatus = NativeIpcTypes.NativeModuleStatus;
 function convertMemoryStatsToReactFormat(stats: any): ReactMemoryData {
   console.log('[메모리 IPC] 메모리 통계를 React 포맷으로 변환:', stats);
   
+  // 타입 안전성 검사 추가
+  if (!stats) {
+    console.warn('[메모리 IPC] stats가 undefined 또는 null입니다');
+    // 기본값 반환
+    return {
+      main: { total: 0, used: 0, free: 0, percentage: 0 },
+      renderer: { total: 0, used: 0, free: 0, percentage: 0 },
+      system: { total: 0, used: 0, free: 0, percentage: 0 },
+      timestamp: Date.now()
+    };
+  }  // main 프로세스 메모리 안전성 검사
+  const safeMainProcess = stats.main || stats;
+  if (!safeMainProcess || typeof safeMainProcess !== 'object') {
+    console.warn('[메모리 IPC] main 프로세스 정보가 없습니다');
+    return {
+      main: { total: 0, used: 0, free: 0, percentage: 0 },
+      renderer: { total: 0, used: 0, free: 0, percentage: 0 },
+      system: { total: 0, used: 0, free: 0, percentage: 0 },
+      timestamp: Date.now()
+    };
+  }
+
   // 시스템 메모리 (실제 물리 메모리)
   const systemTotal = os.totalmem();
   const systemFree = os.freemem();
   const systemUsed = systemTotal - systemFree;
   const systemPercentage = (systemUsed / systemTotal) * 100;
 
-  // 프로세스 메모리 (RSS 기준)
-  const mainProcess = stats.main;
-  const rendererProcesses = Array.isArray(stats.renderer) ? stats.renderer : [stats.renderer];
+  // 프로세스 메모리 (RSS 기준) - 안전한 접근
+  const mainProcessData = stats.main || safeMainProcess;
+  const rendererProcesses = Array.isArray(stats.renderer) ? stats.renderer : [stats.renderer].filter(Boolean);
 
   // 메인 프로세스 메모리 (RSS 기준으로 백분율 계산)
-  const mainRss = mainProcess.rss || 0;
-  const mainHeapTotal = mainProcess.heapTotal || 0;
-  const mainHeapUsed = mainProcess.heapUsed || 0;
+  const mainRss = mainProcessData?.rss || 0;
+  const mainHeapTotal = mainProcessData?.heapTotal || 0;
+  const mainHeapUsed = mainProcessData?.heapUsed || 0;
   const mainPercentage = mainRss > 0 ? (mainHeapUsed / mainRss) * 100 : 0;
 
   // ReactMemoryInfo 타입 검증
@@ -59,10 +81,13 @@ function convertMemoryStatsToReactFormat(stats: any): ReactMemoryData {
   let rendererHeapTotal = 0;
   let rendererHeapUsed = 0;
 
-  rendererProcesses.forEach((renderer: any) => {
-    rendererRss += renderer.rss || 0;
-    rendererHeapTotal += renderer.heapTotal || 0;
-    rendererHeapUsed += renderer.heapUsed || 0;
+  rendererProcesses.forEach((renderer: unknown) => {
+    if (renderer && typeof renderer === 'object') {
+      const typedRenderer = renderer as { rss?: number; heapTotal?: number; heapUsed?: number };
+      rendererRss += typedRenderer.rss || 0;
+      rendererHeapTotal += typedRenderer.heapTotal || 0;
+      rendererHeapUsed += typedRenderer.heapUsed || 0;
+    }
   });
 
   const rendererPercentage = rendererRss > 0 ? (rendererHeapUsed / rendererRss) * 100 : 0;

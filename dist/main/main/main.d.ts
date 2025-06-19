@@ -1,28 +1,5 @@
 import { appState } from './app-initialization';
-import './window';
-import './handlers-manager';
-import './settings-manager';
-import './memory-manager';
 import './app-lifecycle';
-import './auto-launch-manager';
-import './browser-detector';
-import './clipboard-watcher';
-import './crash-reporter';
-import './data-collector';
-import './error-handler';
-import './file-handler';
-import './menu';
-import './native-client';
-import './security-manager';
-import './system-info';
-import './theme-manager';
-import './toast';
-import './update-manager';
-import './utils';
-import './tray';
-import './shortcuts';
-import './protocols';
-import './screenshot';
 export { appState };
 export { isDev, isProd, isTest } from './app-config';
 //# sourceMappingURL=main.d.ts.map
